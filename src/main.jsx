@@ -7,7 +7,7 @@ import SupervisorDashboard from './pages/supervisor/SupervisorDashboard';
 const router=createBrowserRouter(
   [
     {
-      path:"/",
+      path:"/Super",
       element:<SupervisorDashboard/>
     }
   ]
