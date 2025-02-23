@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Button, Modal, Box, TextField, Typography } from "@mui/material";
 
-const WorkloadManager = ({ appointment, fetchAppointments }) => {
+
+const WorkloadManager = ({ appointment, updateAppointment }) => {
   const [openWorkloadModal, setOpenWorkloadModal] = useState(false);
   const [workload, setWorkload] = useState(appointment?.workload || "");
 
@@ -15,19 +16,30 @@ const WorkloadManager = ({ appointment, fetchAppointments }) => {
     setWorkload(appointment?.workload || "");
   };
 
-  const handleWorkloadSubmit = () => {
+  const handleWorkloadSubmit = async () => {
     if (!appointment) return;
-
-    axios
-      .put(`http://localhost:5000/api/appointments/${appointment._id}/workload`, { workload })
-      .then(() => {
-        fetchAppointments(); // Refresh table after workload update
-        handleCloseModals();
-      })
-      .catch((error) => {
-        console.error("Error updating workload:", error);
-      });
+  
+    try {
+      // ✅ Capture the response
+      const response = await axios.put(
+        `http://localhost:5000/api/appointments/${appointment._id}/workload`,
+        { workload }
+      );
+  
+      console.log("✅ Workload updated response:", response.data);
+  
+      // ✅ Ensure the response contains updated data before updating state
+      if (response.data.appointment) {
+        updateAppointment(response.data.appointment);
+      }
+  
+      handleCloseModals();
+    } catch (error) {
+      console.error("🚨 Error updating workload:", error);
+    }
   };
+  
+  
 
   return (
     <>
