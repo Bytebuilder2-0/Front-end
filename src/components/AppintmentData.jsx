@@ -15,14 +15,13 @@ const API_BASE_URL = "http://localhost:5000/api/appointments";
 const fetchAppointments = async () => {
   try {
     const response = await axios.get(API_BASE_URL);
-    return response.data.reverse(); // Latest first
+    return response.data.reverse().filter((x) => x.status === "Accepted" || x.status === "Waiting for Technician Confirmation"); // Latest first
   } catch (error) {
     console.error("Error fetching appointments:", error);
     return [];
   }
 };
 
-// Update an appointment
 
 
 // Main Appointment Data Component
@@ -50,8 +49,7 @@ function AppointmentData() {
   };
 
   const filteredAppointments = appointments.filter((appointment) =>
-    (appointment.vehicleId || "").toString().toLowerCase().includes(searchTerm.toLowerCase()) &&
-    (!appointment.status || appointment.status.trim() !== "Accepted")
+    (appointment.vehicleId || "").toString().toLowerCase().includes(searchTerm.toLowerCase())
   );
   
 

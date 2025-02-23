@@ -23,20 +23,7 @@ const TechnicianAssignmentAndStatusUpdater = ({ appointment, updateAppointment }
   }, []);
 
   // Fetch the appointment status when the component mounts
-  useEffect(() => {
-    async function fetchAppointmentStatus() {
-      try {
-        const response = await axios.get(`http://localhost:5000/api/appointments/${appointment._id}`);
-        setStatus(response.data.status); // Ensure status is accurate on load
-        setTechAssigned(Boolean(response.data.tech));
-        setSelectedTechnician(response.data.tech || "");
-      } catch (error) {
-        console.error("Error fetching appointment:", error);
-      }
-    }
 
-    fetchAppointmentStatus(); // Fetch status from DB
-  }, [appointment._id]); // Re-run only when appointment ID changes
 
   const handleTechnicianChange = async (event) => {
     const technicianId = event.target.value;
@@ -57,6 +44,7 @@ const TechnicianAssignmentAndStatusUpdater = ({ appointment, updateAppointment }
     }
   };
 
+  // Update status to "Waiting for Technician Confirmation"
   const handleStatusUpdate = async () => {
     if (!techAssigned || status === "Waiting for Technician Confirmation" || loading) return;
 
@@ -76,10 +64,12 @@ const TechnicianAssignmentAndStatusUpdater = ({ appointment, updateAppointment }
     }
   };
 
+
   return (
     <Grid container spacing={2}>
+      {/* Technician Selection */}
       <Grid item xs={12} sm={6} display="flex" alignItems="center">
-        <Select value={selectedTechnician} onChange={handleTechnicianChange} displayEmpty fullWidth>
+        <Select value={selectedTechnician} onChange={handleTechnicianChange} displayEmpty fullWidth   disabled={status === "Waiting for Technician Confirmation"}>
           <MenuItem value="">Select Technician</MenuItem>
           {loading ? (
             <MenuItem disabled>
@@ -97,15 +87,22 @@ const TechnicianAssignmentAndStatusUpdater = ({ appointment, updateAppointment }
         </Select>
       </Grid>
 
+      {/* Status Update Button */}
       <Grid item xs={12} sm={6} display="flex" alignItems="center">
         <Button
           variant="contained"
           color="success"
           onClick={handleStatusUpdate}
-          disabled={status === "Waiting for Technician Confirmation" || !techAssigned || loading}
+          disabled={!techAssigned || status === "Waiting for Technician Confirmation" || loading}
           fullWidth
         >
-          {loading ? <CircularProgress size={24} color="inherit" /> : (status === "Waiting for Technician Confirmation" ? "Pending" : "Confirm")}
+          {loading ? (
+            <CircularProgress size={24} color="inherit" />
+          ) : status === "Waiting for Technician Confirmation" ? (
+            "Pending"
+          ) : (
+            "Confirm"
+          )}
         </Button>
       </Grid>
     </Grid>
