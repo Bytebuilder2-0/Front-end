@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, Paper, Typography, Container
+  TableHead, TableRow, Paper, Typography, Container, TextField, Box
 } from "@mui/material";
 import WorkloadManager from "./WorkloadManager";
 import IssueViewer from "./IssueView";
@@ -27,26 +27,20 @@ const fetchAppointments = async () => {
 // Main Appointment Data Component
 function AppointmentData() {
   const [appointments, setAppointments] = useState([]);
-
-  // Fetch appointments and set state
-  const fetchAppointments = async () => {
-    try {
-      const appointmentRes = await axios.get("http://localhost:5000/api/appointments");
-      console.log("Fetched appointments: ", appointmentRes.data); // Log the data
-
-      // Reverse appointments to show the latest first
-      setAppointments(appointmentRes.data.reverse());  
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchAppointments(); // Fetch appointments initially when the component mounts
-  }, []); // ✅ Empty dependency array to fetch only once
+    const getAppointments = async () => {
+      setLoading(true);
+      const data = await fetchAppointments();
+      setAppointments(data);
+      setLoading(false);
+    };
+    getAppointments();
+  }, []);
 
-  // Function to update the appointment in the parent component
-  const updateAppointment = (updatedAppointment) => {
+  const updateAppointmentInState = (updatedAppointment) => {
     setAppointments((prevAppointments) =>
       prevAppointments.map((appt) =>
         appt._id === updatedAppointment._id ? updatedAppointment : appt
@@ -61,9 +55,17 @@ function AppointmentData() {
 
   return (
     <Container>
-      <Typography variant="h5" gutterBottom>
-        Appointments
-      </Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Typography variant="h5" gutterBottom>Appointments</Typography>
+        <TextField
+          label="Search by Vehicle ID"
+          variant="outlined"
+          size="small"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </Box>
+
       <TableContainer component={Paper} elevation={3}>
         <Table>
           <TableHead>
@@ -72,12 +74,16 @@ function AppointmentData() {
               <TableCell><strong>Vehicle Number</strong></TableCell>
               <TableCell><strong>Model</strong></TableCell>
               <TableCell><strong>Issue</strong></TableCell>
-              <TableCell><strong>Workload</strong></TableCell>
-              <TableCell><strong>Technician</strong></TableCell>
+              <TableCell><strong>Write Workload</strong></TableCell>
+              <TableCell><strong>Assign Technician</strong></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredAppointments.length > 0 ? (
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={6} align="center">Loading...</TableCell>
+              </TableRow>
+            ) : filteredAppointments.length > 0 ? (
               filteredAppointments.map((appointment) => (
                 <TableRow key={appointment._id}>
                   <TableCell>{appointment.vehicleId}</TableCell>
@@ -85,22 +91,19 @@ function AppointmentData() {
                   <TableCell>{appointment.model}</TableCell>
                   <TableCell><IssueViewer issue={appointment.issue} /></TableCell>
                   <TableCell>
-                    <WorkloadManager
-                      appointment={appointment}
-                      fetchAppointments={fetchAppointments}
-                    />
+                    <WorkloadManager appointment={appointment} updateAppointment={updateAppointmentInState} />
                   </TableCell>
                   <TableCell>
                     <TechnicianAssignmentAndStatusUpdater
                       appointment={appointment}
-                      updateAppointment={updateAppointment} // Pass the function to update the appointment
+                      updateAppointment={updateAppointmentInState}
                     />
                   </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={6} align="center">No appointments available</TableCell>
+                <TableCell colSpan={6} align="center">No matching appointments</TableCell>
               </TableRow>
             )}
           </TableBody>
