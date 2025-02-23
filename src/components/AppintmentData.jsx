@@ -8,6 +8,23 @@ import WorkloadManager from "./WorkloadManager";
 import IssueViewer from "./IssueView";
 import TechnicianAssignmentAndStatusUpdater from "./TechnicianAssignmentAndStatusUpdater";
 
+// API Base URL
+const API_BASE_URL = "http://localhost:5000/api/appointments";
+
+// Fetch all appointments
+const fetchAppointments = async () => {
+  try {
+    const response = await axios.get(API_BASE_URL);
+    return response.data.reverse().filter((x) => x.status === "Accepted" || x.status === "Waiting for Technician Confirmation"); // Latest first
+  } catch (error) {
+    console.error("Error fetching appointments:", error);
+    return [];
+  }
+};
+
+
+
+// Main Appointment Data Component
 function AppointmentData() {
   const [appointments, setAppointments] = useState([]);
 
@@ -37,18 +54,10 @@ function AppointmentData() {
     );
   };
 
-  // Filter out appointments with the status "Accepted"
-  const filteredAppointments = appointments.filter((appointment) => {
-    // Check if status exists and is not "Accepted" (trim spaces)
-    if (!appointment.status) {
-      console.log("Missing status for appointment: ", appointment);
-      return true; // If no status is present, include the appointment
-    }
-    console.log("Appointment status: ", appointment.status); // Log status value
-    return appointment.status.trim() !== "Accepted";
-  });
-
-  console.log("Filtered appointments: ", filteredAppointments); // Log filtered appointments
+  const filteredAppointments = appointments.filter((appointment) =>
+    (appointment.vehicleId || "").toString().toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  
 
   return (
     <Container>
