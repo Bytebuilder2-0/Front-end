@@ -3,12 +3,16 @@ import { createRoot } from 'react-dom/client'
 
 import {createBrowserRouter,RouterProvider} from 'react-router-dom'
 import SupervisorDashboard from './pages/supervisor/SupervisorDashboard';
+import SupInitial from './pages/supervisor/SupInitial';
 
 const router=createBrowserRouter(
   [
     {
       path:"/Super",
       element:<SupervisorDashboard/>
+    },{
+      path:"/SInitial",
+      element:<SupInitial/>
     }
   ]
 );
