@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
-  Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, Paper, Typography, Container, TextField, Box
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+  Container,
+  TextField,
+  Box,
 } from "@mui/material";
-import WorkloadManager from "./WorkloadManager";
-import IssueViewer from "./IssueView";
-import TechnicianAssignmentAndStatusUpdater from "./TechnicianAssignmentAndStatusUpdater";
+import WorkloadManager from "./sub/WorkloadManager";
+import IssueViewer from "./sub/IssueView";
+import TechnicianAssignmentAndStatusUpdater from "./sub/TechnicianAssignmentAndStatusUpdater";
 
 // API Base URL
 const API_BASE_URL = "http://localhost:5000/api/appointments";
@@ -15,14 +24,18 @@ const API_BASE_URL = "http://localhost:5000/api/appointments";
 const fetchAppointments = async () => {
   try {
     const response = await axios.get(API_BASE_URL);
-    return response.data.reverse().filter((x) => x.status === "Accepted" || x.status === "Waiting for Technician Confirmation"); // Latest first
+    return response.data
+      .reverse()
+      .filter(
+        (x) =>
+          x.status === "Accepted" ||
+          x.status === "Waiting for Technician Confirmation"
+      ); // Latest first
   } catch (error) {
     console.error("Error fetching appointments:", error);
     return [];
   }
 };
-
-
 
 // Main Appointment Data Component
 function AppointmentData() {
@@ -49,14 +62,23 @@ function AppointmentData() {
   };
 
   const filteredAppointments = appointments.filter((appointment) =>
-    (appointment.vehicleId || "").toString().toLowerCase().includes(searchTerm.toLowerCase())
+    (appointment.vehicleId || "")
+      .toString()
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
   );
-  
 
   return (
     <Container>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h5" gutterBottom>Appointments</Typography>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={2}
+      >
+        <Typography variant="h5" gutterBottom>
+          Appointments
+        </Typography>
         <TextField
           label="Search by Vehicle ID"
           variant="outlined"
@@ -70,18 +92,32 @@ function AppointmentData() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell><strong>Vehicle ID</strong></TableCell>
-              <TableCell><strong>Vehicle Number</strong></TableCell>
-              <TableCell><strong>Model</strong></TableCell>
-              <TableCell><strong>Issue</strong></TableCell>
-              <TableCell><strong>Write Workload</strong></TableCell>
-              <TableCell><strong>Assign Technician</strong></TableCell>
+              <TableCell>
+                <strong>Vehicle ID</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Vehicle Number</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Model</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Issue</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Write Workload</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Assign Technician</strong>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={6} align="center">Loading...</TableCell>
+                <TableCell colSpan={6} align="center">
+                  Loading...
+                </TableCell>
               </TableRow>
             ) : filteredAppointments.length > 0 ? (
               filteredAppointments.map((appointment) => (
@@ -89,9 +125,14 @@ function AppointmentData() {
                   <TableCell>{appointment.vehicleId}</TableCell>
                   <TableCell>{appointment.vehicleNumber}</TableCell>
                   <TableCell>{appointment.model}</TableCell>
-                  <TableCell><IssueViewer issue={appointment.issue} /></TableCell>
                   <TableCell>
-                    <WorkloadManager appointment={appointment} updateAppointment={updateAppointmentInState} />
+                    <IssueViewer issue={appointment.issue} />
+                  </TableCell>
+                  <TableCell>
+                    <WorkloadManager
+                      appointment={appointment}
+                      updateAppointment={updateAppointmentInState}
+                    />
                   </TableCell>
                   <TableCell>
                     <TechnicianAssignmentAndStatusUpdater
@@ -103,7 +144,9 @@ function AppointmentData() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={6} align="center">No matching appointments</TableCell>
+                <TableCell colSpan={6} align="center">
+                  No matching appointments
+                </TableCell>
               </TableRow>
             )}
           </TableBody>
