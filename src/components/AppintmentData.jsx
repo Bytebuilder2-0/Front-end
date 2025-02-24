@@ -129,13 +129,13 @@ function AppointmentData() {
                     <IssueViewer issue={appointment.issue} />
                   </TableCell>
                   <TableCell>
-                    <WorkloadManager
+                    <WorkloadManager btn_name="Write Workload"
                       appointment={appointment}
                       updateAppointment={updateAppointmentInState}
                     />
                   </TableCell>
                   <TableCell>
-                    <TechnicianAssignmentAndStatusUpdater
+                    <TechnicianAssignmentAndStatusUpdater 
                       appointment={appointment}
                       updateAppointment={updateAppointmentInState}
                     />

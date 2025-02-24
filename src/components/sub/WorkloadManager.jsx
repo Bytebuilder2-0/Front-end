@@ -3,7 +3,7 @@ import axios from "axios";
 import { Button, Modal, Box, TextField, Typography } from "@mui/material";
 
 
-const WorkloadManager = ({ appointment, updateAppointment }) => {
+const WorkloadManager = ({ appointment, updateAppointment,btn_name }) => {
   const [openWorkloadModal, setOpenWorkloadModal] = useState(false);
   const [workload, setWorkload] = useState(appointment?.workload || "");
 
@@ -44,7 +44,7 @@ const WorkloadManager = ({ appointment, updateAppointment }) => {
   return (
     <>
       <Button variant="contained" color="secondary" onClick={handleOpenWorkload}>
-        Write Workload
+       {btn_name}
       </Button>
 
       <Modal open={openWorkloadModal} onClose={handleCloseModals}>
