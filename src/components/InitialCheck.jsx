@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from "@mui/material";
-import IssueViewer from "./IssueView";
+import IssueViewer from "./sub/IssueView";
 
 // API Base URL
 const API_BASE_URL = "http://localhost:5000/api/appointments";
