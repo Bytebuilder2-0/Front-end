@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from "@mui/material";
-import IssueViewer from "./IssueView";
+import IssueViewer from "./sub/IssueView";
 
 // API Base URL
 const API_BASE_URL = "http://localhost:5000/api/appointments";
@@ -19,16 +19,16 @@ const fetchAppointments = async () => {
   }
 };
 
-// Update appointment status to "Accepted" and remove from table
-const updateAppointmentStatus = async (appointmentId, setAppointments) => {
+// Update appointment status and remove from table
+const updateAppointmentStatus = async (appointmentId, newStatus, setAppointments) => {
   try {
-    await axios.put(`${API_BASE_URL}/${appointmentId}/statusUpdate`, { status: "Accepted" });
+    await axios.put(`${API_BASE_URL}/${appointmentId}/statusUpdate`, { status: newStatus });
 
     setAppointments((prevAppointments) =>
-      prevAppointments.filter((appt) => appt._id !== appointmentId) // Remove accepted appointment
+      prevAppointments.filter((appt) => appt._id !== appointmentId) // Remove updated appointment
     );
   } catch (error) {
-    console.error("Error updating appointment status:", error);
+    console.error(`Error updating appointment status to ${newStatus}:`, error);
   }
 };
 
@@ -64,9 +64,17 @@ const InitialCheck = () => {
                 <Button
                   variant="contained"
                   color="success"
-                  onClick={() => updateAppointmentStatus(appointment._id, setAppointments)}
+                  sx={{ marginRight: 1 }}
+                  onClick={() => updateAppointmentStatus(appointment._id, "Accepted", setAppointments)}
                 >
                   Accept
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={() => updateAppointmentStatus(appointment._id, "Rejected", setAppointments)}
+                >
+                  Reject
                 </Button>
               </TableCell>
             </TableRow>
