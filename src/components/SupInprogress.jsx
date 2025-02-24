@@ -15,6 +15,7 @@ import {
 import IssueViewer from "./sub/IssueView";
 import TechMessageView from "./sub/TechMessageView";
 import SuggestionWriting from "./sub/SuggestionWriting";
+import WorkloadManager from "./sub/WorkloadManager";
 
 // API Base URL
 const API_BASE_URL = "http://localhost:5000/api/appointments";
@@ -84,7 +85,7 @@ const SupInprogress = () => {
                 <strong>Suggestions</strong>
               </TableCell>
               <TableCell>
-                <strong>Action</strong>
+                <strong>Update Workload</strong>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -104,9 +105,10 @@ const SupInprogress = () => {
                   <SuggestionWriting
                     appointment={appointment}
                     updateAppointment={updateAppointmentInState}
-                  />{" "}
+                  />
                 </TableCell>
-                <TableCell> {/* Empty row for Actions */} </TableCell>
+                <TableCell> <WorkloadManager   appointment={appointment} btn_name="update"
+                      updateAppointment={updateAppointmentInState}/></TableCell>
               </TableRow>
             ))}
           </TableBody>
