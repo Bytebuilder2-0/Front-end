@@ -16,6 +16,7 @@ import IssueViewer from "./sub/IssueView";
 import TechMessageView from "./sub/TechMessageView";
 import SuggestionWriting from "./sub/SuggestionWriting";
 import WorkloadManager from "./sub/WorkloadManager";
+import WhatsAppButton from "./sub/WhatsAppButton";
 
 // API Base URL
 const API_BASE_URL = "http://localhost:5000/api/appointments";
@@ -109,6 +110,7 @@ const SupInprogress = () => {
                 </TableCell>
                 <TableCell> <WorkloadManager   appointment={appointment} btn_name="update"
                       updateAppointment={updateAppointmentInState}/></TableCell>
+                      <TableCell><WhatsAppButton phone={appointment.contactNumber}/></TableCell>
               </TableRow>
             ))}
           </TableBody>
