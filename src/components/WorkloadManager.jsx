@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Button,
@@ -10,9 +10,26 @@ import {
 } from "@mui/material";
 import { Add, Delete } from "@mui/icons-material";
 
-const WorkloadManager = ({ appointment, fetchAppointments }) => {
+const WorkloadManager = ({ appointment, updateAppointment }) => {
   const [openWorkloadModal, setOpenWorkloadModal] = useState(false);
   const [workload, setWorkload] = useState(appointment?.workload || []);
+
+  // Fetch the latest workload when the modal is opened
+  useEffect(() => {
+    if (openWorkloadModal && appointment?._id) {
+      // Fetch the latest workload from the backend
+      axios
+        .get(
+          `http://localhost:5000/api/appointments/${appointment._id}/workload`
+        )
+        .then((response) => {
+          setWorkload(response.data.workload); // Set the latest workload
+        })
+        .catch((error) => {
+          console.error("Error fetching workload:", error);
+        });
+    }
+  }, [openWorkloadModal, appointment?._id]);
 
   // Open Modal
   const handleOpenWorkload = () => {
@@ -22,7 +39,7 @@ const WorkloadManager = ({ appointment, fetchAppointments }) => {
   // Close Modal
   const handleCloseModals = () => {
     setOpenWorkloadModal(false);
-    setWorkload(appointment?.workload || []); // Reset workload
+    setWorkload(appointment?.workload || []); // Reset workload if needed
   };
 
   // Handle change in workload steps
@@ -57,11 +74,21 @@ const WorkloadManager = ({ appointment, fetchAppointments }) => {
         { workload }
       )
       .then(() => {
-        fetchAppointments(); // Refresh table after update
-        handleCloseModals();
+        // Fetch the updated appointment data after saving
+        axios
+          .get(`http://localhost:5000/api/appointments/${appointment._id}`)
+          .then((response) => {
+            updateAppointment(response.data); // Update the parent state with latest data
+            setWorkload(response.data.workload); // Update local state with new workload
+            handleCloseModals(); // Close modal after submit
+          })
+          .catch((error) => {
+            console.error("Error fetching updated appointment:", error);
+          });
       })
       .catch((error) => {
         console.error("Error updating workload:", error);
+        handleCloseModals();
       });
   };
 
