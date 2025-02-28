@@ -90,6 +90,7 @@ const WorkloadManager = ({ appointment, updateAppointment }) => {
           workload,
         }
       );
+      setOpenWorkloadModal(false);
 
       // Fetch the updated appointment details to get the latest workload
       const response = await axios.get(
@@ -103,7 +104,6 @@ const WorkloadManager = ({ appointment, updateAppointment }) => {
       setWorkload(response.data.workload);
 
       // Close the modal after the workload is successfully submitted
-      handleCloseModals();
     } catch (error) {
       console.error("Error updating workload:", error);
     }
