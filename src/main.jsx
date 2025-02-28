@@ -5,6 +5,7 @@ import {createBrowserRouter,RouterProvider} from 'react-router-dom'
 import SupervisorDashboard from './pages/supervisor/SupervisorDashboard';
 import SupInitial from './pages/supervisor/SupInitial';
 import Inprogress from './pages/supervisor/Inprogress';
+import TechnicianDashboard from './pages/Technician/TechnicianDashboard';
 
 const router=createBrowserRouter(
   [
@@ -17,6 +18,9 @@ const router=createBrowserRouter(
     },{
       path:"/SInpro",
       element:<Inprogress/>
+    },{
+      path:"/TDashboard",
+      element:<TechnicianDashboard/>
     }
   ]
 );
