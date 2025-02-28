@@ -33,13 +33,27 @@ const WorkloadManager = ({ appointment, updateAppointment }) => {
 
   // Open Modal
   const handleOpenWorkload = () => {
-    setOpenWorkloadModal(true);
+    if (!appointment?._id) {
+      console.log("No appointment found");
+      return; // Ensure appointment is present
+    }
+
+    console.log("Opening workload modal..."); // Debugging line to ensure button click is working
+    // Fetch the latest workload from the backend
+    axios
+      .get(`http://localhost:5000/api/appointments/${appointment._id}/workload`)
+      .then((response) => {
+        setWorkload(response.data.workload); // Ensure fresh data is always fetched
+        setOpenWorkloadModal(true); // Open modal only after data is updated
+      })
+      .catch((error) => {
+        console.error("Error fetching workload:", error);
+      });
   };
 
   // Close Modal
   const handleCloseModals = () => {
     setOpenWorkloadModal(false);
-    setWorkload(appointment?.workload || []); // Reset workload if needed
   };
 
   // Handle change in workload steps
@@ -65,31 +79,34 @@ const WorkloadManager = ({ appointment, updateAppointment }) => {
   };
 
   // Submit workload
-  const handleWorkloadSubmit = () => {
+  const handleWorkloadSubmit = async () => {
     if (!appointment) return;
 
-    axios
-      .put(
+    try {
+      // First, update the workload on the backend
+      await axios.put(
         `http://localhost:5000/api/appointments/${appointment._id}/workload`,
-        { workload }
-      )
-      .then(() => {
-        // Fetch the updated appointment data after saving
-        axios
-          .get(`http://localhost:5000/api/appointments/${appointment._id}`)
-          .then((response) => {
-            updateAppointment(response.data); // Update the parent state with latest data
-            setWorkload(response.data.workload); // Update local state with new workload
-            handleCloseModals(); // Close modal after submit
-          })
-          .catch((error) => {
-            console.error("Error fetching updated appointment:", error);
-          });
-      })
-      .catch((error) => {
-        console.error("Error updating workload:", error);
-        handleCloseModals();
-      });
+        {
+          workload,
+        }
+      );
+
+      // Fetch the updated appointment details to get the latest workload
+      const response = await axios.get(
+        `http://localhost:5000/api/appointments/${appointment._id}`
+      );
+
+      // Update the parent component with the latest appointment data
+      updateAppointment(response.data);
+
+      // Update local state to reflect the latest workload
+      setWorkload(response.data.workload);
+
+      // Close the modal after the workload is successfully submitted
+      handleCloseModals();
+    } catch (error) {
+      console.error("Error updating workload:", error);
+    }
   };
 
   return (
