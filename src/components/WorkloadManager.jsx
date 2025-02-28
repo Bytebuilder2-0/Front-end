@@ -1,27 +1,63 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Button, Modal, Box, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  Modal,
+  Box,
+  TextField,
+  Typography,
+  IconButton,
+} from "@mui/material";
+import { Add, Delete } from "@mui/icons-material";
 
 const WorkloadManager = ({ appointment, fetchAppointments }) => {
   const [openWorkloadModal, setOpenWorkloadModal] = useState(false);
-  const [workload, setWorkload] = useState(appointment?.workload || "");
+  const [workload, setWorkload] = useState(appointment?.workload || []);
 
+  // Open Modal
   const handleOpenWorkload = () => {
     setOpenWorkloadModal(true);
   };
 
+  // Close Modal
   const handleCloseModals = () => {
     setOpenWorkloadModal(false);
-    setWorkload(appointment?.workload || "");
+    setWorkload(appointment?.workload || []); // Reset workload
   };
 
+  // Handle change in workload steps
+  const handleWorkloadChange = (index, field, value) => {
+    const updatedWorkload = [...workload];
+    updatedWorkload[index][field] = value;
+    setWorkload(updatedWorkload);
+  };
+
+  // Add new workload step
+  const addWorkloadStep = () => {
+    setWorkload([
+      ...workload,
+      { step: workload.length + 1, description: "", status: "Pending" },
+    ]);
+  };
+
+  // Remove a workload step
+  const removeWorkloadStep = (index) => {
+    const updatedWorkload = workload.filter((_, i) => i !== index);
+    updatedWorkload.forEach((task, i) => (task.step = i + 1)); // Reorder step numbers
+    setWorkload(updatedWorkload);
+  };
+
+  // Submit workload
   const handleWorkloadSubmit = () => {
     if (!appointment) return;
 
     axios
-      .put(`http://localhost:5000/api/appointments/${appointment._id}/workload`, { workload })
+      .put(
+        `http://localhost:5000/api/appointments/${appointment._id}/workload`,
+        { workload }
+      )
       .then(() => {
-        fetchAppointments(); // Refresh table after workload update
+        fetchAppointments(); // Refresh table after update
         handleCloseModals();
       })
       .catch((error) => {
@@ -31,7 +67,11 @@ const WorkloadManager = ({ appointment, fetchAppointments }) => {
 
   return (
     <>
-      <Button variant="contained" color="secondary" onClick={handleOpenWorkload}>
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={handleOpenWorkload}
+      >
         Write Workload
       </Button>
 
@@ -42,7 +82,7 @@ const WorkloadManager = ({ appointment, fetchAppointments }) => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: 400,
+            width: 500,
             bgcolor: "white",
             boxShadow: 24,
             p: 4,
@@ -52,19 +92,66 @@ const WorkloadManager = ({ appointment, fetchAppointments }) => {
           <Typography variant="h6" gutterBottom>
             Workload for {appointment?.vehicleNumber}
           </Typography>
-          <TextField
+
+          {workload.map((task, index) => (
+            <Box
+              key={index}
+              sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}
+            >
+              <Typography variant="body1" sx={{ width: 30 }}>
+                {task.step}.
+              </Typography>
+              <TextField
+                label="Description"
+                variant="outlined"
+                size="small"
+                fullWidth
+                value={task.description}
+                onChange={(e) =>
+                  handleWorkloadChange(index, "description", e.target.value)
+                }
+              />
+              <IconButton
+                color="error"
+                onClick={() => removeWorkloadStep(index)}
+              >
+                <Delete />
+              </IconButton>
+            </Box>
+          ))}
+
+          <Button
+            startIcon={<Add />}
+            variant="contained"
+            color="primary"
             fullWidth
-            label="Workload Details"
-            multiline
-            rows={4}
-            value={workload}
-            onChange={(e) => setWorkload(e.target.value)}
-          />
-          <Box sx={{ display: "flex", justifyContent: "space-between", marginTop: 2 }}>
-            <Button variant="contained" color="primary" onClick={handleWorkloadSubmit} sx={{ width: "48%" }}>
+            onClick={addWorkloadStep}
+            sx={{ mt: 2 }}
+          >
+            Add Step
+          </Button>
+
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginTop: 2,
+            }}
+          >
+            <Button
+              variant="contained"
+              color="success"
+              onClick={handleWorkloadSubmit}
+              sx={{ width: "48%" }}
+            >
               Submit
             </Button>
-            <Button variant="contained" color="error" onClick={handleCloseModals} sx={{ width: "48%" }}>
+            <Button
+              variant="contained"
+              color="error"
+              onClick={handleCloseModals}
+              sx={{ width: "48%" }}
+            >
               Cancel
             </Button>
           </Box>
