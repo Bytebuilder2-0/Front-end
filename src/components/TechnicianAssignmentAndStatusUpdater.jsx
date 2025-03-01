@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Select, MenuItem, CircularProgress, Button, Grid } from "@mui/material";
+import {
+  Select,
+  MenuItem,
+  CircularProgress,
+  Button,
+  Grid,
+} from "@mui/material";
 
-const TechnicianAssignmentAndStatusUpdater = ({ appointment, updateAppointment }) => {
+const TechnicianAssignmentAndStatusUpdater = ({
+  appointment,
+  updateAppointment,
+}) => {
   const [technicians, setTechnicians] = useState([]);
-  const [selectedTechnician, setSelectedTechnician] = useState(appointment?.tech || "");
+  const [selectedTechnician, setSelectedTechnician] = useState(
+    appointment?.tech || ""
+  );
   const [status, setStatus] = useState(appointment.status);
   const [techAssigned, setTechAssigned] = useState(Boolean(appointment.tech));
   const [loading, setLoading] = useState(false);
@@ -13,7 +24,9 @@ const TechnicianAssignmentAndStatusUpdater = ({ appointment, updateAppointment }
   useEffect(() => {
     async function fetchTechnicians() {
       try {
-        const response = await axios.get("http://localhost:5000/api/technicians");
+        const response = await axios.get(
+          "http://localhost:5000/api/technicians"
+        );
         setTechnicians(response.data);
       } catch (error) {
         console.error("Error fetching technicians:", error);
@@ -24,16 +37,18 @@ const TechnicianAssignmentAndStatusUpdater = ({ appointment, updateAppointment }
 
   // Fetch the appointment status when the component mounts
 
-
   const handleTechnicianChange = async (event) => {
     const technicianId = event.target.value;
     setSelectedTechnician(technicianId);
 
     try {
       setLoading(true);
-      await axios.put(`http://localhost:5000/api/appointments/${appointment._id}/assign`, {
-        technicianId,
-      });
+      await axios.put(
+        `http://localhost:5000/api/appointments/${appointment._id}/assign2`,
+        {
+          technicianId,
+        }
+      );
 
       setTechAssigned(Boolean(technicianId));
       updateAppointment({ ...appointment, tech: technicianId });
@@ -46,7 +61,12 @@ const TechnicianAssignmentAndStatusUpdater = ({ appointment, updateAppointment }
 
   // Update status to "Waiting for Technician Confirmation"
   const handleStatusUpdate = async () => {
-    if (!techAssigned || status === "Waiting for Technician Confirmation" || loading) return;
+    if (
+      !techAssigned ||
+      status === "Waiting for Technician Confirmation" ||
+      loading
+    )
+      return;
 
     try {
       setLoading(true);
@@ -56,7 +76,10 @@ const TechnicianAssignmentAndStatusUpdater = ({ appointment, updateAppointment }
       );
 
       setStatus("Waiting for Technician Confirmation");
-      updateAppointment({ ...appointment, status: "Waiting for Technician Confirmation" });
+      updateAppointment({
+        ...appointment,
+        status: "Waiting for Technician Confirmation",
+      });
     } catch (error) {
       console.error("Error updating status:", error);
     } finally {
@@ -64,12 +87,17 @@ const TechnicianAssignmentAndStatusUpdater = ({ appointment, updateAppointment }
     }
   };
 
-
   return (
     <Grid container spacing={2}>
       {/* Technician Selection */}
       <Grid item xs={12} sm={6} display="flex" alignItems="center">
-        <Select value={selectedTechnician} onChange={handleTechnicianChange} displayEmpty fullWidth   disabled={status === "Waiting for Technician Confirmation"}>
+        <Select
+          value={selectedTechnician}
+          onChange={handleTechnicianChange}
+          displayEmpty
+          fullWidth
+          disabled={status === "Waiting for Technician Confirmation"}
+        >
           <MenuItem value="">Select Technician</MenuItem>
           {loading ? (
             <MenuItem disabled>
@@ -93,7 +121,11 @@ const TechnicianAssignmentAndStatusUpdater = ({ appointment, updateAppointment }
           variant="contained"
           color="success"
           onClick={handleStatusUpdate}
-          disabled={!techAssigned || status === "Waiting for Technician Confirmation" || loading}
+          disabled={
+            !techAssigned ||
+            status === "Waiting for Technician Confirmation" ||
+            loading
+          }
           fullWidth
         >
           {loading ? (
