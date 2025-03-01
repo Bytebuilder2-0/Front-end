@@ -8,9 +8,6 @@ import SupInitial from './pages/supervisor/SupInitial';
 const router=createBrowserRouter(
   [
     {
-      path:"/Super",
-      element:<SupervisorDashboard/>
-    },{
       path:"/SInitial",
       element:<SupInitial/>
     }
