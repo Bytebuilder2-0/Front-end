@@ -130,12 +130,13 @@ function AppointmentData() {
                   </TableCell>
                   <TableCell>
                     <WorkloadManager
+                      btn_name="Write"
                       appointment={appointment}
                       updateAppointment={updateAppointmentInState}
                     />
                   </TableCell>
                   <TableCell>
-                    <TechnicianAssignmentAndStatusUpdater 
+                    <TechnicianAssignmentAndStatusUpdater
                       appointment={appointment}
                       updateAppointment={updateAppointmentInState}
                     />
