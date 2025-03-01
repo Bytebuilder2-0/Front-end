@@ -65,7 +65,7 @@ const InitialCheck = () => {
                   variant="contained"
                   color="success"
                   sx={{ marginRight: 1 }}
-                  onClick={() => updateAppointmentStatus(appointment._id, "Accepted", setAppointments)}
+                  onClick={() => updateAppointmentStatus(appointment._id, "Confirmed", setAppointments)}
                 >
                   Accept
                 </Button>
