@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { Add, Delete } from "@mui/icons-material";
 
-const WorkloadManager = ({ appointment, updateAppointment }) => {
+const WorkloadManager = ({ appointment, updateAppointment, btn_name }) => {
   const [openWorkloadModal, setOpenWorkloadModal] = useState(false);
   const [workload, setWorkload] = useState(appointment?.workload || []);
 
@@ -108,8 +108,6 @@ const WorkloadManager = ({ appointment, updateAppointment }) => {
       console.error("Error updating workload:", error);
     }
   };
-  
-  
 
   return (
     <>
@@ -118,7 +116,7 @@ const WorkloadManager = ({ appointment, updateAppointment }) => {
         color="secondary"
         onClick={handleOpenWorkload}
       >
-        Write Workload
+        {btn_name}
       </Button>
 
       <Modal open={openWorkloadModal} onClose={handleCloseModals}>
