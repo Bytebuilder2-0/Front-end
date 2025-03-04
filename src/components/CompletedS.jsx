@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
@@ -8,7 +7,9 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper,Box,Typography,
+  Paper,
+  Box,
+  Typography,
   Container,
 } from "@mui/material";
 import IssueViewer from "./sub/IssueView";
@@ -50,41 +51,61 @@ function CompletedS() {
   };
 
   return (
-  <Container>
-    <Box
+    <Container>
+      <Box
         display="flex"
         justifyContent="space-between"
         alignItems="center"
         mb={2}
       >
         <Typography variant="h5" gutterBottom>
-         Completed
+          Completed
         </Typography>
       </Box>
-    <TableContainer component={Paper} sx={{ marginTop: 2 }}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell><strong>Vehicle ID</strong></TableCell>
-            <TableCell><strong>Model</strong></TableCell>
-            <TableCell><strong>Description</strong></TableCell>
-            <TableCell><strong>Budget</strong></TableCell>
-            <TableCell><strong>Contact</strong></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {appointments.map((appointment) => (
-            <TableRow key={appointment._id}>
-              <TableCell>{appointment.vehicleId}</TableCell>
-              <TableCell>{appointment.model}</TableCell>
-              <TableCell><IssueViewer issue={appointment.issue} /></TableCell>
-              <TableCell><BudgetReview appointment={appointment} btn_name="review"     updateAppointment={updateAppointmentInState}/></TableCell>
-              <TableCell><WhatsAppButton phone="94771263276" /></TableCell>
+      <TableContainer component={Paper} sx={{ marginTop: 2 }}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                <strong>Vehicle ID</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Model</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Description</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Budget</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Contact</strong>
+              </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {appointments.map((appointment) => (
+              <TableRow key={appointment._id}>
+                <TableCell>{appointment.vehicleId}</TableCell>
+                <TableCell>{appointment.model}</TableCell>
+                <TableCell>
+                  <IssueViewer issue={appointment.issue} />
+                </TableCell>
+                <TableCell>
+                  <BudgetReview
+                    appointment={appointment}
+                    btn_name="review"
+                    updateAppointment={updateAppointmentInState}
+                  />
+                </TableCell>
+                <TableCell>
+                  <WhatsAppButton phone={appointment.contactNumber} />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Container>
   );
 }
