@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { Button, Modal, Box, TextField, Typography } from "@mui/material";
 
@@ -6,36 +6,22 @@ const BudgetReview = ({ appointment, updateAppointment, btn_name }) => {
   const [openBudgetModal, setOpenBudgetModal] = useState(false);
   const [budgetAllocations, setBudgetAllocations] = useState([]);
 
-  // Fetch budget details when modal opens
-  useEffect(() => {
-    if (openBudgetModal && appointment?._id) {
-      axios
-        .get(`http://localhost:5000/api/budget/${appointment._id}/view`)
-        .then((response) => {
-          setBudgetAllocations(response.data.amountAllocations || []);
-        })
-        .catch((error) => {
-          console.error("Error fetching budget:", error);
-        });
-    }
-  }, [openBudgetModal, appointment?._id]);
-
   // Open Modal
-  const handleOpenBudget = () => {
+  const handleOpenBudget = async () => {
     if (!appointment?._id) {
       console.log("No appointment found");
       return;
     }
 
-    axios
-      .get(`http://localhost:5000/api/budget/${appointment._id}/view`)
-      .then((response) => {
-        setBudgetAllocations(response.data.amountAllocations || []);
-        setOpenBudgetModal(true);
-      })
-      .catch((error) => {
-        console.error("Error fetching budget:", error);
-      });
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/budget/${appointment._id}/view`
+      );
+      setBudgetAllocations(response.data.amountAllocations);
+      setOpenBudgetModal(true);
+    } catch (error) {
+      console.error("Error fetching budget:", error);
+    }
   };
 
   // Close Modal
@@ -46,27 +32,30 @@ const BudgetReview = ({ appointment, updateAppointment, btn_name }) => {
   // Handle amount change
   const handleBudgetChange = (index, value) => {
     const updatedAllocations = [...budgetAllocations];
-    updatedAllocations[index].amount = Number(value).toFixed(2); // Format to 2 decimal places
+
+    // Ensure the value is a valid number and is positive
+    const parsedValue = parseFloat(value);
+
+    // Only update if the value is valid and positive
+    updatedAllocations[index].amount =
+      !isNaN(parsedValue) && parsedValue > 0 ? parsedValue : 0;
+
+    // Update state correctly to trigger re-render
     setBudgetAllocations(updatedAllocations);
   };
 
   // Submit budget updates
   const handleBudgetSubmit = async () => {
     if (!appointment) return;
-
+    setOpenBudgetModal(false);
     try {
       // Send the entire budget allocation array in one request
-      await axios.put(
-        `http://localhost:5000/api/budget/${appointment._id}/update`,
-        {
-          amountAllocations: budgetAllocations.map((item) => ({
-            step: item.step,
-            amount: Number(item.amount).toFixed(2), // Ensure proper currency format
-          })),
-        }
-      );
-
-      setOpenBudgetModal(false);
+      for (const allocation of budgetAllocations) {
+        await axios.put(
+          `http://localhost:5000/api/budget/${appointment._id}/update`,
+          { step: allocation.step, amount: allocation.amount }
+        );
+      }
 
       // Fetch updated appointment details
       const response = await axios.get(
@@ -112,20 +101,17 @@ const BudgetReview = ({ appointment, updateAppointment, btn_name }) => {
               key={index}
               sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}
             >
+              <Typography variant="body1">{item.step}</Typography>
               <Typography variant="body1" sx={{ width: "60%" }}>
-                {item.des} {/* Display description (non-editable) */}
+                {item.des}
               </Typography>
               <TextField
                 label="Amount (USD)"
                 variant="outlined"
                 size="small"
-                type="text" // Change from "number" to "text"
+                type="number"
                 value={item.amount}
                 onChange={(e) => handleBudgetChange(index, e.target.value)}
-                inputProps={{
-                  inputMode: "decimal", // Ensures numeric keyboard on mobile
-                  pattern: "[0-9]+(.[0-9]{1,2})?", // Allows only numbers with up to 2 decimal places
-                }}
                 sx={{ width: "40%" }}
               />
             </Box>

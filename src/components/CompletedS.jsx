@@ -8,7 +8,8 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
+  Paper,Box,Typography,
+  Container,
 } from "@mui/material";
 import IssueViewer from "./sub/IssueView";
 import WhatsAppButton from "./sub/WhatsAppButton";
@@ -28,11 +29,14 @@ const fetchAppointments = async () => {
 
 function CompletedS() {
   const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getAppointments = async () => {
+      setLoading(true);
       const data = await fetchAppointments();
       setAppointments(data);
+      setLoading(false);
     };
     getAppointments();
   }, []);
@@ -46,6 +50,17 @@ function CompletedS() {
   };
 
   return (
+  <Container>
+    <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={2}
+      >
+        <Typography variant="h5" gutterBottom>
+         Completed
+        </Typography>
+      </Box>
     <TableContainer component={Paper} sx={{ marginTop: 2 }}>
       <Table>
         <TableHead>
@@ -70,6 +85,7 @@ function CompletedS() {
         </TableBody>
       </Table>
     </TableContainer>
+    </Container>
   );
 }
 
