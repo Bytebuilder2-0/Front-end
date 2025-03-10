@@ -58,9 +58,9 @@ const BudgetReview = ({ appointment, updateAppointment, btn_name }) => {
       }
 
       // Fetch updated appointment details
-      const response = await axios.get(
-        `http://localhost:5000/api/appointments/${appointment._id}/view`
-      );
+      // const response = await axios.get(
+      //   `http://localhost:5000/api/appointments/${appointment._id}/view`
+      // );
 
       // Update the parent component with the latest appointment data
       updateAppointment(response.data);
