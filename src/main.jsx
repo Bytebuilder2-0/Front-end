@@ -5,6 +5,8 @@ import {createBrowserRouter,RouterProvider} from 'react-router-dom'
 import SupervisorDashboard from './pages/supervisor/SupervisorDashboard';
 import SupInitial from './pages/supervisor/SupInitial';
 import Inprogress from './pages/supervisor/Inprogress';
+import AppointmentSubmit from './pages/User/AppoinmentSubmit';
+
 
 const router=createBrowserRouter(
   [
@@ -17,7 +19,12 @@ const router=createBrowserRouter(
     },{
       path:"/SInpro",
       element:<Inprogress/>
+    },
+    {
+      path: '/appointments/new', 
+      element: <AppointmentSubmit />,
     }
+   
   ]
 );
 
