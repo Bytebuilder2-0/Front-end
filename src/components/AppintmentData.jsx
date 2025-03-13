@@ -28,7 +28,7 @@ const fetchAppointments = async () => {
       .reverse()
       .filter(
         (x) =>
-          x.status === "Accepted" ||
+          x.status === "Confirmed" ||
           x.status === "Waiting for Technician Confirmation"
       ); // Latest first
   } catch (error) {
@@ -129,13 +129,14 @@ function AppointmentData() {
                     <IssueViewer issue={appointment.issue} />
                   </TableCell>
                   <TableCell>
-                    <WorkloadManager btn_name="Write Workload"
+                    <WorkloadManager
+                      btn_name="Write"
                       appointment={appointment}
                       updateAppointment={updateAppointmentInState}
                     />
                   </TableCell>
                   <TableCell>
-                    <TechnicianAssignmentAndStatusUpdater 
+                    <TechnicianAssignmentAndStatusUpdater
                       appointment={appointment}
                       updateAppointment={updateAppointmentInState}
                     />
