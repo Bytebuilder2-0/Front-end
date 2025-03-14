@@ -143,7 +143,7 @@ export default function MiniDrawer() {
         </DrawerHeader>
         <Divider />
         <List>
-        <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+        <ListItem  disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 sx={[
                   {
@@ -177,7 +177,7 @@ export default function MiniDrawer() {
                   {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                 </ListItemIcon>
                 <ListItemText
-                  primary={text}
+                  primary="Home"
                   sx={[
                     open
                       ? {
@@ -190,6 +190,7 @@ export default function MiniDrawer() {
                 />
               </ListItemButton>
             </ListItem>
+            
         </List>
       
       </Drawer>
