@@ -7,6 +7,8 @@ import SupInitial from './pages/supervisor/SupInitial';
 import Inprogress from './pages/supervisor/Inprogress';
 import TechnicianDashboard from './pages/Technician/TechnicianDashboard';
 import CompletedSuper from './pages/supervisor/CompletedSuper';
+import AppointmentSubmit from './pages/User/AppoinmentSubmit';
+
 
 const router=createBrowserRouter(
   [
@@ -25,7 +27,12 @@ const router=createBrowserRouter(
     },{
       path:"/TDashboard",
       element:<TechnicianDashboard/>
+    },
+    {
+      path: '/appointments/new', 
+      element: <AppointmentSubmit />,
     }
+   
   ]
 );
 
