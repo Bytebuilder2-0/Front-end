@@ -9,9 +9,14 @@ import {
   Grid,
   Typography,
   FormHelperText,
-  Alert,
-  AlertTitle
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle
 } from '@mui/material';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { useNavigate } from 'react-router-dom'; 
 import HandleAppointmentForm from './sub/HandleAppointmentForm';
 
 const AppointmentSubmit = ({userId}) => {
@@ -30,21 +35,38 @@ const AppointmentSubmit = ({userId}) => {
     handleReset
   } = HandleAppointmentForm(userId);
   
+  const navigate = useNavigate(); 
+  const [showAlert, setShowAlert] = useState(false);
+  const [createdAppointment, setCreatedAppointment] = useState(null); // Store created appointment data
 
  useEffect(() => {
     fetchData();
   }, [userId]);
 
-  const [showAlert, setShowAlert] = useState(false);
+const handleFormSubmit = async (e) => {
+  e.preventDefault();
+  console.log('Form submitted', formData);
 
-  const handSubmit = () => {
-    setShowAlert(true); // Show the alert
-    setTimeout(() => {
-      setShowAlert(false); // Hide alert after 3 seconds
-    }, 3000);
-  };
+  const object = await handleSubmit(e); // Call handleSubmit and get the created appointment
+  console.log('Created Appointment ID:', object.appointment._id);
+
+  if (object) {
+    setShowAlert(true); // Show success alert
+    setCreatedAppointment(object); // Store the created appointment data
+  } else {
+    console.error('Appointment creation failed'); 
+};
+}
 
 
+const handleAlertClose = () => {
+  if (createdAppointment.appointment && createdAppointment.appointment._id) {
+    setShowAlert(false);
+    navigate(`/appointments/${createdAppointment.appointment._id}`); // Redirect to the appointment details page
+  } else {
+    console.error('Appointment ID is undefined'); 
+  }
+};
 
 
   return (
@@ -54,7 +76,7 @@ const AppointmentSubmit = ({userId}) => {
           Create New Appointment
         </Typography>
         
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleFormSubmit}>
           {/* Vehicle Selection */}
           <FormControl fullWidth margin="normal" error={!!errors.vehicleId}>
             <InputLabel>Select Vehicle</InputLabel>
@@ -158,11 +180,10 @@ const AppointmentSubmit = ({userId}) => {
             error={!!errors.contactNumber}
             helperText={errors.contactNumber}
           />
-
-      
           <Grid container spacing={2} justifyContent="flex-end" style={{ marginTop: 20 }}>
             <Grid item>
-              <Button variant="outlined" onClick={handleReset}
+              <Button variant="outlined"
+               onClick={handleReset}
               sx={{
                 backgroundColor: '', 
                 '&:hover': {
@@ -173,6 +194,8 @@ const AppointmentSubmit = ({userId}) => {
                 Reset
               </Button>
             </Grid>
+
+            
             <Grid item>
               <Button type="submit" variant="contained" 
                sx={{
@@ -183,16 +206,62 @@ const AppointmentSubmit = ({userId}) => {
               }}>
                 Submit Appointment
               </Button>
-
-              {showAlert && (
-        <Alert severity="success" sx={{ mt: 2 }}>
-          <AlertTitle>Done</AlertTitle>
-          The appointment submitted successfully..
-        </Alert>
-      )}
             </Grid>
           </Grid>
         </form>
+
+           {/* Success Alert Dialog */}
+ <Dialog open={showAlert} onClose={handleAlertClose}
+ PaperProps={{
+  sx: {
+    borderRadius: '12px', 
+    padding: '20px',
+    backgroundColor: '#f0f4f8',
+    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', 
+  },
+}}>
+  <CheckCircleIcon 
+  sx-={{
+    fontSize: '64px', 
+          marginBottom: '10px', 
+  }}/>
+          <DialogTitle
+           sx={{
+            fontSize: '24px', 
+            fontWeight: 'bold', 
+            color: '#2c3e50',
+            textAlign: 'center', 
+          }}>Appointment Submitted Successfully</DialogTitle>
+          <DialogContent>
+            <DialogContentText
+            sx={{
+              fontSize: '18px', 
+              color: '#34495e', 
+              textAlign: 'center', 
+
+            }}
+            >
+              Your appointment has been submitted successfully! Our supervisor will contact you shortly.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleAlertClose} 
+               sx={{
+                alignItems:"center",
+                backgroundColor: '#4caf50',
+                color: '#fff', 
+                borderRadius: '8px', 
+                padding: '10px 20px', 
+                fontSize: '16px', 
+                textTransform: 'none',
+                '&:hover': {
+                  backgroundColor: '#388e3c', 
+                },
+              }}>
+              OK
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Grid>
     </Grid>
   );
