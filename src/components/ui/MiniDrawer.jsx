@@ -166,7 +166,7 @@ export default function MiniDrawer() {
     </Box>
   )}
    {open && <Divider sx={{ mx: 2, my: 1 }} />} 
-        <ListItem disablePadding sx={{ display: 'block' }} onClick={()=>{navigate("/Super")}}>
+        <ListItem disablePadding sx={{ display: 'block' }} onClick={()=>{navigate("/SInitial")}}>
               <ListItemButton
                 sx={[
                   {
@@ -200,7 +200,148 @@ export default function MiniDrawer() {
   <DescriptionIcon color="success" fontSize="large"/>
                 </ListItemIcon>
                 <ListItemText 
-                  primary="super"
+                  primary="Home"
+                  sx={[
+                    open
+                      ? {
+                          opacity: 1,
+                        }
+                      : {
+                          opacity: 0,
+                        },
+                  ]}
+                />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding sx={{ display: 'block' }} onClick={()=>{navigate("/Super")}}>
+              <ListItemButton
+                sx={[
+                  {
+                    minHeight: 48,
+                    px: 2.5,
+                  },
+                  open
+                    ? {
+                        justifyContent: 'initial',
+                      }
+                    : {
+                        justifyContent: 'center',
+                      },
+                ]}
+              >
+                <ListItemIcon
+                  sx={[
+                    {
+                      minWidth: 0,
+                      justifyContent: 'center',
+                    },
+                    open
+                      ? {
+                          mr: 3,
+                        }
+                      : {
+                          mr: 'auto',
+                        },
+                  ]}
+                >
+  <DescriptionIcon color="success" fontSize="large"/>
+                </ListItemIcon>
+                <ListItemText 
+                  primary="Dashboard"
+                  sx={[
+                    open
+                      ? {
+                          opacity: 1,
+                        }
+                      : {
+                          opacity: 0,
+                        },
+                  ]}
+                />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding sx={{ display: 'block' }} onClick={()=>{navigate("/SInpro")}}>
+              <ListItemButton
+                sx={[
+                  {
+                    minHeight: 48,
+                    px: 2.5,
+                  },
+                  open
+                    ? {
+                        justifyContent: 'initial',
+                      }
+                    : {
+                        justifyContent: 'center',
+                      },
+                ]}
+              >
+                <ListItemIcon
+                  sx={[
+                    {
+                      minWidth: 0,
+                      justifyContent: 'center',
+                    },
+                    open
+                      ? {
+                          mr: 3,
+                        }
+                      : {
+                          mr: 'auto',
+                        },
+                  ]}
+                >
+  <DescriptionIcon color="success" fontSize="large"/>
+                </ListItemIcon>
+                <ListItemText 
+                  primary="Inprogress"
+                  sx={[
+                    open
+                      ? {
+                          opacity: 1,
+                        }
+                      : {
+                          opacity: 0,
+                        },
+                  ]}
+                />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding sx={{ display: 'block' }} onClick={()=>{navigate("/Scom")}}>
+              <ListItemButton
+                sx={[
+                  {
+                    minHeight: 48,
+                    px: 2.5,
+                  },
+                  open
+                    ? {
+                        justifyContent: 'initial',
+                      }
+                    : {
+                        justifyContent: 'center',
+                      },
+                ]}
+              >
+                <ListItemIcon
+                  sx={[
+                    {
+                      minWidth: 0,
+                      justifyContent: 'center',
+                    },
+                    open
+                      ? {
+                          mr: 3,
+                        }
+                      : {
+                          mr: 'auto',
+                        },
+                  ]}
+                >
+  <DescriptionIcon color="success" fontSize="large"/>
+                </ListItemIcon>
+                <ListItemText 
+                  primary="Completed"
                   sx={[
                     open
                       ? {
