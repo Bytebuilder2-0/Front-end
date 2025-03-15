@@ -166,7 +166,7 @@ export default function MiniDrawer() {
     </Box>
   )}
    {open && <Divider sx={{ mx: 2, my: 1 }} />} 
-        <ListItem disablePadding sx={{ display: 'block' }} onClick={()=>{navigate("/2")}}>
+        <ListItem disablePadding sx={{ display: 'block' }} onClick={()=>{navigate("/Super")}}>
               <ListItemButton
                 sx={[
                   {
