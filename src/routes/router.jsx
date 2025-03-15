@@ -5,6 +5,7 @@ import Inprogress from '../pages/supervisor/Inprogress';
 import TechnicianDashboard from '../pages/Technician/TechnicianDashboard';
 import CompletedSuper from '../pages/supervisor/CompletedSuper';
 import AppointmentSubmit from '../pages/User/AppoinmentSubmit';
+import AppointmentView from '../pages/User/AppointmentView';
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,11 @@ const router = createBrowserRouter([
     path: '/appointments/new',
     element: <AppointmentSubmit />,
   },
+ {
+  path: "/appointments/:id", 
+  element: <AppointmentView />
+}
+
 ]);
 
 export default router;
