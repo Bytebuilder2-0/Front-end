@@ -20,13 +20,11 @@ const HandleAppointmentForm = (userId) => {
   // Fetch initial data
   const fetchData = async () => {
     try {
-      // Fetch user's vehicles
       const vehiclesResponse = await axios.get(
         `http://localhost:5000/api/appointments/vehicles/${userId}`
       );
       setVehicles(vehiclesResponse.data);
 
-      // Fetch all services
       const servicesResponse = await axios.get('http://localhost:5000/api/appointments/services');
       setServices(servicesResponse.data);
     } catch (error) {
@@ -34,10 +32,8 @@ const HandleAppointmentForm = (userId) => {
     }
   };
 
-  // Handle vehicle selection
   const handleVehicleChange = (e) => {
     const vehicleObject = e.target.value;
-    // console.log('Selected Vehicle ID (Frontend):', vehicleObject);
     const selectedVehicle = vehicles.find(v => v._id === vehicleObject);
     
     setFormData({
@@ -48,17 +44,14 @@ const HandleAppointmentForm = (userId) => {
     });
   };
 
-  // Handle service selection
   const handleServiceChange = (e) => {
     setFormData({ ...formData, services: e.target.value });
   };
 
-  // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors({ ...errors, [name]: null });
     }
@@ -68,7 +61,6 @@ const HandleAppointmentForm = (userId) => {
     fetchData();
   }, []);
 
-  // Validate form
   const validateForm = () => {
     const newErrors = {};
     
@@ -86,9 +78,9 @@ const HandleAppointmentForm = (userId) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     
     if (!validateForm()) return;
 
@@ -98,10 +90,8 @@ const HandleAppointmentForm = (userId) => {
         formData
       );
       
-      alert('Appointment created successfully!');
       console.log('Created appointment:', response.data);
       
-      // Reset form
       setFormData({
         vehicleObject: '',
         vehicleNumber: '',
@@ -112,14 +102,15 @@ const HandleAppointmentForm = (userId) => {
         expectedDeliveryDate: '',
         contactNumber: ''
       });
+      return response.data; 
  
     } catch (error) {
       console.error('Submission error:', error);
       alert(`Error creating appointment: ${error.response?.data?.message || error.message}`);
     }
+    return null;
   };
 
-  // Handle form reset
   const handleReset = () => {
     setFormData({
       vehicleObject: '',
