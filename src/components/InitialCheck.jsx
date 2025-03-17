@@ -10,7 +10,7 @@ import {
   Paper,
   Button,Container,Box,Typography
 } from "@mui/material";
-import IssueViewer from "./IssueView";
+import IssueViewer from "./sub/IssueView";
 
 // API Base URL
 const API_BASE_URL = "http://localhost:5000/api/appointments";
