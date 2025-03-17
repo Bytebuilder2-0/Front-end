@@ -8,7 +8,7 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Button,
+  Button,Container,Box,Typography
 } from "@mui/material";
 import IssueViewer from "./IssueView";
 
@@ -58,6 +58,17 @@ const InitialCheck = () => {
   }, []);
 
   return (
+    <Container>
+    <Box
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+      mb={2}
+    >
+      <Typography variant="h5" gutterBottom>
+        Home
+      </Typography>
+    </Box>
     <TableContainer component={Paper} sx={{ marginTop: 2 }}>
       <Table>
         <TableHead>
@@ -118,6 +129,7 @@ const InitialCheck = () => {
         </TableBody>
       </Table>
     </TableContainer>
+    </Container>
   );
 };
 
