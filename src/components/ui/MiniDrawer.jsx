@@ -22,7 +22,10 @@ import MailIcon from '@mui/icons-material/Mail';
 import { useNavigate } from 'react-router-dom';
 import DescriptionIcon from '@mui/icons-material/Description';
 import Avatar from '@mui/material/Avatar';
-
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import ArticleIcon from '@mui/icons-material/Article';
+import AutoGraphIcon from '@mui/icons-material/AutoGraph';
+import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 
 const drawerWidth = 240;
 
@@ -159,10 +162,13 @@ export default function MiniDrawer() {
         mb: 2 
       }}
     >
+      
       <Avatar 
-        src="" // Replace with actual profile image URL
-        sx={{ width: 60, height: 60 }} 
+        src="https://randomuser.me/api/portraits/men/1.jpg" // Replace with actual profile image URL
+        sx={{ width: 100, height: 100}} 
       />
+      <br/>
+      <Typography>Supervisor 1</Typography>
     </Box>
   )}
    {open && <Divider sx={{ mx: 2, my: 1 }} />} 
@@ -197,7 +203,8 @@ export default function MiniDrawer() {
                         },
                   ]}
                 >
-  <DescriptionIcon color="success" fontSize="large"/>
+                  <AccountBalanceIcon fontSize="large" sx={{ color: "#ff5733" }}/>
+  {/* <DescriptionIcon color="success" fontSize="large"/> */}
                 </ListItemIcon>
                 <ListItemText 
                   primary="Home"
@@ -244,7 +251,8 @@ export default function MiniDrawer() {
                         },
                   ]}
                 >
-  <DescriptionIcon color="success" fontSize="large"/>
+                  <ArticleIcon fontSize="large"/>
+  {/* <DescriptionIcon color="success" fontSize="large"/> */}
                 </ListItemIcon>
                 <ListItemText 
                   primary="Dashboard"
@@ -291,7 +299,8 @@ export default function MiniDrawer() {
                         },
                   ]}
                 >
-  <DescriptionIcon color="success" fontSize="large"/>
+                  <AutoGraphIcon fontSize="large"/>
+  {/* <DescriptionIcon color="success" fontSize="large"/> */}
                 </ListItemIcon>
                 <ListItemText 
                   primary="Inprogress"
@@ -338,7 +347,8 @@ export default function MiniDrawer() {
                         },
                   ]}
                 >
-  <DescriptionIcon color="success" fontSize="large"/>
+                  <DoneOutlineIcon color="success" fontSize="large"/>
+  {/* <DescriptionIcon color="success" fontSize="large"/> */}
                 </ListItemIcon>
                 <ListItemText 
                   primary="Completed"
