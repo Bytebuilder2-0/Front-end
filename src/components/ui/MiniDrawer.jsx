@@ -159,10 +159,13 @@ export default function MiniDrawer() {
         mb: 2 
       }}
     >
+      
       <Avatar 
-        src="" // Replace with actual profile image URL
-        sx={{ width: 60, height: 60 }} 
+        src="https://randomuser.me/api/portraits/men/1.jpg" // Replace with actual profile image URL
+        sx={{ width: 100, height: 100}} 
       />
+      <br/>
+      <Typography>Supervisor 1</Typography>
     </Box>
   )}
    {open && <Divider sx={{ mx: 2, my: 1 }} />} 
