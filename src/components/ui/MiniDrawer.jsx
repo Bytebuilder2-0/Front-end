@@ -26,6 +26,11 @@ import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import ArticleIcon from '@mui/icons-material/Article';
 import AutoGraphIcon from '@mui/icons-material/AutoGraph';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
+import CompletedS from '../CompletedS';
+import InitialCheck from '../InitialCheck';
+import AppointmentData from '../AppintmentData';
+import SupInprogress from '../SupInprogress';
+
 
 const drawerWidth = 240;
 
@@ -107,10 +112,13 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
+// Define the Drawer and AppBar components as per your existing code ...
+
 export default function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
-  const navigate=useNavigate();
+  const [selectedNav, setSelectedNav] = React.useState('home'); // Default to 'home'
+  const navigate = useNavigate();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -118,6 +126,27 @@ export default function MiniDrawer() {
 
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+
+  const handleNavItemClick = (nav) => {
+    setSelectedNav(nav);
+    // Optionally navigate if needed:
+    // navigate(`/${nav}`);
+  };
+
+  const renderComponent = () => {
+    switch (selectedNav) {
+      case 'home':
+        return <InitialCheck/>;
+      case 'dashboard':
+        return <AppointmentData/>;
+      case 'inprogress':
+        return <SupInprogress/>;
+      case 'completed':
+        return <CompletedS />;
+      default:
+        return  <InitialCheck/>;
+    }
   };
 
   return (
@@ -130,12 +159,7 @@ export default function MiniDrawer() {
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-            sx={[
-              {
-                marginRight: 5,
-              },
-              open && { display: 'none' },
-            ]}
+            sx={[{ marginRight: 5 }, open && { display: 'none' }]}
           >
             <MenuIcon />
           </IconButton>
@@ -152,221 +176,51 @@ export default function MiniDrawer() {
         </DrawerHeader>
         <Divider />
         <List>
-        {open && (
-    <Box 
-      sx={{ 
-        display: 'flex', 
-        flexDirection: 'column', 
-        alignItems: 'center', 
-        mt: 2, 
-        mb: 2 
-      }}
-    >
-      
-      <Avatar 
-        src="https://randomuser.me/api/portraits/men/1.jpg" // Replace with actual profile image URL
-        sx={{ width: 100, height: 100}} 
-      />
-      <br/>
-      <Typography>Supervisor 1</Typography>
-    </Box>
-  )}
-   {open && <Divider sx={{ mx: 2, my: 1 }} />} 
-        <ListItem disablePadding sx={{ display: 'block' }} onClick={()=>{navigate("/SInitial")}}>
-              <ListItemButton
-                sx={[
-                  {
-                    minHeight: 48,
-                    px: 2.5,
-                  },
-                  open
-                    ? {
-                        justifyContent: 'initial',
-                      }
-                    : {
-                        justifyContent: 'center',
-                      },
-                ]}
-              >
-                <ListItemIcon
-                  sx={[
-                    {
-                      minWidth: 0,
-                      justifyContent: 'center',
-                    },
-                    open
-                      ? {
-                          mr: 3,
-                        }
-                      : {
-                          mr: 'auto',
-                        },
-                  ]}
-                >
-                  <AccountBalanceIcon fontSize="large" sx={{ color: "#ff5733" }}/>
-  {/* <DescriptionIcon color="success" fontSize="large"/> */}
-                </ListItemIcon>
-                <ListItemText 
-                  primary="Home"
-                  sx={[
-                    open
-                      ? {
-                          opacity: 1,
-                        }
-                      : {
-                          opacity: 0,
-                        },
-                  ]}
-                />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding sx={{ display: 'block' }} onClick={()=>{navigate("/Super")}}>
-              <ListItemButton
-                sx={[
-                  {
-                    minHeight: 48,
-                    px: 2.5,
-                  },
-                  open
-                    ? {
-                        justifyContent: 'initial',
-                      }
-                    : {
-                        justifyContent: 'center',
-                      },
-                ]}
-              >
-                <ListItemIcon
-                  sx={[
-                    {
-                      minWidth: 0,
-                      justifyContent: 'center',
-                    },
-                    open
-                      ? {
-                          mr: 3,
-                        }
-                      : {
-                          mr: 'auto',
-                        },
-                  ]}
-                >
-                  <ArticleIcon fontSize="large"/>
-  {/* <DescriptionIcon color="success" fontSize="large"/> */}
-                </ListItemIcon>
-                <ListItemText 
-                  primary="Dashboard"
-                  sx={[
-                    open
-                      ? {
-                          opacity: 1,
-                        }
-                      : {
-                          opacity: 0,
-                        },
-                  ]}
-                />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding sx={{ display: 'block' }} onClick={()=>{navigate("/SInpro")}}>
-              <ListItemButton
-                sx={[
-                  {
-                    minHeight: 48,
-                    px: 2.5,
-                  },
-                  open
-                    ? {
-                        justifyContent: 'initial',
-                      }
-                    : {
-                        justifyContent: 'center',
-                      },
-                ]}
-              >
-                <ListItemIcon
-                  sx={[
-                    {
-                      minWidth: 0,
-                      justifyContent: 'center',
-                    },
-                    open
-                      ? {
-                          mr: 3,
-                        }
-                      : {
-                          mr: 'auto',
-                        },
-                  ]}
-                >
-                  <AutoGraphIcon fontSize="large"/>
-  {/* <DescriptionIcon color="success" fontSize="large"/> */}
-                </ListItemIcon>
-                <ListItemText 
-                  primary="Inprogress"
-                  sx={[
-                    open
-                      ? {
-                          opacity: 1,
-                        }
-                      : {
-                          opacity: 0,
-                        },
-                  ]}
-                />
-              </ListItemButton>
-            </ListItem>
-            <ListItem disablePadding sx={{ display: 'block' }} onClick={()=>{navigate("/Scom")}}>
-              <ListItemButton
-                sx={[
-                  {
-                    minHeight: 48,
-                    px: 2.5,
-                  },
-                  open
-                    ? {
-                        justifyContent: 'initial',
-                      }
-                    : {
-                        justifyContent: 'center',
-                      },
-                ]}
-              >
-                <ListItemIcon
-                  sx={[
-                    {
-                      minWidth: 0,
-                      justifyContent: 'center',
-                    },
-                    open
-                      ? {
-                          mr: 3,
-                        }
-                      : {
-                          mr: 'auto',
-                        },
-                  ]}
-                >
-                  <DoneOutlineIcon color="success" fontSize="large"/>
-  {/* <DescriptionIcon color="success" fontSize="large"/> */}
-                </ListItemIcon>
-                <ListItemText 
-                  primary="Completed"
-                  sx={[
-                    open
-                      ? {
-                          opacity: 1,
-                        }
-                      : {
-                          opacity: 0,
-                        },
-                  ]}
-                />
-              </ListItemButton>
-            </ListItem>
+          {open && (
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2, mb: 2 }}>
+              <Avatar src="https://randomuser.me/api/portraits/men/1.jpg" sx={{ width: 100, height: 100 }} />
+              <Typography>Supervisor 1</Typography>
+            </Box>
+          )}
+          {open && <Divider sx={{ mx: 2, my: 1 }} />}
+          <ListItem disablePadding sx={{ display: 'block' }} onClick={() => handleNavItemClick('home')}>
+            <ListItemButton>
+              <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
+                <HomeIcon fontSize="large" sx={{ color: "#ff5733" }} />
+              </ListItemIcon>
+              <ListItemText primary="Home" sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding sx={{ display: 'block' }} onClick={() => handleNavItemClick('dashboard')}>
+            <ListItemButton>
+              <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
+                <ArticleIcon fontSize="large" />
+              </ListItemIcon>
+              <ListItemText primary="Dashboard" sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding sx={{ display: 'block' }} onClick={() => handleNavItemClick('inprogress')}>
+            <ListItemButton>
+              <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
+                <AutoGraphIcon fontSize="large" />
+              </ListItemIcon>
+              <ListItemText primary="Inprogress" sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disablePadding sx={{ display: 'block' }} onClick={() => handleNavItemClick('completed')}>
+            <ListItemButton>
+              <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
+                <DoneOutlineIcon color="success" fontSize="large" />
+              </ListItemIcon>
+              <ListItemText primary="Completed" sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
         </List>
       </Drawer>
-      
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <Toolbar />
+        {renderComponent()}
+      </Box>
     </Box>
   );
 }
