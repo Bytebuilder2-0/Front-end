@@ -179,6 +179,7 @@ export default function MiniDrawer() {
           {open && (
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2, mb: 2 }}>
               <Avatar src="https://randomuser.me/api/portraits/men/1.jpg" sx={{ width: 100, height: 100 }} />
+              <br/>
               <Typography>Supervisor 1</Typography>
             </Box>
           )}
@@ -186,7 +187,7 @@ export default function MiniDrawer() {
           <ListItem disablePadding sx={{ display: 'block' }} onClick={() => handleNavItemClick('home')}>
             <ListItemButton>
               <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
-                <HomeIcon fontSize="large" sx={{ color: "#ff5733" }} />
+                <HomeIcon fontSize="large" sx={{ color: "#" }} />
               </ListItemIcon>
               <ListItemText primary="Home" sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
