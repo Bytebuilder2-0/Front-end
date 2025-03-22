@@ -27,10 +27,7 @@ import {
   DoneOutline as DoneOutlineIcon,
 } from "@mui/icons-material";
 
-import CompletedS from "../CompletedS";
-import InitialCheck from "../InitialCheck";
-import AppointmentData from "../AppintmentData";
-import SupInprogress from "../SupInprogress";
+
 
 const drawerWidth = 240;
 
