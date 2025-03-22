@@ -22,7 +22,7 @@ const router = createBrowserRouter([
     element: <Inprogress />,
   },
   {
-    path: "/Sc",
+    path: "/SCompleted",
     element: <MiniDrawer />,
   },
   {

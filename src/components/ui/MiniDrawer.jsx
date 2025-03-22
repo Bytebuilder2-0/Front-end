@@ -27,8 +27,6 @@ import {
   DoneOutline as DoneOutlineIcon,
 } from "@mui/icons-material";
 
-
-
 const drawerWidth = 240;
 
 // Drawer Opened Styling
@@ -103,28 +101,13 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 export default function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
-  const [selectedNav, setSelectedNav] = React.useState("home");
   const navigate = useNavigate();
 
   const handleDrawerOpen = () => setOpen(true);
   const handleDrawerClose = () => setOpen(false);
 
-  const handleNavItemClick = (nav) => setSelectedNav(nav);
-
-  // Component Rendering Logic
-  const renderComponent = () => {
-    switch (selectedNav) {
-      case "home":
-        return <InitialCheck />;
-      case "dashboard":
-        return <AppointmentData />;
-      case "inprogress":
-        return <SupInprogress />;
-      case "completed":
-        return <CompletedS />;
-      default:
-        return <InitialCheck />;
-    }
+  const handleNavItemClick = (path) => {
+    navigate(path); // Navigates to the respective URL
   };
 
   return (
@@ -184,23 +167,14 @@ export default function MiniDrawer() {
         {/* Navigation List */}
         <List>
           {[
-            { id: "home", label: "Home", icon: <HomeIcon /> },
-            { id: "dashboard", label: "Dashboard", icon: <ArticleIcon /> },
-            { id: "inprogress", label: "In Progress", icon: <AutoGraphIcon /> },
-            {
-              id: "completed",
-              label: "Completed",
-              icon: <DoneOutlineIcon color="success" />,
-            },
-          ].map(({ id, label, icon }) => (
-            <ListItem
-              key={id}
-              disablePadding
-              sx={{ display: "block" }}
-              onClick={() => handleNavItemClick(id)}
-            >
-              <ListItemButton selected={selectedNav === id}>
-                <ListItemIcon sx={{ minWidth: 0, justifyContent: "center" ,marginRight:2}}>
+            { path: "/SInitial", label: "Home", icon: <HomeIcon /> },
+            { path: "/Super", label: "Dashboard", icon: <ArticleIcon /> },
+            { path: "/SInpro", label: "In Progress", icon: <AutoGraphIcon /> },
+            { path: "/SCompleted", label: "Completed", icon: <DoneOutlineIcon color="success" /> },
+          ].map(({ path, label, icon }) => (
+            <ListItem key={path} disablePadding sx={{ display: "block" }} onClick={() => handleNavItemClick(path)}>
+              <ListItemButton selected={window.location.pathname === path}>
+                <ListItemIcon sx={{ minWidth: 0, justifyContent: "center", marginRight: 2 }}>
                   {icon}
                 </ListItemIcon>
                 <ListItemText primary={label} sx={{ opacity: open ? 1 : 0 }} />
@@ -210,11 +184,6 @@ export default function MiniDrawer() {
         </List>
       </Drawer>
 
-      {/* Main Content */}
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <Toolbar />
-        {renderComponent()}
-      </Box>
     </Box>
   );
 }
