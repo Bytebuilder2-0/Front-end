@@ -7,6 +7,7 @@ import CompletedSuper from '../pages/supervisor/CompletedSuper';
 import AppointmentSubmit from '../pages/User/AppoinmentSubmit';
 import AppointmentView from '../pages/User/AppointmentView';
 
+
 const router = createBrowserRouter([
   {
     path: "/Super",
@@ -21,8 +22,8 @@ const router = createBrowserRouter([
     element: <Inprogress />,
   },
   {
-    path: "/Scom",
-    element: <CompletedSuper />,
+    path: "/SCompleted",
+    element: <CompletedSuper/>,
   },
   {
     path: "/TDashboard",
