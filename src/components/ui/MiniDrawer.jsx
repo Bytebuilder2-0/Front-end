@@ -124,6 +124,14 @@ export default function MiniDrawer() {
           >
             <MenuIcon />
           </IconButton>
+          {/* Chevron Icon placed in AppBar */}
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === "rtl" ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
+            )}
+          </IconButton>
           <Typography variant="h6" noWrap>
             Garage24
           </Typography>
@@ -133,13 +141,15 @@ export default function MiniDrawer() {
       {/* Sidebar Drawer */}
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
+          {/* Image at the Top */}
+          <img
+            src="/assets/frame.png"
+            alt="Frame"
+            style={{
+              height: "64px", // Matches AppBar height
+              width: "auto",
+            }}
+          />
         </DrawerHeader>
         <Divider />
 
@@ -158,7 +168,6 @@ export default function MiniDrawer() {
               src="https://randomuser.me/api/portraits/men/1.jpg"
               sx={{ width: 100, height: 100 }}
             />
-
             <Typography>Supervisor 1</Typography>
           </Box>
         )}
@@ -170,11 +179,22 @@ export default function MiniDrawer() {
             { path: "/SInitial", label: "Home", icon: <HomeIcon /> },
             { path: "/Super", label: "Dashboard", icon: <ArticleIcon /> },
             { path: "/SInpro", label: "In Progress", icon: <AutoGraphIcon /> },
-            { path: "/SCompleted", label: "Completed", icon: <DoneOutlineIcon color="success" /> },
+            {
+              path: "/SCompleted",
+              label: "Completed",
+              icon: <DoneOutlineIcon color="success" />,
+            },
           ].map(({ path, label, icon }) => (
-            <ListItem key={path} disablePadding sx={{ display: "block" }} onClick={() => handleNavItemClick(path)}>
+            <ListItem
+              key={path}
+              disablePadding
+              sx={{ display: "block" }}
+              onClick={() => handleNavItemClick(path)}
+            >
               <ListItemButton selected={window.location.pathname === path}>
-                <ListItemIcon sx={{ minWidth: 0, justifyContent: "center", marginRight: 2 }}>
+                <ListItemIcon
+                  sx={{ minWidth: 0, justifyContent: "center", marginRight: 2 }}
+                >
                   {icon}
                 </ListItemIcon>
                 <ListItemText primary={label} sx={{ opacity: open ? 1 : 0 }} />
@@ -183,7 +203,6 @@ export default function MiniDrawer() {
           ))}
         </List>
       </Drawer>
-
     </Box>
   );
 }
