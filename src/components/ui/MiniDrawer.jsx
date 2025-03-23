@@ -159,6 +159,7 @@ export default function MiniDrawer() {
               src="https://randomuser.me/api/portraits/men/1.jpg"
               sx={{ width: 100, height: 100 }}
             />
+            <br/>
             <Typography>Supervisor 1</Typography>
           </Box>
         )}
