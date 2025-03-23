@@ -12,7 +12,7 @@ import {
   Typography,
   Container,
 } from "@mui/material";
-import ReceiptIcon from '@mui/icons-material/Receipt';
+import ReceiptIcon from "@mui/icons-material/Receipt";
 import IssueViewer from "./sub/IssueView";
 import WhatsAppButton from "./sub/WhatsAppButton";
 import BudgetReview from "./sub/BudgetReview";
@@ -80,10 +80,10 @@ function CompletedS() {
                 <strong>Budget</strong>
               </TableCell>
               <TableCell>
-               <strong>Invoice</strong>
+                <strong>Invoice</strong>
               </TableCell>
               <TableCell>
-               <strong>Payment</strong>
+                <strong>Payment</strong>
               </TableCell>
               <TableCell>
                 <strong>Contact</strong>
@@ -106,12 +106,9 @@ function CompletedS() {
                   />
                 </TableCell>
                 <TableCell>
-
-<ReceiptIcon fontSize="large"/>
+                  <ReceiptIcon fontSize="large" />
                 </TableCell>
-                <TableCell>
-Pending
-</TableCell>
+                <TableCell>{appointment.payment}</TableCell>
                 <TableCell>
                   <WhatsAppButton phone={appointment.contactNumber} />
                 </TableCell>
