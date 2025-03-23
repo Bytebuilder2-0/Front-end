@@ -79,6 +79,9 @@ function CompletedS() {
                 <strong>Budget</strong>
               </TableCell>
               <TableCell>
+                Invoice
+              </TableCell>
+              <TableCell>
                 <strong>Contact</strong>
               </TableCell>
             </TableRow>
