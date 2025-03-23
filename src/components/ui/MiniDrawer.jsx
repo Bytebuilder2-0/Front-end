@@ -114,25 +114,17 @@ export default function MiniDrawer() {
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       {/* App Bar */}
-      <AppBar position="fixed" open={open} sx={{ backgroundColor: "black" }}>
+      <AppBar position="fixed" open={open} sx={{ backgroundColor: "primary.main" }}>
         <Toolbar>
           <IconButton
             color="inherit"
-            onClick={handleDrawerOpen}
+            onClick={open ? handleDrawerClose : handleDrawerOpen}
             edge="start"
-            sx={{ marginRight: 5, ...(open && { display: "none" }) }}
+            sx={{ marginRight: 5 }}
           >
-            <MenuIcon />
+            {open ? <ChevronLeftIcon /> : <MenuIcon />}
           </IconButton>
-          {/* Chevron Icon placed in AppBar */}
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
-          <Typography variant="h6" noWrap>
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             Garage24
           </Typography>
         </Toolbar>
