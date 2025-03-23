@@ -94,7 +94,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "flex-end",
-  padding: theme.spacing(0, 1),
+ 
   ...theme.mixins.toolbar,
 }));
 
@@ -138,8 +138,8 @@ export default function MiniDrawer() {
             src="/assets/frame.png"
             alt="Frame"
             style={{
-              height: "64px", // Matches AppBar height
-              width: "auto",
+              height: "64px", 
+              width: "auto"
             }}
           />
         </DrawerHeader>
