@@ -82,6 +82,9 @@ function CompletedS() {
                <strong>Invoice</strong>
               </TableCell>
               <TableCell>
+               <strong>Payment</strong>
+              </TableCell>
+              <TableCell>
                 <strong>Contact</strong>
               </TableCell>
             </TableRow>
@@ -102,8 +105,11 @@ function CompletedS() {
                   />
                 </TableCell>
                 <TableCell>
-                  
+
                 </TableCell>
+                <TableCell>
+
+</TableCell>
                 <TableCell>
                   <WhatsAppButton phone={appointment.contactNumber} />
                 </TableCell>
