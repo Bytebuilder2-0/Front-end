@@ -79,7 +79,7 @@ function CompletedS() {
                 <strong>Budget</strong>
               </TableCell>
               <TableCell>
-                Invoice
+               <strong>Invoice</strong>
               </TableCell>
               <TableCell>
                 <strong>Contact</strong>
@@ -100,6 +100,9 @@ function CompletedS() {
                     btn_name="review"
                     updateAppointment={updateAppointmentInState}
                   />
+                </TableCell>
+                <TableCell>
+                  
                 </TableCell>
                 <TableCell>
                   <WhatsAppButton phone={appointment.contactNumber} />
