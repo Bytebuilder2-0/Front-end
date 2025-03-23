@@ -124,9 +124,7 @@ export default function MiniDrawer() {
           >
             {open ? <ChevronLeftIcon /> : <MenuIcon />}
           </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            Garage24
-          </Typography>
+         
         </Toolbar>
       </AppBar>
 
