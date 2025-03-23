@@ -105,10 +105,11 @@ function CompletedS() {
                   />
                 </TableCell>
                 <TableCell>
+                  
 
                 </TableCell>
                 <TableCell>
-
+Pending
 </TableCell>
                 <TableCell>
                   <WhatsAppButton phone={appointment.contactNumber} />
