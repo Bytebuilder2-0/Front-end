@@ -22,11 +22,10 @@ import {
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
   Home as HomeIcon,
-  Article as ArticleIcon,
   AutoGraph as AutoGraphIcon,
   DoneOutline as DoneOutlineIcon,
 } from "@mui/icons-material";
-
+import DashboardIcon from '@mui/icons-material/Dashboard';
 const drawerWidth = 240;
 
 // Drawer Opened Styling
@@ -159,6 +158,7 @@ export default function MiniDrawer() {
               src="https://randomuser.me/api/portraits/men/1.jpg"
               sx={{ width: 100, height: 100 }}
             />
+            <br/>
             <Typography>Supervisor 1</Typography>
           </Box>
         )}
@@ -168,7 +168,7 @@ export default function MiniDrawer() {
         <List>
           {[
             { path: "/SInitial", label: "Home", icon: <HomeIcon /> },
-            { path: "/Super", label: "Dashboard", icon: <ArticleIcon /> },
+            { path: "/Super", label: "Dashboard", icon: <DashboardIcon/> },
             { path: "/SInpro", label: "In Progress", icon: <AutoGraphIcon /> },
             {
               path: "/SCompleted",
