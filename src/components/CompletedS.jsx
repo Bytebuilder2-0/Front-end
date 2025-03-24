@@ -16,6 +16,7 @@ import ReceiptIcon from "@mui/icons-material/Receipt";
 import IssueViewer from "./sub/IssueView";
 import WhatsAppButton from "./sub/WhatsAppButton";
 import BudgetReview from "./sub/BudgetReview";
+import InvoiceView from "./sub/InvoiceView";
 
 const API_BASE_URL = "http://localhost:5000/api/appointments";
 
@@ -106,11 +107,8 @@ function CompletedS() {
                   />
                 </TableCell>
                 <TableCell>
-                  <ReceiptIcon
-                    fontSize="large"
-                    onClick={() => alert("Are you sure you want to delete this?")}
-                    style={{ cursor: "pointer" }}
-                  />
+                  <InvoiceView/>
+                 
                 </TableCell>
                 <TableCell>{appointment.payment}</TableCell>
                 <TableCell>
