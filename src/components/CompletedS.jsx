@@ -106,7 +106,11 @@ function CompletedS() {
                   />
                 </TableCell>
                 <TableCell>
-                  <ReceiptIcon fontSize="large" />
+                  <ReceiptIcon
+                    fontSize="large"
+                    onClick={() => alert("Are you sure you want to delete this?")}
+                    style={{ cursor: "pointer" }}
+                  />
                 </TableCell>
                 <TableCell>{appointment.payment}</TableCell>
                 <TableCell>
