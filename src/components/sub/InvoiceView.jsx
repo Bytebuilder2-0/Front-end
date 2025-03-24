@@ -1,7 +1,7 @@
 import React from 'react'
 import ReceiptIcon from "@mui/icons-material/Receipt";
 
-function InvoiceView() {
+function InvoiceView({appointment}) {
   return (
    <ReceiptIcon
                       fontSize="large"
