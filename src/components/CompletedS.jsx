@@ -12,7 +12,7 @@ import {
   Typography,
   Container,
 } from "@mui/material";
-import ReceiptIcon from "@mui/icons-material/Receipt";
+
 import IssueViewer from "./sub/IssueView";
 import WhatsAppButton from "./sub/WhatsAppButton";
 import BudgetReview from "./sub/BudgetReview";
@@ -107,7 +107,7 @@ function CompletedS() {
                   />
                 </TableCell>
                 <TableCell>
-                  <InvoiceView/>
+                  <InvoiceView appointment={appointment}/>
                  
                 </TableCell>
                 <TableCell>{appointment.payment}</TableCell>
