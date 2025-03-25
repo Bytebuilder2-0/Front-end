@@ -1,5 +1,19 @@
-import React from 'react'
+import React, { useState } from "react";
 import ReceiptIcon from "@mui/icons-material/Receipt";
+import axios from "axios";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+} from "@mui/material";
 
 function InvoiceView({appointment}) {
   const [open, setOpen] = useState(false);
@@ -18,11 +32,52 @@ function InvoiceView({appointment}) {
     }
   };
   return (
-   <ReceiptIcon
-                      fontSize="large"
-                      onClick={() => alert("Are you sure you want to delete this?")}
-                      style={{ cursor: "pointer" }}
-                    />
+    <>
+ <ReceiptIcon
+        fontSize="large"
+        style={{ cursor: "pointer" }}
+        onClick={fetchBudget}
+      />
+
+
+                    <Dialog
+                    open={open}
+                    onClose={() => setOpen(false)}
+                    fullWidth
+                    maxWidth="sm"
+                  >
+                    <DialogTitle>Budget Details</DialogTitle>
+                    <DialogContent>
+                      {budget ? (
+                        <TableContainer component={Paper}>
+                          <Table>
+                            <TableHead>
+                              <TableRow>
+                                <TableCell>Step</TableCell>
+                                <TableCell>Description</TableCell>
+                                <TableCell>Amount</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {(budget.amountAllocations || []).map((item, index) => (
+                                <TableRow key={index}>
+                                  <TableCell>{item.step}</TableCell>
+                                  <TableCell>{item.des}</TableCell>
+                                  <TableCell>${item.amount}</TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      ) : (
+                        <p>Loading...</p>
+                      )}
+                    </DialogContent>
+                    <Button onClick={() => setOpen(false)}>Close</Button>
+                  </Dialog>
+    </>
+  
+            
 
   )
 }
