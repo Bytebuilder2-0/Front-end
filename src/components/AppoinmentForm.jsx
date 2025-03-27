@@ -27,6 +27,8 @@ const AppointmentSubmit = ({userId}) => {
     services,
     formData,
     errors,
+    disabledVehicles = [],
+    vehicleStatusMap = {},
     fetchData,
     handleVehicleChange,
     handleServiceChange,
@@ -85,11 +87,24 @@ const handleAlertClose = () => {
               onChange={handleVehicleChange}
               label="Select Vehicle"
             >
-              {vehicles.map((vehicle) => (
-                <MenuItem key={vehicle._id} value={vehicle._id}>
-                  {vehicle.vehicleNumber} - {vehicle.model}
-                </MenuItem>
-              ))}
+           {vehicles.map((vehicle) => {
+            const isDisabled = disabledVehicles.includes(vehicle._id) && !["Paid", "Cancelled"].includes(vehicle.status);
+            return (
+              <MenuItem 
+                key={vehicle._id} 
+                value={vehicle._id}
+                disabled={isDisabled}
+                style={{
+                  color: isDisabled ? '#999' : 'inherit',
+                  backgroundColor: isDisabled ? '#f5f5f5' : 'inherit'
+                }}
+              >
+                {vehicle.vehicleNumber} - {vehicle.model}
+                {isDisabled && status && ` (${status})` }
+              </MenuItem>
+            );
+          })}
+
             </Select>
             {errors.vehicleId && <FormHelperText>{errors.vehicleId}</FormHelperText>}
           </FormControl>
