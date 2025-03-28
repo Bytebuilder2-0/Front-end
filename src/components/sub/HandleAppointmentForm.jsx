@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const HandleAppointmentForm = (userId) => {
-  // State variables
+
   const [vehicles, setVehicles] = useState([]);
   const [services, setServices] = useState([]);
   const [formData, setFormData] = useState({
@@ -17,13 +17,11 @@ const HandleAppointmentForm = (userId) => {
   });
   const [errors, setErrors] = useState({});
   const [disabledVehicles, setDisabledVehicles] = useState([]); //Track vehicles with active appointments
-  const [vehicleStatusMap, setVehicleStatusMap] = useState({}); // Track statuses for disabled vehicles
-  // Fetch initial data
+
   const fetchData = async () => {
     try {
       console.log('Fetching data for user:', userId);
       
-      // 1. Fetch user's vehicles
       const vehiclesResponse = await axios.get(
         `http://localhost:5000/api/appointments/vehicles/${userId}`
       );
@@ -33,19 +31,16 @@ const HandleAppointmentForm = (userId) => {
       const servicesResponse = await axios.get('http://localhost:5000/api/appointments/services');
       setServices(servicesResponse.data);
 
-        // NEW: Fetch user's appointments to check for active ones
         const appointmentsResponse = await axios.get(
           `http://localhost:5000/api/appointments/user/${userId}`
         );
         console.log('Appointments response:', appointmentsResponse.data);
-  
-        // Filter appointments that aren't Paid or Cancelled
-        const activeAppointments = appointmentsResponse.data.filter(
+
+        const activeAppointments = appointmentsResponse.data.data.filter(
           appointment => !["Paid", "Cancelled"].includes(appointment.status)
         );
         console.log('Active appointments:', activeAppointments);
-  
-        // Get vehicle IDs from active appointments
+
         const disabledVehicleIds = activeAppointments.map(app => app.vehicleObject);
         const statusMap = {};
         activeAppointments.forEach(app => {
@@ -54,8 +49,7 @@ const HandleAppointmentForm = (userId) => {
       console.log('Disabled vehicles:', disabledVehicleIds);
       console.log('Status map:', statusMap);
         setDisabledVehicles(disabledVehicleIds);
-        setVehicleStatusMap(statusMap);
-
+ 
     } catch (error) {
       console.error('Error fetching data:',  error.response ? error.response.data : error.message);
     }
@@ -86,17 +80,13 @@ const HandleAppointmentForm = (userId) => {
     }
   };
 
-  // In HandleAppointmentForm.jsx
-useEffect(() => {
-  fetchData(); // Initial fetch
 
-  const interval = setInterval(fetchData, 30000); // Refresh every 30 seconds
+useEffect(() => {
+  fetchData(); 
+  const interval = setInterval(fetchData, 30000); 
   return () => clearInterval(interval);
 }, []);
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
 
   const validateForm = () => {
     const newErrors = {};
@@ -126,7 +116,6 @@ useEffect(() => {
         `http://localhost:5000/api/appointments/${userId}`,
         formData
       );
-        // Add the vehicle to disabled list
         setDisabledVehicles([...disabledVehicles, formData.vehicleObject]);
         await fetchData();
       
@@ -143,7 +132,6 @@ useEffect(() => {
         contactNumber: ''
       });
 
-      // setSubmittedVehicles([...submittedVehicles, formData.vehicleObject]);
       return response.data; 
  
     } catch (error) {
