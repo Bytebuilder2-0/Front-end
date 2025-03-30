@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const HandleAppointmentForm = (userId) => {
-  // State variables
+
   const [vehicles, setVehicles] = useState([]);
   const [services, setServices] = useState([]);
   const [formData, setFormData] = useState({
@@ -16,19 +16,42 @@ const HandleAppointmentForm = (userId) => {
     contactNumber: ''
   });
   const [errors, setErrors] = useState({});
+  const [disabledVehicles, setDisabledVehicles] = useState([]); //Track vehicles with active appointments
 
-  // Fetch initial data
   const fetchData = async () => {
     try {
+      console.log('Fetching data for user:', userId);
+      
       const vehiclesResponse = await axios.get(
         `http://localhost:5000/api/appointments/vehicles/${userId}`
       );
+      console.log('Vehicles response:', vehiclesResponse.data);
       setVehicles(vehiclesResponse.data);
 
       const servicesResponse = await axios.get('http://localhost:5000/api/appointments/services');
       setServices(servicesResponse.data);
+
+        const appointmentsResponse = await axios.get(
+          `http://localhost:5000/api/appointments/user/${userId}`
+        );
+        console.log('Appointments response:', appointmentsResponse.data);
+
+        const activeAppointments = appointmentsResponse.data.data.filter(
+          appointment => !["Paid", "Cancelled"].includes(appointment.status)
+        );
+        console.log('Active appointments:', activeAppointments);
+
+        const disabledVehicleIds = activeAppointments.map(app => app.vehicleObject);
+        const statusMap = {};
+        activeAppointments.forEach(app => {
+        statusMap[app.vehicleObject] = app.status;
+});
+      console.log('Disabled vehicles:', disabledVehicleIds);
+      console.log('Status map:', statusMap);
+        setDisabledVehicles(disabledVehicleIds);
+ 
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error('Error fetching data:',  error.response ? error.response.data : error.message);
     }
   };
 
@@ -57,9 +80,13 @@ const HandleAppointmentForm = (userId) => {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+
+useEffect(() => {
+  fetchData(); 
+  const interval = setInterval(fetchData, 30000); 
+  return () => clearInterval(interval);
+}, []);
+
 
   const validateForm = () => {
     const newErrors = {};
@@ -89,6 +116,8 @@ const HandleAppointmentForm = (userId) => {
         `http://localhost:5000/api/appointments/${userId}`,
         formData
       );
+        setDisabledVehicles([...disabledVehicles, formData.vehicleObject]);
+        await fetchData();
       
       console.log('Created appointment:', response.data);
       
@@ -102,6 +131,7 @@ const HandleAppointmentForm = (userId) => {
         expectedDeliveryDate: '',
         contactNumber: ''
       });
+
       return response.data; 
  
     } catch (error) {
@@ -130,6 +160,7 @@ const HandleAppointmentForm = (userId) => {
     services,
     formData,
     errors,
+    disabledVehicles,
     fetchData,
     handleVehicleChange,
     handleServiceChange,
