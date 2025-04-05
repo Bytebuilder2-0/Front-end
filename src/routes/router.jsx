@@ -3,6 +3,7 @@ import SupervisorDashboard from '../pages/supervisor/SupervisorDashboard';
 import SupInitial from '../pages/supervisor/SupInitial';
 import Inprogress from '../pages/supervisor/Inprogress';
 import TechnicianDashboard from '../pages/Technician/TechnicianDashboard';
+import TechnicianDeclined from '../pages/Technician/TechnicianDeclined'
 import CompletedSuper from '../pages/supervisor/CompletedSuper';
 import AppointmentSubmit from '../pages/User/AppoinmentSubmit';
 import AppointmentView from '../pages/User/AppointmentView';
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
   {
     path: "/TDashboard",
     element: <TechnicianDashboard />,
+  },
+  {
+    path: "/TDeclined",
+    element: <TechnicianDeclined />,
   },
   {
     path: '/appointments/new',
