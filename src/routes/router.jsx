@@ -6,6 +6,7 @@ import TechnicianDashboard from '../pages/Technician/TechnicianDashboard';
 import CompletedSuper from '../pages/supervisor/CompletedSuper';
 import AppointmentSubmit from '../pages/User/AppoinmentSubmit';
 import AppointmentView from '../pages/User/AppointmentView';
+import UserDashboard from '../pages/User/UserDashboard';
 
 
 const router = createBrowserRouter([
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
  {
   path: "/appointments/:id", 
   element: <AppointmentView />
+},
+{
+  path: "/User",
+  element: <UserDashboard />
 }
 
 ]);
