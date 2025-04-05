@@ -10,12 +10,16 @@ import {
   Paper,
   Container,
   Button,
+  Box,
+  Typography,
+  TextField,
 } from "@mui/material";
 
 const API_BASE_URL = "http://localhost:5000/api/appointments";
 
 function TAssignedWork() {
   const [appointments, setAppointments] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
 
   // Fetch appointments from backend
@@ -90,9 +94,33 @@ function TAssignedWork() {
     }
   };
 
+  const filteredAppointments = appointments.filter((appointment) =>
+    (appointment.vehicleId || "")
+      .toString()
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
+
   return (
     <Container>
       <h2>Assigned Works</h2>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={2}
+      >
+        <Typography variant="h5" gutterBottom>
+          Appointments
+        </Typography>
+        <TextField
+          label="Search by Vehicle ID"
+          variant="outlined"
+          size="small"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </Box>
 
       <TableContainer component={Paper} elevation={3}>
         <Table>
@@ -125,9 +153,9 @@ function TAssignedWork() {
                   Loading...
                 </TableCell>
               </TableRow>
-            ) : appointments.length > 0 ? (
+            ) : filteredAppointments.length > 0 ? (
               // Filter appointments to show only "Pending", "Reject1", or "Confirmed"
-              appointments
+              filteredAppointments
                 .filter((appointment) =>
                   ["Waiting for Technician Confirmation", "Reject1", "Confirmed"].includes(
                     appointment.status
