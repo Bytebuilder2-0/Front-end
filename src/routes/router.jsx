@@ -8,6 +8,7 @@ import CompletedSuper from '../pages/supervisor/CompletedSuper';
 import AppointmentSubmit from '../pages/User/AppoinmentSubmit';
 import AppointmentView from '../pages/User/AppointmentView';
 import UserDashboard from '../pages/User/UserDashboard';
+import FeedbackPage from "../pages/Manager/FeedbackPage";
 
 
 const router = createBrowserRouter([
@@ -46,6 +47,9 @@ const router = createBrowserRouter([
 {
   path: "/User",
   element: <UserDashboard />
+},{
+  path: "/feedback",
+  element: <FeedbackPage />,
 }
 
 ]);
