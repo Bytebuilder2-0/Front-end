@@ -13,6 +13,10 @@ import {
   Box,
   Typography,
   TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 
 const API_BASE_URL = "http://localhost:5000/api/appointments";
@@ -22,6 +26,9 @@ function TAssignedWork() {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
 
+  const [openDialog, setOpenDialog] = useState(false);
+  const [declineReason, setDeclineReason] = useState("");
+  const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
   // Fetch appointments from backend
   useEffect(() => {
     axios
@@ -64,25 +71,29 @@ function TAssignedWork() {
     }
   };
 
-  // Function to decline appointment
-  // Frontend (React)
-  const handleDecline = async (appointmentId) => {
-    const isConfirmed = window.confirm(
-      "Are you sure you want to decline this appointment?"
-    );
-    if (!isConfirmed) return; // If user cancels, do nothing
+  const handleOpenDialog = (appointmentId) => {
+    setSelectedAppointmentId(appointmentId);
+    setDeclineReason("");
+    setOpenDialog(true);
+  };
 
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setSelectedAppointmentId(null);
+  };
+
+  const handleConfirmDecline = async () => {
     try {
-      // Ensure the route and data being sent match the backend
-      await axios.put(`${API_BASE_URL}/${appointmentId}/statusUpdate`, {
+      await axios.put(`${API_BASE_URL}/${selectedAppointmentId}/statusUpdate`, {
         status: "Reject1",
+        reason: declineReason,
       });
 
-      // Update UI instantly
+      // Update frontend UI
       setAppointments((prevAppointments) =>
         prevAppointments.map((appointment) =>
-          appointment._id === appointmentId
-            ? { ...appointment, status: "Reject1" } // Match the status value with the backend
+          appointment._id === selectedAppointmentId
+            ? { ...appointment, status: "Reject1", reason: declineReason }
             : appointment
         )
       );
@@ -91,6 +102,8 @@ function TAssignedWork() {
     } catch (error) {
       console.error("Error declining appointment:", error);
       alert("❌ Failed to decline appointment.");
+    } finally {
+      handleCloseDialog();
     }
   };
 
@@ -157,9 +170,11 @@ function TAssignedWork() {
               // Filter appointments to show only "Pending", "Reject1", or "Confirmed"
               filteredAppointments
                 .filter((appointment) =>
-                  ["Waiting for Technician Confirmation", "Reject1", "Confirmed"].includes(
-                    appointment.status
-                  )
+                  [
+                    "Waiting for Technician Confirmation",
+                    "Reject1",
+                    "Confirmed",
+                  ].includes(appointment.status)
                 )
                 .map((appointment) => (
                   <TableRow key={appointment._id}>
@@ -192,14 +207,14 @@ function TAssignedWork() {
                           {appointment.status}
                         </Button>
                       ) : (
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={() => handleConfirm(appointment._id)}
-                            style={{ marginRight: "10px" }}
-                          >
-                            Confirm
-                          </Button>                      
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => handleConfirm(appointment._id)}
+                          style={{ marginRight: "10px" }}
+                        >
+                          Confirm
+                        </Button>
                       )}
                     </TableCell>
                     <TableCell>
@@ -208,14 +223,14 @@ function TAssignedWork() {
                           Declined
                         </Button>
                       ) : (
-                          <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={() => handleDecline(appointment._id)}
-                            style={{ marginRight: "10px" }}
-                          >
-                            Decline
-                          </Button>                      
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => handleOpenDialog(appointment._id)}
+                          style={{ marginRight: "10px" }}
+                        >
+                          Decline
+                        </Button>
                       )}
                     </TableCell>
                   </TableRow>
@@ -227,6 +242,40 @@ function TAssignedWork() {
                 </TableCell>
               </TableRow>
             )}
+            {/* Decline Reason Dialog */}
+
+            <Dialog open={openDialog} onClose={handleCloseDialog}>
+              <DialogTitle>Decline Appointment</DialogTitle>
+              <DialogContent>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  label="Reason for Decline"
+                  type="text"
+                  fullWidth
+                  multiline
+                  rows={3}
+                  value={declineReason}
+                  onChange={(e) => setDeclineReason(e.target.value)}
+                  sx={{
+                    '& .MuiInputBase-root': {
+                      alignItems: 'flex-start', // aligns text at the top
+                      width:500,
+                    }
+                  }}
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCloseDialog}>Cancel</Button>
+                <Button
+                  onClick={handleConfirmDecline}
+                  color="error"
+                  disabled={declineReason.trim() === ""}
+                >
+                  Confirm Decline
+                </Button>
+              </DialogActions>
+            </Dialog>
           </TableBody>
         </Table>
       </TableContainer>

@@ -14,6 +14,7 @@ import {
   TextField,
 } from "@mui/material";
 
+
 const API_BASE_URL = "http://localhost:5000/api/appointments";
 
 function TAssignedWork() {
@@ -100,7 +101,7 @@ function TAssignedWork() {
                 <TableRow key={appointment._id}>
                   <TableCell>{appointment.vehicleId}</TableCell>
                   <TableCell>{appointment.vehicleNumber}</TableCell>
-                  <TableCell>{}</TableCell>
+                  <TableCell>{appointment.issue}</TableCell>
                   <TableCell>{}</TableCell>
                   <TableCell>
                       {new Date(
