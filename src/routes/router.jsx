@@ -12,7 +12,7 @@ import UserDashboard from '../pages/User/UserDashboard';
 import FeedbackPage from "../pages/Manager/FeedbackPage";
 
 import TechnicianCompleted from '../pages/Technician/TechnicianCompleted';
-import Test from '../pages/Technician/Test';
+
 
 
 
