@@ -3,6 +3,7 @@ import { Box,Toolbar } from "@mui/material";
 import UserMiniDrawer from "../../components/ui/UserMiniDrawer";
 
 function UserDashboard() {
+  
   return (
      <>
     <Box sx={{ display: 'flex' }}>
