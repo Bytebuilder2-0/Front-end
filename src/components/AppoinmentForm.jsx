@@ -28,7 +28,6 @@ const AppointmentSubmit = ({userId}) => {
     formData,
     errors,
     disabledVehicles = [],
-    vehicleStatusMap = {},
     fetchData,
     handleVehicleChange,
     handleServiceChange,
@@ -55,6 +54,7 @@ const handleFormSubmit = async (e) => {
   if (object) {
     setShowAlert(true); // Show success alert
     setCreatedAppointment(object); // Store the created appointment data
+    
   } else {
     console.error('Appointment creation failed'); 
 };
@@ -69,6 +69,7 @@ const handleAlertClose = () => {
     console.error('Appointment ID is undefined'); 
   }
 };
+
 
 
   return (
