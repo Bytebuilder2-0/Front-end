@@ -6,11 +6,11 @@ import { Box, Toolbar } from '@mui/material';
 function AppointmentSubmit() {
  
   //Hardcode UserId
-  const userId = "67c35eec60d77944a4fe5cf3"; 
+  const userId = "67d873693913311df6a32a25"; 
   return (
     <>
      <Box sx={{ display: 'flex' }}>
-    <UserMiniDrawer />
+    <UserMiniDrawer userId={userId}/>
     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
      <Toolbar/>
      <AppointmentForm userId={userId} />
