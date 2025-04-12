@@ -24,8 +24,10 @@ import {
   Home as HomeIcon,
   AutoGraph as AutoGraphIcon,
   DoneOutline as DoneOutlineIcon,
+  History as HistoryIcon,
 } from "@mui/icons-material";
-import DashboardIcon from '@mui/icons-material/Dashboard';
+import ErrorIcon from "@mui/icons-material/Error";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 const drawerWidth = 240;
 
 // Drawer Opened Styling
@@ -93,7 +95,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "flex-end",
- 
+
   ...theme.mixins.toolbar,
 }));
 
@@ -113,8 +115,7 @@ export default function MiniDrawer() {
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       {/* App Bar */}
-      <AppBar position="fixed" open={open} sx = {
-  {backgroundColor: '', }}>
+      <AppBar position="fixed" open={open} sx={{ backgroundColor: "" }}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -124,7 +125,6 @@ export default function MiniDrawer() {
           >
             {open ? <ChevronLeftIcon /> : <MenuIcon />}
           </IconButton>
-         
         </Toolbar>
       </AppBar>
 
@@ -136,8 +136,8 @@ export default function MiniDrawer() {
             src="/assets/frame.png"
             alt="Frame"
             style={{
-              height: "64px", 
-              width: "auto"
+              height: "64px",
+              width: "auto",
             }}
           />
         </DrawerHeader>
@@ -158,7 +158,7 @@ export default function MiniDrawer() {
               src="https://randomuser.me/api/portraits/men/1.jpg"
               sx={{ width: 100, height: 100 }}
             />
-            <br/>
+            <br />
             <Typography>Supervisor 1</Typography>
           </Box>
         )}
@@ -168,13 +168,15 @@ export default function MiniDrawer() {
         <List>
           {[
             { path: "/SInitial", label: "Home", icon: <HomeIcon /> },
-            { path: "/Super", label: "Dashboard", icon: <DashboardIcon/> },
+            { path: "/Super", label: "Dashboard", icon: <DashboardIcon /> },
             { path: "/SInpro", label: "In Progress", icon: <AutoGraphIcon /> },
             {
               path: "/SCompleted",
               label: "Completed",
               icon: <DoneOutlineIcon color="success" />,
             },
+            { path: "", label: "Decline", icon: <ErrorIcon /> },
+            { path: "", label: "History", icon: <HistoryIcon /> },
           ].map(({ path, label, icon }) => (
             <ListItem
               key={path}
