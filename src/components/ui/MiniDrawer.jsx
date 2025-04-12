@@ -24,6 +24,7 @@ import {
   Home as HomeIcon,
   AutoGraph as AutoGraphIcon,
   DoneOutline as DoneOutlineIcon,
+  History as HistoryIcon,
 } from "@mui/icons-material";
 import DashboardIcon from '@mui/icons-material/Dashboard';
 const drawerWidth = 240;
@@ -174,7 +175,7 @@ export default function MiniDrawer() {
               path: "/SCompleted",
               label: "Completed",
               icon: <DoneOutlineIcon color="success" />,
-            },
+            },{path:"" , label:"History", icon:<HistoryIcon/>},
           ].map(({ path, label, icon }) => (
             <ListItem
               key={path}
