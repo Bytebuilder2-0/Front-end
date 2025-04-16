@@ -116,7 +116,7 @@ const InitialCheck = () => {
                   onClick={() =>
                     updateAppointmentStatus(
                       appointment._id,
-                      "Rejected",
+                      "Reject1",
                       setAppointments
                     )
                   }
