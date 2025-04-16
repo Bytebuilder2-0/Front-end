@@ -83,6 +83,9 @@ const InitialCheck = () => {
               <strong>Issue</strong>
             </TableCell>
             <TableCell>
+              <strong>Exp.Delivery</strong>
+            </TableCell>
+            <TableCell>
               <strong>Actions</strong>
             </TableCell>
           </TableRow>
@@ -94,6 +97,13 @@ const InitialCheck = () => {
               <TableCell>{appointment.model}</TableCell>
               <TableCell>
                 <IssueViewer issue={appointment.issue} />
+              </TableCell>
+              <TableCell>
+              {new Date(appointment.expectedDeliveryDate).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  })}
               </TableCell>
               <TableCell>
                 <Button
