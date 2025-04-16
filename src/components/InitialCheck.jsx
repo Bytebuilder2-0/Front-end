@@ -88,6 +88,9 @@ const InitialCheck = () => {
             <TableCell>
               <strong>Actions</strong>
             </TableCell>
+            <TableCell>
+              <strong>Status</strong>
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -105,6 +108,23 @@ const InitialCheck = () => {
     day: "numeric",
   })}
               </TableCell>
+              <TableCell>
+  <span
+    style={{
+      color:
+        appointment.status === "Pending"
+          ? "orange"
+          : appointment.status === "Confirmed"
+          ? "green"
+          : appointment.status === "Reject1"
+          ? "red"
+          : "gray",
+      fontWeight: 500,
+    }}
+  >
+    {appointment.status}
+  </span>
+</TableCell>
               <TableCell>
                 <Button
                   variant="contained"
@@ -134,6 +154,9 @@ const InitialCheck = () => {
                   Reject
                 </Button>
               </TableCell>
+
+
+
             </TableRow>
           ))}
         </TableBody>
