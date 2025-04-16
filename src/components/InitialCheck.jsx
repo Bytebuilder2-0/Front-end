@@ -8,7 +8,7 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Button,Container,Box,Typography
+  Button,Container,Box,Typography,TextField
 } from "@mui/material";
 import IssueViewer from "./sub/IssueView";
 
@@ -48,6 +48,9 @@ const updateAppointmentStatus = async (
 
 const InitialCheck = () => {
   const [appointments, setAppointments] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
+
 
   useEffect(() => {
     const getAppointments = async () => {
@@ -56,6 +59,14 @@ const InitialCheck = () => {
     };
     getAppointments();
   }, []);
+
+  const filteredAppointments = appointments.filter((appointment) =>
+    (appointment.vehicleId || "")
+      .toString()
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
+
 
   return (
     <Container>
@@ -68,6 +79,13 @@ const InitialCheck = () => {
       <Typography variant="h5" gutterBottom>
         Home
       </Typography>
+        <TextField
+                label="Search by Vehicle ID"
+                variant="outlined"
+                size="small"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
     </Box>
     <TableContainer component={Paper} sx={{ marginTop: 2 }}>
       <Table>
@@ -94,73 +112,75 @@ const InitialCheck = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {appointments.map((appointment) => (
-            <TableRow key={appointment._id}>
-              <TableCell>{appointment.vehicleId}</TableCell>
-              <TableCell>{appointment.model}</TableCell>
-              <TableCell>
-                <IssueViewer issue={appointment.issue} />
-              </TableCell>
-              <TableCell>
-              {new Date(appointment.expectedDeliveryDate).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  })}
-              </TableCell>
-              <TableCell>
-  <span
-    style={{
-      color:
-        appointment.status === "Pending"
-          ? "orange"
-          : appointment.status === "Confirmed"
-          ? "green"
-          : appointment.status === "Cancelled" || appointment.status === "Reject1"
-          ? "red"
-          : "gray",
-      fontWeight: 500,
-    }}
-  >
-    {appointment.status}
-  </span>
-</TableCell>
+  {filteredAppointments.length > 0 ? (
+    filteredAppointments.map((appointment) => (
+      <TableRow key={appointment._id}>
+        <TableCell>{appointment.vehicleId}</TableCell>
+        <TableCell>{appointment.model}</TableCell>
+        <TableCell>
+          <IssueViewer issue={appointment.issue} />
+        </TableCell>
+        <TableCell>
+          {new Date(appointment.expectedDeliveryDate).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          })}
+        </TableCell>
 
-              <TableCell>
-                <Button
-                  variant="contained"
-                  color="success"
-                  sx={{ marginRight: 1 }}
-                  onClick={() =>
-                    updateAppointmentStatus(
-                      appointment._id,
-                      "Confirmed",
-                      setAppointments
-                    )
-                  }
-                >
-                  Accept
-                </Button>
-                <Button
-                  variant="contained"
-                  color="error"
-                  onClick={() =>
-                    updateAppointmentStatus(
-                      appointment._id,
-                      "Reject1",
-                      setAppointments
-                    )
-                  }
-                >
-                  Reject
-                </Button>
-              </TableCell>
+        {/* 🔵 Status with color */}
+        <TableCell>
+          <span
+            style={{
+              color:
+                appointment.status === "Pending"
+                  ? "orange"
+                  : appointment.status === "Confirmed"
+                  ? "green"
+                  : appointment.status === "Cancelled" || appointment.status === "Reject1"
+                  ? "red"
+                  : "gray",
+              fontWeight: 500,
+              textTransform: "capitalize",
+            }}
+          >
+            {appointment.status}
+          </span>
+        </TableCell>
 
+    
+        <TableCell>
+          <Button
+            variant="contained"
+            color="success"
+            sx={{ marginRight: 1 }}
+            onClick={() =>
+              updateAppointmentStatus(appointment._id, "Confirmed", setAppointments)
+            }
+          >
+            Accept
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() =>
+              updateAppointmentStatus(appointment._id, "Reject1", setAppointments)
+            }
+          >
+            Reject
+          </Button>
+        </TableCell>
+      </TableRow>
+    ))
+  ) : (
+    <TableRow>
+      <TableCell colSpan={6} align="center">
+        No matching appointments
+      </TableCell>
+    </TableRow>
+  )}
+</TableBody>
 
-
-            </TableRow>
-          ))}
-        </TableBody>
       </Table>
     </TableContainer>
     </Container>
