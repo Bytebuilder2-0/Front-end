@@ -116,7 +116,7 @@ const InitialCheck = () => {
           ? "orange"
           : appointment.status === "Confirmed"
           ? "green"
-          : appointment.status === "Reject1"
+          : appointment.status === "Cancelled" || appointment.status === "Reject1"
           ? "red"
           : "gray",
       fontWeight: 500,
@@ -125,6 +125,7 @@ const InitialCheck = () => {
     {appointment.status}
   </span>
 </TableCell>
+
               <TableCell>
                 <Button
                   variant="contained"
