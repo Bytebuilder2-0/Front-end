@@ -1,15 +1,72 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Paper,
   Typography,
   Chip,
   Box,
   Button,
-  Divider
+  Divider,
+  Snackbar,
+  Alert
 } from '@mui/material';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import AlertDialog from '../Appointement/AlertDialog';
 
-const AppointmentPending = ({ appointment }) => {
+const AppointmentPending = ({ appointment, onCancel }) => {
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [snackbar, setSnackbar] = useState({ 
+    open: false, 
+    message: '',
+    severity: 'success'
+  });
+  const [isCancelling, setIsCancelling] = useState(false);
+  const navigate = useNavigate();
+
+  const handleCancelClick = () => setOpenConfirm(true);
+
+  const updateAppointmentStatus = async (newStatus) => {
+    setIsCancelling(true);
+    try {
+      const response = await axios.put(
+        `http://localhost:5000/api/appointments/${appointment._id}/statusUpdate`,
+        { status: newStatus }
+      );
+
+      
+      setSnackbar({
+        open: true,
+        message: `Appointment ${newStatus.toLowerCase()} successfully`,
+        severity: 'success'
+      });
+
+      // Wait for user to see the message before proceeding
+      setTimeout(() => {
+        if (typeof onCancel === 'function') {
+          onCancel(appointment._id);
+        }
+      }, 1500);
+    
+    } catch (error) {
+      console.error('Error updating appointment:', error);
+      setSnackbar({
+        open: true,
+        message: `Failed to update appointment: ${error.response?.data?.message || error.message}`,
+        severity: 'error'
+      });
+    }
+    finally {
+      setIsCancelling(false);
+    }
+  };
+
+  const handleConfirmCancel = () => {
+    updateAppointmentStatus('Cancelled');
+    setOpenConfirm(false);
+  };
+
+  
   return (
     <Paper
       elevation={3}
@@ -70,8 +127,33 @@ const AppointmentPending = ({ appointment }) => {
 
       {/* Buttons */}
       <Box mt={3} display="flex" gap={1}>
-        <Button variant="contained" size="small" color="error">Cancel</Button>
+        <Button variant="contained" size="small" color="error"  onClick={handleCancelClick}>Cancel</Button>
       </Box>
+
+      <AlertDialog
+      open={openConfirm}
+      onClose={() => setOpenConfirm(false)}
+      onConfirm={handleConfirmCancel}
+      loading={isCancelling}
+      type="warning"
+      title="Confirm Cancellation"
+      message="Are you sure you want to cancel this appointment?"
+      confirmText="Yes, Cancel"
+      cancelText="No, Keep It"
+      showCancelButton={true}
+/> 
+
+      {/* Success Message */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+      >
+        <Alert severity={snackbar.severity || 'success'}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+
     </Paper>
   );
 };
