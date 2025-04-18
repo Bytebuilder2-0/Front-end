@@ -1,20 +1,19 @@
-import React from 'react'
-import SupInprogress from '../../components/SupInprogress'
+import CompletedS from "../../components/CompletedS";
 import { Box,Toolbar } from "@mui/material";
 import MiniDrawer from "../../components/ui/MiniDrawer";
 
-function Inprogress() {
-  return (
-  <>
- <Box sx={{ display: 'flex' }}>
+function CompletedSuper(){
+return(
+    <Box sx={{ display: 'flex' }}>
     <MiniDrawer />
     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
      <Toolbar/>
- <SupInprogress/>
+     <CompletedS/>
     </Box>
   </Box>
-  </>
-  )
+  
+    
+);
 }
 
-export default Inprogress
+export default CompletedSuper;
