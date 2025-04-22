@@ -10,7 +10,7 @@ const IssueViewer = ({ issue }) => {
    
    <Tooltip title="View Issue" arrow>
         <IconButton
-          color="primary"
+         sx={{ color: "black" }}
           onClick={() => setOpen(true)}
           aria-label="View Vehicle Issue"
         >
