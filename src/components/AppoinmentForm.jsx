@@ -1,23 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import {
-  TextField,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
-  Button,
-  Grid,
-  Typography,
-  FormHelperText,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle
-} from '@mui/material';
+import { TextField, MenuItem, Select, FormControl, InputLabel, Button, Grid, Typography, FormHelperText,} from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useNavigate } from 'react-router-dom'; 
 import HandleAppointmentForm from './sub/HandleAppointmentForm';
+import AlertDialog from './Appointement/AlertDialog';
+import VehicleSelection from './Appointement/VehicleSelection';
 
 const AppointmentSubmit = ({userId}) => {
   // Hardcoded user ID for testing
@@ -60,7 +47,6 @@ const handleFormSubmit = async (e) => {
 };
 }
 
-
 const handleAlertClose = () => {
   if (createdAppointment.appointment && createdAppointment.appointment._id) {
     setShowAlert(false);
@@ -69,7 +55,6 @@ const handleAlertClose = () => {
     console.error('Appointment ID is undefined'); 
   }
 };
-
 
 
   return (
@@ -82,32 +67,15 @@ const handleAlertClose = () => {
         <form onSubmit={handleFormSubmit}>
           {/* Vehicle Selection */}
           <FormControl fullWidth margin="normal" error={!!errors.vehicleId}>
-            <InputLabel>Select Vehicle</InputLabel>
-            <Select
-              value={formData.vehicleObject}
-              onChange={handleVehicleChange}
-              label="Select Vehicle"
-            >
-           {vehicles.map((vehicle) => {
-            const isDisabled = disabledVehicles.includes(vehicle._id) && !["Paid", "Cancelled"].includes(vehicle.status);
-            return (
-              <MenuItem 
-                key={vehicle._id} 
-                value={vehicle._id}
-                disabled={isDisabled}
-                style={{
-                  color: isDisabled ? '#999' : 'inherit',
-                  backgroundColor: isDisabled ? '#f5f5f5' : 'inherit'
-                }}
-              >
-                {vehicle.vehicleNumber} - {vehicle.model}
-                {isDisabled && status && ` (${status})` }
-              </MenuItem>
-            );
-          })}
+      
+            <VehicleSelection
+            vehicles={vehicles}
+            value={formData.vehicleObject}
+            onChange={handleVehicleChange}
+            error={errors.vehicleId}
+            disabledVehicles={disabledVehicles}
+          />
 
-            </Select>
-            {errors.vehicleId && <FormHelperText>{errors.vehicleId}</FormHelperText>}
           </FormControl>
 
           {/* Auto-filled Vehicle Details */}
@@ -225,58 +193,14 @@ const handleAlertClose = () => {
           </Grid>
         </form>
 
-           {/* Success Alert Dialog */}
- <Dialog open={showAlert} onClose={handleAlertClose}
- PaperProps={{
-  sx: {
-    borderRadius: '12px', 
-    padding: '20px',
-    backgroundColor: '#f0f4f8',
-    boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', 
-  },
-}}>
-  <CheckCircleIcon 
-  sx-={{
-    fontSize: '64px', 
-          marginBottom: '10px', 
-  }}/>
-          <DialogTitle
-           sx={{
-            fontSize: '24px', 
-            fontWeight: 'bold', 
-            color: '#2c3e50',
-            textAlign: 'center', 
-          }}>Appointment Submitted Successfully</DialogTitle>
-          <DialogContent>
-            <DialogContentText
-            sx={{
-              fontSize: '18px', 
-              color: '#34495e', 
-              textAlign: 'center', 
+               <AlertDialog
+                open={showAlert} 
+                onClose={handleAlertClose}
+                type="success"
+                title="Appointment Submitted Successfully"
+                message=" Your appointment has been submitted successfully! Our supervisor will contact you shortly."
+                confirmText="Great!" /> 
 
-            }}
-            >
-              Your appointment has been submitted successfully! Our supervisor will contact you shortly.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleAlertClose} 
-               sx={{
-                alignItems:"center",
-                backgroundColor: '#4caf50',
-                color: '#fff', 
-                borderRadius: '8px', 
-                padding: '10px 20px', 
-                fontSize: '16px', 
-                textTransform: 'none',
-                '&:hover': {
-                  backgroundColor: '#388e3c', 
-                },
-              }}>
-              OK
-            </Button>
-          </DialogActions>
-        </Dialog>
       </Grid>
     </Grid>
   );
