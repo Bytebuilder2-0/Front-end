@@ -1,15 +1,22 @@
 import { useState } from "react";
-import { Button, Modal, Box, Typography } from "@mui/material";
+import { Button, Modal, Box, Typography, IconButton,Tooltip } from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const IssueViewer = ({ issue }) => {
   const [open, setOpen] = useState(false);
 
   return (
     <>
-      <Button variant="contained" color="primary" onClick={() => setOpen(true)}>
-        View Issue
-      </Button>
-
+   
+   <Tooltip title="View Issue" arrow>
+        <IconButton
+          color="primary"
+          onClick={() => setOpen(true)}
+          aria-label="View Vehicle Issue"
+        >
+          <VisibilityIcon />
+        </IconButton>
+      </Tooltip>
       <Modal open={open} onClose={() => setOpen(false)}>
         <Box
           sx={{
