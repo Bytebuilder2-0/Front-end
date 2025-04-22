@@ -128,7 +128,7 @@ const InitialCheck = () => {
           })}
         </TableCell>
 
-        {/* 🔵 Status with color */}
+        {/*  Status with color */}
         <TableCell>
           <span
             style={{
