@@ -44,7 +44,7 @@ const SuggestionWriting = ({ appointment, updateAppointment }) => {
   return (
     <>
       <Button variant="contained" color="secondary" onClick={handleOpenSuggestion}>
-        Write Suggestion
+        Write
       </Button>
 
       <Modal open={openSuggestionModal} onClose={handleCloseModals}>

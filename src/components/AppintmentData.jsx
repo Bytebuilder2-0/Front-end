@@ -105,7 +105,7 @@ function AppointmentData() {
                 <strong>Issue</strong>
               </TableCell>
               <TableCell>
-                <strong>Write Workload</strong>
+                <strong>Workload</strong>
               </TableCell>
               <TableCell>
                 <strong>Assign Technician</strong>

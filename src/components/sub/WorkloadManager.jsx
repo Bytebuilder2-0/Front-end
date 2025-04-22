@@ -6,9 +6,10 @@ import {
   Box,
   TextField,
   Typography,
-  IconButton,
+  IconButton,Tooltip
 } from "@mui/material";
 import { Add, Delete } from "@mui/icons-material";
+import EditIcon from '@mui/icons-material/Edit';
 
 const WorkloadManager = ({ appointment, updateAppointment, btn_name }) => {
   const [openWorkloadModal, setOpenWorkloadModal] = useState(false);
@@ -89,13 +90,11 @@ const WorkloadManager = ({ appointment, updateAppointment, btn_name }) => {
 
   return (
     <>
-      <Button
-        variant="contained"
-        color="secondary"
-        onClick={handleOpenWorkload}
-      >
-        {btn_name}
-      </Button>
+     <Tooltip title="Edit Workload">
+  <IconButton  onClick={handleOpenWorkload} sx={{ fontSize: 28 , color: "black" }}>
+    <EditIcon sx={{ fontSize: 28 }} />
+  </IconButton>
+</Tooltip>
 
       <Modal open={openWorkloadModal} onClose={handleCloseModals}>
         <Box
