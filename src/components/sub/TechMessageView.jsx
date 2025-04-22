@@ -7,7 +7,7 @@ const TechMessageView = ({ x }) => {
   return (
     <>
       <Button variant="contained" color="primary" onClick={() => setOpen(true)}>
-        View Message
+        View
       </Button>
 
       <Modal open={open} onClose={() => setOpen(false)}>
