@@ -9,7 +9,7 @@ const SupInitial = () => {
     <Box sx={{ display: 'flex' }}>
        <MiniDrawer />
        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <Toolbar/>
+       <Toolbar/>
     <InitialCheck/>
        </Box>
      </Box>
