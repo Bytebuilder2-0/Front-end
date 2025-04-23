@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
   Table,
@@ -8,31 +8,29 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Container,
   Box,
   Typography,
+  Container,
 } from "@mui/material";
-import IssueViewer from "./sub/IssueView";
-import TechMessageView from "./sub/TechMessageView";
-import SuggestionWriting from "./sub/SuggestionWriting";
-import WorkloadManager from "./sub/WorkloadManager";
-import WhatsAppButton from "./sub/WhatsAppButton";
 
-// API Base URL
+import IssueViewer from "./sub/IssueView";
+import WhatsAppButton from "./sub/WhatsAppButton";
+import BudgetReview from "./sub/BudgetReview";
+import InvoiceView from "./sub/InvoiceView";
+
 const API_BASE_URL = "http://localhost:5000/api/appointments";
 
-// Fetch all appointments
 const fetchAppointments = async () => {
   try {
     const response = await axios.get(API_BASE_URL);
-    return response.data.reverse().filter((x) => x.status === "Accepted"); // Show only Accepted appointments
+    return response.data.filter((appt) => appt.status === "Task Done");
   } catch (error) {
     console.error("Error fetching appointments:", error);
     return [];
   }
 };
 
-const SupInprogress = () => {
+function CompletedS() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -63,7 +61,7 @@ const SupInprogress = () => {
         mb={2}
       >
         <Typography variant="h5" gutterBottom>
-          Inprogress
+          Completed
         </Typography>
       </Box>
       <TableContainer component={Paper} sx={{ marginTop: 2 }}>
@@ -74,19 +72,22 @@ const SupInprogress = () => {
                 <strong>Vehicle ID</strong>
               </TableCell>
               <TableCell>
-                <strong>Vehicle Number</strong>
+                <strong>Model</strong>
               </TableCell>
               <TableCell>
                 <strong>Description</strong>
               </TableCell>
               <TableCell>
-                <strong>Tech.Messages</strong>
+                <strong>Budget</strong>
               </TableCell>
               <TableCell>
-                <strong>Suggestions</strong>
+                <strong>Invoice</strong>
               </TableCell>
               <TableCell>
-                <strong>Update Workload</strong>
+                <strong>Payment</strong>
+              </TableCell>
+              <TableCell>
+                <strong>Contact</strong>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -94,23 +95,25 @@ const SupInprogress = () => {
             {appointments.map((appointment) => (
               <TableRow key={appointment._id}>
                 <TableCell>{appointment.vehicleId}</TableCell>
-                <TableCell>{appointment.vehicleNumber}</TableCell>
+                <TableCell>{appointment.model}</TableCell>
                 <TableCell>
                   <IssueViewer issue={appointment.issue} />
                 </TableCell>
                 <TableCell>
-                  <TechMessageView x={appointment.techMessage} />
-                </TableCell>
-                <TableCell>
-                  {" "}
-                  <SuggestionWriting
+                  <BudgetReview
                     appointment={appointment}
+                    btn_name="review"
                     updateAppointment={updateAppointmentInState}
                   />
                 </TableCell>
-                <TableCell> <WorkloadManager   appointment={appointment} btn_name="update"
-                      updateAppointment={updateAppointmentInState}/></TableCell>
-                      <TableCell><WhatsAppButton phone={appointment.contactNumber}/></TableCell>
+                <TableCell>
+                  <InvoiceView appointment={appointment}/>
+                 
+                </TableCell>
+                <TableCell>{appointment.payment}</TableCell>
+                <TableCell>
+                  <WhatsAppButton phone={appointment.contactNumber} />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -118,6 +121,6 @@ const SupInprogress = () => {
       </TableContainer>
     </Container>
   );
-};
+}
 
-export default SupInprogress;
+export default CompletedS;

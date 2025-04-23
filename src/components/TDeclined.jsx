@@ -8,58 +8,33 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Typography,
   Container,
-  TextField,
   Box,
+  Typography,
+  TextField,
 } from "@mui/material";
-import WorkloadManager from "./sub/WorkloadManager";
-import IssueViewer from "./sub/IssueView";
-import TechnicianAssignmentAndStatusUpdater from "./sub/TechnicianAssignmentAndStatusUpdater";
 
-// API Base URL
+
 const API_BASE_URL = "http://localhost:5000/api/appointments";
 
-// Fetch all appointments
-const fetchAppointments = async () => {
-  try {
-    const response = await axios.get(API_BASE_URL);
-    return response.data
-      .reverse()
-      .filter(
-        (x) =>
-          x.status === "Confirmed" ||
-          x.status === "Waiting for Technician Confirmation"
-      ); // Latest first
-  } catch (error) {
-    console.error("Error fetching appointments:", error);
-    return [];
-  }
-};
-
-// Main Appointment Data Component
-function AppointmentData() {
+function TDeclined() {
   const [appointments, setAppointments] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
 
+  // Fetch appointments from backend  ..
   useEffect(() => {
-    const getAppointments = async () => {
-      setLoading(true);
-      const data = await fetchAppointments();
-      setAppointments(data);
-      setLoading(false);
-    };
-    getAppointments();
+    axios
+      .get(API_BASE_URL)
+      .then((response) => {
+        setAppointments(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching appointments:", error);
+        setLoading(false);
+      });
   }, []);
-
-  const updateAppointmentInState = (updatedAppointment) => {
-    setAppointments((prevAppointments) =>
-      prevAppointments.map((appt) =>
-        appt._id === updatedAppointment._id ? updatedAppointment : appt
-      )
-    );
-  };
 
   const filteredAppointments = appointments.filter((appointment) =>
     (appointment.vehicleId || "")
@@ -70,6 +45,7 @@ function AppointmentData() {
 
   return (
     <Container>
+      <h2>Declined Works</h2>
       <Box
         display="flex"
         justifyContent="space-between"
@@ -99,16 +75,13 @@ function AppointmentData() {
                 <strong>Vehicle Number</strong>
               </TableCell>
               <TableCell>
-                <strong>Model</strong>
+                <strong>Service description</strong>
               </TableCell>
               <TableCell>
-                <strong>Issue</strong>
+                <strong>Declined Reason</strong>
               </TableCell>
               <TableCell>
-                <strong>Workload</strong>
-              </TableCell>
-              <TableCell>
-                <strong>Assign Technician</strong>
+                <strong>Date</strong>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -120,27 +93,21 @@ function AppointmentData() {
                 </TableCell>
               </TableRow>
             ) : filteredAppointments.length > 0 ? (
-              filteredAppointments.map((appointment) => (
+              filteredAppointments.filter((appointment) =>
+                ["Reject1"].includes(
+                  appointment.status
+                )
+              ).map((appointment) => (
                 <TableRow key={appointment._id}>
                   <TableCell>{appointment.vehicleId}</TableCell>
                   <TableCell>{appointment.vehicleNumber}</TableCell>
-                  <TableCell>{appointment.model}</TableCell>
+                  <TableCell>{appointment.issue}</TableCell>
+                  <TableCell>{}</TableCell>
                   <TableCell>
-                    <IssueViewer issue={appointment.issue} />
-                  </TableCell>
-                  <TableCell>
-                    <WorkloadManager
-                      btn_name="Write"
-                      appointment={appointment}
-                      updateAppointment={updateAppointmentInState}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <TechnicianAssignmentAndStatusUpdater
-                      appointment={appointment}
-                      updateAppointment={updateAppointmentInState}
-                    />
-                  </TableCell>
+                      {new Date(
+                        appointment.appointmentDate
+                      ).toLocaleDateString()}
+                    </TableCell>
                 </TableRow>
               ))
             ) : (
@@ -157,4 +124,4 @@ function AppointmentData() {
   );
 }
 
-export default AppointmentData;
+export default TDeclined;

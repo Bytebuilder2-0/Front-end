@@ -1,19 +1,19 @@
 import AppointmentData from "../../components/AppintmentData";
 import { Box,Toolbar } from "@mui/material";
-import MiniDrawer from "../../components/ui/MiniDrawer";
+import UserMiniDrawer from "../../components/ui/UserMiniDrawer";
 
-function SupervisorDashboard() {
+function UserDashboard() {
+  
   return (
      <>
     <Box sx={{ display: 'flex' }}>
-       <MiniDrawer />
+       <UserMiniDrawer />
        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar/>
-    <AppointmentData/>
        </Box>
      </Box>
      </>
   );
 }
 
-export default SupervisorDashboard;
+export default UserDashboard;
