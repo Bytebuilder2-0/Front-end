@@ -110,7 +110,7 @@ export default function MiniDrawer() {
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       {/* App Bar */}
-      <AppBar position="fixed" sx={{ backgroundColor: "", zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <AppBar position="fixed" sx={{ backgroundColor: "#ffffff", zIndex: (theme) => theme.zIndex.drawer + 1 }}>
   <Toolbar disableGutters>
     {/* Left-aligned image, same width as the drawer */}
     <Box sx={{ width: drawerWidth, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -125,9 +125,6 @@ export default function MiniDrawer() {
       />
     </Box>
 
-    {/* Spacer between image and menu icon */}
-    <Box  />
-
     {/* Toggle Drawer Icon */}
     <IconButton
       color="inherit"
@@ -135,7 +132,7 @@ export default function MiniDrawer() {
       edge="end"
       sx={{ marginRight: 2 }}
     >
-      {open ? <ChevronLeftIcon /> : <MenuIcon />}
+      {open ? <ChevronLeftIcon sx={{ color: "text.primary" }}  /> : <MenuIcon sx={{ color: "text.primary" }}  />}
     </IconButton>
   </Toolbar>
 </AppBar>
