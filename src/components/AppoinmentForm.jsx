@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { TextField, MenuItem, Select, FormControl, InputLabel, Button, Grid, Typography, FormHelperText,} from '@mui/material';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useNavigate } from 'react-router-dom'; 
 import HandleAppointmentForm from './sub/HandleAppointmentForm';
 import AlertDialog from './Appointement/AlertDialog';
@@ -138,7 +137,6 @@ const handleAlertClose = () => {
             error={!!errors.preferredTime}
             helperText={errors.preferredTime || 'Example: 09:30 AM'}
           />
-
           <TextField
             fullWidth
             margin="normal"
@@ -150,9 +148,8 @@ const handleAlertClose = () => {
             InputLabelProps={{ shrink: true }}
             error={!!errors.expectedDeliveryDate}
             helperText={errors.expectedDeliveryDate}
-          />
-
-       
+            
+            />          
           <TextField
             fullWidth
             margin="normal"
