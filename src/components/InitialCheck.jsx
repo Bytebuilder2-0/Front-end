@@ -8,8 +8,11 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Button,Container,Box,Typography,TextField
+  Button,Container,Box,Typography,TextField, IconButton, Tooltip 
 } from "@mui/material";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
+
 import IssueViewer from "./sub/IssueView";
 
 // API Base URL
@@ -128,7 +131,7 @@ const InitialCheck = () => {
           })}
         </TableCell>
 
-        {/* 🔵 Status with color */}
+        {/*  Status with color */}
         <TableCell>
           <span
             style={{
@@ -150,26 +153,31 @@ const InitialCheck = () => {
 
     
         <TableCell>
-          <Button
-            variant="contained"
-            color="success"
-            sx={{ marginRight: 1 }}
-            onClick={() =>
-              updateAppointmentStatus(appointment._id, "Confirmed", setAppointments)
-            }
-          >
-            Accept
-          </Button>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() =>
-              updateAppointmentStatus(appointment._id, "Reject1", setAppointments)
-            }
-          >
-            Reject
-          </Button>
-        </TableCell>
+  <Tooltip title="Accept">
+    <IconButton
+      color="success"
+      onClick={() =>
+        updateAppointmentStatus(appointment._id, "Confirmed", setAppointments)
+      }
+      sx={{ fontSize: 30 }}
+    >
+      <CheckCircleIcon sx={{ fontSize: 30 }}/>
+    </IconButton>
+  </Tooltip>
+
+  <Tooltip title="Reject">
+    <IconButton
+      color="error"
+      onClick={() =>
+        updateAppointmentStatus(appointment._id, "Reject1", setAppointments)
+      }
+      sx={{ fontSize: 30 }}
+    >
+      <CancelIcon sx={{ fontSize: 30 }}/>
+    </IconButton>
+  </Tooltip>
+</TableCell>
+
       </TableRow>
     ))
   ) : (

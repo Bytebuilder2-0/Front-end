@@ -80,7 +80,7 @@ const SupInprogress = () => {
                 <strong>Description</strong>
               </TableCell>
               <TableCell>
-                <strong>Technician Messages</strong>
+                <strong>Tech.Messages</strong>
               </TableCell>
               <TableCell>
                 <strong>Suggestions</strong>

@@ -10,6 +10,8 @@ import AppointmentView from '../pages/User/AppointmentView';
 import UserDashboard from '../pages/User/UserDashboard';
 
 import FeedbackPage from "../pages/Manager/FeedbackPage";
+import ManageServices from '../pages/Manager/ManageServices';
+
 
 import TechnicianCompleted from '../pages/Technician/TechnicianCompleted';
 import { Login } from '@mui/icons-material'; 
@@ -62,6 +64,7 @@ const router = createBrowserRouter([
 },{
   path: "/feedback",
   element: <FeedbackPage />,
+
 },
 {
   path: "/Loginpage",
@@ -71,6 +74,15 @@ const router = createBrowserRouter([
   path: "/SignupPage",
   element: <SignupPage />,
 }
+
+  
+
+},
+{
+      path: "/ManageServices",
+      element: <ManageServices/>,
+    } 
+
 
 ]);
 

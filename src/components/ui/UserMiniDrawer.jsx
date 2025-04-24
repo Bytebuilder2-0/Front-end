@@ -22,7 +22,6 @@ import {
   ExpandMore
 } from "@mui/icons-material";
 
-
 const drawerWidth = 240;
 
 // Drawer Opened Styling
@@ -103,7 +102,6 @@ export default function UserMiniDrawer({userId}) {
   const handleDrawerOpen = () => setOpen(true);
   const handleDrawerClose = () => setOpen(false);
 
-
   // const { id } = useParams(); // Get appointment ID from the URL
   const [appointments, setAppointments] = useState([]);
 
@@ -142,7 +140,6 @@ export default function UserMiniDrawer({userId}) {
   const handleExpandClick = (menuItem) => {
     setExpanded(prev => ({ ...prev, [menuItem]: !prev[menuItem] }));
   };
-
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -206,15 +203,17 @@ export default function UserMiniDrawer({userId}) {
             { path: "", label: "Dashboard", icon: <DashboardIcon/> },
             {path : "/appointments/new" , label: "Make an Appointemnt", icon: <TodayIcon /> },
             {path : "" , label: "Notifications", icon: <NotificationsIcon/> },
-            { 
-              label: "My Appointments", 
+            {
+              label: "My Appointments",
               icon: <ListIcon />,
               hasChildren: true,
-              children: appointments.map((appt, index) => ({
-                path: `/appointments/${appt._id || appt.id}`,
-                label: `Appointment ${index + 1}`,
-                status: appt.status 
-              }))
+              children: appointments
+                .filter(appt => !['Cancelled', 'All done'].includes(appt?.status))
+                .map((appt) => ({
+                  path: `/appointments/${appt._id}`,
+                  label: appt.model || `Vehicle ${appt._id.substring(0, 4)}`, // Fallback to partial ID if no model
+                  status: appt.status,
+                }))
             },
             {path : "" , label: "History", icon: <HistoryIcon/> },
             {path : "" , label: "Edit Profile", icon: <EditIcon/> },
