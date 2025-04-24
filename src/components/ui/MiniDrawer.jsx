@@ -39,7 +39,7 @@ const openedMixin = (theme) => ({
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
   }),
-  overflowX: "hidden",
+  overflowX: "hidden", //hide any content that overflows beyond the component’s width
 });
 
 // Drawer Closed Styling
@@ -56,23 +56,16 @@ const closedMixin = (theme) => ({
 });
 
 // Custom AppBar
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
+// Independent AppBar
+const AppBar = styled(MuiAppBar)(({ theme }) => ({
+  zIndex: theme.zIndex.drawer + 1, // ensures it's above the drawer
+  width: "100%", // always full width
+  transition: theme.transitions.create(["background-color"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
 }));
+
 
 // Custom Drawer
 const Drawer = styled(MuiDrawer, {
@@ -115,33 +108,39 @@ export default function MiniDrawer() {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <CssBaseline />
       {/* App Bar */}
-      <AppBar position="fixed" open={open} sx={{ backgroundColor: "" }}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            onClick={open ? handleDrawerClose : handleDrawerOpen}
-            edge="start"
-            sx={{ marginRight: 5 }}
-          >
-            {open ? <ChevronLeftIcon /> : <MenuIcon />}
-          </IconButton>
-        </Toolbar>
-      </AppBar>
+      <AppBar position="fixed" sx={{ backgroundColor: "#ffffff", zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+  <Toolbar disableGutters >
+    {/* Left-aligned image, same width as the drawer */}
+    <Box sx={{ width: drawerWidth, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <img
+        src="/assets/resized-garage24.png"
+        alt="Frame"
+        style={{
+          height: "64px",
+          width: drawerWidth, // fills drawer width
+          objectFit: "contain",
+        }}
+      />
+    </Box>
+
+    {/* Toggle Drawer Icon */}
+    <IconButton
+      color="inherit"
+      onClick={open ? handleDrawerClose : handleDrawerOpen}
+      edge="end"
+      sx={{ marginRight: 2 }}
+    >
+      {open ? <ChevronLeftIcon sx={{ color: "text.primary" }}  /> : <MenuIcon sx={{ color: "text.primary" }}  />}
+    </IconButton>
+  </Toolbar>
+</AppBar>
+
 
       {/* Sidebar Drawer */}
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
-          {/* Image at the Top */}
-          <img
-            src="/assets/frame.png"
-            alt="Frame"
-            style={{
-              height: "64px",
-              width: "auto",
-            }}
-          />
+      
         </DrawerHeader>
         <Divider />
 
