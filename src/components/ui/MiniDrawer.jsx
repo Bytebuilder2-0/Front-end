@@ -108,18 +108,17 @@ export default function MiniDrawer() {
 
   return (
     <Box sx={{ display: "flex" }}>
-      <CssBaseline />
       {/* App Bar */}
       <AppBar position="fixed" sx={{ backgroundColor: "#ffffff", zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-  <Toolbar disableGutters>
+  <Toolbar disableGutters >
     {/* Left-aligned image, same width as the drawer */}
     <Box sx={{ width: drawerWidth, display: "flex", alignItems: "center", justifyContent: "center" }}>
       <img
-        src="/assets/frame.png"
+        src="/assets/resized-garage24.png"
         alt="Frame"
         style={{
           height: "64px",
-          width: "100%", // fills drawer width
+          width: drawerWidth, // fills drawer width
           objectFit: "contain",
         }}
       />
