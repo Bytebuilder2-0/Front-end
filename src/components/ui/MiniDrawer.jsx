@@ -132,7 +132,12 @@ function MiniDrawer() {
     >
       {open ? <ChevronLeftIcon sx={{ color: "text.primary" }}  /> : <MenuIcon sx={{ color: "text.primary" }}  />}
     </IconButton>
-    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+    <Box sx={{ flexGrow: 1 }} />
+    <Box 
+    sx={{ display: { xs: 'none', md: 'flex' }, alignItems: "center",
+        gap: 2, // spacing between icons
+        pr: 7,  // padding-right
+         }}>
            
             <IconButton
               size="large"
