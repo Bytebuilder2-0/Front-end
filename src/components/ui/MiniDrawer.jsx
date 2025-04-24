@@ -87,11 +87,7 @@ const Drawer = styled(MuiDrawer, {
 
 // Drawer Header
 const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-
-  ...theme.mixins.toolbar,
+  ...theme.mixins.toolbar   //this div is same height as the appbar height 
 }));
 
 export default function MiniDrawer() {
@@ -139,9 +135,7 @@ export default function MiniDrawer() {
 
       {/* Sidebar Drawer */}
       <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
-      
-        </DrawerHeader>
+<DrawerHeader/>
         <Divider />
 
         {/* User Avatar */}
