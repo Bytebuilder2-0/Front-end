@@ -12,6 +12,9 @@ import UserDashboard from '../pages/User/UserDashboard';
 import FeedbackPage from "../pages/Manager/FeedbackPage";
 
 import TechnicianCompleted from '../pages/Technician/TechnicianCompleted';
+import { Login } from '@mui/icons-material'; 
+import Loginpage from '../pages/Loginpage';
+import SignupPage from '../pages/SignupPage';
 
 
 
@@ -59,6 +62,14 @@ const router = createBrowserRouter([
 },{
   path: "/feedback",
   element: <FeedbackPage />,
+},
+{
+  path: "/Loginpage",
+  element: <Loginpage />,
+},
+{
+  path: "/SignupPage",
+  element: <SignupPage />,
 }
 
 ]);
