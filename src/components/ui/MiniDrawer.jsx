@@ -93,6 +93,8 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar   //this div is same height as the appbar height 
 }));
 
+const menuId = 'primary-search-account-menu';  //in the account icon in app bar
+
 function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
@@ -136,7 +138,7 @@ function MiniDrawer() {
     <Box 
     sx={{ display: { xs: 'none', md: 'flex' }, alignItems: "center",
         gap: 2, // spacing between icons
-        pr: 7,  // padding-right
+        pr: 5,  // padding-right
          }}>
            
             <IconButton
@@ -145,19 +147,19 @@ function MiniDrawer() {
               color="inherit"
             >
               <Badge badgeContent={0} color="error">
-                <NotificationsIcon sx={{ color: "text.primary" }}/>
+                <NotificationsIcon sx={{ color: "text.primary" }} fontSize="large"/>
               </Badge>
             </IconButton>
             <IconButton
               size="large"
               edge="end"
               aria-label="account of current user"
-             // aria-controls={menuId}
+             aria-controls={menuId}
               aria-haspopup="true"
               //onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircle sx={{ color: "text.primary" }}/>
+              <AccountCircle sx={{ color: "text.primary" }} fontSize="large"/>
             </IconButton>
           </Box>
   </Toolbar>
