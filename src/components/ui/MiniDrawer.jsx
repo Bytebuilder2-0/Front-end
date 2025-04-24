@@ -90,7 +90,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar   //this div is same height as the appbar height 
 }));
 
-export default function MiniDrawer() {
+function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
   const navigate = useNavigate();
@@ -194,3 +194,5 @@ export default function MiniDrawer() {
     </Box>
   );
 }
+
+export default MiniDrawer;
