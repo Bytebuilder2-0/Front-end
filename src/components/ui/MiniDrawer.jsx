@@ -25,9 +25,11 @@ import {
   AutoGraph as AutoGraphIcon,
   DoneOutline as DoneOutlineIcon,
   History as HistoryIcon,
+  Error as ErrorIcon,
+  Dashboard as DashboardIcon
+
 } from "@mui/icons-material";
-import ErrorIcon from "@mui/icons-material/Error";
-import DashboardIcon from "@mui/icons-material/Dashboard";
+
 const drawerWidth = 240;
 
 // Drawer Opened Styling
