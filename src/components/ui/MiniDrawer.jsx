@@ -29,6 +29,9 @@ import {
   Dashboard as DashboardIcon
 
 } from "@mui/icons-material";
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import Badge from '@mui/material/Badge';
+import AccountCircle from '@mui/icons-material/AccountCircle';
 
 const drawerWidth = 240;
 
@@ -129,6 +132,29 @@ function MiniDrawer() {
     >
       {open ? <ChevronLeftIcon sx={{ color: "text.primary" }}  /> : <MenuIcon sx={{ color: "text.primary" }}  />}
     </IconButton>
+    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+           
+            <IconButton
+              size="large"
+              aria-label="show 17 new notifications"
+              color="inherit"
+            >
+              <Badge badgeContent={17} color="error">
+                <NotificationsIcon sx={{ color: "text.primary" }}/>
+              </Badge>
+            </IconButton>
+            <IconButton
+              size="large"
+              edge="end"
+              aria-label="account of current user"
+             // aria-controls={menuId}
+              aria-haspopup="true"
+              //onClick={handleProfileMenuOpen}
+              color="inherit"
+            >
+              <AccountCircle sx={{ color: "text.primary" }}/>
+            </IconButton>
+          </Box>
   </Toolbar>
 </AppBar>
 
