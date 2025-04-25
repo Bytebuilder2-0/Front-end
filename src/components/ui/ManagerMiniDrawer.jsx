@@ -101,7 +101,7 @@ export default function ManagerSidebar({ children }) {
         {open && (
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mt: 2 }}>
             <Avatar src="https://randomuser.me/api/portraits/women/2.jpg" sx={{ width: 80, height: 80 }} />
-            <Typography sx={{ mt: 1 }}>Manager 1</Typography>
+            <Typography sx={{ mt: 1 }}>Manager</Typography>
           </Box>
         )}
         {open && <Divider sx={{ mx: 2, my: 1 }} />}

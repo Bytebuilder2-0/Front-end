@@ -14,6 +14,7 @@ import ManageServices from '../pages/Manager/ManageServices';
 
 
 import TechnicianCompleted from '../pages/Technician/TechnicianCompleted';
+import ManagerDashboardPage from '../pages/Manager/ManagerDashboardPage';
 
 
 
@@ -58,7 +59,8 @@ const router = createBrowserRouter([
 {
   path: "/User",
   element: <UserDashboard />
-},{
+},
+{
   path: "/feedback",
   element: <FeedbackPage />,
   
@@ -67,7 +69,14 @@ const router = createBrowserRouter([
 {
       path: "/ManageServices",
       element: <ManageServices/>,
-    } 
+    } , 
+{
+      path: "/ManagerDashboard",
+      element: <ManagerDashboardPage/>,
+    } ,
+
+
+    
 
 ]);
 
