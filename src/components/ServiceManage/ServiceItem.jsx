@@ -7,18 +7,26 @@ import {
   Button,
   Box,
 } from "@mui/material";
-import ConfirmDeleteDialog from "./ConfirmDeleteDialog";
+import ConfirmDeleteDialog from "./ConfirmDeleteDialog";  // For Delete
+import ConfirmEditDialog from "./ConfirmEditDialog";      // For Edit Confirmation
 
 const ServiceItem = ({ service, onToggle, onDelete, onUpdate }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(service.name);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [editConfirmDialogOpen, setEditConfirmDialogOpen] = useState(false); // Edit confirmation dialog state
 
   const handleSave = () => {
     if (editedName.trim() && editedName !== service.name) {
-      onUpdate(service._id, editedName);
+      setEditConfirmDialogOpen(true); // Show confirmation dialog before updating
     }
-    setIsEditing(false);
+  };
+
+  // Confirm Edit: Update the service name
+  const handleEditConfirmed = () => {
+    onUpdate(service._id, editedName);
+    setEditConfirmDialogOpen(false);
+    setIsEditing(false); // Close edit mode after confirmation
   };
 
   return (
@@ -36,7 +44,7 @@ const ServiceItem = ({ service, onToggle, onDelete, onUpdate }) => {
           onChange={() => onToggle(service._id, service.selected)}
         />
 
-        {/* Edit mode vs display */}
+        {/* Editable Name Field */}
         {isEditing ? (
           <TextField
             value={editedName}
@@ -76,15 +84,24 @@ const ServiceItem = ({ service, onToggle, onDelete, onUpdate }) => {
         </Box>
       </ListItem>
 
-      {/* Confirm Dialog */}
+      {/* Confirm Delete Dialog */}
       <ConfirmDeleteDialog
         open={confirmDialogOpen}
         onClose={() => setConfirmDialogOpen(false)}
         onConfirm={() => {
-          onDelete(service._id, service.name); // Pass name too for Snackbar
+          onDelete(service._id, service.name);
           setConfirmDialogOpen(false);
         }}
         itemName={service.name}
+      />
+
+      {/* Confirm Edit Dialog */}
+      <ConfirmEditDialog
+        open={editConfirmDialogOpen}
+        onClose={() => setEditConfirmDialogOpen(false)}
+        onConfirm={handleEditConfirmed}
+        itemName={service.name}
+        editedName={editedName}
       />
     </>
   );
