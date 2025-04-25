@@ -6,35 +6,19 @@ import {
   TextField,
   Button,
   Box,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Typography,
 } from "@mui/material";
+import ConfirmDeleteDialog from "./ConfirmDeleteDialog"; // ✅ Import
 
 const ServiceItem = ({ service, onToggle, onDelete, onUpdate }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(service.name);
-  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false); // NEW
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 
   const handleSave = () => {
-    if (typeof onUpdate !== "function") {
-      console.error("❌ onUpdate is not a function");
-      return;
-    }
-
     if (editedName.trim() && editedName !== service.name) {
       onUpdate(service._id, editedName);
     }
     setIsEditing(false);
-  };
-
-  const openConfirmDialog = () => setConfirmDialogOpen(true);
-  const closeConfirmDialog = () => setConfirmDialogOpen(false);
-  const confirmDelete = () => {
-    onDelete(service._id);
-    closeConfirmDialog();
   };
 
   return (
@@ -82,26 +66,22 @@ const ServiceItem = ({ service, onToggle, onDelete, onUpdate }) => {
             variant="outlined"
             color="error"
             size="small"
-            onClick={openConfirmDialog}
+            onClick={() => setConfirmDialogOpen(true)}
           >
             Delete
           </Button>
         </Box>
       </ListItem>
 
-      {/* Confirmation Dialog */}
-      <Dialog open={confirmDialogOpen} onClose={closeConfirmDialog}>
-        <DialogTitle>Confirm Deletion</DialogTitle>
-        <DialogContent>
-          <Typography>Are you sure you want to delete "{service.name}"?</Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeConfirmDialog}>Cancel</Button>
-          <Button onClick={confirmDelete} color="error" variant="contained">
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ConfirmDeleteDialog
+        open={confirmDialogOpen}
+        onClose={() => setConfirmDialogOpen(false)}
+        onConfirm={() => {
+          onDelete(service._id);
+          setConfirmDialogOpen(false);
+        }}
+        itemName={service.name}
+      />
     </>
   );
 };
