@@ -58,8 +58,8 @@ const StatusSummary = () => {
           <CardContent sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", pl: 6, pr: 6 }}>
             <div>
               <Typography variant="h6">{data.status}</Typography>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="h4" sx={{ marginRight: 1 }}>{data.count}</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Typography variant="h4" sx={{marginRight:1}}>{data.count}</Typography>
                 <CardMedia
                   component="img"
                   sx={{ height: 20, width: 20 }}
