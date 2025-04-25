@@ -1,9 +1,20 @@
-import React from 'react'
+import React from 'react';
+import { Typography, Box, Divider } from '@mui/material';
 
-function PathNaming() {
+function PathNaming({ label, path }) {
   return (
-    <div>PathNaming</div>
-  )
+    <Box sx={{ mb: 3 }}>
+      
+      <Typography variant="h5" sx={{ fontWeight: 600 }}>
+        {label}
+      </Typography>
+      <Typography variant="body2" color="text.secondary">
+        {path}
+      </Typography>
+      <Divider/>
+    </Box>
+  
+  );
 }
 
-export default PathNaming
+export default PathNaming;

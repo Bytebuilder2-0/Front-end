@@ -10,9 +10,9 @@ const SupInitial = () => {
     <>
     <Box sx={{ display: 'flex' }}>
        <MiniDrawer />
-       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+       <Box component="main" sx={{ flexGrow: 1,pl:3,pr:3 }}>
        <Toolbar/>
-       <PathNaming/>
+       <PathNaming label="Home" path="Supervisor/Initial"/>
        <StatusSummary/>
     <InitialCheck/>
        </Box>
