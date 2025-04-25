@@ -126,6 +126,18 @@ const handleAlertClose = () => {
             multiline
             rows={4}
           />
+                <TextField
+            fullWidth
+            margin="normal"
+            label="Preferred Date"
+            name="preferredDate"
+            type="date"
+            value={formData.preferredDate}
+            onChange={handleInputChange}
+            InputLabelProps={{ shrink: true }}
+            error={!!errors.preferredDate}
+            helperText={errors.preferredDate}
+            />
     
           <TextField
             fullWidth
@@ -158,7 +170,7 @@ const handleAlertClose = () => {
             value={formData.contactNumber}
             onChange={handleInputChange}
             error={!!errors.contactNumber}
-            helperText={errors.contactNumber || 'Example : 0771234567 '}
+            helperText={errors.contactNumber || 'Example : 9412345678'}
           />
           <Grid container spacing={2} justifyContent="flex-end" style={{ marginTop: 20 }}>
             <Grid item>
