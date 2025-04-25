@@ -9,7 +9,7 @@ import AppointmentSubmit from '../pages/User/AppoinmentSubmit';
 import AppointmentView from '../pages/User/AppointmentView';
 import UserDashboard from '../pages/User/UserDashboard';
 
-import FeedbackPage from "../pages/Manager/FeedbackPage";
+import FeedbackPage from '../pages/Manager/FeedbackPage';
 import ManageServices from '../pages/Manager/ManageServices';
 
 
