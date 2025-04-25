@@ -74,6 +74,7 @@ export default function ManagerSidebar({ children }) {
   const handleDrawerToggle = () => setOpen(!open);
 
   const navItems = [
+    { path: "/ManagerDashboard", label: "Dashboard", icon: <BuildIcon /> },
     { path: "/ManageServices", label: "Manage Services", icon: <BuildIcon /> },
     { path: "/feedback", label: "Manage Feedback", icon: <FeedbackIcon /> },
   ];
