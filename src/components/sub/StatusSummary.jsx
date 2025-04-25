@@ -9,8 +9,7 @@ const StatusSummary = () => {
     total: 0,
     pending: 0,
     confirmed: 0,
-    inProgress: 0,
-    rejected: 0,
+ 
   });
 
   useEffect(() => {
@@ -27,8 +26,8 @@ const StatusSummary = () => {
   }, []);
 
   return (
-    <Grid container spacing={2} mb={2}>
-      <Grid item xs={12} sm={6} md={2.4}>
+    <Grid container spacing={5} mb={3} justifyContent="center">
+      <Grid item xs={12} sm={6} md={4}>
         <Card sx={{ backgroundColor: "", color: "#00000" }}>
           <CardContent>
             <Typography variant="h6">Total</Typography>
@@ -36,7 +35,7 @@ const StatusSummary = () => {
           </CardContent>
         </Card>
       </Grid>
-      <Grid item xs={12} sm={6} md={2.4}>
+      <Grid item xs={12} sm={6} md={4}>
         <Card sx={{ backgroundColor: "orange", color: "#fff" }}>
           <CardContent>
             <Typography variant="h6">Pending</Typography>
@@ -44,7 +43,7 @@ const StatusSummary = () => {
           </CardContent>
         </Card>
       </Grid>
-      <Grid item xs={12} sm={6} md={2.4}>
+      <Grid item xs={12} sm={6} md={4}>
         <Card sx={{ backgroundColor: "green", color: "#fff" }}>
           <CardContent>
             <Typography variant="h6">Confirmed</Typography>
@@ -52,22 +51,7 @@ const StatusSummary = () => {
           </CardContent>
         </Card>
       </Grid>
-      <Grid item xs={12} sm={6} md={2.4}>
-        <Card sx={{ backgroundColor: "#0288d1", color: "#fff" }}>
-          <CardContent>
-            <Typography variant="h6">In Progress</Typography>
-            <Typography variant="h4">{counts.inProgress}</Typography>
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={12} sm={6} md={2.4}>
-        <Card sx={{ backgroundColor: "red", color: "#fff" }}>
-          <CardContent>
-            <Typography variant="h6">Rejected</Typography>
-            <Typography variant="h4">{counts.rejected}</Typography>
-          </CardContent>
-        </Card>
-      </Grid>
+    
     </Grid>
   );
 };
