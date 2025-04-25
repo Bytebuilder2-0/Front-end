@@ -11,7 +11,7 @@ export const fetchServices = async () => {
     return [];
   }
 };
-
+//comment add
 export const addService = async (name, type) => {
   try {
     const res = await axios.post(API_URL, { name, type });

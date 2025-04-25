@@ -5,13 +5,16 @@ import {
   toggleService,
   deleteService,
   updateService,
-} from "../api/serviceApi";
+} from "./serviceApi";
 import ServiceList from "./ServiceList";
 import ServiceForm from "./ServiceForm";
 import { Container, Typography, Paper } from "@mui/material";
+import SuccessSnackbar from "./SuccessSnackbar";  // ✅ Import SuccessSnackbar
 
 const ServiceManager = () => {
   const [services, setServices] = useState([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   useEffect(() => {
     fetchServices().then(setServices);
@@ -24,23 +27,29 @@ const ServiceManager = () => {
         service._id === id ? { ...service, selected: !selected } : service
       )
     );
+    // Show Success Snackbar
+    setSnackbarMessage("Service status updated successfully.");
+    setSnackbarOpen(true);
   };
 
   const handleAdd = async (name, type) => {
     const newService = await addService(name, type);
     if (newService && newService._id) {
       setServices((prev) => [...prev, newService]);
+      setSnackbarMessage(`"${name}" added successfully.`);
+      setSnackbarOpen(true);
     } else {
-      setServices((prev) => [
-        ...prev,
-        { ...newService, _id: new Date().toISOString() },
-      ]);
+      setSnackbarMessage("Error adding service.");
+      setSnackbarOpen(true);
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id, name) => {
     await deleteService(id);
     setServices((prev) => prev.filter((service) => service._id !== id));
+    // Show Success Snackbar
+    setSnackbarMessage(`"${name}" deleted successfully.`);
+    setSnackbarOpen(true);
   };
 
   const handleUpdate = async (id, name) => {
@@ -51,6 +60,11 @@ const ServiceManager = () => {
           service._id === id ? { ...service, name: updated.name } : service
         )
       );
+      setSnackbarMessage(`"${name}" updated successfully.`);
+      setSnackbarOpen(true);
+    } else {
+      setSnackbarMessage("Error updating service.");
+      setSnackbarOpen(true);
     }
   };
 
@@ -85,6 +99,13 @@ const ServiceManager = () => {
           onUpdate={handleUpdate}
         />
       </Paper>
+
+      {/* Success Snackbar */}
+      <SuccessSnackbar
+        open={snackbarOpen}
+        message={snackbarMessage}
+        onClose={() => setSnackbarOpen(false)}
+      />
     </Container>
   );
 };
