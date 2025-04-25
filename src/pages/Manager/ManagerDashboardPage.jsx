@@ -1,12 +1,11 @@
 import React from "react";
-import ServiceManager from "../../components/ServiceManage/ServiceManage";
 import ManagerSidebar from "../../components/ui/ManagerMiniDrawer";
 
-export default function ManageServices() {
+export default function ManagerDashboardPage() {
   return (
     <div>
       <ManagerSidebar>
-      <ServiceManager />
+      <h1>this manager dashboard</h1>
       </ManagerSidebar>
     </div>
   );
