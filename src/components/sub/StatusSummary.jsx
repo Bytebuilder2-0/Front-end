@@ -24,98 +24,61 @@ const StatusSummary = () => {
 
     fetchCounts();
   }, []);
+  
+  const statusData = [
+    {
+      title: "Total",
+      subheader: "Pending Appointment Count",
+      count: counts.total,
+      image: "/assets/purchase.png.png",
+      status: "Total",
+    },
+    {
+      title: "Pending",
+      subheader: "Pending Appointment Count",
+      count: counts.pending,
+      image: "/assets/inpro.png",
+      status: "Pending",
+    },
+    {
+      title: "Confirmed",
+      subheader: "Confirmed Appointment Count",
+      count: counts.confirmed,
+      image: "/assets/success.jpg",
+      status: "Confirmed",
+    },
+  ];
 
   return (
     <Grid container spacing={5} mb={3} justifyContent="center">
-      <Grid item xs={12} sm={6} md={4}>
+    {statusData.map((data, index) => (
+      <Grid item xs={12} sm={6} md={4} key={index}>
         <Card sx={{ backgroundColor: "", color: "#" }}>
-            <CardHeader  title="Total" subheader="Pending Appointment Count"/>
-          <CardContent sx={{ display: "flex",alignItems:"center" ,justifyContent: "space-between", pl: 6,
-    pr: 6 }}>
+          <CardHeader title={data.title} subheader={data.subheader} />
+          <CardContent sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", pl: 6, pr: 6 }}>
             <div>
-            <Typography variant="h6">Total</Typography>
-
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography variant="h4" sx={{ marginRight: 1 }}>{counts.total}</Typography>
-                    <CardMedia
-                        component="img"
-                        sx={{ height: 20, width: 20 }}
-                        image="/assets/up.png"
-                        alt="Card Image"
-                    />
-                    </Box>
-          
+              <Typography variant="h6">{data.status}</Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography variant="h4" sx={{ marginRight: 1 }}>{data.count}</Typography>
+                <CardMedia
+                  component="img"
+                  sx={{ height: 20, width: 20 }}
+                  image="/assets/up.png"
+                  alt="Card Image"
+                />
+              </Box>
             </div>
             <CardMedia
-        component="img"
-        sx={{ height:70, width: 70 }}
-        image="/assets/purchase.png.png"
-        alt="Card Image"
-      />
+              component="img"
+              sx={{ height: 70, width: 70 }}
+              image={data.image}
+              alt="Card Image"
+            />
           </CardContent>
-       
         </Card>
       </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <Card sx={{ backgroundColor: "", color: "#" }}>
-            <CardHeader  title="pen-01" subheader="lol Count"/>
-          <CardContent sx={{ display: "flex",alignItems:"center" ,justifyContent: "space-between", pl: 6,
-    pr: 6 }}>
-            <div>
-            <Typography variant="h6">Pending</Typography>
-
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography variant="h4" sx={{ marginRight: 1 }}>{counts.pending}</Typography>
-                    <CardMedia
-                        component="img"
-                        sx={{ height: 20, width: 20 }}
-                        image="/assets/up.png"
-                        alt="Card Image"
-                    />
-                    </Box>
-          
-            </div>
-            <CardMedia
-        component="img"
-        sx={{ height:70, width: 70 }}
-        image="/assets/inpro.png"
-        alt="Card Image"
-      />
-          </CardContent>
-       
-        </Card>
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <Card sx={{ backgroundColor: "", color: "#" }}>
-            <CardHeader  title="cocnmi" subheader="lobuks"/>
-          <CardContent sx={{ display: "flex",alignItems:"center" ,justifyContent: "space-between", pl: 6,
-    pr: 6 }}>
-            <div>
-            <Typography variant="h6">confrm</Typography>
-
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Typography variant="h4" sx={{ marginRight: 1 }}>{counts.confirmed}</Typography>
-                    <CardMedia
-                        component="img"
-                        sx={{ height: 20, width: 20 }}
-                        image="/assets/up.png"
-                        alt="Card Image"
-                    />
-                    </Box>
-          
-            </div>
-            <CardMedia
-        component="img"
-        sx={{ height:70, width: 70 }}
-        image="/assets/success.jpg"
-        alt="Card Image"
-      />
-          </CardContent>
-       
-        </Card>
-      </Grid>
-    
-    </Grid>
+    ))}
+  </Grid>
   );
 };
 
