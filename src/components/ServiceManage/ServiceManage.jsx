@@ -5,7 +5,7 @@ import {
   toggleService,
   deleteService,
   updateService,
-} from "../api/serviceApi";
+} from "./serviceApi";
 import ServiceList from "./ServiceList";
 import ServiceForm from "./ServiceForm";
 import { Container, Typography, Paper } from "@mui/material";
