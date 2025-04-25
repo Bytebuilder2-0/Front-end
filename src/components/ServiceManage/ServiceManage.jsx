@@ -8,13 +8,8 @@ import {
 } from "./serviceApi";
 import ServiceList from "./ServiceList";
 import ServiceForm from "./ServiceForm";
-import {
-  Container,
-  Typography,
-  Paper,
-  Snackbar,
-  Alert,
-} from "@mui/material";
+import { Container, Typography, Paper } from "@mui/material";
+import SuccessSnackbar from "./SuccessSnackbar";  // ✅ Import SuccessSnackbar
 
 const ServiceManager = () => {
   const [services, setServices] = useState([]);
@@ -32,25 +27,27 @@ const ServiceManager = () => {
         service._id === id ? { ...service, selected: !selected } : service
       )
     );
+    // Show Success Snackbar
+    setSnackbarMessage("Service status updated successfully.");
+    setSnackbarOpen(true);
   };
 
   const handleAdd = async (name, type) => {
     const newService = await addService(name, type);
     if (newService && newService._id) {
       setServices((prev) => [...prev, newService]);
+      setSnackbarMessage(`"${name}" added successfully.`);
+      setSnackbarOpen(true);
     } else {
-      setServices((prev) => [
-        ...prev,
-        { ...newService, _id: new Date().toISOString() },
-      ]);
+      setSnackbarMessage("Error adding service.");
+      setSnackbarOpen(true);
     }
   };
 
   const handleDelete = async (id, name) => {
     await deleteService(id);
     setServices((prev) => prev.filter((service) => service._id !== id));
-
-    // ✅ Show Snackbar after deletion
+    // Show Success Snackbar
     setSnackbarMessage(`"${name}" deleted successfully.`);
     setSnackbarOpen(true);
   };
@@ -63,6 +60,11 @@ const ServiceManager = () => {
           service._id === id ? { ...service, name: updated.name } : service
         )
       );
+      setSnackbarMessage(`"${name}" updated successfully.`);
+      setSnackbarOpen(true);
+    } else {
+      setSnackbarMessage("Error updating service.");
+      setSnackbarOpen(true);
     }
   };
 
@@ -98,21 +100,12 @@ const ServiceManager = () => {
         />
       </Paper>
 
-      {/* ✅ Snackbar Message */}
-      <Snackbar
+      {/* Success Snackbar */}
+      <SuccessSnackbar
         open={snackbarOpen}
-        autoHideDuration={3000}
+        message={snackbarMessage}
         onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert
-          onClose={() => setSnackbarOpen(false)}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+      />
     </Container>
   );
 };
