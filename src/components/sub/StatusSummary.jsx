@@ -24,7 +24,7 @@ const StatusSummary = () => {
 
     fetchCounts();
   }, []);
-  
+
   const statusData = [
     {
       title: "Total",
@@ -50,7 +50,7 @@ const StatusSummary = () => {
   ];
 
   return (
-    <Grid container spacing={5} mb={3} justifyContent="center">
+    <Grid container spacing={5} mb={3} mt={3} justifyContent="center">
     {statusData.map((data, index) => (
       <Grid item xs={12} sm={6} md={4} key={index}>
         <Card sx={{ backgroundColor: "", color: "#" }}>

@@ -75,13 +75,11 @@ const InitialCheck = () => {
     <Container>
     <Box
       display="flex"
-      justifyContent="space-between"
+      justifyContent="right"
       alignItems="center"
       mb={2}
     >
-      <Typography variant="h5" gutterBottom>
-        Home
-      </Typography>
+    
         <TextField
                 label="Search by Vehicle ID"
                 variant="outlined"
