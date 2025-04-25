@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Card, CardContent, Typography } from "@mui/material";
+import { Card, CardContent, CardHeader, Typography } from "@mui/material";
 import { Grid} from "@mui/material";
 
 
@@ -28,7 +28,8 @@ const StatusSummary = () => {
   return (
     <Grid container spacing={5} mb={3} justifyContent="center">
       <Grid item xs={12} sm={6} md={4}>
-        <Card sx={{ backgroundColor: "", color: "#00000" }}>
+        <Card sx={{ backgroundColor: "", color: "#" }}>
+            <CardHeader  title="Total" subheader="Pending Appointment Count"/>
           <CardContent>
             <Typography variant="h6">Total</Typography>
             <Typography variant="h4">{counts.total}</Typography>
