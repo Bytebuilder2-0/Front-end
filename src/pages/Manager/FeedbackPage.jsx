@@ -22,6 +22,7 @@ const FeedbackPage = () => {
   }, []);
 
   return (
+    <ManagerSidebar>
     <Container>
       <Paper elevation={3} sx={{ padding: 3, marginTop: 2 }}>
         <Typography variant="h5" gutterBottom>
@@ -30,6 +31,7 @@ const FeedbackPage = () => {
         <FeedbackList feedbacks={feedbacks} onUpdate={fetchFeedbacks} />
       </Paper>
     </Container>
+    </ManagerSidebar>
   );
 };
 
