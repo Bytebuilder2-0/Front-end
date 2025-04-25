@@ -1,6 +1,6 @@
 import React from 'react'
 import InitialCheck from '../../components/InitialCheck'
-import { Box,Toolbar } from "@mui/material";
+import { Box,Toolbar,Divider } from "@mui/material";
 import MiniDrawer from "../../components/ui/MiniDrawer";
 import StatusSummary from '../../components/sub/StatusSummary';
 import PathNaming from '../../components/sub/PathNaming';
@@ -13,6 +13,7 @@ const SupInitial = () => {
        <Box component="main" sx={{ flexGrow: 1,pl:3,pr:3 }}>
        <Toolbar/>
        <PathNaming label="Home" path="Supervisor/Initial"/>
+          <Divider/>
        <StatusSummary/>
     <InitialCheck/>
        </Box>
