@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import AppointmentPending from "./sub/AppointmentPending";
-import AppointmentConfirm from "./sub/AppointmentConfirm";
-import AppointmentInProgress from './sub/AppointmentInProgress';
+import AppointmentPending from "./AppoinmentStatus/AppointmentPending";
+import AppointmentConfirm from "./AppoinmentStatus/AppointmentConfirm";
+import AppointmentInProgress from './AppoinmentStatus/AppointmentInProgress';
 import { CircularProgress, Typography } from '@mui/material';
 
 const AppointmentStatus = () => {
