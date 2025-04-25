@@ -57,19 +57,61 @@ const StatusSummary = () => {
         </Card>
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
-        <Card sx={{ backgroundColor: "orange", color: "#fff" }}>
-          <CardContent>
+        <Card sx={{ backgroundColor: "", color: "#" }}>
+            <CardHeader  title="pen-01" subheader="lol Count"/>
+          <CardContent sx={{ display: "flex",alignItems:"center" ,justifyContent: "space-between", pl: 6,
+    pr: 6 }}>
+            <div>
             <Typography variant="h6">Pending</Typography>
-            <Typography variant="h4">{counts.pending}</Typography>
+
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography variant="h4" sx={{ marginRight: 1 }}>{counts.pending}</Typography>
+                    <CardMedia
+                        component="img"
+                        sx={{ height: 20, width: 20 }}
+                        image="/assets/up.png"
+                        alt="Card Image"
+                    />
+                    </Box>
+          
+            </div>
+            <CardMedia
+        component="img"
+        sx={{ height:70, width: 70 }}
+        image="/assets/inpro.png"
+        alt="Card Image"
+      />
           </CardContent>
+       
         </Card>
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
-        <Card sx={{ backgroundColor: "green", color: "#fff" }}>
-          <CardContent>
-            <Typography variant="h6">Confirmed</Typography>
-            <Typography variant="h4">{counts.confirmed}</Typography>
+        <Card sx={{ backgroundColor: "", color: "#" }}>
+            <CardHeader  title="cocnmi" subheader="lobuks"/>
+          <CardContent sx={{ display: "flex",alignItems:"center" ,justifyContent: "space-between", pl: 6,
+    pr: 6 }}>
+            <div>
+            <Typography variant="h6">confrm</Typography>
+
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography variant="h4" sx={{ marginRight: 1 }}>{counts.confirmed}</Typography>
+                    <CardMedia
+                        component="img"
+                        sx={{ height: 20, width: 20 }}
+                        image="/assets/up.png"
+                        alt="Card Image"
+                    />
+                    </Box>
+          
+            </div>
+            <CardMedia
+        component="img"
+        sx={{ height:70, width: 70 }}
+        image="/assets/success.jpg"
+        alt="Card Image"
+      />
           </CardContent>
+       
         </Card>
       </Grid>
     
