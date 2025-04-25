@@ -14,6 +14,9 @@ import ManageServices from '../pages/Manager/ManageServices';
 
 
 import TechnicianCompleted from '../pages/Technician/TechnicianCompleted';
+import { Login } from '@mui/icons-material'; 
+import Loginpage from '../pages/Loginpage';
+import SignupPage from '../pages/SignupPage';
 import ManagerDashboardPage from '../pages/Manager/ManagerDashboardPage';
 
 
@@ -63,20 +66,27 @@ const router = createBrowserRouter([
 {
   path: "/feedback",
   element: <FeedbackPage />,
-  
 
+},
+{
+  path: "/Loginpage",
+  element: <Loginpage />,
+},
+{
+  path: "/SignupPage",
+  element: <SignupPage />,
 },
 {
       path: "/ManageServices",
       element: <ManageServices/>,
-    } , 
+    },
 {
       path: "/ManagerDashboard",
       element: <ManagerDashboardPage/>,
-    } ,
+    }  
 
 
-    
+
 
 ]);
 
