@@ -29,6 +29,9 @@ import {
   Dashboard as DashboardIcon
 
 } from "@mui/icons-material";
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import Badge from '@mui/material/Badge';
+import AccountCircle from '@mui/icons-material/AccountCircle';
 
 const drawerWidth = 240;
 
@@ -87,14 +90,12 @@ const Drawer = styled(MuiDrawer, {
 
 // Drawer Header
 const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-
-  ...theme.mixins.toolbar,
+  ...theme.mixins.toolbar   //this div is same height as the appbar height 
 }));
 
-export default function MiniDrawer() {
+const menuId = 'primary-search-account-menu';  //in the account icon in app bar
+
+function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
   const navigate = useNavigate();
@@ -133,15 +134,41 @@ export default function MiniDrawer() {
     >
       {open ? <ChevronLeftIcon sx={{ color: "text.primary" }}  /> : <MenuIcon sx={{ color: "text.primary" }}  />}
     </IconButton>
+    <Box sx={{ flexGrow: 1 }} />
+    <Box 
+    sx={{ display: { xs: 'none', md: 'flex' }, alignItems: "center",
+        gap: 2, // spacing between icons
+        pr: 5,  // padding-right
+         }}>
+           
+            <IconButton
+              size="large"
+              aria-label="show 17 new notifications"
+              color="inherit"
+            >
+              <Badge badgeContent={0} color="error">
+                <NotificationsIcon sx={{ color: "text.primary" }} fontSize="large"/>
+              </Badge>
+            </IconButton>
+            <IconButton
+              size="large"
+              edge="end"
+              aria-label="account of current user"
+             aria-controls={menuId}
+              aria-haspopup="true"
+              //onClick={handleProfileMenuOpen}
+              color="inherit"
+            >
+              <AccountCircle sx={{ color: "text.primary" }} fontSize="large"/>
+            </IconButton>
+          </Box>
   </Toolbar>
 </AppBar>
 
 
       {/* Sidebar Drawer */}
       <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
-      
-        </DrawerHeader>
+<DrawerHeader/>
         <Divider />
 
         {/* User Avatar */}
@@ -200,3 +227,5 @@ export default function MiniDrawer() {
     </Box>
   );
 }
+
+export default MiniDrawer;
