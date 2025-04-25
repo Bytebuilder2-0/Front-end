@@ -7,14 +7,13 @@ import {
   Button,
   Box,
 } from "@mui/material";
-import ConfirmDeleteDialog from "./confirmDeleteDialog"; // ✅ Imported lowercase filename version
+import ConfirmDeleteDialog from "./ConfirmDeleteDialog";
 
 const ServiceItem = ({ service, onToggle, onDelete, onUpdate }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(service.name);
-  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false); // Confirm dialog state
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 
-  // Save name update
   const handleSave = () => {
     if (editedName.trim() && editedName !== service.name) {
       onUpdate(service._id, editedName);
@@ -31,13 +30,13 @@ const ServiceItem = ({ service, onToggle, onDelete, onUpdate }) => {
           alignItems: "center",
         }}
       >
-        {/* Checkbox to toggle selected */}
+        {/* Toggle selected */}
         <Checkbox
           checked={service.selected}
           onChange={() => onToggle(service._id, service.selected)}
         />
 
-        {/* Editable Name Field */}
+        {/* Edit mode vs display */}
         {isEditing ? (
           <TextField
             value={editedName}
@@ -77,12 +76,12 @@ const ServiceItem = ({ service, onToggle, onDelete, onUpdate }) => {
         </Box>
       </ListItem>
 
-      {/* Delete Confirmation Dialog */}
+      {/* Confirm Dialog */}
       <ConfirmDeleteDialog
         open={confirmDialogOpen}
         onClose={() => setConfirmDialogOpen(false)}
         onConfirm={() => {
-          onDelete(service._id);
+          onDelete(service._id, service.name); // Pass name too for Snackbar
           setConfirmDialogOpen(false);
         }}
         itemName={service.name}

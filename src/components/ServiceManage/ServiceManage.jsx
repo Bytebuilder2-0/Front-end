@@ -8,10 +8,18 @@ import {
 } from "./serviceApi";
 import ServiceList from "./ServiceList";
 import ServiceForm from "./ServiceForm";
-import { Container, Typography, Paper } from "@mui/material";
+import {
+  Container,
+  Typography,
+  Paper,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 
 const ServiceManager = () => {
   const [services, setServices] = useState([]);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   useEffect(() => {
     fetchServices().then(setServices);
@@ -38,9 +46,13 @@ const ServiceManager = () => {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id, name) => {
     await deleteService(id);
     setServices((prev) => prev.filter((service) => service._id !== id));
+
+    // ✅ Show Snackbar after deletion
+    setSnackbarMessage(`"${name}" deleted successfully.`);
+    setSnackbarOpen(true);
   };
 
   const handleUpdate = async (id, name) => {
@@ -85,6 +97,22 @@ const ServiceManager = () => {
           onUpdate={handleUpdate}
         />
       </Paper>
+
+      {/* ✅ Snackbar Message */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setSnackbarOpen(false)}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
