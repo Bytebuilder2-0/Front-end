@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   TextField, Button, Container, Typography, Avatar, MenuItem,
-  Grid, Paper, InputAdornment, IconButton, Checkbox, FormControlLabel
+  Grid, Paper, InputAdornment, IconButton, Checkbox, FormControlLabel,
+  Box
 } from '@mui/material';
 import { Visibility, VisibilityOff, AddCircleOutlined } from '@mui/icons-material';
 import axios from 'axios';
@@ -81,12 +82,12 @@ const Signup = () => {
     }
   };
 
-  const avatarStyle = {backgroundColor: '#f50057', color: '#fff' }; //rgb(47 154 78) ekata danna 
+  const avatarStyle = {backgroundColor: '#1bbd7e', color: '#fff' }; //rgb(47 154 78) ekata danna 
 
   return (
     <Container maxWidth="sm">
-      <Paper elevation={10} style={{ padding: 24, marginTop: 40, borderRadius: 16 }}>
-        <Grid align="center" item xs={12} mb={2}>
+      <Paper style={{ padding: 20, height: '70vh', width: 405, borderRadius: 0, margin: "0px auto" }}>
+        <Grid align="center" item xs={10} mb={2}>
           <Avatar style={avatarStyle}><AddCircleOutlined /></Avatar>
           <Typography variant="h5" gutterBottom>
             Create an Account
@@ -181,11 +182,14 @@ const Signup = () => {
               )}
             </Grid>
 
-            <Grid item xs={12}>
+          
+          
+            <Grid item xs={5} align="center">
               <Button fullWidth variant="contained" color="primary" type="submit">
                 Sign Up
               </Button>
             </Grid>
+            
           </Grid>
         </form>
       </Paper>

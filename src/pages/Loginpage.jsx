@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, Button, Box, Typography } from '@mui/material';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -70,6 +71,12 @@ const LoginForm = () => {
       <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
         Login
       </Button>
+      <Box sx={{ mt: 2, textAlign: 'center' }}>
+      <Link href="#" underline="none">
+        
+          Forgot password?
+        </Link>
+      </Box>
     </Box>
   );
 };

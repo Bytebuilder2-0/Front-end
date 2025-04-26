@@ -36,7 +36,7 @@ const VehicleForm = () => {
     <Container maxWidth="sm">
       <Paper elevation={4} sx={{ p: 4, mt: 5 }}>
         <Grid align="center" mb={2}>
-        <Avatar sx={{ width: 50, height: 50 }}></Avatar>
+        <Avatar sx={{ width: 50, height: 50 }}>r`</Avatar>
         <Typography variant="h5" gutterBottom>Vehicle Details</Typography>
         </Grid>
         <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
