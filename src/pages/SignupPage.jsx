@@ -81,7 +81,7 @@ const Signup = () => {
     }
   };
 
-  const avatarStyle = {backgroundColor: '#f50057', color: '#fff' };
+  const avatarStyle = {backgroundColor: '#f50057', color: '#fff' }; //rgb(47 154 78) ekata danna 
 
   return (
     <Container maxWidth="sm">

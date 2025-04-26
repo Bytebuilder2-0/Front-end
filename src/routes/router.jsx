@@ -17,7 +17,7 @@ import TechnicianCompleted from '../pages/Technician/TechnicianCompleted';
 import { Login } from '@mui/icons-material'; 
 import Loginpage from '../pages/Loginpage';
 import SignupPage from '../pages/SignupPage';
-
+import VehicleForm from '../pages/VehicleForm';
 
 
 
@@ -73,6 +73,10 @@ const router = createBrowserRouter([
 {
   path: "/SignupPage",
   element: <SignupPage />,
+},
+{
+  path: "/VehicleForm",
+  element: <VehicleForm />,
 },
 {
       path: "/ManageServices",
