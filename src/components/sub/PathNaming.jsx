@@ -5,7 +5,7 @@ function PathNaming({ label, path }) {
   return (
     <Box sx={{display:"flex",gap: 2}}>
        
-      <img src="assets/path.png" alt="path image" />
+      <img src="assets/trans_bg.png" alt="path image" height={50} width={50}/>
       <div>
       <Typography variant="h5" sx={{ fontWeight: 600 }}>
         {label}
