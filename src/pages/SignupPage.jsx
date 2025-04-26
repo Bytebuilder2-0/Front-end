@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
-  TextField, Button, Container, Typography, MenuItem,
-  Grid, Paper, InputAdornment, IconButton
+  TextField, Button, Container, Typography, Avatar, MenuItem,
+  Grid, Paper, InputAdornment, IconButton, Checkbox, FormControlLabel,
+  Box
 } from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Visibility, VisibilityOff, AddCircleOutlined } from '@mui/icons-material';
 import axios from 'axios';
 
-const roles = ["customer", "technician", "manager", "Supervisor", "admin"];
+const roles = ["customer", "technician", "manager", "Supervisor"];
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -18,6 +20,7 @@ const Signup = () => {
     confirmPassword: '',
     role: 'customer',
     roleId: '',
+    termsAccepted: false,  // To track whether the checkbox is checked
   });
 
   const [errors, setErrors] = useState({});
@@ -29,6 +32,10 @@ const Signup = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleCheckboxChange = (e) => {
+    setFormData({ ...formData, termsAccepted: e.target.checked });
+  };
+
   const validate = () => {
     const newErrors = {};
     if (!formData.email.includes('@')) newErrors.email = "Invalid email";
@@ -38,6 +45,7 @@ const Signup = () => {
     if (formData.password.length < 6) newErrors.password = "Password must be at least 6 characters";
     if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Passwords do not match";
     if (isSpecialRole && !formData.roleId.trim()) newErrors.roleId = `${formData.role} ID required`;
+    if (!formData.termsAccepted) newErrors.termsAccepted = "You must accept the terms and conditions"; // Validation for checkbox
     return newErrors;
   };
 
@@ -52,7 +60,6 @@ const Signup = () => {
     try {
       const payload = {
         ...formData,
-        // You can optionally send roleId only for those roles
         roleId: isSpecialRole ? formData.roleId : undefined,
       };
 
@@ -67,6 +74,7 @@ const Signup = () => {
         confirmPassword: '',
         role: 'customer',
         roleId: '',
+        termsAccepted: false, // Reset checkbox after form submission
       });
     } catch (err) {
       console.error(err);
@@ -74,12 +82,17 @@ const Signup = () => {
     }
   };
 
+  const avatarStyle = {backgroundColor: '#1bbd7e', color: '#fff' }; //rgb(47 154 78) ekata danna 
+
   return (
     <Container maxWidth="sm">
-      <Paper elevation={3} style={{ padding: 24, marginTop: 40, borderRadius: 16 }}>
-        <Typography variant="h5" gutterBottom>
-          Create an Account
-        </Typography>
+      <Paper style={{ padding: 20, height: '70vh', width: 405, borderRadius: 0, margin: "0px auto" }}>
+        <Grid align="center" item xs={10} mb={2}>
+          <Avatar style={avatarStyle}><AddCircleOutlined /></Avatar>
+          <Typography variant="h5" gutterBottom>
+            Create an Account
+          </Typography>
+        </Grid>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -158,11 +171,25 @@ const Signup = () => {
               </Grid>
             )}
 
+            {/* Checkbox for Terms and Conditions */}
             <Grid item xs={12}>
+              <FormControlLabel
+                control={<Checkbox checked={formData.termsAccepted} onChange={handleCheckboxChange} />}
+                label="I accept the terms and conditions"
+              />
+              {errors.termsAccepted && (
+                <Typography color="error" variant="body2">{errors.termsAccepted}</Typography>
+              )}
+            </Grid>
+
+          
+          
+            <Grid item xs={5} align="center">
               <Button fullWidth variant="contained" color="primary" type="submit">
                 Sign Up
               </Button>
             </Grid>
+            
           </Grid>
         </form>
       </Paper>
