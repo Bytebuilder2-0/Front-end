@@ -9,7 +9,7 @@ import AppointmentSubmit from '../pages/User/AppoinmentSubmit';
 import AppointmentView from '../pages/User/AppointmentView';
 import UserDashboard from '../pages/User/UserDashboard';
 
-import FeedbackPage from "../pages/Manager/FeedbackPage";
+import FeedbackPage from '../pages/Manager/FeedbackPage';
 import ManageServices from '../pages/Manager/ManageServices';
 
 
@@ -17,6 +17,8 @@ import TechnicianCompleted from '../pages/Technician/TechnicianCompleted';
 import { Login } from '@mui/icons-material'; 
 import Loginpage from '../pages/Loginpage';
 import SignupPage from '../pages/SignupPage';
+import ManagerDashboardPage from '../pages/Manager/ManagerDashboardPage';
+
 import VehicleForm from '../pages/VehicleForm';
 
 
@@ -61,10 +63,10 @@ const router = createBrowserRouter([
 {
   path: "/User",
   element: <UserDashboard />
-},{
+},
+{
   path: "/feedback",
   element: <FeedbackPage />,
-
 },
 {
   path: "/Loginpage",
@@ -81,7 +83,13 @@ const router = createBrowserRouter([
 {
       path: "/ManageServices",
       element: <ManageServices/>,
-    } 
+    },
+{
+      path: "/ManagerDashboard",
+      element: <ManagerDashboardPage/>,
+    }  
+
+
 
 
 ]);
