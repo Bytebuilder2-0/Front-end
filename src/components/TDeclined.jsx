@@ -94,7 +94,7 @@ function TDeclined() {
               </TableRow>
             ) : filteredAppointments.length > 0 ? (
               filteredAppointments.filter((appointment) =>
-                ["Reject1"].includes(
+                ["Reject2"].includes(
                   appointment.status
                 )
               ).map((appointment) => (
