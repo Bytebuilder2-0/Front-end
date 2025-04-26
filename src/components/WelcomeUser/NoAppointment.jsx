@@ -2,6 +2,8 @@ import React  from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
+//This component for when user hasn't any appointment
+
 const NoAppointemnt = () => {
     const navigate = useNavigate();
 
@@ -13,8 +15,8 @@ const NoAppointemnt = () => {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          width: '100%',
-          maxWidth: '400px',
+          paddingBottom:'10px',
+          width: 'auto',
           mx: 'auto',
           my: 4,
           overflow: 'hidden',
@@ -48,24 +50,31 @@ const NoAppointemnt = () => {
             height: "300px", 
             width: "auto",
             opacity: 0.3,
-           filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.1))'
+            filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.1))'
           }}
         />
         
-    
+   
      <Button
         variant="contained"
         onClick={() => navigate('/appointments/new')}
         sx={{
             width: '400px',
             fontSize: '17px',
-          fontWeight: 'bold',
-          textAlign: 'center',
-          padding: '10px',
-          borderRadius : '10px',
-          backgroundColor: 'primary.main',
+            fontWeight: 'bold',
+            textAlign: 'center',
+            padding: '10px',
+            borderRadius : '10px',
+            borderBottom: '4px solid #179e43',
+            height:'50px',
+            transition: '0.3s',        
+	          backgroundColor:'#7acc95',
+            color: 'black',
           '&:hover': {
-            backgroundColor: 'primary.dark'
+            color:'text.secondary',
+            borderBottomWidth: '2px',
+            transform: 'translateY(2px)',
+            backgroundColor: '#90EE90'        
           }
         }}>
 
