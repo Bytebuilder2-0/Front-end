@@ -72,14 +72,22 @@ const ServiceManager = () => {
   const garageServices = services.filter((s) => s.type === "garage");
 
   return (
-    <Container maxWidth="sm">
-      <Paper elevation={3} style={{ padding: "20px", marginTop: "20px" }}>
+    <Container maxWidth="md" sx={{ px: { xs: 2, md: 4 } }}>
+      <Paper
+        elevation={3}
+        sx={{
+          p: { xs: 2, md: 3 },
+          mt: { xs: 2, md: 4 },
+          width: "100%",
+          boxSizing: "border-box",
+        }}
+      >
         <Typography variant="h4" align="center" gutterBottom>
           Add New Service
         </Typography>
         <ServiceForm onAdd={handleAdd} />
-
-        <Typography variant="h5" style={{ marginTop: "20px" }}>
+  
+        <Typography variant="h5" sx={{ mt: 3 }}>
           Customer Services
         </Typography>
         <ServiceList
@@ -88,8 +96,8 @@ const ServiceManager = () => {
           onDelete={handleDelete}
           onUpdate={handleUpdate}
         />
-
-        <Typography variant="h5" style={{ marginTop: "20px" }}>
+  
+        <Typography variant="h5" sx={{ mt: 3 }}>
           Garage Services
         </Typography>
         <ServiceList
@@ -99,7 +107,7 @@ const ServiceManager = () => {
           onUpdate={handleUpdate}
         />
       </Paper>
-
+  
       {/* Success Snackbar */}
       <SuccessSnackbar
         open={snackbarOpen}
