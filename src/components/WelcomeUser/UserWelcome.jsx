@@ -17,9 +17,8 @@ const UserWelcome = ({ userId }) => {
         const checkAppointments = async () => {
             try {
                 const response = await axios.get(API_URL);
-
-                console.log(response.data.data)
                
+                //filtering appointment
             const validAppointments = response.data.data.filter
             (appointment => !['Cancelled', 'Paid', 'All done'].includes(appointment.status) );
               
@@ -28,7 +27,7 @@ const UserWelcome = ({ userId }) => {
                 console.error('Error checking appointments:', err);
                 setHasAppointments(false); // Default to no appointments if error occurs
             } finally {
-                setLoading(false);
+                setLoading(false);    // This wouldn't run if there's a return in try/catch
             }
         };
 
@@ -43,13 +42,18 @@ const UserWelcome = ({ userId }) => {
 
     return (
         <Box sx={{ p: 3, maxWidth: 'auto', margin: '10 auto' }}>
+
             {/* Welcome Header */}
-            <Typography variant="h3" gutterBottom sx={{ fontFamily: '"Poppins", sans-serif', fontWeight: 750, letterSpacing: '0.1px' }}>
-                Welcome to Garage24 !!
+            <Typography variant="h3" gutterBottom 
+            sx={{ fontFamily: '"Poppins", sans-serif',
+                fontWeight: 780, 
+                letterSpacing: '-1px' }}>
+
+                Welcome  to  Garage24  !!
             </Typography>
             
             <Typography variant="body1" sx={{ 
-                mb: 3,
+                mb: 3,  
                 color: 'text.secondary',
                 fontSize: '20px'
             }}>
@@ -58,7 +62,8 @@ const UserWelcome = ({ userId }) => {
             
             <Divider sx={{ my: 5, borderBottomWidth: 3 }} /> 
 
-            {/* Conditional rendering of appointments */}
+            {/* Conditional rendering of components */}
+
             {hasAppointments ? (
                 <AppointDetails userId={userId} />
             ) : (
@@ -71,5 +76,4 @@ const UserWelcome = ({ userId }) => {
         </Box>
     );
 };
-
 export default UserWelcome;
