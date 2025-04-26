@@ -7,8 +7,12 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import {
-  Menu as MenuIcon, ChevronLeft as ChevronLeftIcon,
-  Home as HomeIcon, Feedback as FeedbackIcon, Build as BuildIcon
+  Menu as MenuIcon, 
+  ChevronLeft as ChevronLeftIcon,
+  Home as HomeIcon,
+  Feedback as FeedbackIcon,
+  Build as BuildIcon,
+  Dashboard as DashboardIcon
 } from "@mui/icons-material";
 
 const drawerWidth = 240;
@@ -74,7 +78,7 @@ export default function ManagerSidebar({ children }) {
   const handleDrawerToggle = () => setOpen(!open);
 
   const navItems = [
-    { path: "/ManagerDashboard", label: "Dashboard", icon: <BuildIcon /> },
+    { path: "/ManagerDashboard", label: "Dashboard", icon: <DashboardIcon/> },
     { path: "/ManageServices", label: "Manage Services", icon: <BuildIcon /> },
     { path: "/feedback", label: "Manage Feedback", icon: <FeedbackIcon /> },
   ];
