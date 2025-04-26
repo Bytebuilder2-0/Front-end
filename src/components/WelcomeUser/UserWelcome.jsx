@@ -27,7 +27,7 @@ const UserWelcome = ({ userId }) => {
                 console.error('Error checking appointments:', err);
                 setHasAppointments(false); // Default to no appointments if error occurs
             } finally {
-                setLoading(false);    // This wouldn't run if there's a return in try/catch
+                setLoading(false);   
             }
         };
 
