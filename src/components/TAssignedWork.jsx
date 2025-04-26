@@ -114,11 +114,7 @@ function TAssignedWork() {
       .includes(searchTerm.toLowerCase())
   );
 
-  // const WorkloadDisplay = ({ workload }) => {
-  //   if (!workload || workload.length === 0) {
-  //     return <p>No workload available.</p>;
-  //   }
-  // }
+  
   return (
     <Container>
       <h2>Assigned Works</h2>
