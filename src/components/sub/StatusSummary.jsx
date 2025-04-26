@@ -15,7 +15,7 @@ const StatusSummary = () => {
   useEffect(() => {
     const fetchCounts = async () => {
       try {
-      //  const response = await axios.get("http://localhost:5000/api/appointments/statusCounts");
+        const response = await axios.get("http://localhost:5000/api/appointments/statusCounts");
         setCounts(response.data);
       } catch (error) {
         console.error("Error fetching appointment counts:", error);
@@ -59,7 +59,9 @@ const StatusSummary = () => {
             <div>
               <Typography variant="h6">{data.status}</Typography>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Typography variant="h4" sx={{marginRight:1}}>{data.count}</Typography>
+                <Typography variant="h4" sx={{marginRight:1}}>  {/*if the digit is one just add zero before it  */}
+                  {String(data.count).padStart(2, '0')}  
+                </Typography>
                 <CardMedia
                   component="img"
                   sx={{ height: 20, width: 20 }}
