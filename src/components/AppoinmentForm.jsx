@@ -60,7 +60,7 @@ const handleAlertClose = () => {
     <Grid container justifyContent="center" style={{ padding: 20 }}>
       <Grid item xs={12} md={8}>
         <Typography variant="h4" gutterBottom>
-          Create New Appointment
+          Appoinment Form
         </Typography>
         
         <form onSubmit={handleFormSubmit}>

@@ -2,6 +2,9 @@ import { Typography, Box, Button, Grid } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 
 const VehicleDetails = ({ userId }) => {
+
+     const API_URL = `http://localhost:5000/api/appointments/vehicles/${userId}`
+
     const [vehicles, setVehicles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -9,7 +12,7 @@ const VehicleDetails = ({ userId }) => {
     useEffect(() => {
         const fetchVehicles = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/api/appointments/vehicles/${userId}`);
+                const response = await fetch(API_URL);
                 if (!response.ok) {
                     throw new Error('Failed to fetch vehicles');
                 }

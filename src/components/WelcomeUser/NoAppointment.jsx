@@ -10,7 +10,6 @@ const NoAppointemnt = () => {
     return (
         <Box 
         sx={{
-          position: 'relative',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -24,10 +23,10 @@ const NoAppointemnt = () => {
           backgroundColor: 'background.paper',
         }}>
 
-    <Box
+      <Box
         sx={{
           position: 'absolute',
-          zIndex: 2,     
+          zIndex: 1,     
         
         }}>
 
@@ -50,7 +49,8 @@ const NoAppointemnt = () => {
             height: "300px", 
             width: "auto",
             opacity: 0.3,
-            filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.1))'
+            filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.1))',
+            paddingBottom: '20px'
           }}
         />
         
