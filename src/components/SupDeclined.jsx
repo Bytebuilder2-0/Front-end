@@ -15,8 +15,10 @@ import {
   IconButton
 } from "@mui/material";
 import IssueViewer from "./sub/IssueView";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
+import WorkloadManager from "./sub/WorkloadManager";
+import TechnicianAssignmentAndStatusUpdater from "./sub/TechnicianAssignmentAndStatusUpdater";
+import WhatsAppButton from "./sub/WhatsAppButton";
+
 
 // API Base URL
 const API_BASE_URL = "http://localhost:5000/api/appointments";
@@ -33,19 +35,7 @@ const fetchDeclinedAppointments = async () => {
 };
 
 // Update appointment status and remove from table
-const updateAppointmentStatus = async (appointmentId, newStatus, setAppointments) => {
-  try {
-    await axios.put(`${API_BASE_URL}/${appointmentId}/statusUpdate`, {
-      status: newStatus,
-    });
 
-    setAppointments((prevAppointments) =>
-      prevAppointments.filter((appt) => appt._id !== appointmentId)
-    );
-  } catch (error) {
-    console.error(`Error updating appointment status to ${newStatus}:`, error);
-  }
-};
 
 const SupDeclined = () => {
   const [appointments, setAppointments] = useState([]);
@@ -65,6 +55,13 @@ const SupDeclined = () => {
       .toLowerCase()
       .includes(searchTerm.toLowerCase())
   );
+  const updateAppointmentInState = (updatedAppointment) => {
+    setAppointments((prevAppointments) =>
+      prevAppointments.map((appt) =>
+        appt._id === updatedAppointment._id ? updatedAppointment : appt
+      )
+    );
+  };
 
   return (
     <Container>
@@ -85,9 +82,10 @@ const SupDeclined = () => {
               <TableCell><strong>Vehicle ID</strong></TableCell>
               <TableCell><strong>Model</strong></TableCell>
               <TableCell><strong>Issue</strong></TableCell>
-              <TableCell><strong>Exp. Delivery</strong></TableCell>
-              <TableCell><strong>Status</strong></TableCell>
-              <TableCell><strong>Actions</strong></TableCell>
+              <TableCell><strong>Reason</strong></TableCell>
+              <TableCell><strong>Workload</strong></TableCell>
+              <TableCell><strong>Assign.Tech</strong></TableCell>
+        <TableCell><strong>WhatsApp</strong></TableCell>
             </TableRow>
           </TableHead>
 
@@ -101,54 +99,21 @@ const SupDeclined = () => {
                     <IssueViewer issue={appointment.issue} />
                   </TableCell>
                   <TableCell>
-                    {new Date(appointment.expectedDeliveryDate).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
+               
                   </TableCell>
-
-                  {/* Status color */}
                   <TableCell>
-                    <span
-                      style={{
-                        color:
-                          appointment.status === "Reject2"
-                            ? "red"
-                            : "gray",
-                        fontWeight: 500,
-                        textTransform: "capitalize",
-                      }}
-                    >
-                      {appointment.status}
-                    </span>
+                  <WorkloadManager   appointment={appointment} btn_name="update"
+                      updateAppointment={updateAppointmentInState}/>
                   </TableCell>
-
-                  {/* Actions */}
                   <TableCell>
-                    <Tooltip title="Accept Again">
-                      <IconButton
-                        color="success"
-                        onClick={() =>
-                          updateAppointmentStatus(appointment._id, "Confirmed", setAppointments)
-                        }
-                        sx={{ fontSize: 30 }}
-                      >
-                        <CheckCircleIcon sx={{ fontSize: 30 }} />
-                      </IconButton>
-                    </Tooltip>
-
-                    <Tooltip title="Permanently Reject">
-                      <IconButton
-                        color="error"
-                        onClick={() =>
-                          updateAppointmentStatus(appointment._id, "PermanentlyRejected", setAppointments)
-                        }
-                        sx={{ fontSize: 30 }}
-                      >
-                        <CancelIcon sx={{ fontSize: 30 }} />
-                      </IconButton>
-                    </Tooltip>
+                  <TechnicianAssignmentAndStatusUpdater
+                      appointment={appointment}
+                      updateAppointment={updateAppointmentInState}
+                    />
+                   
+                  </TableCell>
+                  <TableCell>
+                  <WhatsAppButton phone={appointment.contactNumber}/>
                   </TableCell>
                 </TableRow>
               ))
