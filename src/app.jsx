@@ -1,8 +1,15 @@
-//home page
-//import Loginpage from './pages/Loginpage.jsx';
+import React from 'react';
+import LoginForm from './pages/Loginpage';
+import Signup from './pages/SignupPage';
 
 function App() {
-
-}
-
-export default App;
+    return (
+      <div className="App">
+        <LoginForm />
+        <Signup />
+      </div>
+    );
+  }
+  
+  export default App;
+  

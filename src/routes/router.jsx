@@ -19,6 +19,8 @@ import Loginpage from '../pages/Loginpage';
 import SignupPage from '../pages/SignupPage';
 import ManagerDashboardPage from '../pages/Manager/ManagerDashboardPage';
 
+import VehicleForm from '../pages/VehicleForm';
+import SignInVehicleContainer from '../container/container1';
 
 
 
@@ -74,6 +76,14 @@ const router = createBrowserRouter([
 {
   path: "/SignupPage",
   element: <SignupPage />,
+},
+{
+  path: "/VehicleForm",
+  element: <VehicleForm />,
+},
+{
+  path: "/SignupVReg",
+  element: <SignInVehicleContainer />,
 },
 {
       path: "/ManageServices",
