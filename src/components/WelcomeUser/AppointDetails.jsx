@@ -70,7 +70,7 @@ const AppointDetails = ({ userId }) => {
               }
               sx={{
                 '&:hover': {
-                  boxShadow : '10px',
+                   boxShadow: '0px 2px 4px rgba(0,0,0,0.1)',
                   backgroundColor: 'action.hover',
                   cursor: 'pointer'
                 }
