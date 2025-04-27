@@ -61,10 +61,9 @@ const SupInprogress = () => {
         justifyContent="space-between"
         alignItems="center"
         mb={2}
+        mt={2}
       >
-        <Typography variant="h5" gutterBottom>
-          Inprogress
-        </Typography>
+      
       </Box>
       <TableContainer component={Paper} sx={{ marginTop: 2 }}>
         <Table>

@@ -59,10 +59,9 @@ function CompletedS() {
         justifyContent="space-between"
         alignItems="center"
         mb={2}
+        mt={2}
       >
-        <Typography variant="h5" gutterBottom>
-          Completed
-        </Typography>
+     
       </Box>
       <TableContainer component={Paper} sx={{ marginTop: 2 }}>
         <Table>
