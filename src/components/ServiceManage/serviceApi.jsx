@@ -11,10 +11,10 @@ export const fetchServices = async () => {
     return [];
   }
 };
-//comment add
-export const addService = async (name, type) => {
+
+export const addService = async (name) => {
   try {
-    const res = await axios.post(API_URL, { name, type });
+    const res = await axios.post(API_URL, { name }); // Only send name
     return res.data;
   } catch (err) {
     console.error("❌ Error adding service:", err.response?.data || err.message);

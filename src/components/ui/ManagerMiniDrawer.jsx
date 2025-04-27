@@ -152,7 +152,7 @@ export default function ManagerSidebar({ children }) {
 
           {/* Manager Panel Title */}
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            Manager Panel
+            
           </Typography>
 
           {/* Notification and Account Icons */}
