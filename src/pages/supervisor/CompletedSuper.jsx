@@ -9,7 +9,7 @@ return(
     <MiniDrawer />
     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
      <Toolbar/>
-     <PathNaming label="Home" path="Supervisor/Initial"/>
+     <PathNaming label="Completed" path="Supervisor/Completed"/>
      <CompletedS/>
     </Box>
   </Box>

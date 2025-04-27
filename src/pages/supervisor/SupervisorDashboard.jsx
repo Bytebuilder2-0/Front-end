@@ -10,7 +10,7 @@ function SupervisorDashboard() {
        <MiniDrawer />
        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar/>
-         <PathNaming label="Home" path="Supervisor/Initial"/>
+         <PathNaming label="Dashboard" path="Supervisor/Dashboard"/>
     <AppointmentData/>
        </Box>
      </Box>
