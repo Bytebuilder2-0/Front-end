@@ -67,11 +67,13 @@ const Signup = () => {
         ...formData,
         roleId: isSpecialRole ? formData.roleId : undefined,
       };
-      await signup(formData.email, formData.fullName, formData.userName, formData.phone, formData.password, formData.confirmPassword, formData.role);
+      console.log(payload);
+     // await signup(formData.email, formData.fullName, formData.userName, formData.phone, formData.password, formData.confirmPassword, formData.role);
  
 
       const res = await axios.post('http://localhost:4880/api/auth/register', payload);
       alert('Signup successful!');
+      console.log(res);
       setFormData({
         email: '',
         fullName: '',
@@ -85,7 +87,9 @@ const Signup = () => {
       });
     } catch (err) {
       console.error(err);
+      console.log(err);
       alert(err.response?.data?.message || 'Signup failed');
+
     }
   };
 

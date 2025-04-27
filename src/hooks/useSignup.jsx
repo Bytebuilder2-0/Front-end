@@ -16,11 +16,15 @@ export const useSignup = () => {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({email, fullName, userName, phone, password, confirmPassword, role})
        })
+       console.log(response);
+
        const json = await response.json();
+       console.log("json res",json);
        if (!response.ok) {
            setIsLoading(false);
            setError(json.error);
        }
+
        if (response.ok) {
            // save the user to local storage
            localStorage.setItem('user', JSON.stringify(json));
@@ -29,6 +33,6 @@ export const useSignup = () => {
            setIsLoading(false);
        }
 } 
-    
+        console.log("useSignup response", signup);
         return { signup, error, isLoading };  
 }
