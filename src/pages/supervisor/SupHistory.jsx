@@ -2,10 +2,11 @@ import React from 'react'
 import { Box,Toolbar,Divider } from '@mui/material'
 import PathNaming from '../../components/sub/PathNaming'
 import MiniDrawer from '../../components/ui/MiniDrawer'
+import SupHistory from '../../components/SupHistory'
 
 
 
-function Decline() {
+function SupHIstory() {
   return (
     <Box sx={{ display: 'flex' }}>
     <MiniDrawer />
@@ -13,10 +14,10 @@ function Decline() {
      <Toolbar/>
      <PathNaming label="History" path="Supervisor/History"/>
        <Divider/>
-      
+      <SupHistory/>
     </Box>
   </Box>
   )
 }
 
-export default Decline
+export default SupHIstory;
