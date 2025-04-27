@@ -1,10 +1,14 @@
 import React from 'react'
 import TDeclined from '../../components/TDeclined'
+import TechnicianMiniDrawer from '../../components/ui/TechnicianMiniDrawer'
 
 const TechnicianDeclined = () => {
   return (
     <div>
-      <TDeclined/>
+      <TechnicianMiniDrawer>
+        <TDeclined/>
+      </TechnicianMiniDrawer>
+     
     </div>
   )
 }
