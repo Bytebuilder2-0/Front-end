@@ -9,7 +9,7 @@ import {
 import ServiceList from "./ServiceList";
 import ServiceForm from "./ServiceForm";
 import { Container, Typography, Paper } from "@mui/material";
-import SuccessSnackbar from "./SuccessSnackbar";  // ✅ Import SuccessSnackbar
+import SuccessSnackbar from "./SuccessSnackbar";
 
 const ServiceManager = () => {
   const [services, setServices] = useState([]);
@@ -27,27 +27,44 @@ const ServiceManager = () => {
         service._id === id ? { ...service, selected: !selected } : service
       )
     );
-    // Show Success Snackbar
     setSnackbarMessage("Service status updated successfully.");
     setSnackbarOpen(true);
   };
 
-  const handleAdd = async (name, type) => {
-    const newService = await addService(name, type);
-    if (newService && newService._id) {
-      setServices((prev) => [...prev, newService]);
-      setSnackbarMessage(`"${name}" added successfully.`);
-      setSnackbarOpen(true);
-    } else {
+  const handleAdd = async (name) => {
+    // Temporarily add the service to the list for instant feedback (optimistic update)
+    const tempService = { _id: Date.now(), name, selected: false }; // Temporary ID for immediate UI update
+  
+    // Update the services state immediately with the new service
+    setServices((prev) => [...prev, tempService]);
+  
+    try {
+      // Wait for the actual API response
+      const newService = await addService(name); // Call API to add service
+  
+      // Check if the service was added successfully
+      if (newService && newService._id) {
+        // Update the service with actual data (only if successful)
+        setSnackbarMessage(`"${name}" added successfully.`);
+      } else {
+        // If the API returned no data or failed, remove the temporary service and show the error
+        setServices((prev) => prev.filter((service) => service._id !== tempService._id));
+        setSnackbarMessage("Error adding service.");
+      }
+    } catch (error) {
+      // If there’s any error in the API call, remove the temporary service and show error
+      setServices((prev) => prev.filter((service) => service._id !== tempService._id));
       setSnackbarMessage("Error adding service.");
-      setSnackbarOpen(true);
     }
+  
+    // Open the snackbar for success or error message
+    setSnackbarOpen(true);
   };
+  
 
   const handleDelete = async (id, name) => {
     await deleteService(id);
     setServices((prev) => prev.filter((service) => service._id !== id));
-    // Show Success Snackbar
     setSnackbarMessage(`"${name}" deleted successfully.`);
     setSnackbarOpen(true);
   };
@@ -68,9 +85,6 @@ const ServiceManager = () => {
     }
   };
 
-  const customerServices = services.filter((s) => s.type === "customer");
-  const garageServices = services.filter((s) => s.type === "garage");
-
   return (
     <Container maxWidth="md" sx={{ px: { xs: 2, md: 4 } }}>
       <Paper
@@ -86,29 +100,18 @@ const ServiceManager = () => {
           Add New Service
         </Typography>
         <ServiceForm onAdd={handleAdd} />
-  
+
         <Typography variant="h5" sx={{ mt: 3 }}>
-          Customer Services
+          Services
         </Typography>
         <ServiceList
-          services={customerServices}
-          onToggle={handleToggle}
-          onDelete={handleDelete}
-          onUpdate={handleUpdate}
-        />
-  
-        <Typography variant="h5" sx={{ mt: 3 }}>
-          Garage Services
-        </Typography>
-        <ServiceList
-          services={garageServices}
+          services={services}
           onToggle={handleToggle}
           onDelete={handleDelete}
           onUpdate={handleUpdate}
         />
       </Paper>
-  
-      {/* Success Snackbar */}
+
       <SuccessSnackbar
         open={snackbarOpen}
         message={snackbarMessage}
