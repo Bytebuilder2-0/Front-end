@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import AppointmentPending from "./AppoinmentStatus/AppointmentPending";
-import AppointmentConfirm from "./AppoinmentStatus/AppointmentConfirm";
-import AppointmentInProgress from './AppoinmentStatus/AppointmentInProgress';
+import AppointmentPending from "./AppointmentPending";
+import AppointmentConfirm from "./AppointmentConfirm";
+import AppointmentInProgress from './AppointmentInProgress';
 import { CircularProgress, Typography } from '@mui/material';
 
 const AppointmentStatus = () => {
@@ -54,7 +54,6 @@ const AppointmentStatus = () => {
       {appointment.status === 'Pending' && <AppointmentPending appointment={appointment} onCancel={handleAppointmentCancel} />}
       {appointment.status === 'Confirmed' && <AppointmentConfirm appointment={appointment} onCancel={handleAppointmentCancel}/>}
       {appointment.status === 'InProgress' && <AppointmentInProgress appointment={appointment} />}
-      {appointment.status === 'Paid' && <AppointmentInProgress appointment={appointment} />}
 
     </div>
   );

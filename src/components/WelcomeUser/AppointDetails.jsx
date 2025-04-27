@@ -13,7 +13,12 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+//This component for display apppointments in dashboard if has
+
 const AppointDetails = ({ userId }) => {
+
+   const API_URL = `http://localhost:5000/api/appointments/user/${userId}`
+
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -22,15 +27,12 @@ const AppointDetails = ({ userId }) => {
     const fetchAppointments = async () => {
       try {
         setLoading(true);
-         
-    
-        const response = await axios.get(`http://localhost:5000/api/appointments/user/${userId}`);
-               // Ensure we're working with an array
-               const appointmentsData = Array.isArray(response.data) 
-               ? response.data 
-               : response.data?.data || [];
+
+        const response = await axios.get(API_URL);
+
+        const appointmentsData = response.data.data;
              
-             const filteredAppointments = appointmentsData.filter(
+        const filteredAppointments = appointmentsData.filter(
                appt => appt && !['Cancelled', 'All Done'].includes(appt.status)
              );
         
@@ -50,13 +52,16 @@ const AppointDetails = ({ userId }) => {
 
   return (
     <Box>
-      <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>
+      <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold', fontSize:'22px'}}>
         Your  Appointments
       </Typography>
       
       <List sx={{ width: '100%' }}>
+
         {appointments.map((appointment) => (
+
           <React.Fragment key={appointment._id}>
+
             <ListItem 
               secondaryAction={
                 <IconButton edge="end" onClick={() => navigate(`/appointments/${appointment._id}`)}>
@@ -65,29 +70,35 @@ const AppointDetails = ({ userId }) => {
               }
               sx={{
                 '&:hover': {
+                   boxShadow: '0px 2px 4px rgba(0,0,0,0.1)',
                   backgroundColor: 'action.hover',
                   cursor: 'pointer'
                 }
               }}
-              onClick={() => navigate(`/appointments/${appointment._id}`)}
-            >
+              onClick={() => navigate(`/appointments/${appointment._id}`)} 
+              >
+                
+
               <ListItemText
                 primary={appointment.model}
+                secondaryTypographyProps={{ component: 'div' }}
                 secondary={
-                  <Box component="span" sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  <Box component="div" sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                     {appointment.services.map((service, i) => (
-                      <Typography 
+                      <Typography component="div"
                         key={i} >
-                        {service}
+                        {service}..
                       </Typography>
                     ))}
                   </Box>
                 }
               />
             </ListItem>
-            <Divider variant="inset" component="li" />
+            <Divider  sx={{width:'50%'}} />
           </React.Fragment>
+          
         ))}
+        
       </List>
     </Box>
   );
