@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, Button, Box, Typography } from '@mui/material';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -25,15 +26,16 @@ const LoginForm = () => {
 
       // Navigate based on role
       if (role === 'manager') {
-        window.location.href = '/manager-dashboard';
+        window.location.href = '/';
       } else if (role === 'technician') {
         window.location.href = '/technician-dashboard';
       } else if (role === 'customer') {
-        window.location.href = '/customer-dashboard';
+        window.location.href = '/UserDashboard';
       } else if (role === 'supervisor') {
-        window.location.href = '/supervisor-dashboard';
+        window.location.href = '/SupervisorDashboard';
       } else {
-        window.location.href = '/';
+        window.location.href = '/';   //route path="/*" element={<ErrorPage />} />;
+        // or element = {<h1> Page Not Found</h1>}   me deken ekak dnn ona
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
@@ -69,6 +71,12 @@ const LoginForm = () => {
       <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
         Login
       </Button>
+      <Box sx={{ mt: 2, textAlign: 'center' }}>
+      <Link href="#" underline="none">
+        
+          Forgot password?
+        </Link>
+      </Box>
     </Box>
   );
 };

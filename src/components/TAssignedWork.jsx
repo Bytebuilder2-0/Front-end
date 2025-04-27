@@ -51,15 +51,15 @@ function TAssignedWork() {
     if (!isConfirmed) return; // If user cancels, do nothing
 
     try {
-      await axios.put(`${API_BASE_URL}/${appointmentId}/statusUpdate`, {
-        status: "Confirmed",
+      await axios.put(`${API_BASE_URL}/${appointmentId}/tStatusUpdate`, {
+        status: "Accepted",
       });
 
       // Update UI instantly
       setAppointments((prevAppointments) =>
         prevAppointments.map((appointment) =>
           appointment._id === appointmentId
-            ? { ...appointment, status: "Confirmed" }
+            ? { ...appointment, status: "Accepted" }
             : appointment
         )
       );
@@ -84,8 +84,8 @@ function TAssignedWork() {
 
   const handleConfirmDecline = async () => {
     try {
-      await axios.put(`${API_BASE_URL}/${selectedAppointmentId}/statusUpdate`, {
-        status: "Reject1",
+      await axios.put(`${API_BASE_URL}/${selectedAppointmentId}/tStatusUpdate`, {
+        status: "Reject2",
         reason: declineReason,
       });
 
@@ -93,7 +93,7 @@ function TAssignedWork() {
       setAppointments((prevAppointments) =>
         prevAppointments.map((appointment) =>
           appointment._id === selectedAppointmentId
-            ? { ...appointment, status: "Reject1", reason: declineReason }
+            ? { ...appointment, status: "Reject2", reason: declineReason }
             : appointment
         )
       );
@@ -114,6 +114,7 @@ function TAssignedWork() {
       .includes(searchTerm.toLowerCase())
   );
 
+  
   return (
     <Container>
       <h2>Assigned Works</h2>
@@ -172,8 +173,8 @@ function TAssignedWork() {
                 .filter((appointment) =>
                   [
                     "Waiting for Technician Confirmation",
-                    "Reject1",
-                    "Confirmed",
+                    "Reject2",
+                    "Accepted",
                   ].includes(appointment.status)
                 )
                 .map((appointment) => (
@@ -185,13 +186,38 @@ function TAssignedWork() {
                         appointment.appointmentDate
                       ).toLocaleDateString()}
                     </TableCell>
-                    <TableCell>{appointment.workLoad}</TableCell>
                     <TableCell>
-                      {appointment.status === "Confirmed" ? (
+                      {appointment.workload &&
+                      appointment.workload.length > 0 ? (
+                        <Table size="small">
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Step</TableCell>
+                              <TableCell>Description</TableCell>
+                              <TableCell>Steps Status</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {appointment.workload.map((task, index) => (
+                              <TableRow key={task._id || index}>
+                                <TableCell>{task.step}</TableCell>
+                                <TableCell>{task.description}</TableCell>
+                                <TableCell>{task.status}</TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      ) : (
+                        <Typography variant="body2">No workload</Typography>
+                      )}
+                    </TableCell>
+
+                    <TableCell>
+                      {appointment.status === "Accepted" ? (
                         <span style={{ color: "green", fontWeight: "bold" }}>
-                          Confirmed
+                          Accepted
                         </span>
-                      ) : appointment.status === "Reject1" ? (
+                      ) : appointment.status === "Reject2" ? (
                         <span style={{ color: "red", fontWeight: "bold" }}>
                           Declined
                         </span>
@@ -202,7 +228,7 @@ function TAssignedWork() {
                       )}
                     </TableCell>
                     <TableCell>
-                      {appointment.status === "Confirmed" ? (
+                      {appointment.status === "Accepted" ? (
                         <Button variant="contained" disabled>
                           {appointment.status}
                         </Button>
@@ -213,12 +239,12 @@ function TAssignedWork() {
                           onClick={() => handleConfirm(appointment._id)}
                           style={{ marginRight: "10px" }}
                         >
-                          Confirm
+                          Accept
                         </Button>
                       )}
                     </TableCell>
                     <TableCell>
-                      {appointment.status === "Reject1" ? (
+                      {appointment.status === "Reject2" ? (
                         <Button variant="contained" disabled>
                           Declined
                         </Button>
@@ -258,10 +284,10 @@ function TAssignedWork() {
                   value={declineReason}
                   onChange={(e) => setDeclineReason(e.target.value)}
                   sx={{
-                    '& .MuiInputBase-root': {
-                      alignItems: 'flex-start', // aligns text at the top
-                      width:500,
-                    }
+                    "& .MuiInputBase-root": {
+                      alignItems: "flex-start", // aligns text at the top
+                      width: 500,
+                    },
                   }}
                 />
               </DialogContent>
