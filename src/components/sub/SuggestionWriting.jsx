@@ -6,7 +6,8 @@ const SuggestionWriting = ({ appointment, updateAppointment }) => {
   const [openSuggestionModal, setOpenSuggestionModal] = useState(false);
   const [suggestion, setSuggestion] = useState(appointment?.suggestion || "");
 
-  const handleOpenSuggestion = () => {
+  const handleOpenSuggestion = async() => {
+    await fetchLatestSuggestion(); 
     setOpenSuggestionModal(true);
   };
 
@@ -40,6 +41,21 @@ const SuggestionWriting = ({ appointment, updateAppointment }) => {
       console.error("🚨 Error updating suggestion:", error.response?.data || error.message);
     }
   };
+  const fetchLatestSuggestion = async () => {
+    if (!appointment) return;
+  
+    try {
+      const response = await axios.get(`http://localhost:5000/api/appointments/${appointment._id}`);
+      
+      if (response.data && response.data.suggestion !== undefined) {
+        setSuggestion(response.data.suggestion);
+        console.log("🛬 Fetched Latest Suggestion:", response.data.suggestion);
+      }
+    } catch (error) {
+      console.error("🚨 Error fetching latest suggestion:", error.response?.data || error.message);
+    }
+  };
+  
 
   return (
     <>
