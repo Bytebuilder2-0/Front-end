@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { TextField, Button, Box, Typography } from '@mui/material';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';  // 👈 import useNavigate
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();  // 👈 create navigate function
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -20,22 +21,21 @@ const LoginForm = () => {
 
       const { token, role } = response.data;
 
-      // Save the token (e.g., in localStorage)
+      // Save token and role
       localStorage.setItem('token', token);
       localStorage.setItem('role', role);
 
       // Navigate based on role
       if (role === 'manager') {
-        window.location.href = '/';
+        navigate('/ManagerDashboard');
       } else if (role === 'technician') {
-        window.location.href = '/technician-dashboard';
+        navigate('/TDashboard');
       } else if (role === 'customer') {
-        window.location.href = '/UserDashboard';
+        navigate('/User');
       } else if (role === 'supervisor') {
-        window.location.href = '/SupervisorDashboard';
+        navigate('/Super');
       } else {
-        window.location.href = '/';   //route path="/*" element={<ErrorPage />} />;
-        // or element = {<h1> Page Not Found</h1>}   me deken ekak dnn ona
+        navigate('/User');
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
@@ -72,10 +72,7 @@ const LoginForm = () => {
         Login
       </Button>
       <Box sx={{ mt: 2, textAlign: 'center' }}>
-      <Link href="#" underline="none">
-        
-          Forgot password?
-        </Link>
+        <Link to="#" underline="none">Forgot password?</Link>
       </Box>
     </Box>
   );
