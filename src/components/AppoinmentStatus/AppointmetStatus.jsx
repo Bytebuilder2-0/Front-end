@@ -54,7 +54,6 @@ const AppointmentStatus = () => {
       {appointment.status === 'Pending' && <AppointmentPending appointment={appointment} onCancel={handleAppointmentCancel} />}
       {appointment.status === 'Confirmed' && <AppointmentConfirm appointment={appointment} onCancel={handleAppointmentCancel}/>}
       {appointment.status === 'InProgress' && <AppointmentInProgress appointment={appointment} />}
-      {appointment.status === 'Paid' && <AppointmentInProgress appointment={appointment} />}
 
     </div>
   );

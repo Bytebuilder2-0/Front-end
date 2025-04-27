@@ -81,10 +81,11 @@ const AppointDetails = ({ userId }) => {
 
               <ListItemText
                 primary={appointment.model}
+                secondaryTypographyProps={{ component: 'div' }}
                 secondary={
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                  <Box component="div" sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                     {appointment.services.map((service, i) => (
-                      <Typography 
+                      <Typography component="div"
                         key={i} >
                         {service}..
                       </Typography>
