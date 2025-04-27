@@ -59,6 +59,7 @@ function CompletedS() {
         justifyContent="space-between"
         alignItems="center"
         mb={2}
+        mt={2}
       >
      
       </Box>
