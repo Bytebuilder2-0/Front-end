@@ -2,7 +2,7 @@ import React from 'react'
 import { Box,Toolbar,Divider } from '@mui/material'
 import PathNaming from '../../components/sub/PathNaming'
 import MiniDrawer from '../../components/ui/MiniDrawer'
-import SupDeclined from '../../components/SupDeclined'
+
 
 
 function Decline() {
@@ -11,9 +11,9 @@ function Decline() {
     <MiniDrawer />
     <Box component="main" sx={{ flexGrow: 1, pl:3,pr:3 }}>
      <Toolbar/>
-     <PathNaming label="Declined" path="Supervisor/Declined"/>
+     <PathNaming label="History" path="Supervisor/History"/>
        <Divider/>
-        <SupDeclined/>
+      
     </Box>
   </Box>
   )
