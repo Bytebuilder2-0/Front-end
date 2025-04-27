@@ -76,9 +76,7 @@ function AppointmentData() {
         alignItems="center"
         mb={2}
       >
-        <Typography variant="h5" gutterBottom>
-          Appointments
-        </Typography>
+       
         <TextField
           label="Search by Vehicle ID"
           variant="outlined"
