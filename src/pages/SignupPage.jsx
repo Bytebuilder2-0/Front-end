@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
+import { useSignup } from '../hooks/useSignup';
+import { useAuthContext } from '../hooks/useAuthContext';
 import { useNavigate } from 'react-router-dom';
 import {
   TextField, Button, Container, Typography, Avatar, MenuItem,
   Grid, Paper, InputAdornment, IconButton, Checkbox, FormControlLabel,
   Box
 } from '@mui/material';
-import { Visibility, VisibilityOff, AddCircleOutlined } from '@mui/icons-material';
+import { Visibility, VisibilityOff, AddCircleOutlined } from '@mui/icons-material'; 
 import axios from 'axios';
 
 const roles = ["customer", "technician", "manager", "Supervisor"];
@@ -21,12 +23,15 @@ const Signup = () => {
     role: 'customer',
     roleId: '',
     termsAccepted: false,  // To track whether the checkbox is checked
+  
   });
+
 
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const{ signup, error, isLoading } = useSignup();
 
-  const isSpecialRole = ['technician', 'manager', 'Supervisor'].includes(formData.role);
+   const isSpecialRole = ['technician', 'manager', 'Supervisor'].includes(formData.role);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -62,9 +67,13 @@ const Signup = () => {
         ...formData,
         roleId: isSpecialRole ? formData.roleId : undefined,
       };
+      console.log(payload);
+     // await signup(formData.email, formData.fullName, formData.userName, formData.phone, formData.password, formData.confirmPassword, formData.role);
+ 
 
-      const res = await axios.post('http://localhost:5000/api/auth/signup', payload);
+      const res = await axios.post('http://localhost:4880/api/auth/register', payload);
       alert('Signup successful!');
+      console.log(res);
       setFormData({
         email: '',
         fullName: '',
@@ -78,7 +87,9 @@ const Signup = () => {
       });
     } catch (err) {
       console.error(err);
+      console.log(err);
       alert(err.response?.data?.message || 'Signup failed');
+
     }
   };
 
@@ -88,7 +99,7 @@ const Signup = () => {
     <Container maxWidth="sm">
       <Paper style={{ padding: 20, height: '70vh', width: 405, borderRadius: 0, margin: "0px auto" }}>
         <Grid align="center" item xs={10} mb={2}>
-          <Avatar style={avatarStyle}><AddCircleOutlined /></Avatar>
+          <Avatar sx={{ width: 50, height: 50 }} style={avatarStyle}><AddCircleOutlined /></Avatar>
           <Typography variant="h5" gutterBottom>
             Create an Account
           </Typography>
