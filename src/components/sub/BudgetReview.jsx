@@ -106,7 +106,7 @@ const BudgetReview = ({ appointment, updateAppointment, btn_name }) => {
                 {item.des}
               </Typography>
               <TextField
-                label="Amount (USD)"
+                label="Amount (LKR)"
                 variant="outlined"
                 size="small"
                 type="number"

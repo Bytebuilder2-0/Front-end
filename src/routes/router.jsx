@@ -21,7 +21,9 @@ import ManagerDashboardPage from '../pages/Manager/ManagerDashboardPage';
 
 import VehicleForm from '../pages/VehicleForm';
 import SignInVehicleContainer from '../container/container1';
-
+import TechnicianInprogress from '../pages/Technician/TechnicianInprogress';
+import Decline from '../pages/supervisor/Decline';
+import History from '../pages/supervisor/History';
 
 
 const router = createBrowserRouter([
@@ -40,6 +42,13 @@ const router = createBrowserRouter([
   {
     path: "/SCompleted",
     element: <CompletedSuper/>,
+  },{
+    path:"/SDeclined",
+    element:<Decline/>
+
+  },{
+   path:"/SHistory",
+   element:<History/>
   },
   {
     path: "/TDashboard",
@@ -52,6 +61,10 @@ const router = createBrowserRouter([
   {
     path: "/TCompleted",
     element: <TechnicianCompleted />,
+  },
+  {
+    path:"/TInprogress",
+    element:<TechnicianInprogress/>
   },
   {
     path: '/appointments/new',

@@ -1,16 +1,16 @@
-import React from 'react'
-import TAssignedWork from '../../components/TAssignedWork'
-import { Box,Toolbar } from "@mui/material";
-import MiniDrawer from "../../components/ui/MiniDrawer";
+import React from "react";
+import TAssignedWork from "../../components/TAssignedWork";
+import TechnicianMiniDrawer from "../../components/ui/TechnicianMiniDrawer";
 
 function TechnicianDashboard() {
   return (
-    
     <div>
-      <TAssignedWork/>
+      <TechnicianMiniDrawer>
+         <TAssignedWork/>
+      </TechnicianMiniDrawer>
+        
     </div>
-  )
+  );
 }
 
-export default TechnicianDashboard
-
+export default TechnicianDashboard;

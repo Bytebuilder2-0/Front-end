@@ -34,7 +34,7 @@ const VehicleForm = () => {
 
   return (
     <Container maxWidth="sm">
-      <Paper elevation={4} sx={{ p: 4, mt: 5 }}>
+      <Paper  sx={{ p: 1, mt: 3}} style={{ height: '50vh', width: 405, margin: "0px auto" }}>
         <Grid align="center" mb={2}>
         <Avatar sx={{ width: 50, height: 50 }}>r`</Avatar>
         <Typography variant="h5" gutterBottom>Vehicle Details</Typography>
@@ -64,10 +64,12 @@ const VehicleForm = () => {
             onChange={handleChange}
             required
           />
+          
           <Button variant="contained"  type="submit">Add Vehicle</Button>
           {responseMsg && (
             <Typography variant="body1" color="secondary">{responseMsg}</Typography>
           )}
+        
         </Box>
       </Paper>
     </Container>

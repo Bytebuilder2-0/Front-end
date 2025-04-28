@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { TextField, MenuItem, Select, FormControl, InputLabel, Button, Grid, Typography, FormHelperText,} from '@mui/material';
 import { useNavigate } from 'react-router-dom'; 
-import HandleAppointmentForm from './sub/HandleAppointmentForm';
-import AlertDialog from './Appointement/AlertDialog';
-import VehicleSelection from './Appointement/VehicleSelection';
+import HandleAppointmentForm from './HandleAppointmentForm';
+import AlertDialog from './AlertDialog';
+import VehicleSelection from './VehicleSelection';
 
 const AppointmentSubmit = ({userId}) => {
   // Hardcoded user ID for testing
@@ -60,7 +60,7 @@ const handleAlertClose = () => {
     <Grid container justifyContent="center" style={{ padding: 20 }}>
       <Grid item xs={12} md={8}>
         <Typography variant="h4" gutterBottom>
-          Create New Appointment
+          Appoinment Form
         </Typography>
         
         <form onSubmit={handleFormSubmit}>
