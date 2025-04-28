@@ -21,6 +21,8 @@ import {
   AccountCircle
 } from "@mui/icons-material";
 
+import ApprovalIcon from '@mui/icons-material/Approval';
+
 // Define the width of the drawer
 const drawerWidth = 240;
 
@@ -105,6 +107,7 @@ export default function TechnicianMiniDrawer({ children }) {
   // Sidebar navigation items with their icons and labels
   const navItems = [
     { path: "/TDashboard", label: "Assigned", icon: <DashboardIcon /> },
+    { path: "/TAccepted", label: "Accepted", icon: <ApprovalIcon /> },
     { path: "/TDeclined", label: "Declined", icon: <ErrorIcon /> },
     { path: "/TCompleted", label: "Completed", icon: <DoneOutlineIcon color="success" />},
     { path: "/TInprogress", label: "InProgress", icon: <AutoGraphIcon /> },

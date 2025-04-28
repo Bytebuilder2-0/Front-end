@@ -22,10 +22,9 @@ import {
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import { lightBlue } from "@mui/material/colors";
 
-
 const API_BASE_URL = "http://localhost:5000/api/appointments";
 
-function TAssignedWork() {
+function TAcceptedWork() {
   const [appointments, setAppointments] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
@@ -52,28 +51,28 @@ function TAssignedWork() {
   // Function to confirm appointment
   const handleConfirm = async (appointmentId) => {
     const isConfirmed = window.confirm(
-      "Are you sure you want to confirm this appointment?"
+      "Are you sure you want to start this appointment?"
     );
     if (!isConfirmed) return; // If user cancels, do nothing
 
     try {
       await axios.put(`${API_BASE_URL}/${appointmentId}/tStatusUpdate`, {
-        status: "Accepted",
+        status: "InProgress",
       });
 
       // Update UI instantly
       setAppointments((prevAppointments) =>
         prevAppointments.map((appointment) =>
           appointment._id === appointmentId
-            ? { ...appointment, status: "Accepted" }
+            ? { ...appointment, status: "InProgress" }
             : appointment
         )
       );
 
-      alert("✅ Appointment Confirmed!");
+      alert("✅ Appointment Started job!");
     } catch (error) {
-      console.error("Error confirming appointment:", error);
-      alert("❌ Failed to confirm appointment.");
+      console.error("Error starting job:", error);
+      alert("❌ Failed to start appointment.");
     }
   };
 
@@ -97,7 +96,6 @@ function TAssignedWork() {
           reason: declineReason,
         }
       );
-
       // Update frontend UI
       setAppointments((prevAppointments) =>
         prevAppointments.map((appointment) =>
@@ -115,14 +113,12 @@ function TAssignedWork() {
       handleCloseDialog();
     }
   };
-
   const handleToggleWorkload = (appointmentId) => {
     setExpandedWorkload((prev) => ({
       ...prev,
       [appointmentId]: !prev[appointmentId],
     }));
   };
-
   const filteredAppointments = appointments.filter((appointment) =>
     (appointment.vehicleId || "")
       .toString()
@@ -165,13 +161,10 @@ function TAssignedWork() {
                 <strong>Appointment Date</strong>
               </TableCell>
               <TableCell>
+                <strong>Issue</strong>
+              </TableCell>
+              <TableCell>
                 <strong>Work Load</strong>
-              </TableCell>
-              <TableCell>
-                <strong>Status</strong>
-              </TableCell>
-              <TableCell>
-                <strong>Actions</strong>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -186,15 +179,11 @@ function TAssignedWork() {
               // Filter appointments to show only "Pending", "Reject1", or "Confirmed"
               filteredAppointments
                 .filter((appointment) =>
-                  [
-                    "Waiting for Technician Confirmation",
-                    "Reject2",
-                    "Accepted",
-                  ].includes(appointment.status)
+                  ["Accepted"].includes(appointment.status)
                 )
                 .map((appointment) => (
                   <React.Fragment key={appointment._id}>
-                    <TableRow>
+                    <TableRow key={appointment._id}>
                       <TableCell>{appointment.vehicleId}</TableCell>
                       <TableCell>{appointment.vehicleNumber}</TableCell>
                       <TableCell>
@@ -203,6 +192,7 @@ function TAssignedWork() {
                         appointment.appointmentDate
                       ).toLocaleDateString()} */}
                       </TableCell>
+                      <TableCell>{appointment.issue}</TableCell>
                       <TableCell>
                         <IconButton
                           onClick={() => handleToggleWorkload(appointment._id)}
@@ -210,24 +200,8 @@ function TAssignedWork() {
                           <AssignmentIcon />
                         </IconButton>
                       </TableCell>
-
                       <TableCell>
-                        {appointment.status === "Accepted" ? (
-                          <span style={{ color: "green", fontWeight: "bold" }}>
-                            Accepted
-                          </span>
-                        ) : appointment.status === "Reject2" ? (
-                          <span style={{ color: "red", fontWeight: "bold" }}>
-                            Declined
-                          </span>
-                        ) : (
-                          <span style={{ color: "orange", fontWeight: "bold" }}>
-                            Waiting
-                          </span>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {appointment.status === "Accepted" ? (
+                        {appointment.status === "InProgress" ? (
                           <Button variant="contained" disabled>
                             {appointment.status}
                           </Button>
@@ -238,7 +212,7 @@ function TAssignedWork() {
                             onClick={() => handleConfirm(appointment._id)}
                             style={{ marginRight: "10px" }}
                           >
-                            Accept
+                            Start
                           </Button>
                         )}
                       </TableCell>
@@ -283,12 +257,8 @@ function TAssignedWork() {
                               <TableBody>
                                 {appointment.workload.map((task, index) => (
                                   <TableRow key={task._id || index}>
-                                    <TableCell >
-                                      {task.step}
-                                    </TableCell>
-                                    <TableCell >
-                                      {task.description}
-                                    </TableCell>
+                                    <TableCell>{task.step}</TableCell>
+                                    <TableCell>{task.description}</TableCell>
                                   </TableRow>
                                 ))}
                               </TableBody>
@@ -347,4 +317,4 @@ function TAssignedWork() {
   );
 }
 
-export default TAssignedWork;
+export default TAcceptedWork;
