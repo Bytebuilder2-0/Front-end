@@ -69,7 +69,7 @@ const ServiceStepModal = ({ open, onClose, onSave, initialSteps }) => {
   const handleConfirmSaveSteps = () => {
     const filteredSteps = steps.filter((step) => step.description.trim() !== "");
 
-    setSteps(filteredSteps); // 🔥 Update UI immediately by removing empty inputs
+    setSteps(filteredSteps); //  Update UI immediately by removing empty inputs
 
     onSave(filteredSteps); // Save only non-empty steps to backend
     setSuccessMessage("Steps saved successfully!");
@@ -193,3 +193,5 @@ const ServiceStepModal = ({ open, onClose, onSave, initialSteps }) => {
 };
 
 export default ServiceStepModal;
+
+
