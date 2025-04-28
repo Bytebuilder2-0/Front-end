@@ -33,21 +33,17 @@ const ServiceManager = () => {
 
   const handleAdd = async (name) => {
     const tempId = Date.now(); // Temporary ID
-  
-    // Add temporary service to UI
     setServices((prev) => [...prev, { _id: tempId, name, selected: false }]);
-  
     try {
-      const newService = await addService(name); // Call API to actually add
+      const newService = await addService(name);
       if (newService && newService._id) {
         setServices((prev) =>
           prev.map((service) =>
-            service._id === tempId ? newService : service // Replace temp with real service
+            service._id === tempId ? newService : service
           )
         );
         setSnackbarMessage(`"${name}" added successfully.`);
       } else {
-        // API failed, remove temp
         setServices((prev) => prev.filter((service) => service._id !== tempId));
         setSnackbarMessage("Error adding service.");
       }
@@ -55,8 +51,7 @@ const ServiceManager = () => {
       setServices((prev) => prev.filter((service) => service._id !== tempId));
       setSnackbarMessage("Error adding service.");
     }
-    
-    setSnackbarOpen(true); // Always open snackbar
+    setSnackbarOpen(true);
   };
 
   const handleDelete = async (id, name) => {
@@ -75,32 +70,35 @@ const ServiceManager = () => {
         )
       );
       setSnackbarMessage(`"${name}" updated successfully.`);
-      setSnackbarOpen(true);
     } else {
       setSnackbarMessage("Error updating service.");
-      setSnackbarOpen(true);
     }
+    setSnackbarOpen(true);
   };
 
   return (
     <Container maxWidth="md" sx={{ px: { xs: 2, md: 4 } }}>
       <Paper
-        elevation={3}
+        elevation={4}
         sx={{
-          p: { xs: 2, md: 3 },
-          mt: { xs: 2, md: 4 },
+          p: { xs: 3, md: 5 },
+          mt: { xs: 3, md: 5 },
           width: "100%",
           boxSizing: "border-box",
+          borderRadius: 4,
+          background: "linear-gradient(135deg, #f5f7fa 0%,rgb(250, 253, 254) 100%)",
         }}
       >
-        <Typography variant="h4" align="center" gutterBottom>
-          Add New Service
+        <Typography variant="h4" align="center" gutterBottom fontWeight="bold">
+          Manage Services
         </Typography>
+
         <ServiceForm onAdd={handleAdd} />
 
-        <Typography variant="h5" sx={{ mt: 3 }}>
-          Services
+        <Typography variant="h5" sx={{ mt: 4, mb: 2 }} fontWeight="bold">
+          Your Services
         </Typography>
+
         <ServiceList
           services={services}
           onToggle={handleToggle}
