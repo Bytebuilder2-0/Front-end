@@ -176,8 +176,8 @@ const handleAlertClose = () => {
          <FormButtons 
             onReset={handleReset}
             onSubmit={handleFormSubmit}
-            resetLabel="Reset Form"
-            submitLabel="Submit Appointment"
+            resetLabel="Reset"
+            submitLabel="Submit"
             submitColor="success"
           />
         </form>

@@ -10,13 +10,12 @@ const FormButtons = ({
   submitColor = "primary"
 }) => {
   return (
-    <Grid container spacing={2}  style={{ marginTop: 20 }}>
+    <Grid container spacing={3}  style={{ marginTop: 20  }}>
+
       <Grid item 
        sx={{
-        display : 'flex',
-        width : '100%',
-        flexDirection : 'row',
-        
+        width : '50%',
+
       }}>
 
         <Button 
@@ -24,8 +23,8 @@ const FormButtons = ({
           onClick={onReset}
           color={resetColor}
           sx={{
-            flexDirection : 'row',
-          
+            width : '100%',    
+            
             '&:hover': {
               backgroundColor: 'red', 
               color: 'white'
@@ -34,13 +33,20 @@ const FormButtons = ({
         >
           {resetLabel}
         </Button>
+
+
       </Grid>
-      <Grid item>
+      <Grid item
+       sx={{
+        width : '50%'
+      }}>
+     
         <Button 
           type="submit" 
           variant="contained" 
           color={submitColor}
           sx={{
+            width : '100%',
             '&:hover': {
               backgroundColor: 'darkgreen', 
             },
@@ -48,6 +54,7 @@ const FormButtons = ({
         >
           {submitLabel}
         </Button>
+
       </Grid>
     </Grid>
   );
