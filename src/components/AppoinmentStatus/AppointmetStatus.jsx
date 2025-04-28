@@ -51,8 +51,17 @@ const AppointmentStatus = () => {
 
   return (
     <div>
+
+      {(appointment.status === 'Confirmed' || 
+        appointment.status === 'Waiting for Technician Confirmation' || 
+        appointment.status === 'Accepted' || 
+        appointment.status === 'Rejected') && (
+  <AppointmentConfirm 
+    appointment={appointment} 
+    onCancel={handleAppointmentCancel}
+  />
+)}
       {appointment.status === 'Pending' && <AppointmentPending appointment={appointment} onCancel={handleAppointmentCancel} />}
-      {appointment.status === 'Confirmed' && <AppointmentConfirm appointment={appointment} onCancel={handleAppointmentCancel}/>}
       {appointment.status === 'InProgress' && <AppointmentInProgress appointment={appointment} />}
 
     </div>

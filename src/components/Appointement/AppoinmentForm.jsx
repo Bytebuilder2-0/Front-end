@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import HandleAppointmentForm from './HandleAppointmentForm';
 import AlertDialog from './AlertDialog';
 import VehicleSelection from './VehicleSelection';
+import FormButtons from './FormButton';
 
 const AppointmentSubmit = ({userId}) => {
   // Hardcoded user ID for testing
@@ -172,34 +173,13 @@ const handleAlertClose = () => {
             error={!!errors.contactNumber}
             helperText={errors.contactNumber || 'Example : 9412345678'}
           />
-          <Grid container spacing={2} justifyContent="flex-end" style={{ marginTop: 20 }}>
-            <Grid item>
-              <Button variant="outlined"
-               onClick={handleReset}
-              sx={{
-                backgroundColor: '', 
-                '&:hover': {
-                  backgroundColor: 'red', 
-                  color: 'white'
-                },
-              }}>
-                Reset
-              </Button>
-            </Grid>
-
-            
-            <Grid item>
-              <Button type="submit" variant="contained" 
-               sx={{
-                backgroundColor: 'green', 
-                '&:hover': {
-                  backgroundColor: 'darkgreen', 
-                },
-              }}>
-                Submit Appointment
-              </Button>
-            </Grid>
-          </Grid>
+         <FormButtons 
+            onReset={handleReset}
+            onSubmit={handleFormSubmit}
+            resetLabel="Reset Form"
+            submitLabel="Submit Appointment"
+            submitColor="success"
+          />
         </form>
 
                <AlertDialog

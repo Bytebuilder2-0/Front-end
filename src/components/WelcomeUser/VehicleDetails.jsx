@@ -14,6 +14,7 @@ const VehicleDetails = ({ userId }) => {
         const fetchVehicles = async () => {
             try {
                 const response = await axios.get(API_URL);
+                console.log(response.data);
     
                 setVehicles(response.data);
 
