@@ -1,50 +1,34 @@
+// components/ServiceItem.jsx
 import React, { useState } from "react";
-import {
-  ListItem,
-  ListItemText,
-  Checkbox,
-  TextField,
-  Button,
-  Box,
-} from "@mui/material";
-import ConfirmDeleteDialog from "./ConfirmDeleteDialog";  // For Delete
-import ConfirmEditDialog from "./ConfirmEditDialog";      // For Edit Confirmation
+import { ListItem, ListItemText, Checkbox, TextField, Button, Box } from "@mui/material";
+import ConfirmDeleteDialog from "./ConfirmDeleteDialog";
+import ConfirmEditDialog from "./ConfirmEditDialog";
 
 const ServiceItem = ({ service, onToggle, onDelete, onUpdate }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState(service.name);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [editConfirmDialogOpen, setEditConfirmDialogOpen] = useState(false); // Edit confirmation dialog state
+  const [editConfirmDialogOpen, setEditConfirmDialogOpen] = useState(false);
 
   const handleSave = () => {
     if (editedName.trim() && editedName !== service.name) {
-      setEditConfirmDialogOpen(true); // Show confirmation dialog before updating
+      setEditConfirmDialogOpen(true);  // Show confirmation dialog for editing
     }
   };
 
-  // Confirm Edit: Update the service name
   const handleEditConfirmed = () => {
     onUpdate(service._id, editedName);
     setEditConfirmDialogOpen(false);
-    setIsEditing(false); // Close edit mode after confirmation
+    setIsEditing(false);  // Close the editing mode
   };
 
   return (
     <>
-      <ListItem
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        {/* Toggle selected */}
+      <ListItem>
         <Checkbox
           checked={service.selected}
-          onChange={() => onToggle(service._id, service.selected)}
+          onChange={() => onToggle(service._id, service.selected)}  // Trigger toggle
         />
-
-        {/* Editable Name Field */}
         {isEditing ? (
           <TextField
             value={editedName}
@@ -62,8 +46,6 @@ const ServiceItem = ({ service, onToggle, onDelete, onUpdate }) => {
             }}
           />
         )}
-
-        {/* Action Buttons */}
         <Box display="flex" gap={1}>
           <Button
             variant="outlined"
@@ -77,14 +59,14 @@ const ServiceItem = ({ service, onToggle, onDelete, onUpdate }) => {
             variant="outlined"
             color="error"
             size="small"
-            onClick={() => setConfirmDialogOpen(true)}
+            onClick={() => setConfirmDialogOpen(true)}  // Open delete confirmation
           >
             Delete
           </Button>
         </Box>
       </ListItem>
 
-      {/* Confirm Delete Dialog */}
+      {/* Confirmation dialogs for delete and edit */}
       <ConfirmDeleteDialog
         open={confirmDialogOpen}
         onClose={() => setConfirmDialogOpen(false)}
@@ -95,7 +77,6 @@ const ServiceItem = ({ service, onToggle, onDelete, onUpdate }) => {
         itemName={service.name}
       />
 
-      {/* Confirm Edit Dialog */}
       <ConfirmEditDialog
         open={editConfirmDialogOpen}
         onClose={() => setEditConfirmDialogOpen(false)}

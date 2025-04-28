@@ -1,4 +1,3 @@
-// components/confirmDeleteDialog.jsx
 import React from "react";
 import {
   Dialog,

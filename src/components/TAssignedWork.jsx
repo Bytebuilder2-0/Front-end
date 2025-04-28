@@ -52,14 +52,14 @@ function TAssignedWork() {
 
     try {
       await axios.put(`${API_BASE_URL}/${appointmentId}/tStatusUpdate`, {
-        status: "Confirmed",
+        status: "Accepted",
       });
 
       // Update UI instantly
       setAppointments((prevAppointments) =>
         prevAppointments.map((appointment) =>
           appointment._id === appointmentId
-            ? { ...appointment, status: "Confirmed" }
+            ? { ...appointment, status: "Accepted" }
             : appointment
         )
       );
@@ -174,7 +174,7 @@ function TAssignedWork() {
                   [
                     "Waiting for Technician Confirmation",
                     "Reject2",
-                    "Confirmed",
+                    "Accepted",
                   ].includes(appointment.status)
                 )
                 .map((appointment) => (
@@ -182,9 +182,10 @@ function TAssignedWork() {
                     <TableCell>{appointment.vehicleId}</TableCell>
                     <TableCell>{appointment.vehicleNumber}</TableCell>
                     <TableCell>
-                      {new Date(
+                    {appointment.expectedDeliveryDate}
+                    {/* {new Date(
                         appointment.appointmentDate
-                      ).toLocaleDateString()}
+                      ).toLocaleDateString()} */}
                     </TableCell>
                     <TableCell>
                       {appointment.workload &&
@@ -213,9 +214,9 @@ function TAssignedWork() {
                     </TableCell>
 
                     <TableCell>
-                      {appointment.status === "Confirmed" ? (
+                      {appointment.status === "Accepted" ? (
                         <span style={{ color: "green", fontWeight: "bold" }}>
-                          Confirmed
+                          Accepted
                         </span>
                       ) : appointment.status === "Reject2" ? (
                         <span style={{ color: "red", fontWeight: "bold" }}>
@@ -228,7 +229,7 @@ function TAssignedWork() {
                       )}
                     </TableCell>
                     <TableCell>
-                      {appointment.status === "Confirmed" ? (
+                      {appointment.status === "Accepted" ? (
                         <Button variant="contained" disabled>
                           {appointment.status}
                         </Button>
@@ -239,7 +240,7 @@ function TAssignedWork() {
                           onClick={() => handleConfirm(appointment._id)}
                           style={{ marginRight: "10px" }}
                         >
-                          Confirm
+                          Accept
                         </Button>
                       )}
                     </TableCell>

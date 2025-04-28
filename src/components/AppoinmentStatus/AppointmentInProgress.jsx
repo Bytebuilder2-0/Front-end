@@ -1,7 +1,9 @@
 import React from 'react';
 
-const AppointmentInProgress = ({ appointment }) => {
 
-}
+const AppointmentInProgress = ({ appointment }) => {
+  
+
+};
 
 export default AppointmentInProgress;

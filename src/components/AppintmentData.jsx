@@ -72,23 +72,23 @@ function AppointmentData() {
     <Container>
       <Box
         display="flex"
-        justifyContent="space-between"
+        justifyContent="right"
         alignItems="center"
+        mt={2}
         mb={2}
       >
-        <Typography variant="h5" gutterBottom>
-          Appointments
-        </Typography>
+       
         <TextField
           label="Search by Vehicle ID"
           variant="outlined"
           size="small"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+     
         />
       </Box>
 
-      <TableContainer component={Paper} elevation={3}>
+      <TableContainer component={Paper} elevation={3} >
         <Table>
           <TableHead>
             <TableRow>

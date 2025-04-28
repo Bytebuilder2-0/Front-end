@@ -203,8 +203,8 @@ function MiniDrawer() {
               label: "Completed",
               icon: <DoneOutlineIcon color="success" />,
             },
-            { path: "", label: "Decline", icon: <ErrorIcon /> },
-            { path: "", label: "History", icon: <HistoryIcon /> },
+            { path: "/SDeclined", label: "Decline", icon: <ErrorIcon /> },
+            { path: "/SHistory", label: "History", icon: <HistoryIcon /> },
           ].map(({ path, label, icon }) => (
             <ListItem
               key={path}

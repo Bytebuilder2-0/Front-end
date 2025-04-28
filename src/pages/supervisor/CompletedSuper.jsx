@@ -1,13 +1,16 @@
 import CompletedS from "../../components/CompletedS";
-import { Box,Toolbar } from "@mui/material";
+import { Box,Toolbar,Divider } from "@mui/material";
 import MiniDrawer from "../../components/ui/MiniDrawer";
+import PathNaming from "../../components/sub/PathNaming";
 
 function CompletedSuper(){
 return(
     <Box sx={{ display: 'flex' }}>
     <MiniDrawer />
-    <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+    <Box component="main" sx={{ flexGrow: 1, pl:3,pr:3  }}>
      <Toolbar/>
+     <PathNaming label="Completed" path="Supervisor/Completed"/>
+       <Divider/>
      <CompletedS/>
     </Box>
   </Box>
