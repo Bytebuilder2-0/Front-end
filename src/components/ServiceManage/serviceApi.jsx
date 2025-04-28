@@ -47,3 +47,11 @@ export const updateService = async (id, name) => {
     console.error("Error updating service:", err);
   }
 };
+export const updateServiceSteps = async (id, steps) => {
+  try {
+    const res = await axios.put(`http://localhost:5000/api/servicesManage/steps/${id}`, { steps });
+    return res.data;
+  } catch (err) {
+    console.error("Error updating service steps:", err);
+  }
+};
