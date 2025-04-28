@@ -3,25 +3,31 @@ import React, { useState, useEffect } from 'react';
 import AppointDetails from './AppointDetails';
 import NoAppointment from './NoAppointment';
 import VehicleDetails from './VehicleDetails';
+import axios from 'axios';
+
 
 const UserWelcome = ({ userId }) => {
+
+    const API_URL = `http://localhost:5000/api/appointments/user/${userId}`
+
     const [hasAppointments, setHasAppointments] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const checkAppointments = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/api/appointments/user/${userId}`);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch appointments');
-                }
-                const data = await response.json();
-                setHasAppointments(data.length > 0);
+                const response = await axios.get(API_URL);
+               
+                //filtering appointment
+            const validAppointments = response.data.data.filter
+            (appointment => !['Cancelled', 'Paid', 'All done'].includes(appointment.status) );
+              
+            setHasAppointments(validAppointments.length > 0);
             } catch (err) {
                 console.error('Error checking appointments:', err);
                 setHasAppointments(false); // Default to no appointments if error occurs
             } finally {
-                setLoading(false);
+                setLoading(false);   
             }
         };
 
@@ -36,13 +42,18 @@ const UserWelcome = ({ userId }) => {
 
     return (
         <Box sx={{ p: 3, maxWidth: 'auto', margin: '10 auto' }}>
+
             {/* Welcome Header */}
-            <Typography variant="h3" gutterBottom sx={{ fontFamily: '"Poppins", sans-serif', fontWeight: 750, letterSpacing: '0.1px' }}>
-                Welcome to Garage24 !!
+            <Typography variant="h3" gutterBottom 
+            sx={{ fontFamily: '"Poppins", sans-serif',
+                fontWeight: 780, 
+                letterSpacing: '-1px' }}>
+
+                Welcome  to  Garage24  !!
             </Typography>
             
             <Typography variant="body1" sx={{ 
-                mb: 3,
+                mb: 3,  
                 color: 'text.secondary',
                 fontSize: '20px'
             }}>
@@ -51,7 +62,8 @@ const UserWelcome = ({ userId }) => {
             
             <Divider sx={{ my: 5, borderBottomWidth: 3 }} /> 
 
-            {/* Conditional rendering of appointments */}
+            {/* Conditional rendering of components */}
+
             {hasAppointments ? (
                 <AppointDetails userId={userId} />
             ) : (
@@ -64,5 +76,4 @@ const UserWelcome = ({ userId }) => {
         </Box>
     );
 };
-
 export default UserWelcome;

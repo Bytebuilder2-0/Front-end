@@ -1,7 +1,11 @@
 import { Typography, Box, Button, Grid } from '@mui/material';
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 
 const VehicleDetails = ({ userId }) => {
+
+     const API_URL = `http://localhost:5000/api/appointments/vehicles/${userId}`
+
     const [vehicles, setVehicles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -9,12 +13,10 @@ const VehicleDetails = ({ userId }) => {
     useEffect(() => {
         const fetchVehicles = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/api/appointments/vehicles/${userId}`);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch vehicles');
-                }
-                const data = await response.json();
-                setVehicles(data);
+                const response = await axios.get(API_URL);
+    
+                setVehicles(response.data);
+
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -37,7 +39,7 @@ const VehicleDetails = ({ userId }) => {
 
     return (
         <Box sx={{ mb: 4 }}>
-            <Typography variant="h6" sx={{ mb: 3, fontWeight: 'bold' }}>
+            <Typography variant="h6" sx={{ mb: 3, fontWeight: 'bold', fontSize:'22px' }}>
                 Your Vehicles
             </Typography>
 
@@ -45,10 +47,11 @@ const VehicleDetails = ({ userId }) => {
                 <Typography sx={{ mb: 2 }}>No vehicles added!</Typography>
             ) : (
                 <Grid container spacing={2} sx={{ mb: 3 }}>
+
                     {vehicles.map((vehicle) => (
                         <Grid item key={vehicle.id}>
                             <Box sx={{ 
-                                p: 2,
+                                p:4,
                                 border: '1px solid #e0e0e0',
                                 borderRadius: '8px',
                                 minWidth: '180px',
@@ -75,20 +78,6 @@ const VehicleDetails = ({ userId }) => {
                 </Grid>
             )}
 
-            <Button 
-                variant="contained" 
-                color="primary"
-                sx={{
-                    mt: 2,
-                    px: 3,
-                    py: 1,
-                    borderRadius: '4px',
-                    textTransform: 'none',
-                    fontWeight: '500'
-                }}
-            >
-                Add Vehicle
-            </Button>
         </Box>
     );
 };
