@@ -17,6 +17,7 @@ import {
   Notifications as NotificationsIcon,
   DoneOutline as DoneOutlineIcon,
   Error as ErrorIcon,
+  AutoGraph as AutoGraphIcon,
   AccountCircle
 } from "@mui/icons-material";
 
@@ -105,8 +106,8 @@ export default function TechnicianMiniDrawer({ children }) {
   const navItems = [
     { path: "/TDashboard", label: "Assigned", icon: <DashboardIcon /> },
     { path: "/TDeclined", label: "Declined", icon: <ErrorIcon /> },
-    { path: "/TCompleted", label: "Completed", icon: <DoneOutlineIcon color="success" />,
-                },
+    { path: "/TCompleted", label: "Completed", icon: <DoneOutlineIcon color="success" />},
+    { path: "/TInprogress", label: "InProgress", icon: <AutoGraphIcon /> },
   ];
 
   // JSX for sidebar drawer content
