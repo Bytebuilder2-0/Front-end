@@ -104,7 +104,7 @@ export default function ManagerSidebar({ children }) {
   const navItems = [
     { path: "/ManagerDashboard", label: "Dashboard", icon: <DashboardIcon /> },
     { path: "", label: "Reports", icon: <ReportIcon /> },  
-    { path: "", label: "History", icon: <HistoryIcon /> },  // Added History
+    { path: "/ManagerHistory", label: "History", icon: <HistoryIcon /> },  // Added History
     { path: "/ManageServices", label: "Manage Services", icon: <BuildIcon /> },
     { path: "/feedback", label: "Manage Feedback", icon: <FeedbackIcon /> },
   ];
@@ -119,7 +119,7 @@ export default function ManagerSidebar({ children }) {
       <Divider />
       <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mt: 2 }}>
         {/* User Avatar */}
-        <Avatar src="https://randomuser.me/api/portraits/women/2.jpg" sx={{ width: 80, height: 80 }} />
+        <Avatar src="https://randomuser.me/api/portraits/men/7.jpg" sx={{ width: 80, height: 80 }} />
         <Typography sx={{ mt: 1 }}>Manager</Typography>
       </Box>
       <Divider sx={{ mx: 2, my: 1 }} />

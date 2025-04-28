@@ -57,6 +57,14 @@ const ServiceItem = ({ service, onToggle, onDelete, onUpdate }) => {
           </Button>
           <Button
             variant="outlined"
+            style={{ borderColor: 'primary', color: 'primary' }}
+            size="small"
+            onClick={() => addworkload(true)}  // sample
+          >
+            Add Work load
+          </Button>
+          <Button
+            variant="outlined"
             color="error"
             size="small"
             onClick={() => setConfirmDialogOpen(true)}  // Open delete confirmation

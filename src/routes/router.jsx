@@ -11,7 +11,7 @@ import UserDashboard from '../pages/User/UserDashboard';
 
 import FeedbackPage from '../pages/Manager/FeedbackPage';
 import ManageServices from '../pages/Manager/ManageServices';
-
+import ManagerHistoryPage from '../pages/Manager/HistoryPage';
 
 import TechnicianCompleted from '../pages/Technician/TechnicianCompleted';
 import { Login } from '@mui/icons-material'; 
@@ -92,6 +92,10 @@ const router = createBrowserRouter([
 {
       path: "/ManagerDashboard",
       element: <ManagerDashboardPage/>,
+    }  ,
+    {
+      path: "/ManagerHistory",
+      element: <ManagerHistoryPage/>,
     }  
 
 
