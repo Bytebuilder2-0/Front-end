@@ -32,35 +32,32 @@ const ServiceManager = () => {
   };
 
   const handleAdd = async (name) => {
-    // Temporarily add the service to the list for instant feedback (optimistic update)
-    const tempService = { _id: Date.now(), name, selected: false }; // Temporary ID for immediate UI update
+    const tempId = Date.now(); // Temporary ID
   
-    // Update the services state immediately with the new service
-    setServices((prev) => [...prev, tempService]);
+    // Add temporary service to UI
+    setServices((prev) => [...prev, { _id: tempId, name, selected: false }]);
   
     try {
-      // Wait for the actual API response
-      const newService = await addService(name); // Call API to add service
-  
-      // Check if the service was added successfully
+      const newService = await addService(name); // Call API to actually add
       if (newService && newService._id) {
-        // Update the service with actual data (only if successful)
+        setServices((prev) =>
+          prev.map((service) =>
+            service._id === tempId ? newService : service // Replace temp with real service
+          )
+        );
         setSnackbarMessage(`"${name}" added successfully.`);
       } else {
-        // If the API returned no data or failed, remove the temporary service and show the error
-        setServices((prev) => prev.filter((service) => service._id !== tempService._id));
+        // API failed, remove temp
+        setServices((prev) => prev.filter((service) => service._id !== tempId));
         setSnackbarMessage("Error adding service.");
       }
     } catch (error) {
-      // If there’s any error in the API call, remove the temporary service and show error
-      setServices((prev) => prev.filter((service) => service._id !== tempService._id));
+      setServices((prev) => prev.filter((service) => service._id !== tempId));
       setSnackbarMessage("Error adding service.");
     }
-  
-    // Open the snackbar for success or error message
-    setSnackbarOpen(true);
+    
+    setSnackbarOpen(true); // Always open snackbar
   };
-  
 
   const handleDelete = async (id, name) => {
     await deleteService(id);

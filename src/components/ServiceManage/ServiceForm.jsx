@@ -19,7 +19,7 @@ const ServiceForm = ({ onAdd }) => {
       style={{ display: "flex", gap: "10px", marginBottom: "20px" }}
     >
       <TextField
-        label="New Service or Technicians"
+        label="New Service "
         variant="outlined"
         value={name}
         onChange={(e) => setName(e.target.value)}
