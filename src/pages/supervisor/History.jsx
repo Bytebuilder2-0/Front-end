@@ -6,7 +6,7 @@ import SupHistory from '../../components/SupHistory'
 
 
 
-function SupHIstory() {
+function History() {
   return (
     <Box sx={{ display: 'flex' }}>
     <MiniDrawer />
@@ -20,4 +20,4 @@ function SupHIstory() {
   )
 }
 
-export default SupHIstory;
+export default History;
