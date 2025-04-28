@@ -1,16 +1,16 @@
 import React from 'react'
-import TDeclined from '../../components/TDeclined'
 import TechnicianMiniDrawer from '../../components/ui/TechnicianMiniDrawer'
+import TInprogress from '../../components/TInprogress'
 
-const TechnicianDeclined = () => {
+function TechnicianInprogress() {
   return (
     <div>
       <TechnicianMiniDrawer>
-        <TDeclined/>
+        <TInprogress/>
       </TechnicianMiniDrawer>
-     
     </div>
   )
 }
 
-export default TechnicianDeclined
+export default TechnicianInprogress
+

@@ -182,9 +182,10 @@ function TAssignedWork() {
                     <TableCell>{appointment.vehicleId}</TableCell>
                     <TableCell>{appointment.vehicleNumber}</TableCell>
                     <TableCell>
-                      {new Date(
+                    {appointment.expectedDeliveryDate}
+                    {/* {new Date(
                         appointment.appointmentDate
-                      ).toLocaleDateString()}
+                      ).toLocaleDateString()} */}
                     </TableCell>
                     <TableCell>
                       {appointment.workload &&
