@@ -8,13 +8,13 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Button,Container,Box,Typography,TextField, IconButton, Tooltip ,Snackbar
+  Container,Box,TextField, IconButton, Tooltip ,Snackbar,MuiAlert
 } from "@mui/material";
+
+//mui icons
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
-import MuiAlert from '@mui/material/Alert';
 
-
+//Components
 import IssueViewer from "./sub/IssueView";
 import ConfirmationDialog from "./sub/Confirmation";
 
@@ -24,8 +24,8 @@ const API_BASE_URL = "http://localhost:5000/api/appointments";
 // Fetch only "Pending" appointments
 const fetchAppointments = async () => {
   try {
-    const response = await axios.get(API_BASE_URL);
-    return response.data.reverse().filter((appt) => appt.status === "Pending"); // Fetch only pending ones
+    const response = await axios.get(API_BASE_URL); //full axios response object
+    return response.data.reverse().filter((appointment_obj) => appointment_obj.status === "Pending"); // Fetch only pending ones -- Array of json objects
   } catch (error) {
     console.error("Error fetching appointments:", error);
     return [];
