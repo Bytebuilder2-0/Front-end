@@ -13,10 +13,8 @@ import {
 	TextField,
 	IconButton,
 	Tooltip,
-	Snackbar,
 	
 } from "@mui/material";
-import MuiAlert from '@mui/material/Alert';
 
 //mui icons
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -24,6 +22,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 //Components
 import IssueViewer from "./sub/IssueView";
 import ConfirmationDialog from "./sub/Confirmation";
+import CustomSnackbar from "./sub/CustomSnackbar";
 
 // API Base URL
 const API_BASE_URL = "http://localhost:5000/api/appointments";
@@ -51,8 +50,9 @@ const updateAppointmentStatus = async (appointmentId, newStatus, setAppointments
 			status: newStatus,
 		});
 
+    // Remove updated appointment
 		setAppointments(
-			(prevAppointments) => prevAppointments.filter((appt) => appt._id !== appointmentId) // Remove updated appointment
+			(prevAppointments) => prevAppointments.filter((appt) => appt._id !== appointmentId) 
 		);
 	} catch (error) {
 		console.error(`Error updating appointment status to ${newStatus}:`, error);
@@ -68,6 +68,7 @@ const InitialCheck = () => {
 	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 
 	const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
+
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
 	const [snackbarMessage, setSnackbarMessage] = useState("");
 
@@ -123,7 +124,7 @@ const InitialCheck = () => {
 						{filteredAppointments.length > 0 ? (
 							filteredAppointments.map((appointment,index) => (
 								<TableRow key={appointment._id}>
-                  <TableCell>{index+1}</TableCell>
+                  <TableCell>{index+1}<span>.</span></TableCell>
 									<TableCell>{appointment.vehicleId}</TableCell>
 									<TableCell>{appointment.model}</TableCell>
 									<TableCell>
@@ -195,23 +196,9 @@ const InitialCheck = () => {
 				}}
 				onCancel={() => setConfirmDialogOpen(false)}
 			/>
-
-			<Snackbar
-				open={snackbarOpen}
-				autoHideDuration={3000}
-				onClose={() => setSnackbarOpen(false)}
-				anchorOrigin={{ vertical: "top", horizontal: "right" }} // top right corner
-				sx={{ top: 80 }} // add top margin
-			>
-				<MuiAlert
-					onClose={() => setSnackbarOpen(false)}
-					severity="success" // success = green, error = red, warning = yellow
-					sx={{ width: "100%", bgcolor: "success.main", color: "white" }}
-					variant="filled" // makes it filled color
-				>
-					{snackbarMessage}
-				</MuiAlert>
-			</Snackbar>
+``
+      <CustomSnackbar	open={snackbarOpen}	onClose={() => setSnackbarOpen(false)} message={snackbarMessage}  severity ="success"/>
+      
 		</Container>
 	);
 };
