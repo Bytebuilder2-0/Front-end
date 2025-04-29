@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
 import { TextField, Button, Box, Typography } from '@mui/material';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';  // 👈 import useNavigate
+import { Link, useNavigate } from 'react-router-dom';  // import useNavigate
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext'; // Importing the AuthContext
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate();  // 👈 create navigate function
+  const navigate = useNavigate();  //  create navigate function
+
+  const { setUser } = useContext(AuthContext); // Accessing the AuthContext
 
   const handleLogin = async (e) => {
+   
+
     e.preventDefault();
     setError('');
 
@@ -19,11 +25,14 @@ const LoginForm = () => {
         password
       });
 
-      const { token, role } = response.data;
+      const { token, user } = response.data;
+      const role = user.role;
 
       // Save token and role
       localStorage.setItem('token', token);
       localStorage.setItem('role', role);
+
+      setUser({ token, role }); // Update the user state in AuthContext
 
       // Navigate based on role
       if (role === 'manager') {
@@ -35,11 +44,14 @@ const LoginForm = () => {
       } else if (role === 'supervisor') {
         navigate('/Super');
       } else {
-        navigate('/User');
+        console.error('Unknown role:', role);
       }
+      
+      
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     }
+
   };
 
   return (
@@ -72,7 +84,9 @@ const LoginForm = () => {
         Login
       </Button>
       <Box sx={{ mt: 2, textAlign: 'center' }}>
-        <Link to="#" underline="none">Forgot password?</Link>
+        
+        <Link to="#" underline="hover">Forgot password?</Link>
+
       </Box>
     </Box>
   );

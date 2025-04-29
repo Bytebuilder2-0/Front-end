@@ -105,10 +105,10 @@ const InitialCheck = () => {
               <strong>Exp.Delivery</strong>
             </TableCell>
             <TableCell>
-              <strong>Actions</strong>
+              <strong>Status</strong>
             </TableCell>
             <TableCell>
-              <strong>Status</strong>
+              <strong>Action</strong>
             </TableCell>
           </TableRow>
         </TableHead>
@@ -138,8 +138,6 @@ const InitialCheck = () => {
                   ? "orange"
                   : appointment.status === "Confirmed"
                   ? "green"
-                  : appointment.status === "Cancelled" || appointment.status === "Reject1"
-                  ? "red"
                   : "gray",
               fontWeight: 500,
               textTransform: "capitalize",
@@ -163,17 +161,6 @@ const InitialCheck = () => {
     </IconButton>
   </Tooltip>
 
-  <Tooltip title="Reject">
-    <IconButton
-      color="error"
-      onClick={() =>
-        updateAppointmentStatus(appointment._id, "Reject1", setAppointments)
-      }
-      sx={{ fontSize: 30 }}
-    >
-      <CancelIcon sx={{ fontSize: 30 }}/>
-    </IconButton>
-  </Tooltip>
 </TableCell>
 
       </TableRow>
