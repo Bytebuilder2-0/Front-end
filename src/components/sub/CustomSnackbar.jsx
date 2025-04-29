@@ -5,7 +5,7 @@ const CustomSnackbar = ({
   open,
   onClose,
   message,
-  severity = "success", // success, error, warning, info
+  action = "success", // success, error, warning, info
   duration = 3000,
   position = { vertical: "top", horizontal: "right" },
 }) => {
@@ -23,7 +23,7 @@ const CustomSnackbar = ({
     >
       <Alert
         onClose={onClose}
-        severity={severity}
+        severity={action}
         variant="filled"
         sx={{ width: "100%" }}
       >
