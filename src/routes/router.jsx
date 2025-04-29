@@ -12,9 +12,8 @@ import UserDashboard from '../pages/User/UserDashboard';
 import FeedbackPage from '../pages/Manager/FeedbackPage';
 import ManageServices from '../pages/Manager/ManageServices';
 
-
+import HomePage from '../pages/Home';
 import TechnicianCompleted from '../pages/Technician/TechnicianCompleted';
-import { Login } from '@mui/icons-material'; 
 import Loginpage from '../pages/Loginpage';
 import SignupPage from '../pages/SignupPage';
 import ManagerDashboardPage from '../pages/Manager/ManagerDashboardPage';
@@ -31,6 +30,11 @@ const router = createBrowserRouter([
     path: "/Super",
     element: <SupervisorDashboard />,
   },
+  {
+    path: "/",
+    element: <HomePage />,  // <-- Replace HomePage with your real Home component
+  },
+  
   {
     path: "/SInitial",
     element: <SupInitial />,
