@@ -33,6 +33,7 @@ const fetchAppointments = async () => {
     const response = await axios.get(API_BASE_URL); //full axios response object
     return response.data
       .reverse()
+
       .filter((appointment_obj) => appointment_obj.status === "Pending"); // Fetch only pending ones -- Array of json objects
   } catch (error) {
     console.error("Error fetching appointments:", error);
