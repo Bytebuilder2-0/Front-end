@@ -5,15 +5,19 @@ const SuccessSnackbar = ({ open, message, onClose }) => {
   return (
     <Snackbar
       open={open}
-      autoHideDuration={3000} // Snackbar automatically disappears after 3 seconds
+      autoHideDuration={3000}
       onClose={onClose}
-      anchorOrigin={{ vertical: "bottom", horizontal: "center" }} // Position: bottom center
+      anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
     >
       <Alert
         onClose={onClose}
-        severity="success" // Green success alert
-        sx={{ width: "100%" }}
+        severity="success"
         variant="filled"
+        sx={{
+          width: "100%",
+          textAlign: "center",
+          fontWeight: "bold",
+        }}
       >
         {message}
       </Alert>
