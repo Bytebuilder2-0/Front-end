@@ -14,13 +14,15 @@ const ConfirmEditDialog = ({ open, onClose, onConfirm, itemName, editedName }) =
       <DialogTitle>Confirm Edit</DialogTitle>
       <DialogContent>
         <Typography>
-          Are you sure you want to change the service name from{" "}
+          Are you sure you want to change from{" "}
           <strong style={{ color: "crimson" }}>{itemName}</strong> to{" "}
-          <strong style={{ color: "crimson" }}>{editedName}</strong>?
+          <strong style={{ color: "green" }}>{editedName}</strong>?
         </Typography>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={onClose} color="primary" variant="outlined">
+          Cancel
+        </Button>
         <Button onClick={onConfirm} color="success" variant="contained">
           Confirm
         </Button>

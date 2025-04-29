@@ -1,29 +1,50 @@
+// src/components/Feedback/FeedbackInfo.jsx
+
 import React from "react";
 import { Typography, Box, Grid } from "@mui/material";
 
 const FeedbackInfo = ({ feedback }) => {
+  const infoData = [
+    { label: "Feedback ID", value: feedback.feedbackId },
+    { label: "Date", value: new Date(feedback.feedbackDate).toLocaleDateString() },
+    { label: "Comment", value: feedback.comment },
+    { label: "Reply", value: feedback.reply || "No reply yet" },
+    { label: "Action Status", value: feedback.actionStatus },
+  ];
+
   return (
     <Box sx={{ width: "100%" }}>
-      <Grid container spacing={1}>
-        <Grid item xs={4}>
-          {["Feedback ID:", "Date:", "Comment:", "Reply:", "Action Status:"].map((label, index) => (
-            <Typography key={index} variant="subtitle2" sx={{ fontWeight: "bold" }}>
-              {label}
-            </Typography>
-          ))}
-        </Grid>
+      <Grid container spacing={0.5}> {/* ✅ smaller spacing */}
+        {infoData.map((item, index) => (
+          <Grid
+            key={index}
+            container
+            item
+            xs={12}
+            alignItems="center"
+            sx={{ mb: 0.5 }} // ✅ reduced bottom margin
+          >
+            {/* Label */}
+            <Grid item xs={4}>
+              <Typography
+                variant="subtitle2"
+                sx={{ fontWeight: "bold", color: "text.secondary", fontSize: "0.85rem" }}
+              >
+                {item.label}:
+              </Typography>
+            </Grid>
 
-        <Grid item xs={8}>
-          {[
-            feedback.feedbackId,
-            new Date(feedback.feedbackDate).toLocaleDateString(),
-            feedback.comment,
-            feedback.reply || "No reply yet",
-            feedback.actionStatus,
-          ].map((value, index) => (
-            <Typography key={index} variant="body2">{value}</Typography>
-          ))}
-        </Grid>
+            {/* Value */}
+            <Grid item xs={8}>
+              <Typography
+                variant="body2"
+                sx={{ fontSize: "0.85rem", wordBreak: "break-word" }}
+              >
+                {item.value}
+              </Typography>
+            </Grid>
+          </Grid>
+        ))}
       </Grid>
     </Box>
   );
