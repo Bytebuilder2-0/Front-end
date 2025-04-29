@@ -8,12 +8,15 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Button,Container,Box,Typography,TextField, IconButton, Tooltip 
+  Button,Container,Box,Typography,TextField, IconButton, Tooltip ,Snackbar
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
+import MuiAlert from '@mui/material/Alert';
+
 
 import IssueViewer from "./sub/IssueView";
+import ConfirmationDialog from "./sub/Confirmation";
 
 // API Base URL
 const API_BASE_URL = "http://localhost:5000/api/appointments";
@@ -52,6 +55,11 @@ const updateAppointmentStatus = async (
 const InitialCheck = () => {
   const [appointments, setAppointments] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
+const [snackbarOpen, setSnackbarOpen] = useState(false);
+const [snackbarMessage, setSnackbarMessage] = useState("");
+
 
 
 
@@ -149,17 +157,19 @@ const InitialCheck = () => {
 
     
         <TableCell>
-  <Tooltip title="Accept">
-    <IconButton
-      color="success"
-      onClick={() =>
-        updateAppointmentStatus(appointment._id, "Confirmed", setAppointments)
-      }
-      sx={{ fontSize: 30 }}
-    >
-      <CheckCircleIcon sx={{ fontSize: 30 }}/>
-    </IconButton>
-  </Tooltip>
+        <Tooltip title="Accept">
+  <IconButton
+    color="success"
+    onClick={() => {
+      setSelectedAppointmentId(appointment._id); // save which appointment you clicked
+      setConfirmDialogOpen(true);                // open the confirmation dialog
+    }}
+    sx={{ fontSize: 30 }}
+  >
+    <CheckCircleIcon sx={{ fontSize: 30 }} />
+  </IconButton>
+</Tooltip>
+
 
 </TableCell>
 
@@ -176,6 +186,40 @@ const InitialCheck = () => {
 
       </Table>
     </TableContainer>
+    <ConfirmationDialog
+  open={confirmDialogOpen}
+  title="Confirm Appointment"
+  message="Are you sure you want to confirm this appointment?"
+  onConfirm={async () => {
+    await updateAppointmentStatus(selectedAppointmentId, "Confirmed", setAppointments);
+    setConfirmDialogOpen(false);
+    
+    // after success, show snackbar
+    setSnackbarMessage("Appointment Confirmed Successfully!");
+    setSnackbarOpen(true);
+  }}
+  onCancel={() => setConfirmDialogOpen(false)}
+/>
+
+<Snackbar
+  open={snackbarOpen}
+  autoHideDuration={3000}
+  onClose={() => setSnackbarOpen(false)}
+  anchorOrigin={{ vertical: "top", horizontal: "right" }} // top right corner
+  sx={{ top: 80 }} // add top margin
+>
+  <MuiAlert
+    onClose={() => setSnackbarOpen(false)}
+    severity="success" // success = green, error = red, warning = yellow
+    sx={{ width: '100%', bgcolor: 'success.main', color: 'white' }}
+    variant="filled" // makes it filled color
+  >
+    {snackbarMessage}
+  </MuiAlert>
+</Snackbar>
+
+
+
     </Container>
   );
 };
