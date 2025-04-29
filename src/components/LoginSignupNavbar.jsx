@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const LoginSignupNavbar = () => {
   return (
-    <AppBar position="static" sx={{ backgroundColor: ' #9CE178' }}>
+    <AppBar position="static" sx={{ backgroundColor: ' #558b2f' }}>
       <Toolbar>
         <Box sx={{ flexGrow: 1 }}>
           <Link to="/">
