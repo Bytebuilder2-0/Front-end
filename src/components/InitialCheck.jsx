@@ -14,8 +14,9 @@ import {
 	IconButton,
 	Tooltip,
 	Snackbar,
-	MuiAlert,
+	
 } from "@mui/material";
+import MuiAlert from '@mui/material/Alert';
 
 //mui icons
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -59,9 +60,13 @@ const updateAppointmentStatus = async (appointmentId, newStatus, setAppointments
 };
 
 const InitialCheck = () => {
+  //All appointments
 	const [appointments, setAppointments] = useState([]);
+
 	const [searchTerm, setSearchTerm] = useState("");
+
 	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+
 	const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
 	const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -93,6 +98,7 @@ const InitialCheck = () => {
 				<Table>
 					<TableHead>
 						<TableRow>
+             <TableCell></TableCell>
 							<TableCell>
 								<strong>Vehicle ID</strong>
 							</TableCell>
@@ -115,8 +121,9 @@ const InitialCheck = () => {
 					</TableHead>
 					<TableBody>
 						{filteredAppointments.length > 0 ? (
-							filteredAppointments.map((appointment) => (
+							filteredAppointments.map((appointment,index) => (
 								<TableRow key={appointment._id}>
+                  <TableCell>{index+1}</TableCell>
 									<TableCell>{appointment.vehicleId}</TableCell>
 									<TableCell>{appointment.model}</TableCell>
 									<TableCell>
