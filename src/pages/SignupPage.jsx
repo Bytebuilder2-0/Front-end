@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { Visibility, VisibilityOff, AddCircleOutlined } from '@mui/icons-material'; 
 import axios from 'axios';
+import LoginSignupNavbar from '../components/LoginSignupNavbar';
 
 const roles = ["customer", "technician", "manager", "Supervisor"];
 
@@ -93,11 +94,13 @@ const Signup = () => {
     }
   };
 
-  const avatarStyle = {backgroundColor: '#1bbd7e', color: '#fff' }; //rgb(47 154 78) ekata danna 
+  const avatarStyle = {backgroundColor: '#9CE178', color: '#fff' }; //rgb(47 154 78) ekata danna 
 
   return (
+    <>
+    <LoginSignupNavbar />
     <Container maxWidth="sm">
-      <Paper style={{ padding: 20, height: '70vh', width: 405, borderRadius: 0, margin: "0px auto" }}>
+      <Paper style={{ padding: 20, height: '78vh', width: 405, borderRadius: 0, margin: "30px auto" }}>
         <Grid align="center" item xs={10} mb={2}>
           <Avatar sx={{ width: 50, height: 50 }} style={avatarStyle}><AddCircleOutlined /></Avatar>
           <Typography variant="h5" gutterBottom>
@@ -205,6 +208,7 @@ const Signup = () => {
         </form>
       </Paper>
     </Container>
+    </>
   );
 };
 

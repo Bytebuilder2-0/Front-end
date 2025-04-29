@@ -1,13 +1,14 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import Navbar from '../components/Navbar';
+ 
 
 const Home = () => {
   return (
     <Box
       sx={{
         height: '100vh',
-        backgroundImage: 'url(https://source.unsplash.com/1600x900/?technology,nature)',
+        backgroundImage: 'url(/assets/garagebg.jpeg)', // Use the imported variable here
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',

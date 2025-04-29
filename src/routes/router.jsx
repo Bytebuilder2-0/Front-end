@@ -11,8 +11,8 @@ import UserDashboard from '../pages/User/UserDashboard';
 
 import FeedbackPage from '../pages/Manager/FeedbackPage';
 import ManageServices from '../pages/Manager/ManageServices';
-
 import HomePage from '../pages/Home';
+import ManagerHistoryPage from '../pages/Manager/HistoryPage';
 import TechnicianCompleted from '../pages/Technician/TechnicianCompleted';
 import Loginpage from '../pages/Loginpage';
 import SignupPage from '../pages/SignupPage';
@@ -21,8 +21,13 @@ import ManagerDashboardPage from '../pages/Manager/ManagerDashboardPage';
 import VehicleForm from '../pages/VehicleForm';
 import SignInVehicleContainer from '../container/container1';
 import TechnicianInprogress from '../pages/Technician/TechnicianInprogress';
+
+import TechnicianAccepted from '../pages/Technician/TechnicianAccepted';
+
+
 import Decline from '../pages/supervisor/Decline';
 import History from '../pages/supervisor/History';
+
 
 
 const router = createBrowserRouter([
@@ -71,6 +76,10 @@ const router = createBrowserRouter([
     element:<TechnicianInprogress/>
   },
   {
+    path:"/TAccepted",
+    element:<TechnicianAccepted/>
+  },
+  {
     path: '/appointments/new',
     element: <AppointmentSubmit />,
   },
@@ -109,6 +118,10 @@ const router = createBrowserRouter([
 {
       path: "/ManagerDashboard",
       element: <ManagerDashboardPage/>,
+    }  ,
+    {
+      path: "/ManagerHistory",
+      element: <ManagerHistoryPage/>,
     }  
 
 

@@ -16,16 +16,37 @@ const ServiceForm = ({ onAdd }) => {
     <Box
       component="form"
       onSubmit={handleSubmit}
-      style={{ display: "flex", gap: "10px", marginBottom: "20px" }}
+      sx={{
+        display: "flex",
+        gap: 2,
+        mb: 4,
+      }}
     >
       <TextField
-        label="New Service or Technicians"
+        label="New Service"
         variant="outlined"
         value={name}
         onChange={(e) => setName(e.target.value)}
         fullWidth
+        sx={{
+          backgroundColor: "white",
+          borderRadius: 2,
+        }}
       />
-      <Button type="submit" variant="contained" color="primary">
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        sx={{
+          borderRadius: "8px",
+          fontWeight: "bold",
+          textTransform: "none",
+          px: 3,
+          '&:hover': {
+            backgroundColor: "#1565c0",
+          },
+        }}
+      >
         Add
       </Button>
     </Box>
