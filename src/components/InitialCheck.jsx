@@ -196,8 +196,8 @@ const InitialCheck = () => {
 				}}
 				onCancel={() => setConfirmDialogOpen(false)}
 			/>
-``
-      <CustomSnackbar	open={snackbarOpen}	onClose={() => setSnackbarOpen(false)} message={snackbarMessage}  severity ="success"/>
+
+      <CustomSnackbar	open={snackbarOpen}	onClose={() => setSnackbarOpen(false)} message={snackbarMessage}  action ="success"/>
       
 		</Container>
 	);
