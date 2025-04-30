@@ -16,6 +16,7 @@ import {
 import WorkloadManager from "./sub/WorkloadManager";
 import IssueViewer from "./sub/IssueView";
 import TechnicianAssignmentAndStatusUpdater from "./sub/TechnicianAssignmentAndStatusUpdater";
+import CustomSnackbar from "./sub/CustomSnackbar";
 
 // API Base URL
 const API_BASE_URL = "http://localhost:5000/api/appointments";
@@ -41,16 +42,24 @@ const fetchAppointments = async () => {
 function AppointmentData() {
   const [appointments, setAppointments] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [loading, setLoading] = useState(true);
+  
+  const [snackbarInfo, setSnackbarInfo] = useState({
+      open: false,
+      message: "",
+      severity: "success", // or "error", "info", etc.
+    });
 
   useEffect(() => {
     const getAppointments = async () => {
-      setLoading(true);
+    
       const data = await fetchAppointments();
       setAppointments(data);
-      setLoading(false);
+ 
     };
     getAppointments();
+
+    const interval=setInterval(getAppointments,5000);
+    return ()=>clearInterval(interval);
   }, []);
 
   const updateAppointmentInState = (updatedAppointment) => {
@@ -60,6 +69,14 @@ function AppointmentData() {
       )
     );
   };
+  const showSnackbar = (message, severity = "success") => {
+    setSnackbarInfo({
+      open: true,
+      message,
+      severity,
+    });
+  };
+  
 
   const filteredAppointments = appointments.filter((appointment) =>
     (appointment.vehicleId || "")
@@ -113,13 +130,8 @@ function AppointmentData() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={6} align="center">
-                  Loading...
-                </TableCell>
-              </TableRow>
-            ) : filteredAppointments.length > 0 ? (
+            
+           { filteredAppointments.length > 0 ?(
               filteredAppointments.map((appointment) => (
                 <TableRow key={appointment._id}>
                   <TableCell>{appointment.vehicleId}</TableCell>
@@ -130,15 +142,16 @@ function AppointmentData() {
                   </TableCell>
                   <TableCell>
                     <WorkloadManager
-                      btn_name="Write"
                       appointment={appointment}
                       updateAppointment={updateAppointmentInState}
+                      showSnackbar={showSnackbar}
                     />
                   </TableCell>
                   <TableCell>
                     <TechnicianAssignmentAndStatusUpdater
                       appointment={appointment}
                       updateAppointment={updateAppointmentInState}
+                      showSnackbar={showSnackbar}
                     />
                   </TableCell>
                 </TableRow>
@@ -153,6 +166,13 @@ function AppointmentData() {
           </TableBody>
         </Table>
       </TableContainer>
+      <CustomSnackbar
+  open={snackbarInfo.open}
+  message={snackbarInfo.message}
+  severity={snackbarInfo.severity}
+  onClose={() => setSnackbarInfo({ ...snackbarInfo, open: false })}
+/>
+
     </Container>
   );
 }

@@ -1,176 +1,141 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Box,
-  Typography,
-  Container,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Divider,
+  Container, Box, Typography, TextField, Table, TableBody,
+  TableCell, TableContainer, TableHead, TableRow, Paper,
+  IconButton, Tooltip
 } from "@mui/material";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
+import WhatsAppButton from "../sub/WhatsAppButton";
+import DeatailsViewer from "../ManagerDashboard/viewDeatails"; // Full appointment details modal
 
-import IssueViewer from "../sub/IssueView"; 
-import WhatsAppButton from "../sub/WhatsAppButton"; 
-import InvoiceView from "../sub/InvoiceView"; // Added InvoiceView here
+const API_URL = "http://localhost:5000/api/appointments";
 
-const API_BASE_URL = "http://localhost:5000/api/appointments";
-
-// Fetch appointments where payment is "Paid"
-const fetchPaidAppointments = async () => {
-  try {
-    const response = await axios.get(API_BASE_URL);
-    return response.data.filter((appt) => appt.status === "Paid");
-  } catch (error) {
-    console.error("Error fetching appointments:", error);
-    return [];
-  }
-};
-
-function ManagerHistory() {
+const ApointmentChecking = () => {
   const [appointments, setAppointments] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    const getAppointments = async () => {
-      setLoading(true);
-      const data = await fetchPaidAppointments();
-      setAppointments(data);
-      setLoading(false);
+    const fetchAppointments = async () => {
+      try {
+        const res = await axios.get(API_URL);
+        setAppointments(
+          res.data.reverse().filter((appt) => appt.status === "Checking")
+        );
+      } catch (error) {
+        console.error("Error fetching appointments:", error);
+      }
     };
-    getAppointments();
+    fetchAppointments();
   }, []);
 
-  const handleClose = () => {
-    setSelectedAppointment(null);
+  const updateStatus = async (appointmentId, newStatus) => {
+    try {
+      await axios.put(`${API_URL}/${appointmentId}/statusUpdate`, { status: newStatus });
+      setAppointments((prev) => prev.filter((appt) => appt._id !== appointmentId));
+    } catch (error) {
+      console.error("Error updating appointment:", error);
+    }
   };
 
+  const filtered = appointments.filter((appt) =>
+    (appt.vehicleId || "").toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <Container>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={2}
-        mt={2}
-      >
-        <Typography variant="h4">Appointments History</Typography>
-      </Box>
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Paper elevation={6} sx={{ p: 3, borderRadius: 4 }}>
+        {/* Header */}
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+          <Typography variant="h5" sx={{ fontWeight: "bold", color: "#1976d2" }}>
+            Manage Appointment Checking
+          </Typography>
+          <TextField
+            label="Search by Vehicle ID"
+            variant="outlined"
+            size="small"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </Box>
 
-      <TableContainer component={Paper} sx={{ marginTop: 2 }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{ padding: '8px 16px' }}><strong>Vehicle ID</strong></TableCell>
-              <TableCell sx={{ padding: '8px 16px' }}><strong>Model</strong></TableCell>
-              <TableCell sx={{ padding: '8px 16px' }}><strong>Contact</strong></TableCell>
-              <TableCell sx={{ padding: '8px 16px' }}><strong>Invoice</strong></TableCell>
-              <TableCell sx={{ padding: '8px 16px' }}><strong>Appointments Details</strong></TableCell>
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {appointments.map((appointment) => (
-              <TableRow key={appointment._id}>
-                <TableCell sx={{ padding: '8px 16px' }}>{appointment.vehicleId}</TableCell>
-                <TableCell sx={{ padding: '8px 16px' }}>{appointment.model}</TableCell>
-                <TableCell sx={{ padding: '8px 16px' }}>
-                  <WhatsAppButton phone={appointment.contactNumber} />
-                </TableCell>
-                <TableCell sx={{ padding: '8px 16px' }}>
-                  <InvoiceView appointment={appointment} />
-                </TableCell>
-                <TableCell sx={{ padding: '8px 16px' }}>
-                  <Button
-                    variant="outlined"
-                    sx={{ padding: '6px 12px' }}
-                    onClick={() => setSelectedAppointment(appointment)}
-                  >
-                    View
-                  </Button>
-                </TableCell>
+        {/* Table */}
+        <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell align="center"><strong>Vehicle ID</strong></TableCell>
+                <TableCell align="center"><strong>Model</strong></TableCell>
+                <TableCell align="center"><strong>Details</strong></TableCell>
+                <TableCell align="center"><strong>Contact</strong></TableCell>
+                <TableCell align="center"><strong>Status</strong></TableCell>
+                <TableCell align="center"><strong>Actions</strong></TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
 
-      {/* Dialog for Showing Appointment Details */}
-      {selectedAppointment && (
-       <Dialog open={!!selectedAppointment} onClose={handleClose} maxWidth="md" fullWidth>
-       <DialogTitle>Appointment Details</DialogTitle>
-       <DialogContent dividers>
-         {/* Vehicle Info */}
-         <Box mb={2}>
-           <Typography variant="h6" color="primary"><strong>Vehicle Information</strong></Typography>
-           <Typography><strong>Vehicle ID:</strong> {selectedAppointment.vehicleId}</Typography>
-           <Typography><strong>Vehicle Number:</strong> {selectedAppointment.vehicleNumber}</Typography>
-           <Typography><strong>Model:</strong> {selectedAppointment.model}</Typography>
-         </Box>
-     
-         {/* Issue & Reason */}
-         <Box mb={2}>
-           <Typography variant="h6" color="primary"><strong>Issue Details</strong></Typography>
-           <Typography><strong>Issue:</strong> {selectedAppointment.issue}</Typography>
-           <Typography><strong>Reason:</strong> {selectedAppointment.reason || 'N/A'}</Typography>
-         </Box>
-     
-         {/* Appointment Status */}
-         <Box mb={2}>
-           <Typography variant="h6" color="primary"><strong>Status Information</strong></Typography>
-           <Typography><strong>Status:</strong> {selectedAppointment.status}</Typography>
-           <Typography><strong>Preferred Date:</strong> {new Date(selectedAppointment.preferredDate).toLocaleDateString()}</Typography>
-           <Typography><strong>Preferred Time:</strong> {selectedAppointment.preferredTime}</Typography>
-           <Typography><strong>Expected Delivery Date:</strong> {new Date(selectedAppointment.expectedDeliveryDate).toLocaleDateString()}</Typography>
-         </Box>
-     
-         {/* Contact Info */}
-         <Box mb={2}>
-           <Typography variant="h6" color="primary"><strong>Contact Information</strong></Typography>
-           <Typography><strong>Contact Number:</strong> {selectedAppointment.contactNumber}</Typography>
-         </Box>
-     
-         {/* Workload */}
-         <Box mb={2}>
-           <Typography variant="h6" color="primary"><strong>Workload Details</strong></Typography>
-           {selectedAppointment.workload.length > 0 ? (
-             selectedAppointment.workload.map((task, index) => (
-               <Box key={index} sx={{ mb: 1 }}>
-                 <Typography><strong>Step {task.step}:</strong> {task.description} ({task.status})</Typography>
-               </Box>
-             ))
-           ) : (
-             <Typography>No workload details available.</Typography>
-           )}
-         </Box>
-     
-         {/* Supervisor Message and Suggestion */}
-         <Box mb={2}>
-           <Typography variant="h6" color="primary"><strong>Technician's Feedback</strong></Typography>
-           <Typography><strong>Technician Message:</strong> {selectedAppointment.techMessage || 'N/A'}</Typography>
-           <Typography><strong>Suggestion:</strong> {selectedAppointment.suggestion || 'N/A'}</Typography>
-         </Box>
-       </DialogContent>
-       <DialogActions>
-         <Button onClick={handleClose} variant="contained" color="primary">
-           Close
-         </Button>
-       </DialogActions>
-     </Dialog>
-     
-      )}
+            <TableBody>
+              {filtered.length > 0 ? (
+                filtered.map((appointment) => (
+                  <TableRow key={appointment._id}>
+                    <TableCell align="center">{appointment.vehicleId}</TableCell>
+                    <TableCell align="center">{appointment.model}</TableCell>
+                    <TableCell align="center">
+                      <DeatailsViewer appointment={appointment} />
+                    </TableCell>
+                    <TableCell align="center">
+                      <WhatsAppButton phone={appointment.contactNumber} />
+                    </TableCell>
+                    <TableCell align="center">
+                      <Typography
+                        sx={{
+                          color:
+                            appointment.status === "Checking" ? "orange" :
+                            appointment.status === "Pending" ? "green" :
+                            ["Cancelled", "Reject1"].includes(appointment.status) ? "red" : "gray",
+                          fontWeight: 600,
+                          textTransform: "capitalize",
+                          fontSize: "0.9rem",
+                        }}
+                      >
+                        {appointment.status}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Tooltip title="Accept">
+                        <IconButton
+                          color="success"
+                          onClick={() => updateStatus(appointment._id, "Pending")}
+                        >
+                          <CheckCircleIcon sx={{ fontSize: 26 }} />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Reject">
+                        <IconButton
+                          color="error"
+                          onClick={() => updateStatus(appointment._id, "Reject1")}
+                        >
+                          <CancelIcon sx={{ fontSize: 26 }} />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
+                    <Typography variant="h6" color="textSecondary">
+                      No appointments found
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
     </Container>
   );
-}
+};
 
-export default ManagerHistory;
+export default ApointmentChecking;

@@ -12,6 +12,7 @@ import {
   ChevronLeft as ChevronLeftIcon,
   Home as HomeIcon,
   Feedback as FeedbackIcon,
+  AssignmentTurnedIn   as CheckIcon,
   Build as BuildIcon,
   Dashboard as DashboardIcon,
   Notifications as NotificationsIcon,
@@ -103,7 +104,8 @@ export default function ManagerSidebar({ children }) {
   // Sidebar navigation items with their icons and labels
   const navItems = [
     { path: "/ManagerDashboard", label: "Dashboard", icon: <DashboardIcon /> },
-    { path: "", label: "Reports", icon: <ReportIcon /> },  
+    { path: "", label: "Reports", icon: <ReportIcon /> }, 
+    { path: "/CheckStatus", label: "Check status", icon: <CheckIcon /> }, 
     { path: "/ManagerHistory", label: "History", icon: <HistoryIcon /> },  // Added History
     { path: "/ManageServices", label: "Manage Services", icon: <BuildIcon /> },
     { path: "/feedback", label: "Manage Feedback", icon: <FeedbackIcon /> },
