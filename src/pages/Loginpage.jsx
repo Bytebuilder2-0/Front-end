@@ -3,7 +3,8 @@ import { TextField, Button, Box, Typography } from '@mui/material';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';  // import useNavigate
 import { useContext } from 'react';
-import { AuthContext } from '../context/AuthContext'; // Importing the AuthContext
+import { AuthContext } from '../context/AuthContext'; // Importing the AuthContex
+import LoginSignupNavbar from '../components/LoginSignupNavbar'; // Importing the Navbar
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -55,6 +56,8 @@ const LoginForm = () => {
   };
 
   return (
+    <>
+    <LoginSignupNavbar />
     <Box
       component="form"
       onSubmit={handleLogin}
@@ -89,6 +92,7 @@ const LoginForm = () => {
 
       </Box>
     </Box>
+    </>
   );
 };
 
