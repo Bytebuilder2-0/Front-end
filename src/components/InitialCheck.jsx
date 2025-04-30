@@ -68,9 +68,6 @@ const InitialCheck = () => {
 
 	const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
 
-	// const [snackbarOpen, setSnackbarOpen] = useState(false);
-
-	// const [snackbarMessage, setSnackbarMessage] = useState("");
 	const [snackbarInfo, setSnackbarInfo] = useState({
 		open: false,
 		message: "",
@@ -223,7 +220,7 @@ const InitialCheck = () => {
 
 			<CustomSnackbar
 				open={snackbarInfo.open}
-				
+
 				//change without lossing other info in the object
 				onClose={() => setSnackbarInfo({ ...snackbarInfo, open: false })}
 				message={snackbarInfo.message}

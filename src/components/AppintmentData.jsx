@@ -41,14 +41,14 @@ const fetchAppointments = async () => {
 function AppointmentData() {
   const [appointments, setAppointments] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [loading, setLoading] = useState(true);
+  
 
   useEffect(() => {
     const getAppointments = async () => {
-      setLoading(true);
+    
       const data = await fetchAppointments();
       setAppointments(data);
-      setLoading(false);
+ 
     };
     getAppointments();
   }, []);
@@ -113,13 +113,8 @@ function AppointmentData() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={6} align="center">
-                  Loading...
-                </TableCell>
-              </TableRow>
-            ) : filteredAppointments.length > 0 ? (
+            
+           { filteredAppointments.length > 0 ?(
               filteredAppointments.map((appointment) => (
                 <TableRow key={appointment._id}>
                   <TableCell>{appointment.vehicleId}</TableCell>
