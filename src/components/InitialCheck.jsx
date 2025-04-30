@@ -79,6 +79,10 @@ const InitialCheck = () => {
 			setAppointments(data);
 		};
 		getAppointments();
+
+		//Refresh every 5 sec
+		const interval=setInterval(getAppointments,5000);
+		return ()=>clearInterval(interval);
 	}, []);
 
 	const filteredAppointments = appointments.filter((appointment) =>
