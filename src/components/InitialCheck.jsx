@@ -52,7 +52,7 @@ const updateAppointmentStatus = async (appointmentId, newStatus, setAppointments
 
     // Remove updated appointment
 		setAppointments(
-			(prevAppointments) => prevAppointments.filter((appt) => appt._id !== appointmentId) 
+			(appointments) => {return appointments.filter((appointment_obj) => appointment_obj._id !== appointmentId) }
 		);
 	} catch (error) {
 		console.error(`Error updating appointment status to ${newStatus}:`, error);
@@ -70,6 +70,7 @@ const InitialCheck = () => {
 	const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
 
 	const [snackbarOpen, setSnackbarOpen] = useState(false);
+
 	const [snackbarMessage, setSnackbarMessage] = useState("");
 
 	useEffect(() => {
