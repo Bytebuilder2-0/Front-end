@@ -54,7 +54,7 @@ const TechnicianAssignmentAndStatusUpdater = ({
       updateAppointment({ ...appointment, tech: technicianId });
 
       showSnackbar("Technician Added","success");
-      
+
     } catch (error) {
       console.error("Error assigning technician:", error);
     }
@@ -80,6 +80,9 @@ const TechnicianAssignmentAndStatusUpdater = ({
         ...appointment,
         status: "Waiting for Technician Confirmation",
       });
+
+      showSnackbar("Sent to Technician for review","success");
+      
     } catch (error) {
       console.error("Error updating status:", error);
     } 
