@@ -4,20 +4,21 @@ import { Select, MenuItem, Button } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 
 const TechnicianAssignmentAndStatusUpdater = ({ appointment, updateAppointment, showSnackbar }) => {
+	//All technicians
 	const [technicians, setTechnicians] = useState([]);
-	const [selectedTechnician, setSelectedTechnician] = useState(appointment?.tech || "");
+
+	//Technician mongoDb Id
+	const [selectedTechnician, setSelectedTechnician] = useState(appointment?.tech?._id || "");
+
 	const [status, setStatus] = useState(appointment.status);
 	const [techAssigned, setTechAssigned] = useState(Boolean(appointment.tech));
 
-
-
-	// Fetch technician list when the component mounts
+	//Fetch technician list when the component mounts
 	useEffect(() => {
 		async function fetchTechnicians() {
 			try {
 				const response = await axios.get("http://localhost:5000/api/technicians");
 				setTechnicians(response.data);
-			
 			} catch (error) {
 				console.error("Error fetching technicians:", error);
 			}
@@ -37,7 +38,10 @@ const TechnicianAssignmentAndStatusUpdater = ({ appointment, updateAppointment, 
 			});
 
 			setTechAssigned(Boolean(technicianId));
-			updateAppointment({ ...appointment, tech: technicianId });
+			updateAppointment({
+				...appointment,
+				tech: technicians.find((tech) => tech._id === technicianId), // full object
+			});
 
 			showSnackbar("Technician Added", "success");
 		} catch (error) {
@@ -78,6 +82,14 @@ const TechnicianAssignmentAndStatusUpdater = ({ appointment, updateAppointment, 
 					disabled={status === "Waiting for Technician Confirmation"}
 				>
 					<MenuItem value="">Sel.Technician</MenuItem>
+
+            {/* Fallback: Show assigned technician immediately if available */}
+            {!technicians.length && techAssigned && appointment.tech && appointment.tech._id && (
+            <MenuItem value={appointment.tech._id}>
+              {appointment.tech.employee_id} - {appointment.tech.technician_id}
+            </MenuItem>
+          )}
+
 
 					{technicians.length > 0 ? (
 						technicians.map((tech) => (
