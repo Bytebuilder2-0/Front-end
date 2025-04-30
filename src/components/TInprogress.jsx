@@ -141,6 +141,34 @@ function TInprogress() {
       alert("❌ Failed to complete the task.");
     }
   };
+
+
+  const handleAllStepsComplete = async (appointmentId) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to confirm this appointment is Done ?"
+    );
+    if (!isConfirmed) return; // If user cancels, do nothing
+
+    try {
+      await axios.put(`${API_BASE_URL}/${appointmentId}/tStatusUpdate`, {
+        status: "Task Done",
+      });
+
+      // Update UI instantly
+      setAppointments((prevAppointments) =>
+        prevAppointments.map((appointment) =>
+          appointment._id === appointmentId
+            ? { ...appointment, status: "Task Done" }
+            : appointment
+        )
+      );
+
+      alert("✅ Appointment completed");
+    } catch (error) {
+      console.error("Error confirming appointment:", error);
+      alert("❌ Failed to complete appointment.");
+    }
+  };
   
   
   
@@ -267,6 +295,22 @@ function TInprogress() {
                                 </TableCell>
                               </TableRow>
                             ))}
+                            {appointment.workload.length > 0 && (
+                              <TableRow>
+                                <TableCell colSpan={3} align="center">
+                                  <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => handleAllStepsComplete(appointment._id)}
+                                    disabled={
+                                      !appointment.workload.every((task) => task.status === "Completed")
+                                    }
+                                  >
+                                    All Steps Done
+                                  </Button>
+                                </TableCell>
+                              </TableRow>
+                            )}
                           </TableBody>
                         </Table>
                       </TableCell>
