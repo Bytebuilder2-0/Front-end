@@ -10,6 +10,7 @@ import {
 const TechnicianAssignmentAndStatusUpdater = ({
   appointment,
   updateAppointment,
+  showSnackbar
 }) => {
   const [technicians, setTechnicians] = useState([]);
   const [selectedTechnician, setSelectedTechnician] = useState(
@@ -51,6 +52,9 @@ const TechnicianAssignmentAndStatusUpdater = ({
 
       setTechAssigned(Boolean(technicianId));
       updateAppointment({ ...appointment, tech: technicianId });
+
+      showSnackbar("Technician Added","success");
+      
     } catch (error) {
       console.error("Error assigning technician:", error);
     }

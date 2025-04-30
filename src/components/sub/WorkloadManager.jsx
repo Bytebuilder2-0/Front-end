@@ -11,7 +11,7 @@ import {
 import { Add, Delete } from "@mui/icons-material";
 import EditIcon from '@mui/icons-material/Edit';
 
-const WorkloadManager = ({ appointment, updateAppointment}) => {
+const WorkloadManager = ({ appointment, updateAppointment,showSnackbar}) => {
 
   const [openWorkloadModal, setOpenWorkloadModal] = useState(false);
 
@@ -84,6 +84,9 @@ const WorkloadManager = ({ appointment, updateAppointment}) => {
 
       updateAppointment(data); // Update parent state
       setWorkload(data.workload); // Sync local state
+
+        showSnackbar("Workload Added successfully", "success");
+    
     
     } catch (error) {
       console.error("Error updating workload:", error);

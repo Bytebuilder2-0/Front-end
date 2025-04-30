@@ -16,6 +16,7 @@ import {
 import WorkloadManager from "./sub/WorkloadManager";
 import IssueViewer from "./sub/IssueView";
 import TechnicianAssignmentAndStatusUpdater from "./sub/TechnicianAssignmentAndStatusUpdater";
+import CustomSnackbar from "./sub/CustomSnackbar";
 
 // API Base URL
 const API_BASE_URL = "http://localhost:5000/api/appointments";
@@ -42,6 +43,11 @@ function AppointmentData() {
   const [appointments, setAppointments] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   
+  const [snackbarInfo, setSnackbarInfo] = useState({
+      open: false,
+      message: "",
+      severity: "success", // or "error", "info", etc.
+    });
 
   useEffect(() => {
     const getAppointments = async () => {
@@ -63,6 +69,14 @@ function AppointmentData() {
       )
     );
   };
+  const showSnackbar = (message, severity = "success") => {
+    setSnackbarInfo({
+      open: true,
+      message,
+      severity,
+    });
+  };
+  
 
   const filteredAppointments = appointments.filter((appointment) =>
     (appointment.vehicleId || "")
@@ -130,12 +144,14 @@ function AppointmentData() {
                     <WorkloadManager
                       appointment={appointment}
                       updateAppointment={updateAppointmentInState}
+                      showSnackbar={showSnackbar}
                     />
                   </TableCell>
                   <TableCell>
                     <TechnicianAssignmentAndStatusUpdater
                       appointment={appointment}
                       updateAppointment={updateAppointmentInState}
+                      showSnackbar={showSnackbar}
                     />
                   </TableCell>
                 </TableRow>
@@ -150,6 +166,13 @@ function AppointmentData() {
           </TableBody>
         </Table>
       </TableContainer>
+      <CustomSnackbar
+  open={snackbarInfo.open}
+  message={snackbarInfo.message}
+  severity={snackbarInfo.severity}
+  onClose={() => setSnackbarInfo({ ...snackbarInfo, open: false })}
+/>
+
     </Container>
   );
 }
