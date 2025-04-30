@@ -11,8 +11,10 @@ import {
 import { Add, Delete } from "@mui/icons-material";
 import EditIcon from '@mui/icons-material/Edit';
 
-const WorkloadManager = ({ appointment, updateAppointment, btn_name }) => {
+const WorkloadManager = ({ appointment, updateAppointment}) => {
+
   const [openWorkloadModal, setOpenWorkloadModal] = useState(false);
+
   const [workload, setWorkload] = useState(appointment?.workload || []);
 
   // Open Modal and Fetch Latest Workload
