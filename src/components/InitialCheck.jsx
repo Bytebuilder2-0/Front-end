@@ -13,7 +13,6 @@ import {
 	TextField,
 	IconButton,
 	Tooltip,
-	
 } from "@mui/material";
 
 //mui icons
@@ -38,7 +37,7 @@ const fetchAppointments = async () => {
 	} catch (error) {
 		console.error("Error fetching appointments:", error);
 
-     //Array returning, so that app won't crashed
+		//Array returning, so that app won't crashed
 		return [];
 	}
 };
@@ -50,17 +49,17 @@ const updateAppointmentStatus = async (appointmentId, newStatus, setAppointments
 			status: newStatus,
 		});
 
-    // Remove updated appointment
-		setAppointments(
-			(appointments) => {return appointments.filter((appointment_obj) => appointment_obj._id !== appointmentId) }
-		);
+		// Remove updated appointment
+		setAppointments((appointments) => {
+			return appointments.filter((appointment_obj) => appointment_obj._id !== appointmentId);
+		});
 	} catch (error) {
 		console.error(`Error updating appointment status to ${newStatus}:`, error);
 	}
 };
 
 const InitialCheck = () => {
-  //All appointments
+	//All appointments
 	const [appointments, setAppointments] = useState([]);
 
 	const [searchTerm, setSearchTerm] = useState("");
@@ -69,9 +68,14 @@ const InitialCheck = () => {
 
 	const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
 
-	const [snackbarOpen, setSnackbarOpen] = useState(false);
+	// const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-	const [snackbarMessage, setSnackbarMessage] = useState("");
+	// const [snackbarMessage, setSnackbarMessage] = useState("");
+	const [snackbarInfo, setSnackbarInfo] = useState({
+		open: false,
+		message: "",
+		severity: "success", // or "error", "info", etc.
+	});
 
 	useEffect(() => {
 		const getAppointments = async () => {
@@ -81,8 +85,8 @@ const InitialCheck = () => {
 		getAppointments();
 
 		//Refresh every 5 sec
-		const interval=setInterval(getAppointments,5000);
-		return ()=>clearInterval(interval);
+		const interval = setInterval(getAppointments, 5000);
+		return () => clearInterval(interval);
 	}, []);
 
 	const filteredAppointments = appointments.filter((appointment) =>
@@ -104,7 +108,7 @@ const InitialCheck = () => {
 				<Table>
 					<TableHead>
 						<TableRow>
-             <TableCell></TableCell>
+							<TableCell></TableCell>
 							<TableCell>
 								<strong>Vehicle ID</strong>
 							</TableCell>
@@ -127,9 +131,12 @@ const InitialCheck = () => {
 					</TableHead>
 					<TableBody>
 						{filteredAppointments.length > 0 ? (
-							filteredAppointments.map((appointment,index) => (
+							filteredAppointments.map((appointment, index) => (
 								<TableRow key={appointment._id}>
-                  <TableCell>{index+1}<span>.</span></TableCell>
+									<TableCell>
+										{index + 1}
+										<span>.</span>
+									</TableCell>
 									<TableCell>{appointment.vehicleId}</TableCell>
 									<TableCell>{appointment.model}</TableCell>
 									<TableCell>
@@ -196,14 +203,32 @@ const InitialCheck = () => {
 					setConfirmDialogOpen(false);
 
 					// after success, show snackbar
-					setSnackbarMessage("Appointment Confirmed Successfully!");
-					setSnackbarOpen(true);
+					setSnackbarInfo({
+						open: true,
+						message: "Appointment Confirmed Successfully!",
+						severity: "success",
+					});
 				}}
-				onCancel={() => setConfirmDialogOpen(false)}
+				onCancel={() => {
+					setConfirmDialogOpen(false);
+
+					//after failure
+					setSnackbarInfo({
+						open: true,
+						message: "Appointment not accepted",
+						severity: "error",
+					});
+				}}
 			/>
 
-      <CustomSnackbar	open={snackbarOpen}	onClose={() => setSnackbarOpen(false)} message={snackbarMessage}  action ="success"/>
-      
+			<CustomSnackbar
+				open={snackbarInfo.open}
+				
+				//change without lossing other info in the object
+				onClose={() => setSnackbarInfo({ ...snackbarInfo, open: false })}
+				message={snackbarInfo.message}
+				action={snackbarInfo.severity}
+			/>
 		</Container>
 	);
 };
