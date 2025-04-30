@@ -3,14 +3,14 @@ import axios from "axios";
 import {
   Select,
   MenuItem,
-  CircularProgress,
-  Button,
-  Grid,
+  Button
 } from "@mui/material";
+import Grid from '@mui/material/Grid2';
 
 const TechnicianAssignmentAndStatusUpdater = ({
   appointment,
   updateAppointment,
+  showSnackbar
 }) => {
   const [technicians, setTechnicians] = useState([]);
   const [selectedTechnician, setSelectedTechnician] = useState(
@@ -18,7 +18,7 @@ const TechnicianAssignmentAndStatusUpdater = ({
   );
   const [status, setStatus] = useState(appointment.status);
   const [techAssigned, setTechAssigned] = useState(Boolean(appointment.tech));
-  const [loading, setLoading] = useState(false);
+  
 
   // Fetch technician list when the component mounts
   useEffect(() => {
@@ -42,7 +42,7 @@ const TechnicianAssignmentAndStatusUpdater = ({
     setSelectedTechnician(technicianId);
 
     try {
-      setLoading(true);
+    
       await axios.put(
         `http://localhost:5000/api/appointments/${appointment._id}/assign2`,
         {
@@ -52,10 +52,11 @@ const TechnicianAssignmentAndStatusUpdater = ({
 
       setTechAssigned(Boolean(technicianId));
       updateAppointment({ ...appointment, tech: technicianId });
+
+      showSnackbar("Technician Added","success");
+
     } catch (error) {
       console.error("Error assigning technician:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -63,13 +64,12 @@ const TechnicianAssignmentAndStatusUpdater = ({
   const handleStatusUpdate = async () => {
     if (
       !techAssigned ||
-      status === "Waiting for Technician Confirmation" ||
-      loading
+      status === "Waiting for Technician Confirmation"
     )
       return;
 
     try {
-      setLoading(true);
+     
       await axios.put(
         `http://localhost:5000/api/appointments/${appointment._id}/statusUpdate`,
         { status: "Waiting for Technician Confirmation" }
@@ -80,11 +80,12 @@ const TechnicianAssignmentAndStatusUpdater = ({
         ...appointment,
         status: "Waiting for Technician Confirmation",
       });
+
+      showSnackbar("Sent to Technician for review","success");
+
     } catch (error) {
       console.error("Error updating status:", error);
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
   return (
@@ -98,12 +99,9 @@ const TechnicianAssignmentAndStatusUpdater = ({
           fullWidth
           disabled={status === "Waiting for Technician Confirmation"}
         >
-          <MenuItem value="">Select Technician</MenuItem>
-          {loading ? (
-            <MenuItem disabled>
-              <CircularProgress size={24} />
-            </MenuItem>
-          ) : technicians.length > 0 ? (
+          <MenuItem value="">Sel.Technician</MenuItem>
+          
+         {technicians.length > 0 ? (
             technicians.map((tech) => (
               <MenuItem key={tech._id} value={tech._id}>
                 {tech.employee_id} - {tech.technician_id}
@@ -123,14 +121,11 @@ const TechnicianAssignmentAndStatusUpdater = ({
           onClick={handleStatusUpdate}
           disabled={
             !techAssigned ||
-            status === "Waiting for Technician Confirmation" ||
-            loading
+            status === "Waiting for Technician Confirmation"
           }
           fullWidth
         >
-          {loading ? (
-            <CircularProgress size={24} color="inherit" />
-          ) : status === "Waiting for Technician Confirmation" ? (
+         {status === "Waiting for Technician Confirmation" ? (
             "Pending"
           ) : (
             "Confirm"
