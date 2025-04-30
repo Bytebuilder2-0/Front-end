@@ -7,8 +7,9 @@ export default function ManagerDashboardPage() {
     <div>
       
       <ManagerSidebar>
+      <h1> Manager Dashboard</h1>
       <Apointmentcheking/>
-      <h1>this manager dashboard</h1>
+
       </ManagerSidebar>
     </div>
   );

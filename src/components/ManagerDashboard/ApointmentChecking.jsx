@@ -1,196 +1,160 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Button,Container,Box,Typography,TextField, IconButton, Tooltip 
+  Container, Box, Typography, TextField, Table, TableBody, TableCell,
+  TableContainer, TableHead, TableRow, Paper, IconButton, Tooltip
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
+import DeatailsViewer from "./viewDeatails";
+import WhatsAppButton from "../sub/WhatsAppButton";
+import ConfirmDeleteDialog from "../ServiceManage/ConfirmDeleteDialog";
+import SuccessSnackbar from "../ServiceManage/SuccessSnackbar";
 
-import IssueViewer from "../sub/IssueView";
-
-// API Base URL
 const API_BASE_URL = "http://localhost:5000/api/appointments";
 
-// Fetch only "Pending" appointments
-const fetchAppointments = async () => {
-  try {
-    const response = await axios.get(API_BASE_URL);
-    return response.data.reverse().filter((appt) => appt.status === "Checking"); // Fetch only pending ones
-  } catch (error) {
-    console.error("Error fetching appointments:", error);
-    return [];
-  }
-};
-
-// Update appointment status and remove from table
-const updateAppointmentStatus = async (
-  appointmentId,
-  newStatus,
-  setAppointments
-) => {
-  try {
-    await axios.put(`${API_BASE_URL}/${appointmentId}/statusUpdate`, {
-      status: newStatus,
-    });
-
-    setAppointments(
-      (prevAppointments) =>
-        prevAppointments.filter((appt) => appt._id !== appointmentId) // Remove updated appointment
-    );
-  } catch (error) {
-    console.error(`Error updating appointment status to ${newStatus}:`, error);
-  }
-};
-
-const Apointmentcheking = () => {
+const ApointmentChecking = () => {
   const [appointments, setAppointments] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
+  const [confirmDialog, setConfirmDialog] = useState({
+    open: false,
+    appointment: null,
+    actionType: "",
+  });
 
+  const [snackbar, setSnackbar] = useState({ open: false, message: "" });
 
   useEffect(() => {
-    const getAppointments = async () => {
-      const data = await fetchAppointments();
-      setAppointments(data);
-    };
-    getAppointments();
+    axios.get(API_BASE_URL)
+      .then((res) => setAppointments(res.data.reverse().filter((appt) => appt.status === "Checking")))
+      .catch((err) => console.error("Error fetching appointments:", err));
   }, []);
 
-  const filteredAppointments = appointments.filter((appointment) =>
-    (appointment.vehicleId || "")
-      .toString()
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase())
-  );
+  const handleStatusUpdate = async (appointmentId, newStatus) => {
+    try {
+      await axios.put(`${API_BASE_URL}/${appointmentId}/statusUpdate`, { status: newStatus });
+      setAppointments((prev) => prev.filter((appt) => appt._id !== appointmentId));
 
+      const emoji = newStatus === "Pending" ? "\u2705" : "\u274C"; // Unicode emoji
+      setSnackbar({
+        open: true,
+        message: `${emoji} Appointment ${newStatus === "Pending" ? "accepted" : "rejected"} successfully!`,
+      });
+    } catch (err) {
+      console.error("Error updating status:", err);
+    }
+  };
+
+  const handleClickAction = (appointment, type) => {
+    setConfirmDialog({
+      open: true,
+      appointment,
+      actionType: type,
+    });
+  };
+
+  const handleConfirmAction = () => {
+    if (confirmDialog.appointment) {
+      const newStatus = confirmDialog.actionType === "Accept" ? "Pending" : "Reject1";
+      handleStatusUpdate(confirmDialog.appointment._id, newStatus);
+      setConfirmDialog({ open: false, appointment: null, actionType: "" });
+    }
+  };
 
   return (
-    <Container>
-    <Box
-      display="flex"
-      justifyContent="right"
-      alignItems="center"
-      mb={2}
-    >
-    
-        <TextField
-                label="Search by Vehicle ID"
-                variant="outlined"
-                size="small"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-    </Box>
-    <TableContainer component={Paper} sx={{ marginTop: 2 }}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>
-              <strong>Vehicle ID</strong>
-            </TableCell>
-            <TableCell>
-              <strong>Model</strong>
-            </TableCell>
-            <TableCell>
-              <strong>Issue</strong>
-            </TableCell>
-            <TableCell>
-              <strong>Exp.Delivery</strong>
-            </TableCell>
-            <TableCell>
-              <strong>Actions</strong>
-            </TableCell>
-            <TableCell>
-              <strong>Status</strong>
-            </TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-  {filteredAppointments.length > 0 ? (
-    filteredAppointments.map((appointment) => (
-      <TableRow key={appointment._id}>
-        <TableCell>{appointment.vehicleId}</TableCell>
-        <TableCell>{appointment.model}</TableCell>
-        <TableCell>
-          <IssueViewer issue={appointment.issue} />
-        </TableCell>
-        <TableCell>
-          {new Date(appointment.expectedDeliveryDate).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-          })}
-        </TableCell>
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Paper elevation={6} sx={{ p: 3, borderRadius: "16px" }}>
+        {/* Header */}
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+          <Typography variant="h5" fontWeight="bold" color="#1976d2">
+            Manage Appointment Checking
+          </Typography>
+          <TextField
+            label="Search by Vehicle ID"
+            variant="outlined"
+            size="small"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </Box>
 
-        {/*  Status with color */}
-        <TableCell>
-          <span
-            style={{
-              color:
-                appointment.status === "Checking"
-                  ? "orange"
-                  : appointment.status === "Pending"
-                  ? "green"
-                  : appointment.status === "Cancelled" || appointment.status === "Reject1"
-                  ? "red"
-                  : "gray",
-              fontWeight: 500,
-              textTransform: "capitalize",
-            }}
-          >
-            {appointment.status}
-          </span>
-        </TableCell>
+        {/* Table */}
+        <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                {["Vehicle ID", "Model", "Appointment Details", "Contact", "Status", "Actions"].map((head) => (
+                  <TableCell align="center" key={head}><strong>{head}</strong></TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
 
-    
-        <TableCell>
-  <Tooltip title="Accept">
-    <IconButton
-      color="success"
-      onClick={() =>
-        updateAppointmentStatus(appointment._id, "Pending", setAppointments)
-      }
-      sx={{ fontSize: 30 }}
-    >
-      <CheckCircleIcon sx={{ fontSize: 30 }}/>
-    </IconButton>
-  </Tooltip>
+            <TableBody>
+              {appointments.filter((a) => a.vehicleId?.toLowerCase().includes(searchTerm.toLowerCase()))
+                .map((appointment) => (
+                  <TableRow key={appointment._id}>
+                    <TableCell align="center">{appointment.vehicleId}</TableCell>
+                    <TableCell align="center">{appointment.model}</TableCell>
+                    <TableCell align="center"><DeatailsViewer appointment={appointment} /></TableCell>
+                    <TableCell align="center"><WhatsAppButton phone={appointment.contactNumber} /></TableCell>
+                    <TableCell align="center">
+                      <Typography sx={{
+                        color:
+                          appointment.status === "Checking" ? "orange" :
+                          appointment.status === "Pending" ? "green" :
+                          ["Cancelled", "Reject1"].includes(appointment.status) ? "red" : "gray",
+                        fontWeight: 600, textTransform: "capitalize", fontSize: "0.9rem"
+                      }}>
+                        {appointment.status}
+                      </Typography>
+                    </TableCell>
+                    <TableCell align="center">
+                      <Tooltip title="Accept">
+                        <IconButton color="success" onClick={() => handleClickAction(appointment, "Accept")}>
+                          <CheckCircleIcon sx={{ fontSize: 26 }} />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Reject">
+                        <IconButton color="error" onClick={() => handleClickAction(appointment, "Reject")}>
+                          <CancelIcon sx={{ fontSize: 26 }} />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                ))}
 
-  <Tooltip title="Reject">
-    <IconButton
-      color="error"
-      onClick={() =>
-        updateAppointmentStatus(appointment._id, "Reject1", setAppointments)
-      }
-      sx={{ fontSize: 30 }}
-    >
-      <CancelIcon sx={{ fontSize: 30 }}/>
-    </IconButton>
-  </Tooltip>
-</TableCell>
+              {appointments.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
+                    <Typography variant="h6" color="textSecondary">
+                      No appointments found
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
 
-      </TableRow>
-    ))
-  ) : (
-    <TableRow>
-      <TableCell colSpan={6} align="center">
-        No matching appointments
-      </TableCell>
-    </TableRow>
-  )}
-</TableBody>
+      {/* Confirm Dialog */}
+      <ConfirmDeleteDialog
+        open={confirmDialog.open}
+        onClose={() => setConfirmDialog({ open: false, appointment: null, actionType: "" })}
+        onConfirm={handleConfirmAction}
+        itemName={`Appointment for ${confirmDialog.appointment?.vehicleId || ""}`}
+        actionName={confirmDialog.actionType === "Accept" ? "Accept" : "Reject"}
+      />
 
-      </Table>
-    </TableContainer>
+      {/* Success Snackbar */}
+      <SuccessSnackbar
+        open={snackbar.open}
+        message={snackbar.message}
+        onClose={() => setSnackbar({ open: false, message: "" })}
+      />
     </Container>
   );
 };
 
-export default Apointmentcheking;
+export default ApointmentChecking;

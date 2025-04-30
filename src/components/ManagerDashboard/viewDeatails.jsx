@@ -34,19 +34,8 @@ const DeatailsViewer = ({ appointment }) => {
             {appointment.model && <Typography><strong>Model:</strong> {appointment.model}</Typography>}
           </Box>
 
-          {/* Issue Info */}
-          {(appointment.issue || appointment.reason) && (
-            <Box mb={3}>
-              <Typography variant="h6" sx={{ color: "#1976d2", mb: 1 }}>
-                Issue Details
-              </Typography>
-              {appointment.issue && <Typography><strong>Issue:</strong> {appointment.issue}</Typography>}
-              {appointment.reason && <Typography><strong>Reason:</strong> {appointment.reason}</Typography>}
-            </Box>
-          )}
-
-          {/* Services */}
-          {Array.isArray(appointment.services) && appointment.services.length > 0 && (
+           {/* Services */}
+           {Array.isArray(appointment.services) && appointment.services.length > 0 && (
             <Box mb={3}>
               <Typography variant="h6" sx={{ color: "#1976d2", mb: 1 }}>
                 Services Selected
@@ -59,6 +48,19 @@ const DeatailsViewer = ({ appointment }) => {
             </Box>
           )}
 
+
+          {/* Issue Info */}
+          {(appointment.issue || appointment.reason) && (
+            <Box mb={3}>
+              <Typography variant="h6" sx={{ color: "#1976d2", mb: 1 }}>
+                Issue Details
+              </Typography>
+              {appointment.issue && <Typography><strong>Issue:</strong> {appointment.issue}</Typography>}
+              {appointment.reason && <Typography><strong>Reason:</strong> {appointment.reason}</Typography>}
+            </Box>
+          )}
+
+         
           {/* Appointment Dates */}
           {(appointment.preferredDate || appointment.preferredTime || appointment.expectedDeliveryDate) && (
             <Box mb={3}>
