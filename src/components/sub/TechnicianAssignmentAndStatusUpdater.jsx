@@ -3,9 +3,9 @@ import axios from "axios";
 import {
   Select,
   MenuItem,
-  Button,
-  Grid,
+  Button
 } from "@mui/material";
+import Grid from '@mui/material/Grid2';
 
 const TechnicianAssignmentAndStatusUpdater = ({
   appointment,
@@ -82,7 +82,7 @@ const TechnicianAssignmentAndStatusUpdater = ({
       });
 
       showSnackbar("Sent to Technician for review","success");
-      
+
     } catch (error) {
       console.error("Error updating status:", error);
     } 
