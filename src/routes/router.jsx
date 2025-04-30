@@ -27,6 +27,7 @@ import TechnicianAccepted from '../pages/Technician/TechnicianAccepted';
 
 import Decline from '../pages/supervisor/Decline';
 import History from '../pages/supervisor/History';
+import CheckStatus from '../pages/Manager/CheckStatus';
 
 
 
@@ -122,6 +123,10 @@ const router = createBrowserRouter([
     {
       path: "/ManagerHistory",
       element: <ManagerHistoryPage/>,
+    }  ,
+    {
+      path: "/CheckStatus",
+      element: <CheckStatus/>,
     }  
 
 
