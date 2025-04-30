@@ -51,6 +51,9 @@ function AppointmentData() {
  
     };
     getAppointments();
+
+    const interval=setInterval(getAppointments,5000);
+    return ()=>clearInterval(interval);
   }, []);
 
   const updateAppointmentInState = (updatedAppointment) => {
