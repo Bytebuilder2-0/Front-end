@@ -125,7 +125,6 @@ function AppointmentData() {
                   </TableCell>
                   <TableCell>
                     <WorkloadManager
-                      btn_name="Write"
                       appointment={appointment}
                       updateAppointment={updateAppointmentInState}
                     />
