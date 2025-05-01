@@ -1,144 +1,122 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  Select,
-  MenuItem,
-  CircularProgress,
-  Button,
-  Grid,
-} from "@mui/material";
+import { Select, MenuItem, Button } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 
-const TechnicianAssignmentAndStatusUpdater = ({
-  appointment,
-  updateAppointment,
-}) => {
-  const [technicians, setTechnicians] = useState([]);
-  const [selectedTechnician, setSelectedTechnician] = useState(
-    appointment?.tech || ""
-  );
-  const [status, setStatus] = useState(appointment.status);
-  const [techAssigned, setTechAssigned] = useState(Boolean(appointment.tech));
-  const [loading, setLoading] = useState(false);
+const TechnicianAssignmentAndStatusUpdater = ({ appointment, updateAppointment, showSnackbar }) => {
+	//All technicians
+	const [technicians, setTechnicians] = useState([]);
 
-  // Fetch technician list when the component mounts
-  useEffect(() => {
-    async function fetchTechnicians() {
-      try {
-        const response = await axios.get(
-          "http://localhost:5000/api/technicians"
-        );
-        setTechnicians(response.data);
-      } catch (error) {
-        console.error("Error fetching technicians:", error);
-      }
-    }
-    fetchTechnicians();
-  }, []);
+	//Technician mongoDb Id
+	const [selectedTechnician, setSelectedTechnician] = useState(appointment?.tech?._id || "");
 
-  // Fetch the appointment status when the component mounts
+	const [status, setStatus] = useState(appointment.status);
+	const [techAssigned, setTechAssigned] = useState(Boolean(appointment.tech));
 
-  const handleTechnicianChange = async (event) => {
-    const technicianId = event.target.value;
-    setSelectedTechnician(technicianId);
+	//Fetch technician list when the component mounts
+	useEffect(() => {
+		async function fetchTechnicians() {
+			try {
+				const response = await axios.get("http://localhost:5000/api/technicians");
+				setTechnicians(response.data);
+			} catch (error) {
+				console.error("Error fetching technicians:", error);
+			}
+		}
+		fetchTechnicians();
+	}, []);
 
-    try {
-      setLoading(true);
-      await axios.put(
-        `http://localhost:5000/api/appointments/${appointment._id}/assign2`,
-        {
-          technicianId,
-        }
-      );
+	// Fetch the appointment status when the component mounts
 
-      setTechAssigned(Boolean(technicianId));
-      updateAppointment({ ...appointment, tech: technicianId });
-    } catch (error) {
-      console.error("Error assigning technician:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+	const handleTechnicianChange = async (event) => {
+		const technicianId = event.target.value;
+		setSelectedTechnician(technicianId);
 
-  // Update status to "Waiting for Technician Confirmation"
-  const handleStatusUpdate = async () => {
-    if (
-      !techAssigned ||
-      status === "Waiting for Technician Confirmation" ||
-      loading
-    )
-      return;
+		try {
+			await axios.put(`http://localhost:5000/api/appointments/${appointment._id}/assign2`, {
+				technicianId,
+			});
 
-    try {
-      setLoading(true);
-      await axios.put(
-        `http://localhost:5000/api/appointments/${appointment._id}/statusUpdate`,
-        { status: "Waiting for Technician Confirmation" }
-      );
+			setTechAssigned(Boolean(technicianId));
+			updateAppointment({
+				...appointment,
+				tech: technicians.find((tech) => tech._id === technicianId), // full object
+			});
 
-      setStatus("Waiting for Technician Confirmation");
-      updateAppointment({
-        ...appointment,
-        status: "Waiting for Technician Confirmation",
-      });
-    } catch (error) {
-      console.error("Error updating status:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+			showSnackbar("Technician Added", "success");
+		} catch (error) {
+			console.error("Error assigning technician:", error);
+		}
+	};
 
-  return (
-    <Grid container spacing={2}>
-      {/* Technician Selection */}
-      <Grid item xs={12} sm={6} display="flex" alignItems="center">
-        <Select
-          value={selectedTechnician}
-          onChange={handleTechnicianChange}
-          displayEmpty
-          fullWidth
-          disabled={status === "Waiting for Technician Confirmation"}
-        >
-          <MenuItem value="">Select Technician</MenuItem>
-          {loading ? (
-            <MenuItem disabled>
-              <CircularProgress size={24} />
+	// Update status to "Waiting for Technician Confirmation"
+	const handleStatusUpdate = async () => {
+		if (!techAssigned || status === "Waiting for Technician Confirmation") return;
+
+		try {
+			await axios.put(`http://localhost:5000/api/appointments/${appointment._id}/statusUpdate`, {
+				status: "Waiting for Technician Confirmation",
+			});
+
+			setStatus("Waiting for Technician Confirmation");
+			updateAppointment({
+				...appointment,
+				status: "Waiting for Technician Confirmation",
+			});
+
+			showSnackbar("Sent to Technician for review", "success");
+		} catch (error) {
+			console.error("Error updating status:", error);
+		}
+	};
+
+	return (
+		<Grid container spacing={2}>
+			{/* Technician Selection */}
+			<Grid item xs={12} sm={6} display="flex" alignItems="center">
+				<Select
+					value={selectedTechnician}
+					onChange={handleTechnicianChange}
+					displayEmpty
+					fullWidth
+					disabled={status === "Waiting for Technician Confirmation"}
+				>
+					<MenuItem value="">Sel.Technician</MenuItem>
+
+            {/* Fallback: Show assigned technician immediately if available */}
+            {!technicians.length && techAssigned && appointment.tech && appointment.tech._id && (
+            <MenuItem value={appointment.tech._id}>
+              {appointment.tech.employee_id} - {appointment.tech.technician_id}
             </MenuItem>
-          ) : technicians.length > 0 ? (
-            technicians.map((tech) => (
-              <MenuItem key={tech._id} value={tech._id}>
-                {tech.employee_id} - {tech.technician_id}
-              </MenuItem>
-            ))
-          ) : (
-            <MenuItem disabled>No Technicians Available</MenuItem>
           )}
-        </Select>
-      </Grid>
 
-      {/* Status Update Button */}
-      <Grid item xs={12} sm={6} display="flex" alignItems="center">
-        <Button
-          variant="contained"
-          color="success"
-          onClick={handleStatusUpdate}
-          disabled={
-            !techAssigned ||
-            status === "Waiting for Technician Confirmation" ||
-            loading
-          }
-          fullWidth
-        >
-          {loading ? (
-            <CircularProgress size={24} color="inherit" />
-          ) : status === "Waiting for Technician Confirmation" ? (
-            "Pending"
-          ) : (
-            "Confirm"
-          )}
-        </Button>
-      </Grid>
-    </Grid>
-  );
+
+					{technicians.length > 0 ? (
+						technicians.map((tech) => (
+							<MenuItem key={tech._id} value={tech._id}>
+								{tech.employee_id} - {tech.technician_id}
+							</MenuItem>
+						))
+					) : (
+						<MenuItem disabled>No Technicians Available</MenuItem>
+					)}
+				</Select>
+			</Grid>
+
+			{/* Status Update Button */}
+			<Grid item xs={12} sm={6} display="flex" alignItems="center">
+				<Button
+					variant="contained"
+					color="success"
+					onClick={handleStatusUpdate}
+					disabled={!techAssigned || status === "Waiting for Technician Confirmation"}
+					fullWidth
+				>
+					{status === "Waiting for Technician Confirmation" ? "Pending" : "Confirm"}
+				</Button>
+			</Grid>
+		</Grid>
+	);
 };
 
 export default TechnicianAssignmentAndStatusUpdater;

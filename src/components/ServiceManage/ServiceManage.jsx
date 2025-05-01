@@ -8,7 +8,7 @@ import {
 } from "./serviceApi";
 import ServiceList from "./ServiceList";
 import ServiceForm from "./ServiceForm";
-import { Container, Typography, Paper } from "@mui/material";
+import { Container, Typography, Paper, Box } from "@mui/material";
 import SuccessSnackbar from "./SuccessSnackbar";
 
 const ServiceManager = () => {
@@ -77,21 +77,31 @@ const ServiceManager = () => {
   };
 
   return (
-    <Container maxWidth="md" sx={{ px: { xs: 2, md: 4 } }}>
+    <Container maxWidth="md" sx={{ mt: 5, mb: 5 }}>
       <Paper
-        elevation={4}
+        elevation={5}
         sx={{
-          p: { xs: 3, md: 5 },
-          mt: { xs: 3, md: 5 },
-          width: "100%",
-          boxSizing: "border-box",
-          borderRadius: 4,
-          background: "linear-gradient(135deg, #f5f7fa 0%,rgb(250, 253, 254) 100%)",
+          p: 4,
+          backgroundColor: "#f9fafb",
+          borderRadius: "12px",
         }}
       >
-        <Typography variant="h4" align="center" gutterBottom fontWeight="bold">
-          Manage Services
-        </Typography>
+        <Box mb={3}>
+          <Typography
+            variant="h4"
+            align="center"
+            sx={{
+              fontWeight: "bold",
+              color: "#3f51b5",
+              letterSpacing: 1,
+            }}
+          >
+            Manage Services
+          </Typography>
+          <Typography variant="subtitle1" align="center" sx={{ color: "gray", mt: 1 }}>
+            Add, Edit, and Organize Your Services Easily
+          </Typography>
+        </Box>
 
         <ServiceForm onAdd={handleAdd} />
 
@@ -99,12 +109,27 @@ const ServiceManager = () => {
           Your Services
         </Typography>
 
-        <ServiceList
-          services={services}
-          onToggle={handleToggle}
-          onDelete={handleDelete}
-          onUpdate={handleUpdate}
-        />
+        {services.length === 0 ? (
+          <Box
+            sx={{
+              textAlign: "center",
+              py: 5,
+              backgroundColor: "#f5f5f5",
+              borderRadius: "12px",
+            }}
+          >
+            <Typography variant="h6" color="textSecondary">
+              No services available
+            </Typography>
+          </Box>
+        ) : (
+          <ServiceList
+            services={services}
+            onToggle={handleToggle}
+            onDelete={handleDelete}
+            onUpdate={handleUpdate}
+          />
+        )}
       </Paper>
 
       <SuccessSnackbar
