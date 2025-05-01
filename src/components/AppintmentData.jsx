@@ -90,8 +90,13 @@ function AppointmentData() {
 				/>
 			</Box>
 
-			<TableContainer component={Paper} elevation={3}>
-				<Table>
+			<TableContainer component={Paper} elevation={3}
+			  sx={{
+				maxHeight: 400, // Adjust the height according to the number of rows you want to display
+				overflowY: 'auto', // Enable vertical scroll when content overflows
+			  }}
+			>
+				<Table stickyHeader>
 					<TableHead>
 						<TableRow>
 							<TableCell>

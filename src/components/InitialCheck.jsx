@@ -101,8 +101,8 @@ const InitialCheck = () => {
 					onChange={(e) => setSearchTerm(e.target.value)}
 				/>
 			</Box>
-			<TableContainer component={Paper} sx={{ marginTop: 2 }}>
-				<Table>
+			<TableContainer component={Paper} sx={{ marginTop: 2,overflow:"auto",maxHeight:400}} >
+				<Table stickyHeader>
 					<TableHead>
 						<TableRow>
 							<TableCell></TableCell>

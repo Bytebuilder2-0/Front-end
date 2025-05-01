@@ -20,25 +20,25 @@ const SuggestionWriting = ({ appointment, updateAppointment }) => {
     if (!appointment) return;
 
     try {
-      console.log("📡 Sending Suggestion Update:", suggestion, "for Appointment ID:", appointment._id);
+      console.log("Sending Suggestion Update:", suggestion, "for Appointment ID:", appointment._id);
 
       const response = await axios.put(
         `http://localhost:5000/api/appointments/${appointment._id}/suggestions`,
         { suggestion }
       );
 
-      console.log("✅ API Response:", response.data);
+      console.log("API Response:", response.data);
 
       if (response.data && response.data.appointment) {
-        console.log("📌 Updating appointment state with:", response.data.appointment);
+        console.log("Updating appointment state with:", response.data.appointment);
         updateAppointment(response.data.appointment);
       } else {
-        console.warn("⚠️ No updated appointment data in response.");
+        console.warn("No updated appointment data in response.");
       }
 
       handleCloseModals();
     } catch (error) {
-      console.error("🚨 Error updating suggestion:", error.response?.data || error.message);
+      console.error("Error updating suggestion:", error.response?.data || error.message);
     }
   };
   const fetchLatestSuggestion = async () => {
@@ -52,14 +52,14 @@ const SuggestionWriting = ({ appointment, updateAppointment }) => {
         console.log("🛬 Fetched Latest Suggestion:", response.data.suggestion);
       }
     } catch (error) {
-      console.error("🚨 Error fetching latest suggestion:", error.response?.data || error.message);
+      console.error("Error fetching latest suggestion:", error.response?.data || error.message);
     }
   };
   
 
   return (
     <>
-      <Button variant="contained" color="secondary" onClick={handleOpenSuggestion}>
+      <Button variant="text" color="success" onClick={handleOpenSuggestion} sx={{fontWeight:"bold"}}>
         Write
       </Button>
 

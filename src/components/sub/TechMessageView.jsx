@@ -6,7 +6,7 @@ const TechMessageView = ({ x }) => {
 
   return (
     <>
-      <Button variant="contained" color="primary" onClick={() => setOpen(true)}>
+      <Button variant="outlined" color="success" sx={{backgroundColor:"#33383E23",color:"#33383E"}}  onClick={() => setOpen(true)}>
         View
       </Button>
 

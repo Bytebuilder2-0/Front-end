@@ -9,7 +9,7 @@ const LoginSignupNavbar = () => {
         <Box sx={{ flexGrow: 1 }}>
           <Link to="/">
             <img
-              src="/assets/garage.jpg"
+              src="/assets/resized-garage24.png"
               alt="Logo"
               style={{ height: 40 }}
             />

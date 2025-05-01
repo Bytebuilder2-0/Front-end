@@ -1,20 +1,28 @@
+// utils/logout.jsx
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const handleLogout = async () => {
-  const token = localStorage.getItem('token');
+const useLogout = () => {
+  const navigate = useNavigate();
 
-  try {
-    await axios.post('http://localhost:5000/api/auth/logout', {}, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+  const handleLogout = async () => {
+    const token = localStorage.getItem('token');
 
-    localStorage.removeItem('token');
-    window.location.href = '/login'; // Or navigate programmatically
-  } catch (err) {
-    console.error('Logout error:', err.response?.data || err.message);
-  }
+    try {
+      await axios.post('http://localhost:4880/api/auth/logout', {}, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      localStorage.removeItem('token');
+      navigate('/login');
+    } catch (err) {
+      console.error('Logout error:', err.response?.data || err.message);
+    }
+  };
+
+  return handleLogout;
 };
 
-export default handleLogout;
+export default useLogout;
