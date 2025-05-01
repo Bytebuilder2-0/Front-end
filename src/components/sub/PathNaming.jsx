@@ -10,7 +10,7 @@ function PathNaming({ label, path }) {
       <Typography variant="h5" sx={{ fontWeight: 600 ,color:"#33383E"}}>
         {label}
       </Typography>
-      <Typography variant="body2" color="text.secondary">
+      <Typography variant="body2" sx={{color:"#459328"}}>
         {path}
       </Typography>
 
