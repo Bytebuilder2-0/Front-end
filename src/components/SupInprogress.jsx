@@ -34,14 +34,14 @@ const fetchAppointments = async () => {
 
 const SupInprogress = () => {
   const [appointments, setAppointments] = useState([]);
-  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     const getAppointments = async () => {
-      setLoading(true);
+  
       const data = await fetchAppointments();
       setAppointments(data);
-      setLoading(false);
+ 
     };
     getAppointments();
   }, []);

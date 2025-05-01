@@ -11,7 +11,7 @@ function Decline() {
     <MiniDrawer />
     <Box component="main" sx={{ flexGrow: 1, pl:3,pr:3 }}>
      <Toolbar/>
-     <PathNaming label="Declined.." path="Supervisor/Declined"/>
+     <PathNaming label="Declined" path="Supervisor/Declined"/>
        <Divider/>
         <SupDeclined/>
     </Box>
