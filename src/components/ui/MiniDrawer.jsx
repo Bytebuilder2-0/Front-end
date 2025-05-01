@@ -150,8 +150,8 @@ function MiniDrawer() {
 						}}
 					>
 						<IconButton size="large" aria-label="show 17 new notifications" color="inherit">
-							<Badge badgeContent={1} color="error">
-								<NotificationsIcon sx={{ color: "#459328" }} fontSize="large" />
+							<Badge badgeContent={0} color="error">
+								<NotificationsIcon sx={{ color: "#33383E" }} fontSize="large" />
 							</Badge>
 						</IconButton>
 						<IconButton
@@ -163,7 +163,7 @@ function MiniDrawer() {
 							//onClick={handleProfileMenuOpen}
 							color="inherit"
 						>
-							<AccountCircle sx={{ color: "text.primary" }} fontSize="large" />
+							<AccountCircle sx={{ color: "#33383E" }} fontSize="large" />
 						</IconButton>
 					</Box>
 				</Toolbar>

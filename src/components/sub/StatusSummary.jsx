@@ -28,36 +28,33 @@ const StatusSummary = () => {
   const statusData = [
     {
       title: "Total",
-      subheader: "Pending Appointment Count",
+      subheader: "Total Appointment Count",
       count: counts.total,
-      image: "/assets/purchase.png.png",
-      status: "Total",
+      image: "/assets/purchase.png.png"
+
     },
     {
       title: "Pending",
       subheader: "Pending Appointment Count",
       count: counts.pending,
-      image: "/assets/inpro.png",
-      status: "Pending",
+      image: "/assets/inpro.png"
     },
     {
       title: "Confirmed",
       subheader: "Confirmed Appointment Count",
       count: counts.confirmed,
-      image: "/assets/success.jpg",
-      status: "Confirmed",
+      image: "/assets/success.jpg"
+    
     },
   ];
 
   return (
-    <Grid container spacing={7} mb={3} mt={3} justifyContent="center">
+    <Grid container gap={7} mb={1} mt={1} justifyContent="center">
     {statusData.map((data, index) => (
-      <Grid   key={index}>
-        <Card sx={{ backgroundColor: "#33383E23", color: "#" }}>
-          <CardHeader title={data.title} subheader={data.subheader} />
-          <CardContent sx={{ display: "flex", alignItems: "center", justifyContent: "space-between"}}>
-            <Box>
-              <Typography variant="h6">{data.status}</Typography>
+      <Grid width="25%"  key={index}>
+        <Card sx={{ backgroundColor: "#33383E23", color: "#33383E" }}>
+          <CardHeader title={data.title} subheader={data.subheader}  sx={{ pb: 0, pt: 1 }}/>
+          <CardContent sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", pt: 1}}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Typography variant="h4" sx={{marginRight:1}}>  {/*if the digit is one just add zero before it  */}
                   {String(data.count).padStart(2, '0')}  
@@ -69,7 +66,7 @@ const StatusSummary = () => {
                   alt="Card Image"
                 />
               </Box>
-            </Box>
+  
             <CardMedia
               component="img"
               sx={{ height: 70, width: 70 }}
