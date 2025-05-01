@@ -72,7 +72,7 @@ const Signup = () => {
      // await signup(formData.email, formData.fullName, formData.userName, formData.phone, formData.password, formData.confirmPassword, formData.role);
  
 
-      const res = await axios.post('http://localhost:4880/api/auth/register', payload);
+      const res = await axios.post('http://localhost:5000/api/auth/register', payload);
       alert('Signup successful!');
       console.log(res);
       setFormData({
