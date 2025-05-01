@@ -10,14 +10,13 @@ import {
   Paper,
   Container,
   Box,
-  TextField,
-  Tooltip,
-  IconButton
+  TextField
 } from "@mui/material";
 import IssueViewer from "./sub/IssueView";
 import WorkloadManager from "./sub/WorkloadManager";
 import TechnicianAssignmentAndStatusUpdater from "./sub/TechnicianAssignmentAndStatusUpdater";
 import WhatsAppButton from "./sub/WhatsAppButton";
+import Reason from "./sub/Reason";
 
 
 // API Base URL
@@ -99,7 +98,7 @@ const SupDeclined = () => {
                     <IssueViewer issue={appointment.issue} />
                   </TableCell>
                   <TableCell>
-               
+               <Reason reason={appointment.reason}/>
                   </TableCell>
                   <TableCell>
                   <WorkloadManager   appointment={appointment} btn_name="update"
