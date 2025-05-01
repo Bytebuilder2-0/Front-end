@@ -12,13 +12,16 @@ import {
   ChevronLeft as ChevronLeftIcon,
   Home as HomeIcon,
   Feedback as FeedbackIcon,
-  AssignmentTurnedIn   as CheckIcon,
   Build as BuildIcon,
   Dashboard as DashboardIcon,
   Notifications as NotificationsIcon,
-  History as HistoryIcon, Report as ReportIcon ,
+  DoneOutline as DoneOutlineIcon,
+  Error as ErrorIcon,
+  AutoGraph as AutoGraphIcon,
   AccountCircle
 } from "@mui/icons-material";
+
+import ApprovalIcon from '@mui/icons-material/Approval';
 
 // Define the width of the drawer
 const drawerWidth = 240;
@@ -85,7 +88,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 // Main ManagerSidebar component
-export default function ManagerSidebar({ children }) {
+export default function TechnicianMiniDrawer({ children }) {
   const theme = useTheme(); // Using MUI theme
   const navigate = useNavigate(); // Hook for navigation
   const [open, setOpen] = React.useState(true); // State to handle desktop drawer open/close
@@ -103,12 +106,11 @@ export default function ManagerSidebar({ children }) {
 
   // Sidebar navigation items with their icons and labels
   const navItems = [
-    { path: "/ManagerDashboard", label: "Dashboard", icon: <DashboardIcon /> },
-    { path: "", label: "Reports", icon: <ReportIcon /> }, 
-    { path: "/CheckStatus", label: "Check status", icon: <CheckIcon /> }, 
-    { path: "/ManagerHistory", label: "History", icon: <HistoryIcon /> },  // Added History
-    { path: "/ManageServices", label: "Manage Services", icon: <BuildIcon /> },
-    { path: "/feedback", label: "Manage Feedback", icon: <FeedbackIcon /> },
+    { path: "/TDashboard", label: "Assigned", icon: <DashboardIcon /> },
+    { path: "/TAccepted", label: "Accepted", icon: <ApprovalIcon /> },
+    { path: "/TDeclined", label: "Declined", icon: <ErrorIcon /> },
+    { path: "/TCompleted", label: "Completed", icon: <DoneOutlineIcon color="success" />},
+    { path: "/TInprogress", label: "InProgress", icon: <AutoGraphIcon /> },
   ];
 
   // JSX for sidebar drawer content
@@ -121,8 +123,8 @@ export default function ManagerSidebar({ children }) {
       <Divider />
       <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mt: 2 }}>
         {/* User Avatar */}
-        <Avatar src="https://randomuser.me/api/portraits/men/7.jpg" sx={{ width: 80, height: 80 }} />
-        <Typography sx={{ mt: 1 }}>Manager</Typography>
+        <Avatar src="https://t4.ftcdn.net/jpg/05/69/90/77/360_F_569907763_6JSDpoAAeyBjjyuP1eJWcfZ34aItK17U.jpg" sx={{ width: 100, height:100 }} />
+        <Typography sx={{ mt: 1 }}>Technician</Typography>
       </Box>
       <Divider sx={{ mx: 2, my: 1 }} />
       {/* Sidebar Menu Items */}
@@ -154,7 +156,7 @@ export default function ManagerSidebar({ children }) {
 
           {/* Manager Panel Title */}
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            
+            Hello Technician...
           </Typography>
 
           {/* Notification and Account Icons */}

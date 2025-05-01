@@ -1,11 +1,10 @@
-// components/ServiceList.jsx
 import React from "react";
 import ServiceItem from "./ServiceItem";
 import { List } from "@mui/material";
 
 const ServiceList = ({ services, onToggle, onDelete, onUpdate }) => {
   return (
-    <List>
+    <List sx={{ mt: 2 }}>
       {services.map((service) => (
         <ServiceItem
           key={service._id}

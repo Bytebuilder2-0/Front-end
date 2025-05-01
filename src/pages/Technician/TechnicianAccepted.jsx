@@ -1,16 +1,17 @@
 import React from "react";
-import TAssignedWork from "../../components/TAssignedWork";
+import TAcceptedWork from "../../components/TAccepted";
 import TechnicianMiniDrawer from "../../components/ui/TechnicianMiniDrawer";
 
-function TechnicianDashboard() {
+
+function TechnicianAccepted() {
   return (
     <div>
       <TechnicianMiniDrawer>
-         <TAssignedWork/>
+         <TAcceptedWork/>
       </TechnicianMiniDrawer>
         
     </div>
   );
 }
 
-export default TechnicianDashboard;
+export default TechnicianAccepted;

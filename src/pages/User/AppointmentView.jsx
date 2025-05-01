@@ -5,7 +5,7 @@ import UserMiniDrawer from "../../components/ui/UserMiniDrawer";
 
 function AppointmentView(){
 
-  const userId = "680e27c048a060dca4041bb5"; 
+  const userId = "67c35ede60d77944a4fe5cf1"; 
 
       return (
         <>

@@ -11,19 +11,23 @@ import UserDashboard from '../pages/User/UserDashboard';
 
 import FeedbackPage from '../pages/Manager/FeedbackPage';
 import ManageServices from '../pages/Manager/ManageServices';
-
-
+import HomePage from '../pages/Home';
+import ManagerHistoryPage from '../pages/Manager/HistoryPage';
 import TechnicianCompleted from '../pages/Technician/TechnicianCompleted';
-import { Login } from '@mui/icons-material'; 
 import Loginpage from '../pages/Loginpage';
 import SignupPage from '../pages/SignupPage';
 import ManagerDashboardPage from '../pages/Manager/ManagerDashboardPage';
 
 import VehicleForm from '../pages/VehicleForm';
 import SignInVehicleContainer from '../container/container1';
-import Decline from '../pages/supervisor/Decline';
-import SupHIstory from '../pages/supervisor/SupHistory';
+import TechnicianInprogress from '../pages/Technician/TechnicianInprogress';
 
+import TechnicianAccepted from '../pages/Technician/TechnicianAccepted';
+
+
+import Decline from '../pages/supervisor/Decline';
+import History from '../pages/supervisor/History';
+import CheckStatus from '../pages/Manager/CheckStatus';
 
 
 
@@ -32,6 +36,11 @@ const router = createBrowserRouter([
     path: "/Super",
     element: <SupervisorDashboard />,
   },
+  {
+    path: "/",
+    element: <HomePage />,  // <-- Replace HomePage with your real Home component
+  },
+  
   {
     path: "/SInitial",
     element: <SupInitial />,
@@ -46,9 +55,10 @@ const router = createBrowserRouter([
   },{
     path:"/SDeclined",
     element:<Decline/>
+
   },{
-    path:"/SHistory",
-    element:<SupHIstory/>
+   path:"/SHistory",
+   element:<History/>
   },
   {
     path: "/TDashboard",
@@ -61,6 +71,14 @@ const router = createBrowserRouter([
   {
     path: "/TCompleted",
     element: <TechnicianCompleted />,
+  },
+  {
+    path:"/TInprogress",
+    element:<TechnicianInprogress/>
+  },
+  {
+    path:"/TAccepted",
+    element:<TechnicianAccepted/>
   },
   {
     path: '/appointments/new',
@@ -101,6 +119,14 @@ const router = createBrowserRouter([
 {
       path: "/ManagerDashboard",
       element: <ManagerDashboardPage/>,
+    }  ,
+    {
+      path: "/ManagerHistory",
+      element: <ManagerHistoryPage/>,
+    }  ,
+    {
+      path: "/CheckStatus",
+      element: <CheckStatus/>,
     }  
 
 
