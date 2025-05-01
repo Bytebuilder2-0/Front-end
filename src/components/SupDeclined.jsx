@@ -10,9 +10,7 @@ import {
   Paper,
   Container,
   Box,
-  TextField,
-  Tooltip,
-  IconButton
+  TextField
 } from "@mui/material";
 import IssueViewer from "./sub/IssueView";
 import WorkloadManager from "./sub/WorkloadManager";

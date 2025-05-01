@@ -9,7 +9,6 @@ import {
   TableRow,
   Paper,
   Box,
-  Typography,
   Container,
 } from "@mui/material";
 
@@ -32,14 +31,14 @@ const fetchAppointments = async () => {
 
 function CompletedS() {
   const [appointments, setAppointments] = useState([]);
-  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     const getAppointments = async () => {
-      setLoading(true);
+    
       const data = await fetchAppointments();
       setAppointments(data);
-      setLoading(false);
+     
     };
     getAppointments();
   }, []);
