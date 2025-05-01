@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Card, CardContent, CardHeader, Typography ,CardMedia,Box} from "@mui/material";
-import { Grid} from "@mui/material";
+import Grid from "@mui/material/Grid2";
 
 
 const StatusSummary = () => {
@@ -50,13 +50,13 @@ const StatusSummary = () => {
   ];
 
   return (
-    <Grid container spacing={5} mb={3} mt={3} justifyContent="center">
+    <Grid container spacing={7} mb={3} mt={3} justifyContent="center">
     {statusData.map((data, index) => (
-      <Grid item xs={12} sm={6} md={4} key={index}>
-        <Card sx={{ backgroundColor: "", color: "#" }}>
+      <Grid   key={index}>
+        <Card sx={{ backgroundColor: "#33383E23", color: "#" }}>
           <CardHeader title={data.title} subheader={data.subheader} />
-          <CardContent sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", pl: 6, pr: 6 }}>
-            <div>
+          <CardContent sx={{ display: "flex", alignItems: "center", justifyContent: "space-between"}}>
+            <Box>
               <Typography variant="h6">{data.status}</Typography>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Typography variant="h4" sx={{marginRight:1}}>  {/*if the digit is one just add zero before it  */}
@@ -69,7 +69,7 @@ const StatusSummary = () => {
                   alt="Card Image"
                 />
               </Box>
-            </div>
+            </Box>
             <CardMedia
               component="img"
               sx={{ height: 70, width: 70 }}
