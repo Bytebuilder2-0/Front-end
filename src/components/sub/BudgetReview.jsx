@@ -74,7 +74,7 @@ const BudgetReview = ({ appointment, updateAppointment, btn_name }) => {
 
   return (
     <>
-      <Button variant="contained" color="primary" onClick={handleOpenBudget}>
+      <Button variant="contained" sx={{backgroundColor:"#33383E"}} onClick={handleOpenBudget}>
         {btn_name}
       </Button>
 
