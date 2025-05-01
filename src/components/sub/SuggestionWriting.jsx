@@ -59,7 +59,7 @@ const SuggestionWriting = ({ appointment, updateAppointment }) => {
 
   return (
     <>
-      <Button variant="text" color="success" onClick={handleOpenSuggestion}>
+      <Button variant="text" color="success" onClick={handleOpenSuggestion} sx={{fontWeight:"bold"}}>
         Write
       </Button>
 
