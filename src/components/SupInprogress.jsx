@@ -109,7 +109,7 @@ const SupInprogress = () => {
                 </TableCell>
                 <TableCell> <WorkloadManager   appointment={appointment} btn_name="update"
                       updateAppointment={updateAppointmentInState}/></TableCell>
-                      <TableCell><WhatsAppButton phone={appointment.contactNumber}/></TableCell>
+                      <TableCell><WhatsAppButton phone={appointment.contactNumber} VNumber={appointment.vehicleNumber}/></TableCell>
               </TableRow>
             ))}
           </TableBody>

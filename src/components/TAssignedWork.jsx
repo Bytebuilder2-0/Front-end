@@ -70,10 +70,10 @@ function TAssignedWork() {
         )
       );
 
-      alert("✅ Appointment Confirmed!");
+      alert(" Appointment Confirmed!");
     } catch (error) {
       console.error("Error confirming appointment:", error);
-      alert("❌ Failed to confirm appointment.");
+      alert(" Failed to confirm appointment.");
     }
   };
 
@@ -107,10 +107,10 @@ function TAssignedWork() {
         )
       );
 
-      alert("❌ Appointment Declined!");
+      alert(" Appointment Declined!");
     } catch (error) {
       console.error("Error declining appointment:", error);
-      alert("❌ Failed to decline appointment.");
+      alert(" Failed to decline appointment.");
     } finally {
       handleCloseDialog();
     }
@@ -188,8 +188,8 @@ function TAssignedWork() {
                 .filter((appointment) =>
                   [
                     "Waiting for Technician Confirmation",
-                    "Reject2",
-                    "Accepted",
+                    // "Reject2",
+                    // "Accepted",
                   ].includes(appointment.status)
                 )
                 .map((appointment) => (
@@ -198,10 +198,11 @@ function TAssignedWork() {
                       <TableCell>{appointment.vehicleId}</TableCell>
                       <TableCell>{appointment.vehicleNumber}</TableCell>
                       <TableCell>
-                        {appointment.expectedDeliveryDate}
-                        {/* {new Date(
-                        appointment.appointmentDate
-                      ).toLocaleDateString()} */}
+                        {new Date(appointment.expectedDeliveryDate).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
                       </TableCell>
                       <TableCell>
                         <IconButton
