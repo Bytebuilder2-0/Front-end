@@ -7,7 +7,7 @@ function PathNaming({ label, path }) {
        
    {/*<img src="assets/trans_bg.png" alt="path image" height={50} width={50}/> */ } 
       <div>
-      <Typography variant="h5" sx={{ fontWeight: 600 }}>
+      <Typography variant="h5" sx={{ fontWeight: 600 ,color:"#33383E"}}>
         {label}
       </Typography>
       <Typography variant="body2" color="text.secondary">
