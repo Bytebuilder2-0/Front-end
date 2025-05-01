@@ -106,19 +106,19 @@ export default function TechnicianMiniDrawer({ children }) {
 
   // Sidebar navigation items with their icons and labels
   const navItems = [
-    { path: "/TDashboard", label: "Assigned", icon: <DashboardIcon /> },
-    { path: "/TAccepted", label: "Accepted", icon: <ApprovalIcon /> },
-    { path: "/TDeclined", label: "Declined", icon: <ErrorIcon /> },
+    { path: "/TDashboard", label: "Assigned", icon: <DashboardIcon sx={{ color: '#ffffff' }}/>},
+    { path: "/TAccepted", label: "Accepted", icon: <ApprovalIcon sx={{ color: '#ffffff' }}/> },
+    { path: "/TDeclined", label: "Declined", icon: <ErrorIcon sx={{ color: '#ffffff' }}/> },
     { path: "/TCompleted", label: "Completed", icon: <DoneOutlineIcon color="success" />},
-    { path: "/TInprogress", label: "InProgress", icon: <AutoGraphIcon /> },
+    { path: "/TInprogress", label: "InProgress", icon: <AutoGraphIcon sx={{ color: '#ffffff' }}/> },
   ];
 
   // JSX for sidebar drawer content
   const drawerContent = (
     <>
-      <DrawerHeader>
+      <DrawerHeader >
         {/* Company Logo inside Drawer */}
-        <img src="/assets/frame.png" alt="Logo" style={{ height: "64px", width: "auto" }} />
+        <img src="/assets/frame.png" alt="Logo" style={{ height: "64px", width: "auto",opacity: "100%", backgroundColor:"#fff" }} />
       </DrawerHeader>
       <Divider />
       <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mt: 2 }}>
@@ -147,15 +147,15 @@ export default function TechnicianMiniDrawer({ children }) {
       <CssBaseline />
 
       {/* Top AppBar */}
-      <AppBar position="fixed" open={open} issmallscreen={isSmallScreen} sx={{ backgroundColor: "#1976d2" }}>
+      <AppBar position="fixed" open={open} issmallscreen={isSmallScreen} sx={{ backgroundColor: "#33383E23" }}>
         <Toolbar>
           {/* Toggle Drawer Button */}
-          <IconButton color="inherit" onClick={handleDrawerToggle} edge="start" sx={{ marginRight: 2 }}>
+          <IconButton color="" onClick={handleDrawerToggle} edge="start" sx={{ marginRight: 2 }} >
             {(!isSmallScreen && open) ? <ChevronLeftIcon /> : <MenuIcon />}
           </IconButton>
 
           {/* Manager Panel Title */}
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }} color="black">
             Hello Technician...
           </Typography>
 
@@ -164,12 +164,12 @@ export default function TechnicianMiniDrawer({ children }) {
             {/* Notifications Icon with badge */}
             <IconButton size="large" color="inherit">
               <Badge badgeContent={0} color="error">
-                <NotificationsIcon sx={{ color: "white" }} />
+                <NotificationsIcon sx={{ color: "black" }} />
               </Badge>
             </IconButton>
             {/* Account Profile Icon */}
             <IconButton size="large" edge="end" color="inherit">
-              <AccountCircle sx={{ color: "white" }} />
+              <AccountCircle sx={{ color: "black" }} />
             </IconButton>
           </Box>
         </Toolbar>
@@ -182,7 +182,8 @@ export default function TechnicianMiniDrawer({ children }) {
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{ keepMounted: true }}
-          sx={{ "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth } }}
+          sx={{ "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth,   } }}
+          
         >
           {drawerContent}
         </MuiDrawer>
@@ -190,7 +191,7 @@ export default function TechnicianMiniDrawer({ children }) {
         <MuiDrawer
           variant="persistent"
           open={open}
-          sx={{ "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth } }}
+          sx={{ "& .MuiDrawer-paper": { boxSizing: "border-box", width: drawerWidth, backgroundColor: "#33383E", color:"white"} }}
         >
           {drawerContent}
         </MuiDrawer>
