@@ -8,12 +8,12 @@ import {
 	TableHead,
 	TableRow,
 	Paper,
-	Typography,
 	Container,
 	TextField,
 	Box,
 
 } from "@mui/material";
+
 import WorkloadManager from "./sub/WorkloadManager";
 import IssueViewer from "./sub/IssueView";
 import TechnicianAssignmentAndStatusUpdater from "./sub/TechnicianAssignmentAndStatusUpdater";
@@ -21,9 +21,8 @@ import CustomSnackbar from "./sub/CustomSnackbar";
 
 // API Base URL
 const baseURL=import.meta.env.VITE_API_BASE_URL;
-//const API_BASE_URL = "http://localhost:5000/api/appointments";
 
-// Fetch all appointments
+// Fetch all appointments(status=confirmed,waiting for technician confirmation)
 const fetchAppointments = async () => {
 	try {
 		const response = await axios.get(`${baseURL}/appointments`);
@@ -41,12 +40,10 @@ function AppointmentData() {
 	const [appointments, setAppointments] = useState([]);
 	const [searchTerm, setSearchTerm] = useState("");
 
-
-
 	const [snackbarInfo, setSnackbarInfo] = useState({
 		open: false,
 		message: "",
-		severity: "success", // or "error", "info", etc.
+		severity: "success", // or error,info,warning
 	});
 
 	useEffect(() => {
@@ -57,17 +54,21 @@ function AppointmentData() {
 			
 		};
 		getAppointments();
-
+		//Polling every 5 sec
 		const interval = setInterval(getAppointments, 5000);
+
+		//Clear polling after component unmount
 		return () => clearInterval(interval);
 	}, []);
 
+	//Child components appointment get updated, will reflect that back in parent witout refreshing
 	const updateAppointmentInState = (updatedAppointment) => {
 		setAppointments((prevAppointments) =>
 			prevAppointments.map((appt) => (appt._id === updatedAppointment._id ? updatedAppointment : appt))
 		);
 	};
-	const showSnackbar = (message, severity = "success") => {
+
+	const showSnackbar = (message, severity) => {
 		setSnackbarInfo({
 			open: true,
 			message,
@@ -93,8 +94,11 @@ function AppointmentData() {
 
 			<TableContainer component={Paper} elevation={3}
 			  sx={{
-				maxHeight: 400, // Adjust the height according to the number of rows you want to display
-				overflowY: 'auto', // Enable vertical scroll when content overflows
+				// Adjust the height according to the number of rows you want to display
+				maxHeight: 400, 
+
+				// Enable vertical scroll when content overflows
+				overflowY: 'auto', 
 			  }}
 			>
 				<Table stickyHeader>
@@ -161,7 +165,7 @@ function AppointmentData() {
 			<CustomSnackbar
 				open={snackbarInfo.open}
 				message={snackbarInfo.message}
-				severity={snackbarInfo.severity}
+				action={snackbarInfo.severity}
 				onClose={() => setSnackbarInfo({ ...snackbarInfo, open: false })}
 			/>
 		</Container>
