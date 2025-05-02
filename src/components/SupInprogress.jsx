@@ -25,7 +25,7 @@ const API_BASE_URL = "http://localhost:5000/api/appointments";
 const fetchAppointments = async () => {
   try {
     const response = await axios.get(API_BASE_URL);
-    return response.data.reverse().filter((x) => x.status === "Accepted"); // Show only Accepted appointments
+    return response.data.reverse().filter((x) => x.status === "Accepted" || x.status==="InProgress"); // Show only Accepted appointments
   } catch (error) {
     console.error("Error fetching appointments:", error);
     return [];
@@ -109,7 +109,7 @@ const SupInprogress = () => {
                 </TableCell>
                 <TableCell> <WorkloadManager   appointment={appointment} btn_name="update"
                       updateAppointment={updateAppointmentInState}/></TableCell>
-                      <TableCell><WhatsAppButton phone={appointment.contactNumber}/></TableCell>
+                      <TableCell><WhatsAppButton phone={appointment.contactNumber} VNumber={appointment.vehicleNumber}/></TableCell>
               </TableRow>
             ))}
           </TableBody>
