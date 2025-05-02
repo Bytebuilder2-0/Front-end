@@ -138,7 +138,7 @@ function MiniDrawer() {
 						edge="end"
 						sx={{ marginRight: 2 }}
 					>
-						{open ? <ChevronLeftIcon sx={{ color: "#459328"}} /> : <MenuIcon sx={{ color: "#459328" }} />}
+						{open ? <ChevronLeftIcon sx={{ color: "#459328" }} /> : <MenuIcon sx={{ color: "#459328" }} />}
 					</IconButton>
 					<Box sx={{ flexGrow: 1 }} />
 					<Box
@@ -170,12 +170,16 @@ function MiniDrawer() {
 			</AppBar>
 
 			{/* Sidebar Drawer */}
-			<Drawer variant="permanent" open={open}   sx={{
-    '& .MuiDrawer-paper': {
-      backgroundColor: '#33383E', // change this to any color you want
-      color: 'white',             // optional: text/icon color
-    },
-  }}>
+			<Drawer
+				variant="permanent"
+				open={open}
+				sx={{
+					"& .MuiDrawer-paper": {
+						backgroundColor: "#33383E", 
+						color: "white", // text/icon color
+					},
+				}}
+			>
 				<DrawerHeader />
 				<Divider />
 
@@ -195,31 +199,32 @@ function MiniDrawer() {
 						<Typography>Supervisor 1</Typography>
 					</Box>
 				)}
-				{open && <Divider sx={{ borderColor: '#ffffff',mr:3,ml:3 }}/>}
+				{open && <Divider sx={{ borderColor: "#ffffff", mr: 3, ml: 3 }} />}
 
 				{/* Navigation List */}
 				<List>
 					{[
-						{ path: "/SInitial", label: "Home", icon: <HomeIcon sx={{ color: '#ffffff' }}/> },
-						{ path: "/Super", label: "Dashboard", icon: <DashboardIcon sx={{ color: '#ffffff' }}/> },
-						{ path: "/SInpro", label: "In Progress", icon: <AutoGraphIcon sx={{ color: '#ffffff' }}/> },
+						{ path: "/SInitial", label: "Home", icon: <HomeIcon sx={{ color: "#ffffff" }} /> },
+						{ path: "/Super", label: "Dashboard", icon: <DashboardIcon sx={{ color: "#ffffff" }} /> },
+						{ path: "/SInpro", label: "In Progress", icon: <AutoGraphIcon sx={{ color: "#ffffff" }} /> },
 						{
 							path: "/SCompleted",
 							label: "Completed",
-							icon: <DoneOutlineIcon sx={{ color: '#ffffff' }}/>,
+							icon: <DoneOutlineIcon sx={{ color: "#ffffff" }} />,
 						},
-						{ path: "/SDeclined", label: "Decline", icon: <ErrorIcon sx={{ color: '#ffffff' }}/> },
-						{ path: "/SHistory", label: "History", icon: <HistoryIcon sx={{ color: '#ffffff' }}/> },
+						{ path: "/SDeclined", label: "Decline", icon: <ErrorIcon sx={{ color: "#ffffff" }} /> },
+						{ path: "/SHistory", label: "History", icon: <HistoryIcon sx={{ color: "#ffffff" }} /> },
 					].map(({ path, label, icon }) => (
 						<ListItem key={path} disablePadding sx={{ display: "block" }} onClick={() => handleNavItemClick(path)}>
-							<ListItemButton selected={window.location.pathname === path}
-              sx={{
-                '&.Mui-selected': {
-                  backgroundColor: '#444950', // darker shade
-                  color: '#ffffff',
-                }
-              }}
-              >
+							<ListItemButton
+								selected={window.location.pathname === path}
+								sx={{
+									"&.Mui-selected": {
+										backgroundColor: "#444950", // darker shade
+										color: "#ffffff",
+									},
+								}}
+							>
 								<ListItemIcon sx={{ minWidth: 0, justifyContent: "center", marginRight: 2 }}>{icon}</ListItemIcon>
 								<ListItemText primary={label} sx={{ opacity: open ? 1 : 0 }} />
 							</ListItemButton>
