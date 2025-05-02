@@ -15,25 +15,20 @@ import {
 	Tooltip,
 } from "@mui/material";
 
-//mui icons
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
-//Components
 import IssueViewer from "./sub/IssueView";
 import ConfirmationDialog from "./sub/Confirmation";
 import CustomSnackbar from "./sub/CustomSnackbar";
 
 // API Base URL
-const baseURL=import.meta.env.VITE_API_BASE_URL;
-//const API_BASE_URL = "http://localhost:5000/api/appointments";
+const baseURL = import.meta.env.VITE_API_BASE_URL;
 
 // Fetch only "Pending" appointments
 const fetchAppointments = async () => {
 	try {
-		//full axios response object
 		const response = await axios.get(`${baseURL}/appointments`);
 
-		// Fetch only pending ones -- Array of json objects
 		return response.data.reverse().filter((appointment_obj) => appointment_obj.status === "Pending");
 	} catch (error) {
 		console.error("Error fetching appointments:", error);
@@ -72,9 +67,10 @@ const InitialCheck = () => {
 	const [snackbarInfo, setSnackbarInfo] = useState({
 		open: false,
 		message: "",
-		severity: "success", // or "error", "info", etc.
+		severity: "success", //Status
 	});
 
+	//Runs only in every intial mount of the component
 	useEffect(() => {
 		const getAppointments = async () => {
 			const data = await fetchAppointments();
@@ -84,11 +80,13 @@ const InitialCheck = () => {
 
 		//Refresh every 5 sec
 		const interval = setInterval(getAppointments, 5000);
+
+		//Runs when unmounting the component
 		return () => clearInterval(interval);
 	}, []);
 
 	const filteredAppointments = appointments.filter((appointment) =>
-		(appointment.vehicleId || "").toString().toLowerCase().includes(searchTerm.toLowerCase())
+		(appointment.vehicleId || "").toLowerCase().includes(searchTerm.toLowerCase())
 	);
 
 	return (
@@ -102,11 +100,10 @@ const InitialCheck = () => {
 					onChange={(e) => setSearchTerm(e.target.value)}
 				/>
 			</Box>
-			<TableContainer component={Paper} sx={{ marginTop: 2,overflow:"auto",maxHeight:400}} >
+			<TableContainer component={Paper} sx={{ marginTop: 2, overflow: "auto", maxHeight: 400 }}>
 				<Table stickyHeader>
 					<TableHead>
 						<TableRow>
-							<TableCell></TableCell>
 							<TableCell>
 								<strong>Vehicle ID</strong>
 							</TableCell>
@@ -131,10 +128,6 @@ const InitialCheck = () => {
 						{filteredAppointments.length > 0 ? (
 							filteredAppointments.map((appointment, index) => (
 								<TableRow key={appointment._id}>
-									<TableCell>
-										{index + 1}
-										<span>.</span>
-									</TableCell>
 									<TableCell>{appointment.vehicleId}</TableCell>
 									<TableCell>{appointment.model}</TableCell>
 									<TableCell>
@@ -148,7 +141,7 @@ const InitialCheck = () => {
 										})}
 									</TableCell>
 
-									{/*  Status with color */}
+									{/*Status with color */}
 									<TableCell>
 										<span
 											style={{
@@ -171,8 +164,10 @@ const InitialCheck = () => {
 											<IconButton
 												color="success"
 												onClick={() => {
-													setSelectedAppointmentId(appointment._id); // save which appointment you clicked
-													setConfirmDialogOpen(true); // open the confirmation dialog
+													// save which appointment you clicked
+													setSelectedAppointmentId(appointment._id);
+													// open the confirmation dialog
+													setConfirmDialogOpen(true);
 												}}
 												sx={{ fontSize: 30 }}
 											>
@@ -183,9 +178,10 @@ const InitialCheck = () => {
 								</TableRow>
 							))
 						) : (
+							//If no Filtered Items
 							<TableRow>
 								<TableCell colSpan={6} align="center">
-									No matching appointments
+									No Appointments Founded
 								</TableCell>
 							</TableRow>
 						)}
@@ -221,7 +217,6 @@ const InitialCheck = () => {
 
 			<CustomSnackbar
 				open={snackbarInfo.open}
-
 				//change without lossing other info in the object
 				onClose={() => setSnackbarInfo({ ...snackbarInfo, open: false })}
 				message={snackbarInfo.message}
