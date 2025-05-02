@@ -1,32 +1,22 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableContainer,
-	TableHead,
-	TableRow,
-	Paper,
-	Container,
-	Box,
-	Typography,
-} from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Container, Box } from "@mui/material";
+
 import IssueViewer from "./sub/IssueView";
 import TechMessageView from "./sub/TechMessageView";
 import SuggestionWriting from "./sub/SuggestionWriting";
 import WorkloadManager from "./sub/WorkloadManager";
 import WhatsAppButton from "./sub/WhatsAppButton";
+import CustomSnackbar from "./sub/CustomSnackbar";
 
 // API Base URL
 const baseURL = import.meta.env.VITE_API_BASE_URL;
-//const API_BASE_URL = "http://localhost:5000/api/appointments";
 
-// Fetch all appointments
+// Fetch all appointments(status=Accepted,Inprogress)
 const fetchAppointments = async () => {
 	try {
 		const response = await axios.get(`${baseURL}/appointments`);
-		return response.data.reverse().filter((x) => x.status === "Accepted" || x.status === "InProgress"); // Show only Accepted appointments
+		return response.data.reverse().filter((x) => x.status === "Accepted" || x.status === "InProgress");
 	} catch (error) {
 		console.error("Error fetching appointments:", error);
 		return [];
@@ -36,20 +26,39 @@ const fetchAppointments = async () => {
 const SupInprogress = () => {
 	const [appointments, setAppointments] = useState([]);
 
+	const [snackbarInfo, setSnackbarInfo] = useState({
+		open: false,
+		message: "",
+		severity: "success", // or error,info,warning
+	});
+
 	useEffect(() => {
 		const getAppointments = async () => {
 			const data = await fetchAppointments();
 			setAppointments(data);
 		};
 		getAppointments();
+		//Polling every 5 sec
+		const interval = setInterval(getAppointments, 5000);
+
+		//Clear polling after component unmount
+		return () => clearInterval(interval);
 	}, []);
 
+	//Child components appointment get updated, will reflect that back in parent witout refreshing
 	const updateAppointmentInState = (updatedAppointment) => {
 		setAppointments((prevAppointments) =>
 			prevAppointments.map((appt) => (appt._id === updatedAppointment._id ? updatedAppointment : appt))
 		);
 	};
 
+	const showSnackbar = (message, severity) => {
+		setSnackbarInfo({
+			open: true,
+			message,
+			severity,
+		});
+	};
 
 	return (
 		<Container>
@@ -90,15 +99,17 @@ const SupInprogress = () => {
 									<TechMessageView x={appointment.techMessage} />
 								</TableCell>
 								<TableCell>
-									{" "}
-									<SuggestionWriting appointment={appointment} updateAppointment={updateAppointmentInState} />
+									<SuggestionWriting
+										appointment={appointment}
+										updateAppointment={updateAppointmentInState}
+										showSnackbar={showSnackbar}
+									/>
 								</TableCell>
 								<TableCell>
-									{" "}
 									<WorkloadManager
 										appointment={appointment}
-										btn_name="update"
 										updateAppointment={updateAppointmentInState}
+										showSnackbar={showSnackbar}
 									/>
 								</TableCell>
 								<TableCell>
@@ -109,6 +120,12 @@ const SupInprogress = () => {
 					</TableBody>
 				</Table>
 			</TableContainer>
+			<CustomSnackbar
+				open={snackbarInfo.open}
+				message={snackbarInfo.message}
+				action={snackbarInfo.severity}
+				onClose={() => setSnackbarInfo({ ...snackbarInfo, open: false })}
+			/>
 		</Container>
 	);
 };

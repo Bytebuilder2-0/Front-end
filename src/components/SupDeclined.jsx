@@ -17,11 +17,12 @@ import WorkloadManager from "./sub/WorkloadManager";
 import TechnicianAssignmentAndStatusUpdater from "./sub/TechnicianAssignmentAndStatusUpdater";
 import WhatsAppButton from "./sub/WhatsAppButton";
 import Reason from "./sub/Reason";
+import CustomSnackbar from "./sub/CustomSnackbar";
 
 
 // API Base URL
 const baseURL=import.meta.env.VITE_API_BASE_URL;
-//const API_BASE_URL = "http://localhost:5000/api/appointments";
+
 
 // Fetch only "Reject2" appointments
 const fetchDeclinedAppointments = async () => {
@@ -36,10 +37,15 @@ const fetchDeclinedAppointments = async () => {
 
 // Update appointment status and remove from table
 
-
 const SupDeclined = () => {
   const [appointments, setAppointments] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+
+    const [snackbarInfo, setSnackbarInfo] = useState({
+        open: false,
+        message: "",
+        severity: "success", // or error,info,warning
+      });
 
   useEffect(() => {
     const getDeclinedAppointments = async () => {
@@ -47,6 +53,13 @@ const SupDeclined = () => {
       setAppointments(data);
     };
     getDeclinedAppointments();
+
+    //Polling every 5 sec
+  const interval = setInterval(getDeclinedAppointments, 5000);
+
+  //Clear polling after component unmount
+  return () => clearInterval(interval);
+
   }, []);
 
   const filteredAppointments = appointments.filter((appointment) =>
@@ -62,6 +75,14 @@ const SupDeclined = () => {
       )
     );
   };
+
+  const showSnackbar = (message, severity) => {
+		setSnackbarInfo({
+			open: true,
+			message,
+			severity,
+		});
+	};
 
   return (
     <Container>
@@ -102,13 +123,18 @@ const SupDeclined = () => {
                <Reason reason={appointment.reason}/>
                   </TableCell>
                   <TableCell>
-                  <WorkloadManager   appointment={appointment} btn_name="update"
-                      updateAppointment={updateAppointmentInState}/>
+                  <WorkloadManager   
+                  appointment={appointment}
+                      updateAppointment={updateAppointmentInState}
+                      showSnackbar={showSnackbar}
+                      />
+                         
                   </TableCell>
                   <TableCell>
                   <TechnicianAssignmentAndStatusUpdater
                       appointment={appointment}
                       updateAppointment={updateAppointmentInState}
+                      showSnackbar={showSnackbar}
                     />
                    
                   </TableCell>
@@ -128,6 +154,12 @@ const SupDeclined = () => {
 
         </Table>
       </TableContainer>
+      <CustomSnackbar
+				open={snackbarInfo.open}
+				message={snackbarInfo.message}
+				action={snackbarInfo.severity}
+				onClose={() => setSnackbarInfo({ ...snackbarInfo, open: false })}
+			/>
     </Container>
   );
 };

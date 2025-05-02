@@ -15,17 +15,12 @@ const CustomSnackbar = ({
       autoHideDuration={duration}
       onClose={onClose}
       anchorOrigin={position}
-      sx={{
-        "& .MuiSnackbarContent-root": {
-          mt: 2, // top margin
-        },
-      }}
     >
       <Alert
         onClose={onClose}
         severity={action}
         variant="filled"
-        sx={{ width: "100%" }}
+        sx={{ width: "100%",mt:5 }}
       >
         {message}
       </Alert>

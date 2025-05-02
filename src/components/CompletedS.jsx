@@ -16,9 +16,10 @@ import IssueViewer from "./sub/IssueView";
 import WhatsAppButton from "./sub/WhatsAppButton";
 import BudgetReview from "./sub/BudgetReview";
 import InvoiceView from "./sub/InvoiceView";
+import CustomSnackbar from "./sub/CustomSnackbar";
 
 const baseURL=import.meta.env.VITE_API_BASE_URL;
-//const API_BASE_URL = "http://localhost:5000/api/appointments";
+
 
 const fetchAppointments = async () => {
   try {
@@ -33,6 +34,13 @@ const fetchAppointments = async () => {
 function CompletedS() {
   const [appointments, setAppointments] = useState([]);
 
+  const [snackbarInfo, setSnackbarInfo] = useState({
+      open: false,
+      message: "",
+      severity: "success", // or error,info,warning
+    });
+  
+
 
   useEffect(() => {
     const getAppointments = async () => {
@@ -42,6 +50,12 @@ function CompletedS() {
      
     };
     getAppointments();
+	//Polling every 5 sec
+  const interval = setInterval(getAppointments, 5000);
+
+  //Clear polling after component unmount
+  return () => clearInterval(interval);
+
   }, []);
 
   const updateAppointmentInState = (updatedAppointment) => {
@@ -51,6 +65,14 @@ function CompletedS() {
       )
     );
   };
+
+  const showSnackbar = (message, severity) => {
+		setSnackbarInfo({
+			open: true,
+			message,
+			severity,
+		});
+	};
 
   return (
     <Container>
@@ -103,6 +125,7 @@ function CompletedS() {
                     appointment={appointment}
                     btn_name="review"
                     updateAppointment={updateAppointmentInState}
+                    showSnackbar={showSnackbar}
                   />
                 </TableCell>
                 <TableCell>
@@ -118,6 +141,12 @@ function CompletedS() {
           </TableBody>
         </Table>
       </TableContainer>
+      <CustomSnackbar
+				open={snackbarInfo.open}
+				message={snackbarInfo.message}
+				action={snackbarInfo.severity}
+				onClose={() => setSnackbarInfo({ ...snackbarInfo, open: false })}
+			/>
     </Container>
   );
 }

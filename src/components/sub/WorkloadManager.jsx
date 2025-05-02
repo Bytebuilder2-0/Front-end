@@ -177,7 +177,10 @@ const WorkloadManager = ({ appointment, updateAppointment,showSnackbar}) => {
             <Button
               variant="contained"
               color="error"
-              onClick={handleCloseModals}
+              onClick={() => {
+                handleCloseModals();
+                showSnackbar("Nothing Changed", "warning");
+              }}
               sx={{ width: "48%" }}
             >
               Cancel
