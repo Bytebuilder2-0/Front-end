@@ -117,7 +117,7 @@ function MiniDrawer() {
 							display: "flex",
 							alignItems: "center",
 							justifyContent: "center",
-							backgroundColor: "#fff", // or match the logo background
+							backgroundColor: "#fff", // match the logo background
 						}}
 					>
 						<img
