@@ -4,7 +4,7 @@ import { Button, Modal, Box, TextField, Typography } from "@mui/material";
 
 const baseURL=import.meta.env.VITE_API_BASE_URL;
 
-const BudgetReview = ({ appointment, updateAppointment, btn_name }) => {
+const BudgetReview = ({ appointment, updateAppointment, btn_name,showSnackbar }) => {
   const [openBudgetModal, setOpenBudgetModal] = useState(false);
   const [budgetAllocations, setBudgetAllocations] = useState([]);
 
@@ -66,9 +66,10 @@ const BudgetReview = ({ appointment, updateAppointment, btn_name }) => {
 
       // Update the parent component with the latest appointment data
       updateAppointment(response.data);
-
+     
       // Update local state with the latest budget
       setBudgetAllocations(response.data.amountAllocations);
+    
     } catch (error) {
       console.error("Error updating budget:", error);
     }
@@ -129,7 +130,10 @@ const BudgetReview = ({ appointment, updateAppointment, btn_name }) => {
             <Button
               variant="contained"
               color="success"
-              onClick={handleBudgetSubmit}
+              onClick={()=>{
+                handleBudgetSubmit();
+                showSnackbar("Budget Reviewed","success");
+              }}
               sx={{ width: "48%" }}
             >
               Submit
@@ -137,7 +141,10 @@ const BudgetReview = ({ appointment, updateAppointment, btn_name }) => {
             <Button
               variant="contained"
               color="error"
-              onClick={handleCloseModals}
+              onClick={()=>{
+                handleCloseModals();
+                showSnackbar("Nothing Changed","warning");
+              }}
               sx={{ width: "48%" }}
             >
               Cancel
