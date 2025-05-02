@@ -100,7 +100,7 @@ function TInprogress() {
       alert("Suggestion Message Send To The Manager!");
     } catch (error) {
       console.error("Error declining appointment:", error);
-      alert("❌ Failed Message Send.");
+      alert(" Failed Message Send.");
     } finally {
       handleCloseDialog();
     }
@@ -135,10 +135,10 @@ function TInprogress() {
         })
       );
   
-      alert("✅ Task marked as completed!");
+      alert("Task marked as completed!");
     } catch (error) {
       console.error("Error completing step:", error.response?.data || error.message);
-      alert("❌ Failed to complete the task.");
+      alert("Failed to complete the task.");
     }
   };
 
@@ -163,10 +163,10 @@ function TInprogress() {
         )
       );
 
-      alert("✅ Appointment completed");
+      alert("Appointment completed");
     } catch (error) {
       console.error("Error confirming appointment:", error);
-      alert("❌ Failed to complete appointment.");
+      alert("Failed to complete appointment.");
     }
   };
   
@@ -214,9 +214,6 @@ function TInprogress() {
                 <strong>Suggestions</strong>
               </TableCell>
               <TableCell>
-                <strong>Supervisor Message</strong>
-              </TableCell>
-              <TableCell>
                 <strong>Status</strong>
               </TableCell>
             </TableRow>
@@ -249,7 +246,6 @@ function TInprogress() {
                           <EditIcon sx={{ fontSize: 28 }} />
                         </IconButton>
                       </TableCell>
-                      <TableCell>{appointment.suggestion}</TableCell>
                       <TableCell>
                         <IconButton
                           onClick={() => handleToggleWorkload(appointment._id)}

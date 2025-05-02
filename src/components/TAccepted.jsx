@@ -69,10 +69,10 @@ function TAcceptedWork() {
         )
       );
 
-      alert("✅ Appointment Started job!");
+      alert("Appointment Started job!");
     } catch (error) {
       console.error("Error starting job:", error);
-      alert("❌ Failed to start appointment.");
+      alert("Failed to start appointment.");
     }
   };
 
@@ -105,10 +105,10 @@ function TAcceptedWork() {
         )
       );
 
-      alert("❌ Appointment Declined!");
+      alert(" Appointment Declined!");
     } catch (error) {
       console.error("Error declining appointment:", error);
-      alert("❌ Failed to decline appointment.");
+      alert(" Failed to decline appointment.");
     } finally {
       handleCloseDialog();
     }
@@ -187,10 +187,11 @@ function TAcceptedWork() {
                       <TableCell>{appointment.vehicleId}</TableCell>
                       <TableCell>{appointment.vehicleNumber}</TableCell>
                       <TableCell>
-                        {appointment.expectedDeliveryDate}
-                        {/* {new Date(
-                        appointment.appointmentDate
-                      ).toLocaleDateString()} */}
+                      {new Date(appointment.expectedDeliveryDate).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
                       </TableCell>
                       <TableCell>{appointment.issue}</TableCell>
                       <TableCell>
