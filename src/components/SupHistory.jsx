@@ -13,6 +13,7 @@ import {
   TextField,
 } from "@mui/material";
 import IssueViewer from "./sub/IssueView";
+import InvoiceView from "./sub/InvoiceView";
 
 const baseURL=import.meta.env.VITE_API_BASE_URL;
 //const API_BASE_URL = "http://localhost:5000/api/appointments";
@@ -66,6 +67,7 @@ const SupHistory = () => {
               <TableCell><strong>Model</strong></TableCell>
               <TableCell><strong>Issue</strong></TableCell>
               <TableCell><strong>Exp. Delivery</strong></TableCell>
+              <TableCell>Invoice</TableCell>
               <TableCell><strong>Status</strong></TableCell>
             </TableRow>
           </TableHead>
@@ -84,6 +86,9 @@ const SupHistory = () => {
                       month: "short",
                       day: "numeric",
                     })}
+                  </TableCell>
+                  <TableCell>
+                    <InvoiceView appointment={appointment}/>
                   </TableCell>
                   <TableCell>
                     <span
