@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Button, Modal, Box, TextField, Typography } from "@mui/material";
 
+const baseURL=import.meta.env.VITE_API_BASE_URL;
+
 const SuggestionWriting = ({ appointment, updateAppointment }) => {
   const [openSuggestionModal, setOpenSuggestionModal] = useState(false);
   const [suggestion, setSuggestion] = useState(appointment?.suggestion || "");
@@ -23,7 +25,7 @@ const SuggestionWriting = ({ appointment, updateAppointment }) => {
       console.log("Sending Suggestion Update:", suggestion, "for Appointment ID:", appointment._id);
 
       const response = await axios.put(
-        `http://localhost:5000/api/appointments/${appointment._id}/suggestions`,
+        `${baseURL}/appointments/${appointment._id}/suggestions`,
         { suggestion }
       );
 
@@ -45,7 +47,7 @@ const SuggestionWriting = ({ appointment, updateAppointment }) => {
     if (!appointment) return;
   
     try {
-      const response = await axios.get(`http://localhost:5000/api/appointments/${appointment._id}`);
+      const response = await axios.get(`${baseURL}/appointments/${appointment._id}`);
       
       if (response.data && response.data.suggestion !== undefined) {
         setSuggestion(response.data.suggestion);

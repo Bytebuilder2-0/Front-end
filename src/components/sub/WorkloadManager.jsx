@@ -11,6 +11,8 @@ import {
 import { Add, Delete } from "@mui/icons-material";
 import EditIcon from '@mui/icons-material/Edit';
 
+const baseURL=import.meta.env.VITE_API_BASE_URL;
+
 const WorkloadManager = ({ appointment, updateAppointment,showSnackbar}) => {
 
   const [openWorkloadModal, setOpenWorkloadModal] = useState(false);
@@ -26,7 +28,7 @@ const WorkloadManager = ({ appointment, updateAppointment,showSnackbar}) => {
 
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/appointments/${appointment._id}/workload`
+        `${baseURL}/appointments/${appointment._id}/workload`
       );
       setWorkload(response.data.workload); // Ensure fresh data is fetched
       setOpenWorkloadModal(true);
@@ -73,13 +75,13 @@ const WorkloadManager = ({ appointment, updateAppointment,showSnackbar}) => {
 
     try {
       await axios.put(
-        `http://localhost:5000/api/appointments/${appointment._id}/workload`,
+        `${baseURL}/appointments/${appointment._id}/workload`,
         { workload }
       );
       setOpenWorkloadModal(false);//close model here ..otherwise it will delay to get close if we put it bottom
       // Fetch updated appointment details
       const { data } = await axios.get(
-        `http://localhost:5000/api/appointments/${appointment._id}`
+        `${baseURL}/appointments/${appointment._id}`
       );
 
       updateAppointment(data); // Update parent state
