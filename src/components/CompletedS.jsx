@@ -17,11 +17,12 @@ import WhatsAppButton from "./sub/WhatsAppButton";
 import BudgetReview from "./sub/BudgetReview";
 import InvoiceView from "./sub/InvoiceView";
 
-const API_BASE_URL = "http://localhost:5000/api/appointments";
+const baseURL=import.meta.env.VITE_API_BASE_URL;
+//const API_BASE_URL = "http://localhost:5000/api/appointments";
 
 const fetchAppointments = async () => {
   try {
-    const response = await axios.get(API_BASE_URL);
+    const response = await axios.get(`${baseURL}/appointments`);
     return response.data.filter((appt) => appt.status === "Task Done");
   } catch (error) {
     console.error("Error fetching appointments:", error);

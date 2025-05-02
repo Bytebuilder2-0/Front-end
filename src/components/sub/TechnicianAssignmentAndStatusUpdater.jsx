@@ -3,6 +3,8 @@ import axios from "axios";
 import { Select, MenuItem, Button } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 
+const baseURL=import.meta.env.VITE_API_BASE_URL;
+
 const TechnicianAssignmentAndStatusUpdater = ({ appointment, updateAppointment, showSnackbar }) => {
 	//All technicians
 	const [technicians, setTechnicians] = useState([]);
@@ -17,7 +19,7 @@ const TechnicianAssignmentAndStatusUpdater = ({ appointment, updateAppointment, 
 	useEffect(() => {
 		async function fetchTechnicians() {
 			try {
-				const response = await axios.get("http://localhost:5000/api/technicians");
+				const response = await axios.get(`${baseURL}/technicians`);
 				setTechnicians(response.data);
 			} catch (error) {
 				console.error("Error fetching technicians:", error);
@@ -33,7 +35,7 @@ const TechnicianAssignmentAndStatusUpdater = ({ appointment, updateAppointment, 
 		setSelectedTechnician(technicianId);
 
 		try {
-			await axios.put(`http://localhost:5000/api/appointments/${appointment._id}/assign2`, {
+			await axios.put(`${baseURL}/appointments/${appointment._id}/assign2`, {
 				technicianId,
 			});
 
@@ -54,7 +56,7 @@ const TechnicianAssignmentAndStatusUpdater = ({ appointment, updateAppointment, 
 		if (!techAssigned || status === "Waiting for Technician Confirmation") return;
 
 		try {
-			await axios.put(`http://localhost:5000/api/appointments/${appointment._id}/statusUpdate`, {
+			await axios.put(`${baseURL}/appointments/${appointment._id}/statusUpdate`, {
 				status: "Waiting for Technician Confirmation",
 			});
 

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Button, Modal, Box, TextField, Typography } from "@mui/material";
 
+const baseURL=import.meta.env.VITE_API_BASE_URL;
+
 const BudgetReview = ({ appointment, updateAppointment, btn_name }) => {
   const [openBudgetModal, setOpenBudgetModal] = useState(false);
   const [budgetAllocations, setBudgetAllocations] = useState([]);
@@ -15,7 +17,7 @@ const BudgetReview = ({ appointment, updateAppointment, btn_name }) => {
 
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/budget/${appointment._id}/view`
+        `${baseURL}/budget/${appointment._id}/view`
       );
       setBudgetAllocations(response.data.amountAllocations);
       setOpenBudgetModal(true);
@@ -52,7 +54,7 @@ const BudgetReview = ({ appointment, updateAppointment, btn_name }) => {
       // Send the entire budget allocation array in one request
       for (const allocation of budgetAllocations) {
         await axios.put(
-          `http://localhost:5000/api/budget/${appointment._id}/update`,
+          `${baseURL}/budget/${appointment._id}/update`,
           { step: allocation.step, amount: allocation.amount }
         );
       }

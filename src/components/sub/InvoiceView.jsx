@@ -15,6 +15,9 @@ import {
   Button,
 } from "@mui/material";
 
+
+const baseURL=import.meta.env.VITE_API_BASE_URL;
+
 function InvoiceView({appointment}) {
   const [open, setOpen] = useState(false);
   const [budget, setBudget] = useState(null);
@@ -22,7 +25,7 @@ function InvoiceView({appointment}) {
   const fetchBudget = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/budget/${appointment._id}/view`
+        `${baseURL}/budget/${appointment._id}/view`
       );
       setBudget(response.data || {});
       setOpen(true);

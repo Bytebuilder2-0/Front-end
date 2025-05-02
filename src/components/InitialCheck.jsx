@@ -24,13 +24,14 @@ import ConfirmationDialog from "./sub/Confirmation";
 import CustomSnackbar from "./sub/CustomSnackbar";
 
 // API Base URL
-const API_BASE_URL = "http://localhost:5000/api/appointments";
+const baseURL=import.meta.env.VITE_API_BASE_URL;
+//const API_BASE_URL = "http://localhost:5000/api/appointments";
 
 // Fetch only "Pending" appointments
 const fetchAppointments = async () => {
 	try {
 		//full axios response object
-		const response = await axios.get(API_BASE_URL);
+		const response = await axios.get(`${baseURL}/appointments`);
 
 		// Fetch only pending ones -- Array of json objects
 		return response.data.reverse().filter((appointment_obj) => appointment_obj.status === "Pending");
@@ -45,7 +46,7 @@ const fetchAppointments = async () => {
 // Update appointment status and remove from current table
 const updateAppointmentStatus = async (appointmentId, newStatus, setAppointments) => {
 	try {
-		await axios.put(`${API_BASE_URL}/${appointmentId}/statusUpdate`, {
+		await axios.put(`${baseURL}/appointments/${appointmentId}/statusUpdate`, {
 			status: newStatus,
 		});
 

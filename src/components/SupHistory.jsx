@@ -14,12 +14,13 @@ import {
 } from "@mui/material";
 import IssueViewer from "./sub/IssueView";
 
-const API_BASE_URL = "http://localhost:5000/api/appointments";
+const baseURL=import.meta.env.VITE_API_BASE_URL;
+//const API_BASE_URL = "http://localhost:5000/api/appointments";
 
 // Fetch only "Paid" appointments
 const fetchPaidAppointments = async () => {
   try {
-    const response = await axios.get(API_BASE_URL);
+    const response = await axios.get(`${baseURL}/appointments`);
     return response.data.reverse().filter((appt) => appt.status === "Paid");
   } catch (error) {
     console.error("Error fetching paid appointments:", error);

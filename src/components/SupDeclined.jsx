@@ -20,12 +20,13 @@ import Reason from "./sub/Reason";
 
 
 // API Base URL
-const API_BASE_URL = "http://localhost:5000/api/appointments";
+const baseURL=import.meta.env.VITE_API_BASE_URL;
+//const API_BASE_URL = "http://localhost:5000/api/appointments";
 
 // Fetch only "Reject2" appointments
 const fetchDeclinedAppointments = async () => {
   try {
-    const response = await axios.get(API_BASE_URL);
+    const response = await axios.get(`${baseURL}/appointments`);
     return response.data.reverse().filter((appt) => appt.status === "Reject2");
   } catch (error) {
     console.error("Error fetching declined appointments:", error);

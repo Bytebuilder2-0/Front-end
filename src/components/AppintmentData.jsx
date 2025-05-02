@@ -20,12 +20,13 @@ import TechnicianAssignmentAndStatusUpdater from "./sub/TechnicianAssignmentAndS
 import CustomSnackbar from "./sub/CustomSnackbar";
 
 // API Base URL
-const API_BASE_URL = "http://localhost:5000/api/appointments";
+const baseURL=import.meta.env.VITE_API_BASE_URL;
+//const API_BASE_URL = "http://localhost:5000/api/appointments";
 
 // Fetch all appointments
 const fetchAppointments = async () => {
 	try {
-		const response = await axios.get(API_BASE_URL);
+		const response = await axios.get(`${baseURL}/appointments`);
 		return response.data
 			.reverse()
 			.filter((x) => x.status === "Confirmed" || x.status === "Waiting for Technician Confirmation"); // Latest first
