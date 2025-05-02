@@ -211,8 +211,7 @@ export default function UserMiniDrawer({userId}) {
                 .filter(appt => !['Cancelled', 'All done'].includes(appt?.status))
                 .map((appt) => ({
                   path: `/appointments/${appt._id}`,
-                  label: appt.model || `Vehicle ${appt._id.substring(0, 4)}`, // Fallback to partial ID if no model
-                  status: appt.status,
+                  label: appt.model                     // Fallback to partial ID if no model
                 }))
             },
             {path : "" , label: "History", icon: <HistoryIcon/> },

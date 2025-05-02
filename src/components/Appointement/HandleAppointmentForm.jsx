@@ -3,7 +3,12 @@ import axios from 'axios';
 
 const HandleAppointmentForm = (userId) => {
 
-  const [vehicles, setVehicles] = useState([]);
+  const API_URL_VEHI = `http://localhost:5000/api/appointments/vehicles/${userId}`
+  const API_URL_SERVI = 'http://localhost:5000/api/appointments/services'
+  const API_URL_User_APPOIN = `http://localhost:5000/api/appointments/user/${userId}`
+  const API_URL_APPOIN   = `http://localhost:5000/api/appointments/${userId}`
+
+  const [vehicles, setVehicles] = useState([]);     //state initialization
   const [services, setServices] = useState([]);
   const [formData, setFormData] = useState({
     vehicleObject: '',
@@ -19,46 +24,42 @@ const HandleAppointmentForm = (userId) => {
   const [errors, setErrors] = useState({});
   const [disabledVehicles, setDisabledVehicles] = useState([]); //Track vehicles with active appointments
 
+//data fetching 
+
   const fetchData = async () => {
-    try {
-      console.log('Fetching data for user:', userId);
-      
-      const vehiclesResponse = await axios.get(
-        `http://localhost:5000/api/appointments/vehicles/${userId}`
-      );
+    try {   
+
+      const vehiclesResponse = await axios.get(API_URL_VEHI);      //set vehicles related user
       console.log('Vehicles response:', vehiclesResponse.data);
       setVehicles(vehiclesResponse.data);
 
-      const servicesResponse = await axios.get('http://localhost:5000/api/appointments/services');
+      const servicesResponse = await axios.get(API_URL_SERVI);   //set services
       setServices(servicesResponse.data);
 
-        const appointmentsResponse = await axios.get(
-          `http://localhost:5000/api/appointments/user/${userId}`
-        );
-        console.log('Appointments response:', appointmentsResponse.data);
+      const appointmentsResponse = await axios.get(API_URL_User_APPOIN);    //set appoinments related user
+      console.log('Appointments response:', appointmentsResponse.data);
+    
 
-        const activeAppointments = appointmentsResponse.data.data.filter(
+      const activeAppointments = appointmentsResponse.data.data.filter(          //Filter appoinments except status 'paid','cancelled'
           appointment => !["Paid", "Cancelled"].includes(appointment.status)
-        );
-        console.log('Active appointments:', activeAppointments);
+      );
+      console.log('Active appointments:', activeAppointments);
 
-        const disabledVehicleIds = activeAppointments.map(app => app.vehicleObject);
-        const statusMap = {};
-        activeAppointments.forEach(app => {
-        statusMap[app.vehicleObject] = app.status;
-});
+      const disabledVehicleIds = activeAppointments.map(app => app.vehicleObject);      //Map vehicles from active appoinments
+
       console.log('Disabled vehicles:', disabledVehicleIds);
-      console.log('Status map:', statusMap);
-        setDisabledVehicles(disabledVehicleIds);
+      setDisabledVehicles(disabledVehicleIds);
  
     } catch (error) {
       console.error('Error fetching data:',  error.response ? error.response.data : error.message);
     }
   };
 
+  //input hadling
+
   const handleVehicleChange = (e) => {
     const vehicleObject = e.target.value;
-    const selectedVehicle = vehicles.find(v => v._id === vehicleObject);
+    const selectedVehicle = vehicles.find(v => v._id === vehicleObject);    //find selected vehilce(one by one)
     
     setFormData({
       ...formData,
@@ -111,14 +112,11 @@ useEffect(() => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    
-    if (!validateForm()) return;
+    if (!validateForm()) return;      //called to if form valid or not
 
     try {
-      const response = await axios.post(
-        `http://localhost:5000/api/appointments/${userId}`,
-        formData
-      );
+      const response = await axios.post( API_URL_APPOIN , formData );
+
         setDisabledVehicles([...disabledVehicles, formData.vehicleObject]);
         await fetchData();
       

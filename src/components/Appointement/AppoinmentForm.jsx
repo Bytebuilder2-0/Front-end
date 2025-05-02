@@ -25,7 +25,7 @@ const AppointmentSubmit = ({userId}) => {
   
   const navigate = useNavigate(); 
   const [showAlert, setShowAlert] = useState(false);
-  const [createdAppointment, setCreatedAppointment] = useState(null); // Store created appointment data
+  const [createdAppointment, setCreatedAppointment] = useState(null);
 
  useEffect(() => {
     fetchData();
@@ -35,12 +35,12 @@ const handleFormSubmit = async (e) => {
   e.preventDefault();
   console.log('Form submitted', formData);
 
-  const object = await handleSubmit(e); // Call handleSubmit and get the created appointment
+  const object = await handleSubmit(e);                             // Call handleSubmit and get the created appointment
   console.log('Created Appointment ID:', object.appointment._id);
 
   if (object) {
-    setShowAlert(true); // Show success alert
-    setCreatedAppointment(object); // Store the created appointment data
+    setShowAlert(true);                                 
+    setCreatedAppointment(object);      // Store the created appointment data
     
   } else {
     console.error('Appointment creation failed'); 
@@ -98,6 +98,7 @@ const handleAlertClose = () => {
           {/* Service Selection */}
           <FormControl fullWidth margin="normal" error={!!errors.services}>
             <InputLabel>Select Services</InputLabel>
+
             <Select
               multiple
               value={formData.services}
@@ -124,6 +125,8 @@ const handleAlertClose = () => {
             name="issue"
             value={formData.issue}
             onChange={handleInputChange}
+            error={!!errors.issue}
+            helperText={errors.issue}
             multiline
             rows={4}
           />

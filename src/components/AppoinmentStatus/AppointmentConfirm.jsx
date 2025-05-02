@@ -13,19 +13,19 @@ const AppointmentConfirm = ({ appointment, onCancel }) => {
     severity: 'success'
   });
   const [isCancelling, setIsCancelling] = useState(false);
-  const navigate = useNavigate();
 
-  const handleCancelClick = () => setOpenConfirm(true);
 
-  const updateAppointmentStatus = async (newStatus) => {
+  const handleCancelClick = () => setOpenConfirm(true);          // When user clicks "Cancel Booking" button, open confirmation dialog
+
+  const updateAppointmentStatus = async (newStatus) => {           // Function to update appointment status (used to cancel the booking)
+
     setIsCancelling(true);
+
     try {
       const response = await axios.put(
         `http://localhost:5000/api/appointments/${appointment._id}/statusUpdate`,
         { status: newStatus }
       );
-
-      
       setSnackbar({
         open: true,
         message: `Appointment ${newStatus.toLowerCase()} successfully`,
@@ -33,7 +33,7 @@ const AppointmentConfirm = ({ appointment, onCancel }) => {
       });
 
       // Wait for user to see the message before proceeding
-      setTimeout(() => {
+      setTimeout(() => {                                // After short delay, trigger onCancel callback to refresh data
         if (typeof onCancel === 'function') {
           onCancel(appointment._id);
         }
@@ -41,9 +41,9 @@ const AppointmentConfirm = ({ appointment, onCancel }) => {
     
     } catch (error) {
       console.error('Error updating appointment:', error);
-      setSnackbar({
-        open: true,
-        message: `Failed to update appointment: ${error.response?.data?.message || error.message}`,
+      setSnackbar({                                                              // If API call fails, show error message
+        open: true, 
+        message: "Failed to update appointment",
         severity: 'error'
       });
     }
@@ -52,7 +52,7 @@ const AppointmentConfirm = ({ appointment, onCancel }) => {
     }
   };
 
-  const handleConfirmCancel = () => {
+  const handleConfirmCancel = () => { 
     updateAppointmentStatus('Cancelled');
     setOpenConfirm(false);
   };
@@ -96,20 +96,21 @@ const AppointmentConfirm = ({ appointment, onCancel }) => {
         }
       }}>
    <Typography 
-  variant="body1" 
-  sx={{
-    textAlign: 'center',
-    fontStyle: 'italic',
-    color: 'text.secondary',
-    fontSize: "18px",
-    mb: 3,
-    lineHeight: 1.6
-  }}
->
-  Your appointment has been confirmed. Thank you for choosing us!
-</Typography>
-         <div>
-          <Typography variant="subtitle1" sx={{ fontWeight: '800',fontSize: '20px' }}>Appointment Id  : {appointment.appointmentId}</Typography>
+        variant="body1" 
+        sx={{
+          textAlign: 'center',
+          fontStyle: 'italic',
+          color: 'text.secondary',
+          fontSize: "18px",
+          mb: 3,
+          lineHeight: 1.6
+  }}>
+
+       Your appointment has been confirmed. Thank you for choosing us!
+   </Typography> 
+   
+          <div>
+          <Typography variant="subtitle1" sx={{ fontWeight: '800',fontSize: '20px' }}>Vehicle Id  : {appointment.vehicleId}</Typography>
        
         </div>
         <Divider sx={{ my: 2, borderBottomWidth: 3 }} /> 

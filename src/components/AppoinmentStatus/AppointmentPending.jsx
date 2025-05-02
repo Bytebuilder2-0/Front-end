@@ -29,6 +29,7 @@ const AppointmentPending = ({ appointment, onCancel }) => {
   const updateAppointmentStatus = async (newStatus) => {
     setIsCancelling(true);
     try {
+      
       const response = await axios.put(
         `http://localhost:5000/api/appointments/${appointment._id}/statusUpdate`,
         { status: newStatus }
@@ -92,7 +93,7 @@ const AppointmentPending = ({ appointment, onCancel }) => {
 
       {/* Title */}
       <Typography variant="h6" fontWeight="bold" gutterBottom>
-        Appointment ID : {appointment.appointmentId}
+        Vehicle ID : {appointment.vehicleId}
       </Typography>
 
       

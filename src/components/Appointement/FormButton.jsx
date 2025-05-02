@@ -14,32 +14,26 @@ const FormButtons = ({
 
       <Grid item 
        sx={{
-        width : '50%',
-
-      }}>
-
+        width : '50%',}}>
         <Button 
           variant="outlined"
           onClick={onReset}
           color={resetColor}
           sx={{
-            width : '100%',    
-            
+            width : '100%',                
             '&:hover': {
               backgroundColor: 'red', 
               color: 'white'
             },
-          }}
-        >
+          }}>
           {resetLabel}
         </Button>
-
-
       </Grid>
+
+      
       <Grid item
        sx={{
-        width : '50%'
-      }}>
+        width : '50%'}}>
      
         <Button 
           type="submit" 
