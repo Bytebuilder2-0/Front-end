@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const LoginSignupNavbar = () => {
   return (
-    <AppBar position="static" sx={{ backgroundColor: ' #558b2f' }}>
+    <AppBar position="static" sx={{ backgroundColor: '#558b2f' }}>
       <Toolbar>
         <Box sx={{ flexGrow: 1 }}>
           <Link to="/">
@@ -15,14 +15,11 @@ const LoginSignupNavbar = () => {
             />
           </Link>
         </Box>
-        {/* <Box>
-          <Button color="inherit" component={Link} to="/Loginpage" sx={{ marginRight: 2 }}>
-            Login
+        <Box>
+          <Button color="inherit" component={Link} to="/VehicleForm">
+            Add Vehicle
           </Button>
-          <Button color="inherit" component={Link} to="/SignupPage">
-            Sign Up
-          </Button>
-        </Box> */}
+        </Box>
       </Toolbar>
     </AppBar>
   );

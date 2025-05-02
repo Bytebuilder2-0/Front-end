@@ -18,17 +18,20 @@ const LoginForm = () => {
 		setError("");
 
 		try {
-			const response = await axios.post("http://localhost:5000/api/auth/login", {
+			const response = await axios.post("http://localhost:5000/api/auth/login", {  //endpoint ek change karann passe
 				email,
 				password,
-			});
+			}); 
+			
 
 			const { token, user } = response.data;
 			const role = user.role.toLowerCase();
 
-			localStorage.setItem("token", token);
-			localStorage.setItem("role", role);
+			localStorage.setItem("token", token); 
+			localStorage.setItem("role", role); 
 			setUser({ token, role });
+
+			
 
 			if (role === "manager") navigate("/ManagerDashboard");
 			else if (role === "technician") navigate("/TDashboard");
@@ -48,7 +51,7 @@ const LoginForm = () => {
 				sx={{
 					display: "flex",
 					minHeight: "100vh",
-					backgroundImage: "url(/assets/man2.webp)", // 👈 Replace with your image path
+					backgroundImage: "url(/assets/man2.webp)", 
 					backgroundSize: "cover",
 					backgroundPosition: "center",
 					alignItems: "center",
@@ -129,7 +132,7 @@ const LoginForm = () => {
 								backgroundColor: "#388e3c",
 								"&:hover": {
 									backgroundColor: "#7cc05d",
-								},
+								}, 
 							}}
 						>
 							Login

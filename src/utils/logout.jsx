@@ -9,7 +9,7 @@ const useLogout = () => {
     const token = localStorage.getItem('token');
 
     try {
-      await axios.post('http://localhost:4880/api/auth/logout', {}, {
+      await axios.post('${process.env.VITE_API_BASE_URL}/auth/logout', {}, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

@@ -38,7 +38,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <HomePage />,  // <-- Replace HomePage with your real Home component
+    element: <HomePage />,
   },
   
   {
@@ -114,11 +114,14 @@ const router = createBrowserRouter([
 },
 {
       path: "/ManageServices",
-      element: <ManageServices/>,
+      element: 
+      <ManageServices/>,
     },
 {
       path: "/ManagerDashboard",
-      element: <ManagerDashboardPage/>,
+      element: <protectedRoute allowedRoles={["manager"]} >
+      <ManagerDashboardPage/></protectedRoute>,
+      
     }  ,
     {
       path: "/ManagerHistory",

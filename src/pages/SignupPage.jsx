@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { useSignup } from "../hooks/useSignup";
-import { useAuthContext } from "../hooks/useAuthContext";
+//import { useSignup } from "../hooks/useSignup";
+//import { useAuthContext } from "../hooks/useAuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import {
   TextField,
@@ -42,6 +42,7 @@ const Signup = () => {
 
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(""); // Define successMessage state
   const { signup, error, isLoading } = useSignup();
 
   const isSpecialRole = ["technician", "manager", "Supervisor"].includes(
@@ -91,10 +92,10 @@ const Signup = () => {
       // await signup(formData.email, formData.fullName, formData.userName, formData.phone, formData.password, formData.confirmPassword, formData.role);
 
       const res = await axios.post(
-        "http://localhost:5000/api/auth/register",
+        'http://localhost:5000/api/auth/register',
         payload
       );
-      alert("Signup successful!");
+      setSuccessMessage("Signup successful! please login to continue"); // Set success message
       console.log(res);
       setFormData({
         email: "",
@@ -308,6 +309,12 @@ const Signup = () => {
               </Grid>
             </Grid>
           </form>
+          {/* Display success message */}
+          {successMessage && (
+            <Typography variant="h6" color="primary" align="center" sx={{ mt: 2 }}>
+              {successMessage}
+            </Typography>
+          )}
         </Paper>
       </Container>
     </>
@@ -315,3 +322,4 @@ const Signup = () => {
 };
 
 export default Signup;
+
