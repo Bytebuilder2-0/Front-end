@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Container, Box } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Container, Box,TextField } from "@mui/material";
 
 import IssueViewer from "./sub/IssueView";
 import TechMessageView from "./sub/TechMessageView";
@@ -25,6 +25,7 @@ const fetchAppointments = async () => {
 
 const SupInprogress = () => {
 	const [appointments, setAppointments] = useState([]);
+	const [searchTerm, setSearchTerm] = useState("");
 
 	const [snackbarInfo, setSnackbarInfo] = useState({
 		open: false,
@@ -52,6 +53,10 @@ const SupInprogress = () => {
 		);
 	};
 
+	const filteredAppointments = appointments.filter((appointment) =>
+		(appointment.vehicleId || "").toLowerCase().includes(searchTerm.toLowerCase())
+	);
+
 	const showSnackbar = (message, severity) => {
 		setSnackbarInfo({
 			open: true,
@@ -63,6 +68,15 @@ const SupInprogress = () => {
 	return (
 		<Container>
 			<Box display="flex" justifyContent="space-between" alignItems="center" mb={2} mt={2}></Box>
+			<Box display="flex" justifyContent="right" alignItems="center" mb={2}>
+				<TextField
+					label="Search by Vehicle ID"
+					variant="outlined"
+					size="small"
+					value={searchTerm}
+					onChange={(e) => setSearchTerm(e.target.value)}
+				/>
+			</Box>
 			<TableContainer component={Paper} sx={{ marginTop: 2 }}>
 				<Table>
 					<TableHead>
@@ -88,35 +102,44 @@ const SupInprogress = () => {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{appointments.map((appointment) => (
-							<TableRow key={appointment._id}>
-								<TableCell>{appointment.vehicleId}</TableCell>
-								<TableCell>{appointment.vehicleNumber}</TableCell>
-								<TableCell>
-									<IssueViewer issue={appointment.issue} />
-								</TableCell>
-								<TableCell>
-									<TechMessageView x={appointment.techMessage} />
-								</TableCell>
-								<TableCell>
-									<SuggestionWriting
-										appointment={appointment}
-										updateAppointment={updateAppointmentInState}
-										showSnackbar={showSnackbar}
-									/>
-								</TableCell>
-								<TableCell>
-									<WorkloadManager
-										appointment={appointment}
-										updateAppointment={updateAppointmentInState}
-										showSnackbar={showSnackbar}
-									/>
-								</TableCell>
-								<TableCell>
-									<WhatsAppButton phone={appointment.contactNumber} />
+						{filteredAppointments.length > 0 ? (
+							filteredAppointments.map((appointment) => (
+								<TableRow key={appointment._id}>
+									<TableCell>{appointment.vehicleId}</TableCell>
+									<TableCell>{appointment.vehicleNumber}</TableCell>
+									<TableCell>
+										<IssueViewer issue={appointment.issue} />
+									</TableCell>
+									<TableCell>
+										<TechMessageView x={appointment.techMessage} />
+									</TableCell>
+									<TableCell>
+										<SuggestionWriting
+											appointment={appointment}
+											updateAppointment={updateAppointmentInState}
+											showSnackbar={showSnackbar}
+										/>
+									</TableCell>
+									<TableCell>
+										<WorkloadManager
+											appointment={appointment}
+											updateAppointment={updateAppointmentInState}
+											showSnackbar={showSnackbar}
+										/>
+									</TableCell>
+									<TableCell>
+										<WhatsAppButton phone={appointment.contactNumber} />
+									</TableCell>
+								</TableRow>
+							))
+						) : (
+							//If no Filtered Items
+							<TableRow>
+								<TableCell colSpan={6} align="center">
+									No Appointments Founded
 								</TableCell>
 							</TableRow>
-						))}
+						)}
 					</TableBody>
 				</Table>
 			</TableContainer>

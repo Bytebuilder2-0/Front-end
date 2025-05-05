@@ -126,7 +126,7 @@ const InitialCheck = () => {
 					</TableHead>
 					<TableBody>
 						{filteredAppointments.length > 0 ? (
-							filteredAppointments.map((appointment, index) => (
+							filteredAppointments.map((appointment) => (
 								<TableRow key={appointment._id}>
 									<TableCell>{appointment.vehicleId}</TableCell>
 									<TableCell>{appointment.model}</TableCell>

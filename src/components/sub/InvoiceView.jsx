@@ -66,7 +66,7 @@ function InvoiceView({appointment}) {
                                 <TableRow key={index}>
                                   <TableCell>{item.step}</TableCell>
                                   <TableCell>{item.des}</TableCell>
-                                  <TableCell>${item.amount}</TableCell>
+                                  <TableCell>LKR {item.amount}</TableCell>
                                 </TableRow>
                               ))}
                             </TableBody>
