@@ -15,7 +15,11 @@ const StatusSummary = () => {
 	useEffect(() => {
 		const fetchCounts = async () => {
 			try {
-				const response = await axios.get(`${baseURL}/appointments/statusCounts`);
+				const response = await axios.get(`${baseURL}/appointments/statusCounts`,{
+					headers:{
+						Authorization: `Bearer ${localStorage.getItem('token')}`
+					}
+				});
 				setCounts(response.data);
 			} catch (error) {
 				console.error("Error fetching appointment counts:", error);
