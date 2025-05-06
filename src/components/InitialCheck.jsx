@@ -27,7 +27,11 @@ const baseURL = import.meta.env.VITE_API_BASE_URL;
 // Fetch only "Pending" appointments
 const fetchAppointments = async () => {
 	try {
-		const response = await axios.get(`${baseURL}/appointments`);
+		const response = await axios.get(`${baseURL}/appointments`, {
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+			},
+		});
 
 		return response.data.reverse().filter((appointment_obj) => appointment_obj.status === "Pending");
 	} catch (error) {
@@ -41,9 +45,17 @@ const fetchAppointments = async () => {
 // Update appointment status and remove from current table
 const updateAppointmentStatus = async (appointmentId, newStatus, setAppointments) => {
 	try {
-		await axios.put(`${baseURL}/appointments/${appointmentId}/statusUpdate`, {
-			status: newStatus,
-		});
+		await axios.put(
+			`${baseURL}/appointments/${appointmentId}/statusUpdate`,
+			{
+				status: newStatus,
+			},
+			{
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+			}
+		);
 
 		// Remove updated appointment
 		setAppointments((appointments) => {
