@@ -25,7 +25,11 @@ const baseURL=import.meta.env.VITE_API_BASE_URL;
 // Fetch all appointments(status=confirmed,waiting for technician confirmation)
 const fetchAppointments = async () => {
 	try {
-		const response = await axios.get(`${baseURL}/appointments`);
+		const response = await axios.get(`${baseURL}/appointments`,{
+			headers:{
+				Authorization: `Bearer ${localStorage.getItem('token')}`
+			}
+		});
 		return response.data
 			.reverse()
 			.filter((x) => x.status === "Confirmed" || x.status === "Waiting for Technician Confirmation"); // Latest first

@@ -28,7 +28,11 @@ const WorkloadManager = ({ appointment, updateAppointment,showSnackbar}) => {
 
     try {
       const response = await axios.get(
-        `${baseURL}/appointments/${appointment._id}/workload`
+        `${baseURL}/appointments/${appointment._id}/workload`,{
+					headers:{
+						Authorization: `Bearer ${localStorage.getItem('token')}`
+					}
+				}
       );
       setWorkload(response.data.workload); // Ensure fresh data is fetched
       setOpenWorkloadModal(true);
@@ -76,12 +80,20 @@ const WorkloadManager = ({ appointment, updateAppointment,showSnackbar}) => {
     try {
       await axios.put(
         `${baseURL}/appointments/${appointment._id}/workload`,
-        { workload }
+        { workload },{
+					headers:{
+						Authorization: `Bearer ${localStorage.getItem('token')}`
+					}
+				}
       );
       setOpenWorkloadModal(false);//close model here ..otherwise it will delay to get close if we put it bottom
       // Fetch updated appointment details
       const { data } = await axios.get(
-        `${baseURL}/appointments/${appointment._id}`
+        `${baseURL}/appointments/${appointment._id}`,{
+					headers:{
+						Authorization: `Bearer ${localStorage.getItem('token')}`
+					}
+				}
       );
 
       updateAppointment(data); // Update parent state
