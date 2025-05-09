@@ -20,9 +20,13 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import IssueViewer from "./sub/IssueView";
 import ConfirmationDialog from "./sub/Confirmation";
 import CustomSnackbar from "./sub/CustomSnackbar";
+import { jwtDecode } from "jwt-decode";
 
 // API Base URL
 const baseURL = import.meta.env.VITE_API_BASE_URL;
+
+const decoded = jwtDecode(localStorage.getItem("token"));
+console.log(decoded.id);
 
 // Fetch only "Pending" appointments
 const fetchAppointments = async () => {
@@ -33,7 +37,9 @@ const fetchAppointments = async () => {
 			},
 		});
 
-		return response.data.reverse().filter((appointment_obj) => appointment_obj.status === "Pending");
+		return response.data
+			.reverse()
+			.filter((appointment_obj) => appointment_obj.status === "Pending");
 	} catch (error) {
 		console.error("Error fetching appointments:", error);
 
@@ -43,7 +49,12 @@ const fetchAppointments = async () => {
 };
 
 // Update appointment status and remove from current table
-const updateAppointmentStatus = async (appointmentId, newStatus, setAppointments) => {
+const updateAppointmentStatus = async (
+	appointmentId,
+	newStatus,
+	supervised,
+	setAppointments
+) => {
 	try {
 		await axios.put(
 			`${baseURL}/appointments/${appointmentId}/statusUpdate`,
@@ -57,9 +68,23 @@ const updateAppointmentStatus = async (appointmentId, newStatus, setAppointments
 			}
 		);
 
+		await axios.put(
+			`${baseURL}/appointments/${appointmentId}/superby`,
+			{
+				sconfirmedBy: supervised,
+			},
+			{
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+			}
+		);
+
 		// Remove updated appointment
 		setAppointments((appointments) => {
-			return appointments.filter((appointment_obj) => appointment_obj._id !== appointmentId);
+			return appointments.filter(
+				(appointment_obj) => appointment_obj._id !== appointmentId
+			);
 		});
 	} catch (error) {
 		console.error(`Error updating appointment status to ${newStatus}:`, error);
@@ -112,7 +137,10 @@ const InitialCheck = () => {
 					onChange={(e) => setSearchTerm(e.target.value)}
 				/>
 			</Box>
-			<TableContainer component={Paper} sx={{ marginTop: 2, overflow: "auto", maxHeight: 400 }}>
+			<TableContainer
+				component={Paper}
+				sx={{ marginTop: 2, overflow: "auto", maxHeight: 400 }}
+			>
 				<Table stickyHeader>
 					<TableHead>
 						<TableRow>
@@ -146,11 +174,14 @@ const InitialCheck = () => {
 										<IssueViewer issue={appointment.issue} />
 									</TableCell>
 									<TableCell>
-										{new Date(appointment.expectedDeliveryDate).toLocaleDateString("en-US", {
-											year: "numeric",
-											month: "short",
-											day: "numeric",
-										})}
+										{new Date(appointment.expectedDeliveryDate).toLocaleDateString(
+											"en-US",
+											{
+												year: "numeric",
+												month: "short",
+												day: "numeric",
+											}
+										)}
 									</TableCell>
 
 									{/*Status with color */}
@@ -205,7 +236,12 @@ const InitialCheck = () => {
 				title="Confirm Appointment"
 				message="Are you sure you want to confirm this appointment?"
 				onConfirm={async () => {
-					await updateAppointmentStatus(selectedAppointmentId, "Confirmed", setAppointments);
+					await updateAppointmentStatus(
+						selectedAppointmentId,
+						"Confirmed",
+						decoded.id,
+						setAppointments
+					);
 					setConfirmDialogOpen(false);
 
 					// after success, show snackbar
