@@ -12,7 +12,11 @@ const baseURL = import.meta.env.VITE_API_BASE_URL;
 
 const fetchAppointments = async () => {
 	try {
-		const response = await axios.get(`${baseURL}/appointments`);
+		const response = await axios.get(`${baseURL}/appointments`,{
+			headers:{
+				Authorization: `Bearer ${localStorage.getItem('token')}`
+			}
+		});
 		return response.data.filter((appt) => appt.status === "Task Done");
 	} catch (error) {
 		console.error("Error fetching appointments:", error);

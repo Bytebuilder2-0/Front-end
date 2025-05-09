@@ -17,7 +17,11 @@ const BudgetReview = ({ appointment, updateAppointment, btn_name, showSnackbar }
 		}
 
 		try {
-			const response = await axios.get(`${baseURL}/budget/${appointment._id}/view`);
+			const response = await axios.get(`${baseURL}/budget/${appointment._id}/view`,{
+				headers:{
+					Authorization: `Bearer ${localStorage.getItem('token')}`
+				}
+			});
 			setBudgetAllocations(response.data.amountAllocations);
 			setOpenBudgetModal(true);
 		} catch (error) {
@@ -55,6 +59,10 @@ const BudgetReview = ({ appointment, updateAppointment, btn_name, showSnackbar }
 					step: allocation.step,
 					amount: allocation.amount,
           des:allocation.des,
+				},{
+					headers:{
+						Authorization: `Bearer ${localStorage.getItem('token')}`
+					}
 				});
 			}
 

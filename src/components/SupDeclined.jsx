@@ -27,7 +27,11 @@ const baseURL=import.meta.env.VITE_API_BASE_URL;
 // Fetch only "Reject2" appointments
 const fetchDeclinedAppointments = async () => {
   try {
-    const response = await axios.get(`${baseURL}/appointments`);
+    const response = await axios.get(`${baseURL}/appointments`,{
+      headers:{
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
     return response.data.reverse().filter((appt) => appt.status === "Reject2");
   } catch (error) {
     console.error("Error fetching declined appointments:", error);

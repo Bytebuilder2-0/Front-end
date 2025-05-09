@@ -21,7 +21,11 @@ const baseURL=import.meta.env.VITE_API_BASE_URL;
 // Fetch only "Paid" appointments
 const fetchPaidAppointments = async () => {
   try {
-    const response = await axios.get(`${baseURL}/appointments`);
+    const response = await axios.get(`${baseURL}/appointments`,{
+      headers:{
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
     return response.data.reverse().filter((appt) => appt.status === "Paid");
   } catch (error) {
     console.error("Error fetching paid appointments:", error);

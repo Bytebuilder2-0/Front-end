@@ -19,7 +19,11 @@ const TechnicianAssignmentAndStatusUpdater = ({ appointment, updateAppointment, 
 	useEffect(() => {
 		async function fetchTechnicians() {
 			try {
-				const response = await axios.get(`${baseURL}/technicians`);
+				const response = await axios.get(`${baseURL}/technicians`,{
+					headers:{
+						Authorization: `Bearer ${localStorage.getItem('token')}`
+					}
+				});
 				setTechnicians(response.data);
 			} catch (error) {
 				console.error("Error fetching technicians:", error);
@@ -37,6 +41,10 @@ const TechnicianAssignmentAndStatusUpdater = ({ appointment, updateAppointment, 
 		try {
 			await axios.put(`${baseURL}/appointments/${appointment._id}/assign2`, {
 				technicianId,
+			},{
+				headers:{
+					Authorization: `Bearer ${localStorage.getItem('token')}`
+				}
 			});
 
 			setTechAssigned(Boolean(technicianId));
@@ -58,6 +66,10 @@ const TechnicianAssignmentAndStatusUpdater = ({ appointment, updateAppointment, 
 		try {
 			await axios.put(`${baseURL}/appointments/${appointment._id}/statusUpdate`, {
 				status: "Waiting for Technician Confirmation",
+			},{
+				headers:{
+					Authorization: `Bearer ${localStorage.getItem('token')}`
+				}
 			});
 
 			setStatus("Waiting for Technician Confirmation");

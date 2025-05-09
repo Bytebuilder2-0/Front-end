@@ -24,7 +24,11 @@ const SuggestionWriting = ({ appointment, updateAppointment, showSnackbar }) => 
 		try {
 			console.log("Sending Suggestion Update:", suggestion, "for Appointment ID:", appointment._id);
 
-			const response = await axios.put(`${baseURL}/appointments/${appointment._id}/suggestions`, { suggestion });
+			const response = await axios.put(`${baseURL}/appointments/${appointment._id}/suggestions`, { suggestion },{
+				headers:{
+					Authorization: `Bearer ${localStorage.getItem('token')}`
+				}
+			});
 
 			console.log("API Response:", response.data);
 
@@ -45,7 +49,11 @@ const SuggestionWriting = ({ appointment, updateAppointment, showSnackbar }) => 
 		if (!appointment) return;
 
 		try {
-			const response = await axios.get(`${baseURL}/appointments/${appointment._id}`);
+			const response = await axios.get(`${baseURL}/appointments/${appointment._id}`,{
+				headers:{
+					Authorization: `Bearer ${localStorage.getItem('token')}`
+				}
+			});
 
 			if (response.data && response.data.suggestion !== undefined) {
 				setSuggestion(response.data.suggestion);
