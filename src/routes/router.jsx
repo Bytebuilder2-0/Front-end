@@ -31,35 +31,42 @@ import ManagerHistoryPage from "../pages/Manager/HistoryPage";
 import ManagerDashboardPage from "../pages/Manager/ManagerDashboardPage";
 import CheckStatus from "../pages/Manager/CheckStatus";
 
+import Layout from "../pages/supervisor/Layout";
+
 const router = createBrowserRouter([
 	{
 		path: "/",
 		element: <HomePage />, // <-- Replace HomePage with your real Home component
 	},
-	{
-		path: "/SInitial",
-		element: <SupInitial />,
-	},
-	{
-		path: "/Super",
-		element: <SupervisorDashboard />,
-	},
-	{
-		path: "/SInpro",
-		element: <Inprogress />,
-	},
-	{
-		path: "/SCompleted",
-		element: <CompletedSuper />,
-	},
-	{
-		path: "/SDeclined",
-		element: <Decline />,
-	},
-	{
-		path: "/SHistory",
-		element: <History />,
-	},
+	  {
+    element: <Layout />, //  All below routes will share the MiniDrawer layout
+    children: [
+      {
+        path: "/SInitial",
+        element: <SupInitial />,
+      },
+      {
+        path: "/Super",
+        element: <SupervisorDashboard />,
+      },
+      {
+        path: "/SInpro",
+        element: <Inprogress />,
+      },
+      {
+        path: "/SCompleted",
+        element: <CompletedSuper />,
+      },
+      {
+        path: "/SDeclined",
+        element: <Decline />,
+      },
+      {
+        path: "/SHistory",
+        element: <History />,
+      },
+    ],
+  },
 	{
 		path: "/TDashboard",
 		element: <TechnicianDashboard />,
