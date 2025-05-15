@@ -11,7 +11,6 @@ import {
 	Container,
 	TextField,
 	Box,
-
 } from "@mui/material";
 
 import WorkloadManager from "./sub/WorkloadManager";
@@ -19,20 +18,26 @@ import IssueViewer from "./sub/IssueView";
 import TechnicianAssignmentAndStatusUpdater from "./sub/TechnicianAssignmentAndStatusUpdater";
 import CustomSnackbar from "./sub/CustomSnackbar";
 
+import { jwtDecode } from "jwt-decode";
+
 // API Base URL
-const baseURL=import.meta.env.VITE_API_BASE_URL;
+const baseURL = import.meta.env.VITE_API_BASE_URL;
 
 // Fetch all appointments(status=confirmed,waiting for technician confirmation)
-const fetchAppointments = async () => {
+const fetchAppointments = async (supervisorId) => {
 	try {
-		const response = await axios.get(`${baseURL}/appointments`,{
-			headers:{
-				Authorization: `Bearer ${localStorage.getItem('token')}`
-			}
+		const response = await axios.get(`${baseURL}/appointments`, {
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+			},
 		});
 		return response.data
 			.reverse()
-			.filter((x) => x.status === "Confirmed" || x.status === "Waiting for Technician Confirmation"); // Latest first
+			.filter(
+				(x) =>
+					x.sconfirmedBy?.toString() === supervisorId &&
+					(x.status === "Confirmed" || x.status === "Waiting for Technician Confirmation")
+			); // Latest first
 	} catch (error) {
 		console.error("Error fetching appointments:", error);
 		return [];
@@ -51,11 +56,12 @@ function AppointmentData() {
 	});
 
 	useEffect(() => {
+		const token = localStorage.getItem("token");
+		const decoded = jwtDecode(token);
+
 		const getAppointments = async () => {
-	
-			const data = await fetchAppointments();
+			const data = await fetchAppointments(decoded.id);
 			setAppointments(data);
-			
 		};
 		getAppointments();
 		//Polling every 5 sec
@@ -68,7 +74,9 @@ function AppointmentData() {
 	//Child components appointment get updated, will reflect that back in parent witout refreshing
 	const updateAppointmentInState = (updatedAppointment) => {
 		setAppointments((prevAppointments) =>
-			prevAppointments.map((appt) => (appt._id === updatedAppointment._id ? updatedAppointment : appt))
+			prevAppointments.map((appt) =>
+				appt._id === updatedAppointment._id ? updatedAppointment : appt
+			)
 		);
 	};
 
@@ -81,7 +89,10 @@ function AppointmentData() {
 	};
 
 	const filteredAppointments = appointments.filter((appointment) =>
-		(appointment.vehicleId || "").toString().toLowerCase().includes(searchTerm.toLowerCase())
+		(appointment.vehicleId || "")
+			.toString()
+			.toLowerCase()
+			.includes(searchTerm.toLowerCase())
 	);
 
 	return (
@@ -96,14 +107,16 @@ function AppointmentData() {
 				/>
 			</Box>
 
-			<TableContainer component={Paper} elevation={3}
-			  sx={{
-				// Adjust the height according to the number of rows you want to display
-				maxHeight: 400, 
+			<TableContainer
+				component={Paper}
+				elevation={3}
+				sx={{
+					// Adjust the height according to the number of rows you want to display
+					maxHeight: 400,
 
-				// Enable vertical scroll when content overflows
-				overflowY: 'auto', 
-			  }}
+					// Enable vertical scroll when content overflows
+					overflowY: "auto",
+				}}
 			>
 				<Table stickyHeader>
 					<TableHead>
@@ -128,9 +141,8 @@ function AppointmentData() {
 							</TableCell>
 						</TableRow>
 					</TableHead>
-      
+
 					<TableBody>
-            
 						{filteredAppointments.length > 0 ? (
 							filteredAppointments.map((appointment) => (
 								<TableRow key={appointment._id}>
