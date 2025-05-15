@@ -28,8 +28,7 @@ import {
 	Error as ErrorIcon,
 	Dashboard as DashboardIcon,
 } from "@mui/icons-material";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import Badge from "@mui/material/Badge";
+
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import Notify from "../Atoms/Notify";
 
@@ -150,11 +149,7 @@ function MiniDrawer() {
 							pr: 5, // padding-right
 						}}
 					>
-						{/* <IconButton size="large" aria-label="show 17 new notifications" color="inherit">
-							<Badge badgeContent={0} color="error">
-								<NotificationsIcon sx={{ color: "#33383E" }} fontSize="large" />
-							</Badge>
-						</IconButton> */}
+						
 						<Notify/>
 						<IconButton
 							size="large"
