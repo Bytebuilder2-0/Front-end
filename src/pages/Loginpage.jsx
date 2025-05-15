@@ -33,7 +33,7 @@ const LoginForm = () => {
 			if (role === "manager") navigate("/ManagerDashboard");
 			else if (role === "technician") navigate("/TDashboard");
 			else if (role === "customer") navigate("/User");
-			else if (role === "supervisor") navigate("/Super");
+			else if (role === "supervisor") navigate("/SInitial");
 			else console.error("Unknown role:", role);
 		} catch (err) {
 			setError(err.response?.data?.message || "Login failed");
@@ -48,7 +48,7 @@ const LoginForm = () => {
 				sx={{
 					display: "flex",
 					minHeight: "100vh",
-					backgroundImage: "url(/assets/man2.webp)", // 👈 Replace with your image path
+					backgroundImage: "url(/assets/man2.webp)", //  Replace with your image path
 					backgroundSize: "cover",
 					backgroundPosition: "center",
 					alignItems: "center",
