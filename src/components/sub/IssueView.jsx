@@ -28,7 +28,8 @@ const IssueViewer = ({ issue }) => {
             bgcolor: "white",
             boxShadow: 24,
             p: 4,
-            borderRadius: 2,
+            borderRadius: 3,
+             border: "2px solid #1976d2",
           }}
         >
           <Typography variant="h6">Issue Details</Typography>
