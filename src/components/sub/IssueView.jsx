@@ -30,7 +30,7 @@ const IssueViewer = ({ issue }) => {
 						boxShadow: 24,
 						p: 4,
 						borderRadius: 3,
-						border: "2px solid #459328",
+						border: "3px solid #33383E",
 					}}
 				>
 					<Typography
