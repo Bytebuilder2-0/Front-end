@@ -6,6 +6,7 @@ export const AuthContext = createContext();
 // 2. Create the Provider Component
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true); 
 
   // 3. Load user from localStorage when app starts
   useEffect(() => {
@@ -14,10 +15,11 @@ export const AuthProvider = ({ children }) => {
     if (token && role) {
       setUser({ token, role });
     }
+    setLoading(false);
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user, setUser,loading }}>
       {children}
     </AuthContext.Provider>
   );
