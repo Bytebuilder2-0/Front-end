@@ -52,11 +52,19 @@ const router = createBrowserRouter([
 			},
 			{
 				path: "/Super",
-				element: <SupervisorDashboard />,
+				element: (
+					<PrivateRoute allowedRoles={["supervisor"]}>
+						<SupervisorDashboard />
+					</PrivateRoute>
+				),
 			},
 			{
 				path: "/SInpro",
-				element: <Inprogress />,
+				element: (
+					<PrivateRoute allowedRoles={["supervisor"]}>
+						<Inprogress />
+					</PrivateRoute>
+				),
 			},
 			{
 				path: "/SCompleted",

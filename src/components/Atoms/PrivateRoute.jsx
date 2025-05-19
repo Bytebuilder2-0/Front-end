@@ -5,7 +5,7 @@ import { AuthContext } from "../../context/AuthContext";
 const PrivateRoute = ({ children, allowedRoles }) => {
 	const { user, loading } = useContext(AuthContext);
 
-	if (loading) return null; // or a loader/spinner
+	if (loading) return null; // or a loader
 
 	if (!user) {
 		return <Navigate to="/Loginpage" replace />;
