@@ -32,45 +32,54 @@ import ManagerDashboardPage from "../pages/Manager/ManagerDashboardPage";
 import CheckStatus from "../pages/Manager/CheckStatus";
 
 import Layout from "../pages/supervisor/Layout";
+import PrivateRoute from "../components/Atoms/PrivateRoute";
 
 const router = createBrowserRouter([
 	{
 		path: "/",
 		element: <HomePage />, // <-- Replace HomePage with your real Home component
 	},
-	  {
-    element: <Layout />, //  All below routes will share the MiniDrawer layout
-    children: [
-      {
-        path: "/SInitial",
-        element:(
-		<PrivateRoute allowedRoles={['supervisor']}>
-         <SupInitial />
-      </PrivateRoute>
-		),
-      },
-      {
-        path: "/Super",
-        element: <SupervisorDashboard />,
-      },
-      {
-        path: "/SInpro",
-        element: <Inprogress />,
-      },
-      {
-        path: "/SCompleted",
-        element: <CompletedSuper />,
-      },
-      {
-        path: "/SDeclined",
-        element: <Decline />,
-      },
-      {
-        path: "/SHistory",
-        element: <History />,
-      },
-    ],
-  },
+	{
+		element: <Layout />, //  All below routes will share the MiniDrawer layout
+		children: [
+			{
+				path: "/SInitial",
+				element: (
+					<PrivateRoute allowedRoles={["supervisor"]}>
+						<SupInitial />
+					</PrivateRoute>
+				),
+			},
+			{
+				path: "/Super",
+				element: (
+					<PrivateRoute allowedRoles={["supervisor"]}>
+						<SupervisorDashboard />
+					</PrivateRoute>
+				),
+			},
+			{
+				path: "/SInpro",
+				element: (
+					<PrivateRoute allowedRoles={["supervisor"]}>
+						<Inprogress />
+					</PrivateRoute>
+				),
+			},
+			{
+				path: "/SCompleted",
+				element: <CompletedSuper />,
+			},
+			{
+				path: "/SDeclined",
+				element: <Decline />,
+			},
+			{
+				path: "/SHistory",
+				element: <History />,
+			},
+		],
+	},
 	{
 		path: "/TDashboard",
 		element: <TechnicianDashboard />,
