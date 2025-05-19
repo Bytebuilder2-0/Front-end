@@ -43,7 +43,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/SInitial",
-        element: <SupInitial />,
+        element:(
+		<PrivateRoute allowedRoles={['supervisor']}>
+         <SupInitial />
+      </PrivateRoute>
+		),
       },
       {
         path: "/Super",
