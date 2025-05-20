@@ -6,6 +6,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 function Account() {
 	const [anchorEl, setAnchorEl] = useState(null);
 	const menuOpen = Boolean(anchorEl);
+	const navigate = useNavigate(); // Initialize navigation
 
 	const handleMenuOpen = (event) => {
 		setAnchorEl(event.currentTarget);
@@ -16,18 +17,20 @@ function Account() {
 	};
 
 	const handleProfileClick = () => {
-		// Navigate to profile page or open profile dialog
 		console.log("Profile clicked");
 		handleMenuClose();
 	};
 
 	const handleLogoutClick = () => {
-		// Perform logout logic here (e.g., clear token, redirect)
-		//localStorage.removeItem("token"); // Adjust based on your token name
-		// Optionally clear other auth-related items
-		// Redirect to login
-		//navigate("/Loginpage"); // Update with your actual login route
-		handleMenuClose();
+		// Clear token and any other auth-related data
+		localStorage.removeItem("token");
+		localStorage.removeItem("userId"); // if used
+		localStorage.removeItem("role"); // if used
+
+		handleMenuClose(); // Close the dropdown menu
+
+		// Redirect to login page
+		navigate("/Loginpage"); // Update with your actual login route
 	};
 
 	return (
