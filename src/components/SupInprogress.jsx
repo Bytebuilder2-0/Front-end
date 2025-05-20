@@ -8,6 +8,7 @@ import SuggestionWriting from "./sub/SuggestionWriting";
 import WorkloadManager from "./sub/WorkloadManager";
 import WhatsAppButton from "./sub/WhatsAppButton";
 import CustomSnackbar from "./sub/CustomSnackbar";
+import { jwtDecode } from "jwt-decode";
 
 // API Base URL
 const baseURL = import.meta.env.VITE_API_BASE_URL;
@@ -20,7 +21,11 @@ const fetchAppointments = async () => {
 				Authorization: `Bearer ${localStorage.getItem('token')}`
 			}
 		});
-		return response.data.reverse().filter((x) => x.status === "Accepted" || x.status === "InProgress");
+		return response.data.reverse().filter(
+			(x) =>
+					x.sconfirmedBy?.toString() === supervisorId &&
+					( x.status === "Accepted" || x.status === "InProgress")
+			);
 	} catch (error) {
 		console.error("Error fetching appointments:", error);
 		return [];
@@ -38,8 +43,11 @@ const SupInprogress = () => {
 	});
 
 	useEffect(() => {
+			const token = localStorage.getItem("token");
+			const decoded = jwtDecode(token);
+
 		const getAppointments = async () => {
-			const data = await fetchAppointments();
+			const data = await fetchAppointments(decoded.id);
 			setAppointments(data);
 		};
 		getAppointments();
