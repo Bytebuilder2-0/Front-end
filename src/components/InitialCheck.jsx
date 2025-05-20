@@ -25,8 +25,19 @@ import { jwtDecode } from "jwt-decode";
 // API Base URL
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 
-const decoded = jwtDecode(localStorage.getItem("token"));
-console.log(decoded.id);
+const token = localStorage.getItem("token");
+
+let decoded = null;
+
+if (token) {
+	try {
+		decoded = jwtDecode(token);
+		console.log(decoded.id); // optional
+	} catch (err) {
+		console.error("Invalid token:", err);
+		decoded = null;
+	}
+}
 
 // Fetch only "Pending" appointments
 const fetchAppointments = async () => {
@@ -236,6 +247,10 @@ const InitialCheck = () => {
 				title="Confirm Appointment"
 				message="Are you sure you want to confirm this appointment?"
 				onConfirm={async () => {
+					if (!decoded || !decoded.id) {
+						console.error("User not authenticated.");
+						return;
+					}
 					await updateAppointmentStatus(
 						selectedAppointmentId,
 						"Confirmed",

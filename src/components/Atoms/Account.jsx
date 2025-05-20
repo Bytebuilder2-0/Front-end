@@ -1,58 +1,65 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 
 function Account() {
-  const [anchorEl, setAnchorEl] = useState(null);
-  const menuOpen = Boolean(anchorEl);
+	const [anchorEl, setAnchorEl] = useState(null);
+	const menuOpen = Boolean(anchorEl);
+	const navigate = useNavigate(); // Initialize navigation
 
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+	const handleMenuOpen = (event) => {
+		setAnchorEl(event.currentTarget);
+	};
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
+	const handleMenuClose = () => {
+		setAnchorEl(null);
+	};
 
-  const handleProfileClick = () => {
-    // Navigate to profile page or open profile dialog
-    console.log("Profile clicked");
-    handleMenuClose();
-  };
+	const handleProfileClick = () => {
+		console.log("Profile clicked");
+		handleMenuClose();
+	};
 
-  const handleLogoutClick = () => {
-    // Perform logout logic here (e.g., clear token, redirect)
-    console.log("Logout clicked");
-    handleMenuClose();
-  };
+	const handleLogoutClick = () => {
+		// Clear token and any other auth-related data
+		localStorage.removeItem("token");
+		localStorage.removeItem("userId"); // if used
+		localStorage.removeItem("role"); // if used
 
-  return (
-    <>
-      <IconButton
-        size="large"
-        edge="end"
-        aria-label="account of current user"
-        aria-controls="account-menu"
-        aria-haspopup="true"
-        onClick={handleMenuOpen}
-        color="inherit"
-      >
-        <AccountCircle sx={{ color: "#33383E" }} fontSize="large" />
-      </IconButton>
+		handleMenuClose(); // Close the dropdown menu
 
-      <Menu
-        id="account-menu"
-        anchorEl={anchorEl}
-        open={menuOpen}
-        onClose={handleMenuClose}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        transformOrigin={{ vertical: "top", horizontal: "right" }}
-      >
-        <MenuItem onClick={handleProfileClick}>Profile</MenuItem>
-        <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
-      </Menu>
-    </>
-  );
+		// Redirect to login page
+		navigate("/Loginpage"); // Update with your actual login route
+	};
+
+	return (
+		<>
+			<IconButton
+				size="large"
+				edge="end"
+				aria-label="account of current user"
+				aria-controls="account-menu"
+				aria-haspopup="true"
+				onClick={handleMenuOpen}
+				color="inherit"
+			>
+				<AccountCircle sx={{ color: "#33383E" }} fontSize="large" />
+			</IconButton>
+
+			<Menu
+				id="account-menu"
+				anchorEl={anchorEl}
+				open={menuOpen}
+				onClose={handleMenuClose}
+				anchorOrigin={{ vertical: "top", horizontal: "right" }}
+				transformOrigin={{ vertical: "top", horizontal: "right" }}
+			>
+				<MenuItem onClick={handleProfileClick}>Profile</MenuItem>
+				<MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
+			</Menu>
+		</>
+	);
 }
 
 export default Account;
