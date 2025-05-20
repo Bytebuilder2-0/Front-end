@@ -25,7 +25,7 @@ import {
 import axios from "axios";
 import LoginSignupNavbar from "../components/LoginSignupNavbar";
 
-const roles = ["customer", "technician", "manager", "Supervisor"];
+const roles = ["customer", "technician", "manager", "supervisor"];
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -44,7 +44,7 @@ const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { signup, error, isLoading } = useSignup();
 
-  const isSpecialRole = ["technician", "manager", "Supervisor"].includes(
+  const isSpecialRole = ["technician", "manager", "supervisor"].includes(
     formData.role
   );
 
