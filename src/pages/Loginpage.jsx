@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import LoginSignupNavbar from "../components/LoginSignupNavbar";
 import { LockOpen } from "@mui/icons-material";
+import { jwtDecode } from "jwt-decode";
 
 const LoginForm = () => {
 	const [email, setEmail] = useState("");
@@ -12,6 +13,8 @@ const LoginForm = () => {
 	const [error, setError] = useState("");
 	const navigate = useNavigate();
 	const { setUser } = useContext(AuthContext);
+
+	const { login } = useContext(AuthContext);
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
@@ -23,12 +26,11 @@ const LoginForm = () => {
 				password,
 			});
 
-			const { token, user } = response.data;
-			const role = user.role.toLowerCase();
+			const { token } = response.data;
+			login(token);
 
-			localStorage.setItem("token", token);
-			localStorage.setItem("role", role);
-			setUser({ token, role });
+			const decoded = jwtDecode(token);
+			const role = decoded.role?.toLowerCase();
 
 			if (role === "manager") navigate("/ManagerDashboard");
 			else if (role === "technician") navigate("/TDashboard");
@@ -75,7 +77,12 @@ const LoginForm = () => {
 						<Typography variant="h5" align="center" gutterBottom>
 							Login
 						</Typography>
-						<Typography variant="body2" color="textSecondary" align="center" sx={{ mb: 1 }}>
+						<Typography
+							variant="body2"
+							color="textSecondary"
+							align="center"
+							sx={{ mb: 1 }}
+						>
 							Don't have an account?{" "}
 							<Link
 								to="/SignupPage"

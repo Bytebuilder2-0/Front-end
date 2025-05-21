@@ -1,58 +1,48 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import {jwtDecode} from "jwt-decode";
 
-// 1. Create the Context
 export const AuthContext = createContext();
 
-// 2. Create the Provider Component
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true); 
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [loading, setLoading] = useState(true);
 
-  // 3. Load user from localStorage when app starts
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const role = localStorage.getItem('role');
-    if (token && role) {
-      setUser({ token, role });
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        setUser(decoded);
+      } catch (err) {
+        console.error("Invalid token", err);
+        logout();
+      }
+    } else {
+      setUser(null);
     }
     setLoading(false);
-  }, []);
+  }, [token]);
+
+  const login = (jwtToken) => {
+    localStorage.setItem("token", jwtToken);
+    setToken(jwtToken);
+  };
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+    setToken(null);
+  };
+
+  const isAuthenticated = () => !!user;
 
   return (
-    <AuthContext.Provider value={{ user, setUser,loading }}>
+    <AuthContext.Provider
+      value={{ user, token, login, logout, isAuthenticated, loading }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
-
-
-
-
-
-
-
-
-// import { createContext, useReducer } from "react";
-
-// export const AuthContext = createContext();
-// export const authReducer = (state, action) => {
-//     switch (action.type) {  //destructure action type
-//         case "LOGIN":
-//             return { user: action.payload };
-//         case "LOGOUT":
-//             return { user: null };
-//         default:
-//             return state;
-//     }
-// };
-// export const AuthContextProvider = ({ children }) => {
-//     const [state, dispatch] = useReducer(authReducer,{user:null}) 
-
-//     console.log("AuthContext state:", state); // Log the state to see its structure
-//     return(
-//         <AuthContext.Provider value={{ ...state, dispatch }}>
-//             {children}
-//         </AuthContext.Provider>
-//     )
-// }
+export const useAuth = () => useContext(AuthContext);
