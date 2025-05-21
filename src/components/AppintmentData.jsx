@@ -18,17 +18,17 @@ import IssueViewer from "./sub/IssueView";
 import TechnicianAssignmentAndStatusUpdater from "./sub/TechnicianAssignmentAndStatusUpdater";
 import CustomSnackbar from "./sub/CustomSnackbar";
 
-import { jwtDecode } from "jwt-decode";
+import { useAuth } from "../context/AuthContext";
 
 // API Base URL
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 
 // Fetch all appointments(status=confirmed,waiting for technician confirmation)
-const fetchAppointments = async (supervisorId) => {
+const fetchAppointments = async (supervisorId, token) => {
 	try {
 		const response = await axios.get(`${baseURL}/appointments`, {
 			headers: {
-				Authorization: `Bearer ${localStorage.getItem("token")}`,
+				Authorization: `Bearer ${token}`,
 			},
 		});
 		return response.data
@@ -46,6 +46,7 @@ const fetchAppointments = async (supervisorId) => {
 
 // Main Appointment Data Component
 function AppointmentData() {
+	const { user, token } = useAuth();
 	const [appointments, setAppointments] = useState([]);
 	const [searchTerm, setSearchTerm] = useState("");
 
@@ -56,11 +57,10 @@ function AppointmentData() {
 	});
 
 	useEffect(() => {
-		const token = localStorage.getItem("token");
-		const decoded = jwtDecode(token);
+		if (!user || !token) return;
 
 		const getAppointments = async () => {
-			const data = await fetchAppointments(decoded.id);
+			const data = await fetchAppointments(user.id, token);
 			setAppointments(data);
 		};
 		getAppointments();
@@ -69,7 +69,7 @@ function AppointmentData() {
 
 		//Clear polling after component unmount
 		return () => clearInterval(interval);
-	}, []);
+	}, [user, token]);
 
 	//Child components appointment get updated, will reflect that back in parent witout refreshing
 	const updateAppointmentInState = (updatedAppointment) => {
