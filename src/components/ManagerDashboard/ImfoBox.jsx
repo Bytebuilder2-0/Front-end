@@ -10,26 +10,22 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 
-const baseURL = import.meta.env.VITE_API_BASE_URL;
+const baseURL = "http://localhost:5000/api";
 
 const StatusSummary = () => {
   const [counts, setCounts] = useState({
     total: 0,
     pending: 0,
     confirmed: 0,
+    checking: 0, //  added new count
   });
 
   useEffect(() => {
     const fetchCounts = async () => {
       try {
         const response = await axios.get(
-          `${baseURL}/appointments/statusCounts`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
+          `${baseURL}/appointments/statusCountsc`
+        ); // fixed backtick & URL typo
         setCounts(response.data);
       } catch (error) {
         console.error("Error fetching appointment counts:", error);
@@ -58,6 +54,12 @@ const StatusSummary = () => {
       count: counts.confirmed,
       image: "/assets/success.jpg",
     },
+    {
+      title: "Checking", // ✅ new card
+      subheader: "Checking Appointment Count",
+      count: counts.Checking,
+      image: "https://cdn-icons-png.flaticon.com/512/3500/3500833.png", //  use an appropriate icon
+    },
   ];
 
   return (
@@ -80,8 +82,6 @@ const StatusSummary = () => {
             >
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Typography variant="h4" sx={{ marginRight: 1 }}>
-                  {" "}
-                  {/*if the digit is one just add zero before it  */}
                   {String(data.count).padStart(2, "0")}
                 </Typography>
                 <CardMedia

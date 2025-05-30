@@ -30,104 +30,109 @@ import ManageServices from "../pages/Manager/ManageServices";
 import ManagerHistoryPage from "../pages/Manager/HistoryPage";
 import ManagerDashboardPage from "../pages/Manager/ManagerDashboardPage";
 import CheckStatus from "../pages/Manager/CheckStatus";
+import Reports from "../pages/Manager/Report";
 
 const router = createBrowserRouter([
-	{
-		path: "/",
-		element: <HomePage />, // <-- Replace HomePage with your real Home component
-	},
-	{
-		path: "/SInitial",
-		element: <SupInitial />,
-	},
-	{
-		path: "/Super",
-		element: <SupervisorDashboard />,
-	},
-	{
-		path: "/SInpro",
-		element: <Inprogress />,
-	},
-	{
-		path: "/SCompleted",
-		element: <CompletedSuper />,
-	},
-	{
-		path: "/SDeclined",
-		element: <Decline />,
-	},
-	{
-		path: "/SHistory",
-		element: <History />,
-	},
-	{
-		path: "/TDashboard",
-		element: <TechnicianDashboard />,
-	},
-	{
-		path: "/TDeclined",
-		element: <TechnicianDeclined />,
-	},
-	{
-		path: "/TCompleted",
-		element: <TechnicianCompleted />,
-	},
-	{
-		path: "/TInprogress",
-		element: <TechnicianInprogress />,
-	},
-	{
-		path: "/TAccepted",
-		element: <TechnicianAccepted />,
-	},
-	{
-		path: "/appointments/new",
-		element: <AppointmentSubmit />,
-	},
-	{
-		path: "/appointments/:id",
-		element: <AppointmentView />,
-	},
-	{
-		path: "/User",
-		element: <UserDashboard />,
-	},
-	{
-		path: "/feedback",
-		element: <FeedbackPage />,
-	},
-	{
-		path: "/Loginpage",
-		element: <Loginpage />,
-	},
-	{
-		path: "/SignupPage",
-		element: <SignupPage />,
-	},
-	{
-		path: "/VehicleForm",
-		element: <VehicleForm />,
-	},
-	{
-		path: "/SignupVReg",
-		element: <SignInVehicleContainer />,
-	},
-	{
-		path: "/ManageServices",
-		element: <ManageServices />,
-	},
-	{
-		path: "/ManagerDashboard",
-		element: <ManagerDashboardPage />,
-	},
-	{
-		path: "/ManagerHistory",
-		element: <ManagerHistoryPage />,
-	},
-	{
-		path: "/CheckStatus",
-		element: <CheckStatus />,
-	},
+  {
+    path: "/",
+    element: <HomePage />, // <-- Replace HomePage with your real Home component
+  },
+  {
+    path: "/SInitial",
+    element: <SupInitial />,
+  },
+  {
+    path: "/Super",
+    element: <SupervisorDashboard />,
+  },
+  {
+    path: "/SInpro",
+    element: <Inprogress />,
+  },
+  {
+    path: "/SCompleted",
+    element: <CompletedSuper />,
+  },
+  {
+    path: "/SDeclined",
+    element: <Decline />,
+  },
+  {
+    path: "/SHistory",
+    element: <History />,
+  },
+  {
+    path: "/TDashboard",
+    element: <TechnicianDashboard />,
+  },
+  {
+    path: "/TDeclined",
+    element: <TechnicianDeclined />,
+  },
+  {
+    path: "/TCompleted",
+    element: <TechnicianCompleted />,
+  },
+  {
+    path: "/TInprogress",
+    element: <TechnicianInprogress />,
+  },
+  {
+    path: "/TAccepted",
+    element: <TechnicianAccepted />,
+  },
+  {
+    path: "/appointments/new",
+    element: <AppointmentSubmit />,
+  },
+  {
+    path: "/appointments/:id",
+    element: <AppointmentView />,
+  },
+  {
+    path: "/User",
+    element: <UserDashboard />,
+  },
+  {
+    path: "/feedback",
+    element: <FeedbackPage />,
+  },
+  {
+    path: "/Loginpage",
+    element: <Loginpage />,
+  },
+  {
+    path: "/SignupPage",
+    element: <SignupPage />,
+  },
+  {
+    path: "/VehicleForm",
+    element: <VehicleForm />,
+  },
+  {
+    path: "/SignupVReg",
+    element: <SignInVehicleContainer />,
+  },
+  {
+    path: "/ManageServices",
+    element: <ManageServices />,
+  },
+  {
+    path: "/ManagerDashboard",
+    element: <ManagerDashboardPage />,
+  },
+  {
+    path: "/ManagerHistory",
+    element: <ManagerHistoryPage />,
+  },
+  {
+    path: "/CheckStatus",
+    element: <CheckStatus />,
+  },
+  {
+    path: "/Reports",
+    element: <Reports />,
+  },
 ]);
 
 export default router;

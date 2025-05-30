@@ -1,12 +1,12 @@
 import React from "react";
+import ReportComponent from "../../components/ManagerReport/Report";
 import ManagerSidebar from "../../components/ui/ManagerMiniDrawer";
-import Apointmentcheking from "../../components/ManagerDashboard/CheckStatus";
 
-export default function CheckStatus() {
+export default function Report() {
   return (
     <div>
       <ManagerSidebar>
-        <Apointmentcheking />
+        <ReportComponent />
       </ManagerSidebar>
     </div>
   );
