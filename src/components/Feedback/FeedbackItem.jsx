@@ -6,7 +6,29 @@ import axios from "axios";
 import FeedbackActions from "./FeedbackActions";
 import FeedbackInfo from "./FeedbackInfo";
 import ReplyBox from "./ReplyBox";
-import SuccessSnackbar from "../ServiceManage/SuccessSnackbar"; // ✅ import
+import SuccessSnackbar from "../ServiceManage/SuccessSnackbar"; // import
+
+import { jwtDecode } from "jwt-decode";
+
+const API_URL = "http://localhost:5000/api/feedback";
+const token = localStorage.getItem("token");
+
+let decoded = null;
+if (token) {
+  try {
+    decoded = jwtDecode(token);
+    console.log(decoded.id); // optional
+  } catch (err) {
+    console.error("Invalid token:", err);
+  }
+}
+
+//  Handy config object you can reuse
+const authConfig = {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+};
 
 const FeedbackItem = ({ feedback, onUpdate }) => {
   const [reply, setReply] = useState(feedback.reply || "");
@@ -17,11 +39,17 @@ const FeedbackItem = ({ feedback, onUpdate }) => {
     if (!updatedReply.trim()) return;
 
     try {
-      await axios.put(`http://localhost:5000/api/feedback/${feedback._id}/reply`, { reply: updatedReply });
+      await axios.put(
+        `${API_URL}/${feedback._id}/reply`,
+        {
+          reply: updatedReply,
+        },
+        authConfig
+      );
       setReply(updatedReply);
       setIsReplying(false);
 
-      // ✅ Show success snackbar
+      //  Show success snackbar
       setSnackbarOpen(true);
 
       // Refresh the feedback list after reply
@@ -50,13 +78,18 @@ const FeedbackItem = ({ feedback, onUpdate }) => {
         {isReplying ? (
           <ReplyBox feedback={feedback} onUpdateReply={handleReplySubmit} />
         ) : (
-          <Button variant="outlined" color="primary" onClick={() => setIsReplying(true)} size="small">
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => setIsReplying(true)}
+            size="small"
+          >
             {reply ? "Edit Reply" : "Add Reply"}
           </Button>
         )}
       </Box>
 
-      {/* ✅ Snackbar */}
+      {/* Snackbar */}
       <SuccessSnackbar
         open={snackbarOpen}
         message="Reply submitted successfully!"

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { TextField, Button, Box } from "@mui/material";
 import SuccessSnackbar from "../ServiceManage/SuccessSnackbar";
-import ConfirmEditDialog from "../ServiceManage/ConfirmEditDialog"; // ✅ import your Confirm Dialog
+import ConfirmEditDialog from "../ServiceManage/ConfirmEditDialog"; // import your Confirm Dialog
 
 const ReplyBox = ({ feedback, onUpdateReply }) => {
   const [reply, setReply] = useState(feedback.reply || "");
@@ -18,7 +18,7 @@ const ReplyBox = ({ feedback, onUpdateReply }) => {
   const handleConfirmEdit = async () => {
     try {
       await onUpdateReply(reply); // Submit reply
-      setSnackbarOpen(true);      // Show success snackbar
+      setSnackbarOpen(true); // Show success snackbar
       setConfirmDialogOpen(false); // Close confirm dialog
     } catch (error) {
       console.error("Error updating reply:", error);
@@ -51,14 +51,14 @@ const ReplyBox = ({ feedback, onUpdateReply }) => {
       <Button
         variant="contained"
         color="primary"
-        onClick={handleReplySubmit} // ✅ open confirm dialog
+        onClick={handleReplySubmit} //  open confirm dialog
         fullWidth
         sx={{ fontWeight: "bold" }}
       >
         Submit Reply
       </Button>
 
-      {/* ✅ Confirmation Dialog */}
+      {/*  Confirmation Dialog */}
       <ConfirmEditDialog
         open={confirmDialogOpen}
         onClose={handleCancelEdit}
@@ -67,7 +67,7 @@ const ReplyBox = ({ feedback, onUpdateReply }) => {
         editedName={reply}
       />
 
-      {/* ✅ Success Snackbar */}
+      {/*  Success Snackbar */}
       <SuccessSnackbar
         open={snackbarOpen}
         message="Reply submitted successfully!"

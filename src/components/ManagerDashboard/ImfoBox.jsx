@@ -9,8 +9,22 @@ import {
   Box,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
+import { jwtDecode } from "jwt-decode"; // add
 
 const baseURL = "http://localhost:5000/api";
+
+const token = localStorage.getItem("token"); // add
+let decoded = null;
+
+if (token) {
+  try {
+    decoded = jwtDecode(token);
+    console.log(decoded.id); // optional
+  } catch (err) {
+    console.error("Invalid token:", err);
+    decoded = null;
+  }
+}
 
 const StatusSummary = () => {
   const [counts, setCounts] = useState({
@@ -24,7 +38,12 @@ const StatusSummary = () => {
     const fetchCounts = async () => {
       try {
         const response = await axios.get(
-          `${baseURL}/appointments/statusCountsc`
+          `${baseURL}/appointments/statusCountsc`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
         ); // fixed backtick & URL typo
         setCounts(response.data);
       } catch (error) {
@@ -55,7 +74,7 @@ const StatusSummary = () => {
       image: "/assets/success.jpg",
     },
     {
-      title: "Checking", // ✅ new card
+      title: "Checking", //  new card
       subheader: "Checking Appointment Count",
       count: counts.Checking,
       image: "https://cdn-icons-png.flaticon.com/512/3500/3500833.png", //  use an appropriate icon

@@ -15,8 +15,27 @@ import {
 } from "@mui/material";
 import DeatailsViewer from "./viewDeatails";
 import WhatsAppButton from "../sub/WhatsAppButton";
+import { jwtDecode } from "jwt-decode";
 
 const API_BASE_URL = "http://localhost:5000/api/appointments";
+const token = localStorage.getItem("token");
+
+let decoded = null;
+if (token) {
+  try {
+    decoded = jwtDecode(token);
+    console.log(decoded.id); // optional
+  } catch (err) {
+    console.error("Invalid token:", err);
+  }
+}
+
+// 👉 Handy config object you can reuse
+const authConfig = {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+};
 
 const allowedStatuses = [
   "Pending",
@@ -36,7 +55,7 @@ const CheckStatus = () => {
 
   useEffect(() => {
     axios
-      .get(API_BASE_URL)
+      .get(API_BASE_URL, authConfig)
       .then((res) => {
         const filtered = res.data.filter((appt) =>
           allowedStatuses.includes(appt.status)

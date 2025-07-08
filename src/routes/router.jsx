@@ -135,23 +135,43 @@ const router = createBrowserRouter([
   },
   {
     path: "/ManageServices",
-    element: <ManageServices />,
+    element: (
+      <PrivateRoute allowedRoles={["manager"]}>
+        <ManageServices />
+      </PrivateRoute>
+    ),
   },
   {
     path: "/ManagerDashboard",
-    element: <ManagerDashboardPage />,
+    element: (
+      <PrivateRoute allowedRoles={["manager"]}>
+        <ManagerDashboardPage />
+      </PrivateRoute>
+    ),
   },
   {
     path: "/ManagerHistory",
-    element: <ManagerHistoryPage />,
+    element: (
+      <PrivateRoute allowedRoles={["manager"]}>
+        <ManagerHistoryPage />
+      </PrivateRoute>
+    ),
   },
   {
     path: "/CheckStatus",
-    element: <CheckStatus />,
+    element: (
+      <PrivateRoute allowedRoles={["manager"]}>
+        <CheckStatus />
+      </PrivateRoute>
+    ),
   },
   {
     path: "/Reports",
-    element: <Reports />,
+    element: (
+      <PrivateRoute allowedRoles={["manager"]}>
+        <Reports />
+      </PrivateRoute>
+    ),
   },
 ]);
 
