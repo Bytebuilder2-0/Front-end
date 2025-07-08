@@ -33,121 +33,126 @@ import CheckStatus from "../pages/Manager/CheckStatus";
 
 import Layout from "../pages/supervisor/Layout";
 import PrivateRoute from "../components/Atoms/PrivateRoute";
+import Reports from "../pages/Manager/Report";
 
 const router = createBrowserRouter([
-	{
-		path: "/",
-		element: <HomePage />, // <-- Replace HomePage with your real Home component
-	},
-	{
-		element: <Layout />, //  All below routes will share the MiniDrawer layout
-		children: [
-			{
-				path: "/SInitial",
-				element: (
-					<PrivateRoute allowedRoles={["supervisor"]}>
-						<SupInitial />
-					</PrivateRoute>
-				),
-			},
-			{
-				path: "/Super",
-				element: (
-					<PrivateRoute allowedRoles={["supervisor"]}>
-						<SupervisorDashboard />
-					</PrivateRoute>
-				),
-			},
-			{
-				path: "/SInpro",
-				element: (
-					<PrivateRoute allowedRoles={["supervisor"]}>
-						<Inprogress />
-					</PrivateRoute>
-				),
-			},
-			{
-				path: "/SCompleted",
-				element: <CompletedSuper />,
-			},
-			{
-				path: "/SDeclined",
-				element: <Decline />,
-			},
-			{
-				path: "/SHistory",
-				element: <History />,
-			},
-		],
-	},
-	{
-		path: "/TDashboard",
-		element: <TechnicianDashboard />,
-	},
-	{
-		path: "/TDeclined",
-		element: <TechnicianDeclined />,
-	},
-	{
-		path: "/TCompleted",
-		element: <TechnicianCompleted />,
-	},
-	{
-		path: "/TInprogress",
-		element: <TechnicianInprogress />,
-	},
-	{
-		path: "/TAccepted",
-		element: <TechnicianAccepted />,
-	},
-	{
-		path: "/appointments/new",
-		element: <AppointmentSubmit />,
-	},
-	{
-		path: "/appointments/:id",
-		element: <AppointmentView />,
-	},
-	{
-		path: "/User",
-		element: <UserDashboard />,
-	},
-	{
-		path: "/feedback",
-		element: <FeedbackPage />,
-	},
-	{
-		path: "/Loginpage",
-		element: <Loginpage />,
-	},
-	{
-		path: "/SignupPage",
-		element: <SignupPage />,
-	},
-	{
-		path: "/VehicleForm",
-		element: <VehicleForm />,
-	},
-	{
-		path: "/SignupVReg",
-		element: <SignInVehicleContainer />,
-	},
-	{
-		path: "/ManageServices",
-		element: <ManageServices />,
-	},
-	{
-		path: "/ManagerDashboard",
-		element: <ManagerDashboardPage />,
-	},
-	{
-		path: "/ManagerHistory",
-		element: <ManagerHistoryPage />,
-	},
-	{
-		path: "/CheckStatus",
-		element: <CheckStatus />,
-	},
+  {
+    path: "/",
+    element: <HomePage />, // <-- Replace HomePage with your real Home component
+  },
+  {
+    element: <Layout />, //  All below routes will share the MiniDrawer layout
+    children: [
+      {
+        path: "/SInitial",
+        element: (
+          <PrivateRoute allowedRoles={["supervisor"]}>
+            <SupInitial />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/Super",
+        element: (
+          <PrivateRoute allowedRoles={["supervisor"]}>
+            <SupervisorDashboard />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/SInpro",
+        element: (
+          <PrivateRoute allowedRoles={["supervisor"]}>
+            <Inprogress />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/SCompleted",
+        element: <CompletedSuper />,
+      },
+      {
+        path: "/SDeclined",
+        element: <Decline />,
+      },
+      {
+        path: "/SHistory",
+        element: <History />,
+      },
+    ],
+  },
+  {
+    path: "/TDashboard",
+    element: <TechnicianDashboard />,
+  },
+  {
+    path: "/TDeclined",
+    element: <TechnicianDeclined />,
+  },
+  {
+    path: "/TCompleted",
+    element: <TechnicianCompleted />,
+  },
+  {
+    path: "/TInprogress",
+    element: <TechnicianInprogress />,
+  },
+  {
+    path: "/TAccepted",
+    element: <TechnicianAccepted />,
+  },
+  {
+    path: "/appointments/new",
+    element: <AppointmentSubmit />,
+  },
+  {
+    path: "/appointments/:id",
+    element: <AppointmentView />,
+  },
+  {
+    path: "/User",
+    element: <UserDashboard />,
+  },
+  {
+    path: "/feedback",
+    element: <FeedbackPage />,
+  },
+  {
+    path: "/Loginpage",
+    element: <Loginpage />,
+  },
+  {
+    path: "/SignupPage",
+    element: <SignupPage />,
+  },
+  {
+    path: "/VehicleForm",
+    element: <VehicleForm />,
+  },
+  {
+    path: "/SignupVReg",
+    element: <SignInVehicleContainer />,
+  },
+  {
+    path: "/ManageServices",
+    element: <ManageServices />,
+  },
+  {
+    path: "/ManagerDashboard",
+    element: <ManagerDashboardPage />,
+  },
+  {
+    path: "/ManagerHistory",
+    element: <ManagerHistoryPage />,
+  },
+  {
+    path: "/CheckStatus",
+    element: <CheckStatus />,
+  },
+  {
+    path: "/Reports",
+    element: <Reports />,
+  },
 ]);
 
 export default router;

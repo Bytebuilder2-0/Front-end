@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
-  Container, Box, Typography, TextField, Table, TableBody, TableCell,
-  TableContainer, TableHead, TableRow, Paper
+  Container,
+  Box,
+  Typography,
+  TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
 } from "@mui/material";
 import DeatailsViewer from "./viewDeatails";
 import WhatsAppButton from "../sub/WhatsAppButton";
@@ -18,7 +27,7 @@ const allowedStatuses = [
   "Accepted",
   "Reject2",
   "InProgress",
-  "Task Done"
+  "Task Done",
 ];
 
 const CheckStatus = () => {
@@ -26,22 +35,32 @@ const CheckStatus = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    axios.get(API_BASE_URL)
+    axios
+      .get(API_BASE_URL)
       .then((res) => {
-        const filtered = res.data.filter((appt) => allowedStatuses.includes(appt.status));
+        const filtered = res.data.filter((appt) =>
+          allowedStatuses.includes(appt.status)
+        );
         setAppointments(filtered.reverse());
       })
       .catch((err) => console.error("Error fetching appointments:", err));
   }, []);
 
   const filteredAppointments = appointments.filter((appointment) =>
-    (appointment.vehicleId || "").toLowerCase().includes(searchTerm.toLowerCase())
+    (appointment.vehicleId || "")
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
   );
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Paper elevation={6} sx={{ p: 3, borderRadius: "16px" }}>
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={2}
+        >
           <Typography variant="h5" fontWeight="bold" color="#1976d2">
             Check Appointment Status
           </Typography>
@@ -59,9 +78,13 @@ const CheckStatus = () => {
           <Table>
             <TableHead>
               <TableRow>
-                {["Vehicle ID", "Model", "Details", "Contact", "Status"].map((head) => (
-                  <TableCell align="center" key={head}><strong>{head}</strong></TableCell>
-                ))}
+                {["Vehicle ID", "Model", "Details", "Contact", "Status"].map(
+                  (head) => (
+                    <TableCell align="center" key={head}>
+                      <strong>{head}</strong>
+                    </TableCell>
+                  )
+                )}
               </TableRow>
             </TableHead>
 
@@ -69,7 +92,9 @@ const CheckStatus = () => {
               {filteredAppointments.length > 0 ? (
                 filteredAppointments.map((appointment) => (
                   <TableRow key={appointment._id}>
-                    <TableCell align="center">{appointment.vehicleId}</TableCell>
+                    <TableCell align="center">
+                      {appointment.vehicleId}
+                    </TableCell>
                     <TableCell align="center">{appointment.model}</TableCell>
                     <TableCell align="center">
                       <DeatailsViewer appointment={appointment} />
@@ -78,20 +103,31 @@ const CheckStatus = () => {
                       <WhatsAppButton phone={appointment.contactNumber} />
                     </TableCell>
                     <TableCell align="center">
-                      <Typography sx={{
-                        color:
-                          appointment.status === "Pending" ? "orange" :
-                          appointment.status === "Cancelled" ? "red" :
-                          ["Reject1", "Reject2"].includes(appointment.status) ? "red" :
-                          appointment.status === "Confirmed" ? "green" :
-                          appointment.status === "Accepted" ? "#1976d2" :
-                          appointment.status === "Task Done" ? "green" :
-                          appointment.status === "InProgress" ? "#fb8c00" :
-                          "gray",
-                        fontWeight: 600,
-                        textTransform: "capitalize",
-                        fontSize: "0.9rem"
-                      }}>
+                      <Typography
+                        sx={{
+                          color:
+                            appointment.status === "Pending"
+                              ? "orange"
+                              : appointment.status === "Cancelled"
+                              ? "red"
+                              : ["Reject1", "Reject2"].includes(
+                                  appointment.status
+                                )
+                              ? "red"
+                              : appointment.status === "Confirmed"
+                              ? "green"
+                              : appointment.status === "Accepted"
+                              ? "#1976d2"
+                              : appointment.status === "Task Done"
+                              ? "green"
+                              : appointment.status === "InProgress"
+                              ? "#fb8c00"
+                              : "gray",
+                          fontWeight: 600,
+                          textTransform: "capitalize",
+                          fontSize: "0.9rem",
+                        }}
+                      >
                         {appointment.status}
                       </Typography>
                     </TableCell>
