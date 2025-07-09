@@ -1,4 +1,4 @@
-import AppointmentStatus from '../../components/AppointmetStatus';
+import AppointmentStatus from '../../components/AppoinmentStatus/AppointmetStatus';
 import { Box,Toolbar } from "@mui/material";
 import UserMiniDrawer from "../../components/ui/UserMiniDrawer";
 

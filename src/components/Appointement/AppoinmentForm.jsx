@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { TextField, MenuItem, Select, FormControl, InputLabel, Button, Grid, Typography, FormHelperText,} from '@mui/material';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useNavigate } from 'react-router-dom'; 
-import HandleAppointmentForm from './sub/HandleAppointmentForm';
-import AlertDialog from './Appointement/AlertDialog';
-import VehicleSelection from './Appointement/VehicleSelection';
+import HandleAppointmentForm from './HandleAppointmentForm';
+import AlertDialog from './AlertDialog';
+import VehicleSelection from './VehicleSelection';
 
 const AppointmentSubmit = ({userId}) => {
   // Hardcoded user ID for testing
@@ -61,7 +60,7 @@ const handleAlertClose = () => {
     <Grid container justifyContent="center" style={{ padding: 20 }}>
       <Grid item xs={12} md={8}>
         <Typography variant="h4" gutterBottom>
-          Create New Appointment
+          Appoinment Form
         </Typography>
         
         <form onSubmit={handleFormSubmit}>
@@ -127,6 +126,18 @@ const handleAlertClose = () => {
             multiline
             rows={4}
           />
+                <TextField
+            fullWidth
+            margin="normal"
+            label="Preferred Date"
+            name="preferredDate"
+            type="date"
+            value={formData.preferredDate}
+            onChange={handleInputChange}
+            InputLabelProps={{ shrink: true }}
+            error={!!errors.preferredDate}
+            helperText={errors.preferredDate}
+            />
     
           <TextField
             fullWidth
@@ -138,7 +149,6 @@ const handleAlertClose = () => {
             error={!!errors.preferredTime}
             helperText={errors.preferredTime || 'Example: 09:30 AM'}
           />
-
           <TextField
             fullWidth
             margin="normal"
@@ -150,9 +160,8 @@ const handleAlertClose = () => {
             InputLabelProps={{ shrink: true }}
             error={!!errors.expectedDeliveryDate}
             helperText={errors.expectedDeliveryDate}
-          />
-
-       
+            
+            />          
           <TextField
             fullWidth
             margin="normal"
@@ -161,7 +170,7 @@ const handleAlertClose = () => {
             value={formData.contactNumber}
             onChange={handleInputChange}
             error={!!errors.contactNumber}
-            helperText={errors.contactNumber || 'Example : 0771234567 '}
+            helperText={errors.contactNumber || 'Example : 9412345678'}
           />
           <Grid container spacing={2} justifyContent="flex-end" style={{ marginTop: 20 }}>
             <Grid item>

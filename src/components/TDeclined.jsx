@@ -94,7 +94,7 @@ function TDeclined() {
               </TableRow>
             ) : filteredAppointments.length > 0 ? (
               filteredAppointments.filter((appointment) =>
-                ["Reject1"].includes(
+                ["Reject2"].includes(
                   appointment.status
                 )
               ).map((appointment) => (
@@ -102,7 +102,7 @@ function TDeclined() {
                   <TableCell>{appointment.vehicleId}</TableCell>
                   <TableCell>{appointment.vehicleNumber}</TableCell>
                   <TableCell>{appointment.issue}</TableCell>
-                  <TableCell>{}</TableCell>
+                  <TableCell>{appointment.reason}</TableCell>
                   <TableCell>
                       {new Date(
                         appointment.appointmentDate

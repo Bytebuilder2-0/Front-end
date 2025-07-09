@@ -1,185 +1,202 @@
 import React, { useState } from "react";
 import axios from "axios";
 import {
-  Button,
-  Modal,
-  Box,
-  TextField,
-  Typography,
-  IconButton,Tooltip
+	Button,
+	Modal,
+	Box,
+	TextField,
+	Typography,
+	IconButton,
+	Tooltip,
 } from "@mui/material";
 import { Add, Delete } from "@mui/icons-material";
-import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from "@mui/icons-material/Edit";
+import { useAuth } from "../../context/AuthContext";
 
-const WorkloadManager = ({ appointment, updateAppointment, btn_name }) => {
-  const [openWorkloadModal, setOpenWorkloadModal] = useState(false);
-  const [workload, setWorkload] = useState(appointment?.workload || []);
+const baseURL = import.meta.env.VITE_API_BASE_URL;
 
-  // Open Modal and Fetch Latest Workload
-  const handleOpenWorkload = async () => {
-    if (!appointment?._id) {
-      console.error("No appointment found");
-      return;
-    }
+const WorkloadManager = ({ appointment, updateAppointment, showSnackbar }) => {
+	const { token } = useAuth();
+	const [openWorkloadModal, setOpenWorkloadModal] = useState(false);
 
-    try {
-      const response = await axios.get(
-        `http://localhost:5000/api/appointments/${appointment._id}/workload`
-      );
-      setWorkload(response.data.workload); // Ensure fresh data is fetched
-      setOpenWorkloadModal(true);
-    } catch (error) {
-      console.error("Error fetching workload:", error);
-    }
-  };
+	const [workload, setWorkload] = useState(appointment?.workload || []);
 
-  // Close Modal
-  const handleCloseModals = () => {
-    setOpenWorkloadModal(false);
-  };
+	// Open Modal and Fetch Latest Workload
+	const handleOpenWorkload = async () => {
+		if (!appointment?._id) {
+			console.error("No appointment found");
+			return;
+		}
 
-  // Handle Workload Input Changes
-  const handleWorkloadChange = (index, field, value) => {
-    setWorkload((prevWorkload) =>
-      prevWorkload.map((task, i) =>
-        i === index ? { ...task, [field]: value } : task
-      )
-    );
-  };
+		try {
+			const response = await axios.get(
+				`${baseURL}/appointments/${appointment._id}/workload`,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			setWorkload(response.data.workload); // Ensure fresh data is fetched
+			setOpenWorkloadModal(true);
+		} catch (error) {
+			console.error("Error fetching workload:", error);
+		}
+	};
 
-  // Add a New Workload Step
-  const addWorkloadStep = () => {
-    setWorkload((prevWorkload) => [
-      ...prevWorkload,
-      { step: prevWorkload.length + 1, description: "", status: "Pending" },
-    ]);
-  };
+	// Close Modal
+	const handleCloseModals = () => {
+		setOpenWorkloadModal(false);
+	};
 
-  // Remove a Workload Step
-  const removeWorkloadStep = (index) => {
-    setWorkload(
-      (prevWorkload) =>
-        prevWorkload
-          .filter((_, i) => i !== index)
-          .map((task, i) => ({ ...task, step: i + 1 })) // Reorder steps
-    );
-  };
+	// Handle Workload Input Changes
+	const handleWorkloadChange = (index, field, value) => {
+		setWorkload((prevWorkload) =>
+			prevWorkload.map((task, i) => (i === index ? { ...task, [field]: value } : task))
+		);
+	};
 
-  // Submit Workload Updates
-  const handleWorkloadSubmit = async () => {
-    if (!appointment?._id) return;
+	// Add a New Workload Step
+	const addWorkloadStep = () => {
+		setWorkload((prevWorkload) => [
+			...prevWorkload,
+			{ step: prevWorkload.length + 1, description: "", status: "Pending" },
+		]);
+	};
 
-    try {
-      await axios.put(
-        `http://localhost:5000/api/appointments/${appointment._id}/workload`,
-        { workload }
-      );
-      setOpenWorkloadModal(false);//close model here ..otherwise it will delay to get close if we put it bottom
-      // Fetch updated appointment details
-      const { data } = await axios.get(
-        `http://localhost:5000/api/appointments/${appointment._id}`
-      );
+	// Remove a Workload Step
+	const removeWorkloadStep = (index) => {
+		setWorkload(
+			(prevWorkload) =>
+				prevWorkload
+					.filter((_, i) => i !== index)
+					.map((task, i) => ({ ...task, step: i + 1 })) // Reorder steps
+		);
+	};
 
-      updateAppointment(data); // Update parent state
-      setWorkload(data.workload); // Sync local state
-    
-    } catch (error) {
-      console.error("Error updating workload:", error);
-    }
-  };
+	// Submit Workload Updates
+	const handleWorkloadSubmit = async () => {
+		if (!appointment?._id) return;
 
-  return (
-    <>
-     <Tooltip title="Edit Workload">
-  <IconButton  onClick={handleOpenWorkload} sx={{ fontSize: 28 , color: "black" }}>
-    <EditIcon sx={{ fontSize: 28 }} />
-  </IconButton>
-</Tooltip>
+		try {
+			await axios.put(
+				`${baseURL}/appointments/${appointment._id}/workload`,
+				{ workload },
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			setOpenWorkloadModal(false); //close model here ..otherwise it will delay to get close if we put it bottom
+			// Fetch updated appointment details
+			const { data } = await axios.get(`${baseURL}/appointments/${appointment._id}`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
 
-      <Modal open={openWorkloadModal} onClose={handleCloseModals}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 500,
-            bgcolor: "white",
-            boxShadow: 24,
-            p: 4,
-            borderRadius: 2,
-          }}
-        >
-          <Typography variant="h6" gutterBottom>
-            Workload for {appointment?.vehicleNumber}
-          </Typography>
+			updateAppointment(data); // Update parent state
+			setWorkload(data.workload); // Sync local state
 
-          {workload.map((task, index) => (
-            <Box
-              key={index}
-              sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}
-            >
-              <Typography variant="body1" sx={{ width: 30 }}>
-                {task.step}.
-              </Typography>
-              <TextField
-                label="Description"
-                variant="outlined"
-                size="small"
-                fullWidth
-                value={task.description}
-                onChange={(e) =>
-                  handleWorkloadChange(index, "description", e.target.value)
-                }
-              />
-              <IconButton
-                color="error"
-                onClick={() => removeWorkloadStep(index)}
-              >
-                <Delete />
-              </IconButton>
-            </Box>
-          ))}
+			showSnackbar("Workload Added successfully", "success");
+		} catch (error) {
+			console.error("Error updating workload:", error);
+		}
+	};
 
-          <Button
-            startIcon={<Add />}
-            variant="contained"
-            color="primary"
-            fullWidth
-            onClick={addWorkloadStep}
-            sx={{ mt: 2 }}
-          >
-            Add Step
-          </Button>
+	return (
+		<>
+			<Tooltip title="Edit Workload">
+				<IconButton onClick={handleOpenWorkload} sx={{ fontSize: 28, color: "black" }}>
+					<EditIcon sx={{ fontSize: 28 }} />
+				</IconButton>
+			</Tooltip>
 
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              marginTop: 2,
-            }}
-          >
-            <Button
-              variant="contained"
-              color="success"
-              onClick={handleWorkloadSubmit}
-              sx={{ width: "48%" }}
-            >
-              Submit
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              onClick={handleCloseModals}
-              sx={{ width: "48%" }}
-            >
-              Cancel
-            </Button>
-          </Box>
-        </Box>
-      </Modal>
-    </>
-  );
+			<Modal open={openWorkloadModal} onClose={handleCloseModals}>
+				<Box
+					sx={{
+						position: "absolute",
+						top: "50%",
+						left: "50%",
+						transform: "translate(-50%, -50%)",
+						width: 500,
+						bgcolor: "white",
+						boxShadow: 24,
+						p: 4,
+						borderRadius: 2,
+					}}
+				>
+					<Typography variant="h6" gutterBottom>
+						Workload for {appointment?.vehicleNumber}
+					</Typography>
+
+					{workload.map((task, index) => (
+						<Box
+							key={index}
+							sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}
+						>
+							<Typography variant="body1" sx={{ width: 30 }}>
+								{task.step}.
+							</Typography>
+							<TextField
+								label="Description"
+								variant="outlined"
+								size="small"
+								fullWidth
+								value={task.description}
+								onChange={(e) =>
+									handleWorkloadChange(index, "description", e.target.value)
+								}
+							/>
+							<IconButton color="error" onClick={() => removeWorkloadStep(index)}>
+								<Delete />
+							</IconButton>
+						</Box>
+					))}
+
+					<Button
+						startIcon={<Add />}
+						variant="contained"
+						color="primary"
+						fullWidth
+						onClick={addWorkloadStep}
+						sx={{ mt: 2 }}
+					>
+						Add Step
+					</Button>
+
+					<Box
+						sx={{
+							display: "flex",
+							justifyContent: "space-between",
+							marginTop: 2,
+						}}
+					>
+						<Button
+							variant="contained"
+							color="success"
+							onClick={handleWorkloadSubmit}
+							sx={{ width: "48%" }}
+						>
+							Submit
+						</Button>
+						<Button
+							variant="contained"
+							color="error"
+							onClick={() => {
+								handleCloseModals();
+								showSnackbar("Nothing Changed", "warning");
+							}}
+							sx={{ width: "48%" }}
+						>
+							Cancel
+						</Button>
+					</Box>
+				</Box>
+			</Modal>
+		</>
+	);
 };
 
 export default WorkloadManager;

@@ -200,7 +200,7 @@ export default function UserMiniDrawer({userId}) {
         <List>
           {[
             { path: "", label: "Home", icon: <HomeIcon /> },
-            { path: "", label: "Dashboard", icon: <DashboardIcon/> },
+            { path: "/User", label: "Dashboard", icon: <DashboardIcon/> },
             {path : "/appointments/new" , label: "Make an Appointemnt", icon: <TodayIcon /> },
             {path : "" , label: "Notifications", icon: <NotificationsIcon/> },
             {

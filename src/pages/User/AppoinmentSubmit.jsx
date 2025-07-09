@@ -1,5 +1,5 @@
 import React from 'react';
-import AppointmentForm from '../../components/AppoinmentForm' 
+import AppointmentForm from '../../components/Appointement/AppoinmentForm' 
 import UserMiniDrawer from '../../components/ui/UserMiniDrawer'
 import { Box, Toolbar } from '@mui/material';
 

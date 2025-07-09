@@ -1,150 +1,183 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Button, Modal, Box, TextField, Typography } from "@mui/material";
+import { Add } from "@mui/icons-material";
 
-const BudgetReview = ({ appointment, updateAppointment, btn_name }) => {
-  const [openBudgetModal, setOpenBudgetModal] = useState(false);
-  const [budgetAllocations, setBudgetAllocations] = useState([]);
+const baseURL = import.meta.env.VITE_API_BASE_URL;
 
-  // Open Modal
-  const handleOpenBudget = async () => {
-    if (!appointment?._id) {
-      console.log("No appointment found");
-      return;
-    }
+const BudgetReview = ({ appointment, updateAppointment, btn_name, showSnackbar }) => {
+	const [openBudgetModal, setOpenBudgetModal] = useState(false);
+	const [budgetAllocations, setBudgetAllocations] = useState([]);
 
-    try {
-      const response = await axios.get(
-        `http://localhost:5000/api/budget/${appointment._id}/view`
-      );
-      setBudgetAllocations(response.data.amountAllocations);
-      setOpenBudgetModal(true);
-    } catch (error) {
-      console.error("Error fetching budget:", error);
-    }
-  };
+	// Open Modal
+	const handleOpenBudget = async () => {
+		if (!appointment?._id) {
+			console.log("No appointment found");
+			return;
+		}
 
-  // Close Modal
-  const handleCloseModals = () => {
-    setOpenBudgetModal(false);
-  };
+		try {
+			const response = await axios.get(`${baseURL}/budget/${appointment._id}/view`,{
+				headers:{
+					Authorization: `Bearer ${localStorage.getItem('token')}`
+				}
+			});
+			setBudgetAllocations(response.data.amountAllocations);
+			setOpenBudgetModal(true);
+		} catch (error) {
+			console.error("Error fetching budget:", error);
+		}
+	};
 
-  // Handle amount change
-  const handleBudgetChange = (index, value) => {
-    const updatedAllocations = [...budgetAllocations];
+	// Close Modal
+	const handleCloseModals = () => {
+		setOpenBudgetModal(false);
+	};
 
-    // Ensure the value is a valid number and is positive
-    const parsedValue = parseFloat(value);
+	// Handle amount change
+	const handleBudgetChange = (index, value) => {
+		const updatedAllocations = [...budgetAllocations];
 
-    // Only update if the value is valid and positive
-    updatedAllocations[index].amount =
-      !isNaN(parsedValue) && parsedValue > 0 ? parsedValue : 0;
+		// Ensure the value is a valid number and is positive
+		const parsedValue = parseFloat(value);
 
-    // Update state correctly to trigger re-render
-    setBudgetAllocations(updatedAllocations);
-  };
+		// Only update if the value is valid and positive
+		updatedAllocations[index].amount = !isNaN(parsedValue) && parsedValue > 0 ? parsedValue : 0;
 
-  // Submit budget updates
-  const handleBudgetSubmit = async () => {
-    if (!appointment) return;
-    setOpenBudgetModal(false);
-    try {
-      // Send the entire budget allocation array in one request
-      for (const allocation of budgetAllocations) {
-        await axios.put(
-          `http://localhost:5000/api/budget/${appointment._id}/update`,
-          { step: allocation.step, amount: allocation.amount }
-        );
-      }
+		// Update state correctly to trigger re-render
+		setBudgetAllocations(updatedAllocations);
+	};
 
-      // Fetch updated appointment details
-      // const response = await axios.get(
-      //   `http://localhost:5000/api/appointments/${appointment._id}/view`
-      // );
+	// Submit budget updates
+	const handleBudgetSubmit = async () => {
+		if (!appointment) return;
+		setOpenBudgetModal(false);
+		try {
+			// Send the entire budget allocation array in one request
+			for (const allocation of budgetAllocations) {
+				await axios.put(`${baseURL}/budget/${appointment._id}/update`, {
+					step: allocation.step,
+					amount: allocation.amount,
+          des:allocation.des,
+				},{
+					headers:{
+						Authorization: `Bearer ${localStorage.getItem('token')}`
+					}
+				});
+			}
 
-      // Update the parent component with the latest appointment data
-      updateAppointment(response.data);
+			// Update the parent component with the latest appointment data
+			updateAppointment(response.data);
 
-      // Update local state with the latest budget
-      setBudgetAllocations(response.data.amountAllocations);
-    } catch (error) {
-      console.error("Error updating budget:", error);
-    }
-  };
+			// Update local state with the latest budget
+			setBudgetAllocations(response.data.amountAllocations);
+		} catch (error) {
+			console.error("Error updating budget:", error);
+		}
+	};
 
-  return (
-    <>
-      <Button variant="contained" color="primary" onClick={handleOpenBudget}>
-        {btn_name}
-      </Button>
+	// Add a New Workload Step
+	const addWorkloadStep = () => {
+		setBudgetAllocations((x) => [...x, { step: x.length + 1, des: "", amount: 0 }]);
+	};
 
-      <Modal open={openBudgetModal} onClose={handleCloseModals}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 500,
-            bgcolor: "white",
-            boxShadow: 24,
-            p: 4,
-            borderRadius: 2,
-          }}
-        >
-          <Typography variant="h6" gutterBottom>
-            Budget Review for {appointment?.vehicleNumber}
-          </Typography>
+	return (
+		<>
+			<Button variant="contained" sx={{ backgroundColor: "#333834" }} onClick={handleOpenBudget}>
+				{btn_name}
+			</Button>
 
-          {budgetAllocations.map((item, index) => (
-            <Box
-              key={index}
-              sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}
-            >
-              <Typography variant="body1">{item.step}</Typography>
-              <Typography variant="body1" sx={{ width: "60%" }}>
-                {item.des}
-              </Typography>
-              <TextField
-                label="Amount (USD)"
-                variant="outlined"
-                size="small"
-                type="number"
-                value={item.amount}
-                onChange={(e) => handleBudgetChange(index, e.target.value)}
-                sx={{ width: "40%" }}
-              />
-            </Box>
-          ))}
+			<Modal open={openBudgetModal} onClose={handleCloseModals}>
+				<Box
+					sx={{
+						position: "absolute",
+						top: "50%",
+						left: "50%",
+						transform: "translate(-50%, -50%)",
+						width: 500,
+						bgcolor: "white",
+						boxShadow: 24,
+						p: 4,
+						borderRadius: 2,
+					}}
+				>
+					<Typography variant="h6" gutterBottom>
+						Budget Review for {appointment?.vehicleNumber}
+					</Typography>
 
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              marginTop: 2,
-            }}
-          >
-            <Button
-              variant="contained"
-              color="success"
-              onClick={handleBudgetSubmit}
-              sx={{ width: "48%" }}
-            >
-              Submit
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              onClick={handleCloseModals}
-              sx={{ width: "48%" }}
-            >
-              Cancel
-            </Button>
-          </Box>
-        </Box>
-      </Modal>
-    </>
-  );
+					{budgetAllocations.map((item, index) => (
+						<Box key={index} sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+							<Typography variant="body1">{item.step}</Typography>
+							<TextField
+								label="Description"
+								variant="outlined"
+								size="small"
+								value={item.des}
+								onChange={(e) => {
+									const updated = [...budgetAllocations];
+									updated[index].des = e.target.value;
+									setBudgetAllocations(updated);
+								}}
+								sx={{ width: "60%" }}
+							/>
+
+							<TextField
+								label="Amount (LKR)"
+								variant="outlined"
+								size="small"
+								type="number"
+								value={item.amount}
+								onChange={(e) => handleBudgetChange(index, e.target.value)}
+								sx={{ width: "40%" }}
+							/>
+						</Box>
+					))}
+
+					<Button
+						startIcon={<Add />}
+						variant="contained"
+						color="primary"
+						fullWidth
+						onClick={addWorkloadStep}
+						sx={{ mt: 2 }}
+					>
+						Add Step
+					</Button>
+
+					<Box
+						sx={{
+							display: "flex",
+							justifyContent: "space-between",
+							marginTop: 2,
+						}}
+					>
+						<Button
+							variant="contained"
+							color="success"
+							onClick={() => {
+								handleBudgetSubmit();
+								showSnackbar("Budget Reviewed", "success");
+							}}
+							sx={{ width: "48%" }}
+						>
+							Submit
+						</Button>
+						<Button
+							variant="contained"
+							color="error"
+							onClick={() => {
+								handleCloseModals();
+								showSnackbar("Nothing Changed", "warning");
+							}}
+							sx={{ width: "48%" }}
+						>
+							Cancel
+						</Button>
+					</Box>
+				</Box>
+			</Modal>
+		</>
+	);
 };
 
 export default BudgetReview;

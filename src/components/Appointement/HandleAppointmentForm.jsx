@@ -11,6 +11,7 @@ const HandleAppointmentForm = (userId) => {
     model: '',
     services: [],
     issue: '',
+    preferredDate: '',
     preferredTime: '',
     expectedDeliveryDate: '',
     contactNumber: ''
@@ -93,12 +94,14 @@ useEffect(() => {
     
     if (!formData.vehicleObject) newErrors.vehicleObject = 'Vehicle selection is required';
     if (formData.services.length === 0) newErrors.services = 'At least one service required';
+    if (!formData.issue) newErrors.issue = 'Vehicle issue is required';
+    if (!formData.preferredDate) newErrors.preferredDate = 'Preferred date is required';
     if (!formData.preferredTime) newErrors.preferredTime = 'Preferred time is required';
     if (!formData.expectedDeliveryDate) newErrors.expectedDeliveryDate = 'Delivery date is required';
     if (!formData.contactNumber) {
       newErrors.contactNumber = 'Contact number is required';
-    } else if (!/^\d{10}$/.test(formData.contactNumber)) {
-      newErrors.contactNumber = 'Invalid contact number (10 digits required)';
+    }  else if (!/^94\d{9}$/.test(formData.contactNumber)) {
+      newErrors.contactNumber = 'Invalid contact number (must start with 94 followed by 9 digits, e.g., 94771234567)';
     }
     
     setErrors(newErrors);
@@ -127,6 +130,7 @@ useEffect(() => {
         model: '',
         services: [],
         issue: '',
+        preferredDate: '',
         preferredTime: '',
         expectedDeliveryDate: '',
         contactNumber: ''
@@ -148,6 +152,7 @@ useEffect(() => {
       model: '',
       services: [],
       issue: '',
+      preferredDate: '',
       preferredTime: '',
       expectedDeliveryDate: '',
       contactNumber: ''
