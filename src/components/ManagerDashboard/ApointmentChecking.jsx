@@ -21,8 +21,27 @@ import DeatailsViewer from "./viewDeatails";
 import WhatsAppButton from "../sub/WhatsAppButton";
 import ConfirmDeleteDialog from "../ServiceManage/ConfirmDeleteDialog";
 import SuccessSnackbar from "../ServiceManage/SuccessSnackbar";
+import { jwtDecode } from "jwt-decode";
 
 const API_BASE_URL = "http://localhost:5000/api/appointments";
+const token = localStorage.getItem("token");
+
+let decoded = null;
+if (token) {
+  try {
+    decoded = jwtDecode(token);
+    console.log(decoded.id); // optional
+  } catch (err) {
+    console.error("Invalid token:", err);
+  }
+}
+
+// config object you can reuse
+const authConfig = {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+};
 
 const ApointmentChecking = () => {
   const [appointments, setAppointments] = useState([]);
@@ -38,7 +57,7 @@ const ApointmentChecking = () => {
 
   useEffect(() => {
     axios
-      .get(API_BASE_URL)
+      .get(API_BASE_URL, authConfig)
       .then((res) =>
         setAppointments(
           res.data.reverse().filter((appt) => appt.status === "Checking")
@@ -49,9 +68,13 @@ const ApointmentChecking = () => {
 
   const handleStatusUpdate = async (appointmentId, newStatus) => {
     try {
-      await axios.put(`${API_BASE_URL}/${appointmentId}/statusUpdate`, {
-        status: newStatus,
-      });
+      await axios.put(
+        `${API_BASE_URL}/${appointmentId}/statusUpdate`,
+        {
+          status: newStatus,
+        },
+        authConfig
+      );
       setAppointments((prev) =>
         prev.filter((appt) => appt._id !== appointmentId)
       );

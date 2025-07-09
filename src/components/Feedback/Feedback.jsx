@@ -4,15 +4,33 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Container, Typography, Paper, Box } from "@mui/material";
 import FeedbackList from "./FeedbackList";
+import { jwtDecode } from "jwt-decode";
 
 const API_URL = "http://localhost:5000/api/feedback";
+const token = localStorage.getItem("token");
 
+let decoded = null;
+if (token) {
+  try {
+    decoded = jwtDecode(token);
+    console.log(decoded.id); // optional
+  } catch (err) {
+    console.error("Invalid token:", err);
+  }
+}
+
+//  Handy config object you can reuse
+const authConfig = {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+};
 const Feedback = () => {
   const [feedbacks, setFeedbacks] = useState([]);
 
   const fetchFeedbacks = async () => {
     try {
-      const res = await axios.get(API_URL);
+      const res = await axios.get(API_URL, authConfig);
       setFeedbacks(res.data.data);
     } catch (error) {
       console.error("Error fetching feedback:", error);
@@ -45,7 +63,11 @@ const Feedback = () => {
           >
             Manage User Feedback
           </Typography>
-          <Typography variant="subtitle1" align="center" sx={{ color: "gray", mt: 1 }}>
+          <Typography
+            variant="subtitle1"
+            align="center"
+            sx={{ color: "gray", mt: 1 }}
+          >
             View, Reply, and Take Actions on User Feedbacks
           </Typography>
         </Box>

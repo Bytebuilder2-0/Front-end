@@ -7,6 +7,28 @@ import { useState } from "react";
 import SuccessSnackbar from "../ServiceManage/SuccessSnackbar";
 import ConfirmDeleteDialog from "../ServiceManage/ConfirmDeleteDialog"; // ✅ Import
 
+import { jwtDecode } from "jwt-decode";
+
+const API_URL = "http://localhost:5000/api/feedback";
+const token = localStorage.getItem("token");
+
+let decoded = null;
+if (token) {
+  try {
+    decoded = jwtDecode(token);
+    console.log(decoded.id); // optional
+  } catch (err) {
+    console.error("Invalid token:", err);
+  }
+}
+
+//  Handy config object you can reuse
+const authConfig = {
+  headers: {
+    Authorization: `Bearer ${token}`,
+  },
+};
+
 const FeedbackActions = ({ feedback, onUpdate }) => {
   const [deleted, setDeleted] = useState(false);
   const [actionStatus, setActionStatus] = useState(feedback.actionStatus);
@@ -14,15 +36,15 @@ const FeedbackActions = ({ feedback, onUpdate }) => {
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false); // ✅ New state for delete confirm
 
-  // ✅ Open Confirm Delete Dialog
+  //  Open Confirm Delete Dialog
   const handleDeleteClick = () => {
     setConfirmDeleteOpen(true);
   };
 
-  // ✅ Actually delete after confirm
+  //  Actually delete after confirm
   const handleConfirmDelete = async () => {
     try {
-      await axios.put(`http://localhost:5000/api/feedback/${feedback._id}/delete`);
+      await axios.put(`${API_URL}/${feedback._id}/delete`, authConfig);
       setSnackbarMessage("Feedback successfully deleted!");
       setSnackbarOpen(true);
       setDeleted(true);
@@ -37,15 +59,19 @@ const FeedbackActions = ({ feedback, onUpdate }) => {
     setConfirmDeleteOpen(false); // Close without deleting
   };
 
-  // ✅ Toggle Add/Remove Action
+  // Toggle Add/Remove Action
   const handleActionUpdate = async () => {
     try {
       const newStatus = actionStatus === "yes" ? "no" : "yes";
       setActionStatus(newStatus);
-      await axios.put(`http://localhost:5000/api/feedback/${feedback._id}/action`);
+      await axios.put(`${API_URL}/${feedback._id}/action`, authConfig);
       onUpdate();
 
-      setSnackbarMessage(newStatus === "yes" ? "Feedback successfully added!" : "Feedback successfully removed!");
+      setSnackbarMessage(
+        newStatus === "yes"
+          ? "Feedback successfully added!"
+          : "Feedback successfully removed!"
+      );
       setSnackbarOpen(true);
     } catch (err) {
       console.error("Error updating action status:", err);
@@ -85,7 +111,7 @@ const FeedbackActions = ({ feedback, onUpdate }) => {
           <Button
             variant="contained"
             color="error"
-            onClick={handleDeleteClick} // ✅ Ask confirmation before delete
+            onClick={handleDeleteClick} // Ask confirmation before delete
             fullWidth
             size="small"
           >
@@ -94,15 +120,15 @@ const FeedbackActions = ({ feedback, onUpdate }) => {
         </Grid>
       </Grid>
 
-      {/* ✅ Confirm Delete Dialog */}
+      {/*  Confirm Delete Dialog */}
       <ConfirmDeleteDialog
         open={confirmDeleteOpen}
         onClose={handleCancelDelete}
         onConfirm={handleConfirmDelete}
-        itemName={`feedback ID: ${feedback.feedbackId}`} // ✅ Pass item name
+        itemName={`feedback ID: ${feedback.feedbackId}`} //  Pass item name
       />
 
-      {/* ✅ Success Snackbar */}
+      {/*  Success Snackbar */}
       <SuccessSnackbar
         open={snackbarOpen}
         message={snackbarMessage}
