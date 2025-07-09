@@ -24,10 +24,12 @@ import EditIcon from "@mui/icons-material/Edit";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
 import { lightBlue } from "@mui/material/colors";
+import { useAuth } from "../context/AuthContext";
 
 const API_BASE_URL = "http://localhost:5000/api/appointments";
 
 function TInprogress() {
+  const [user,token]=useAuth();
   const [appointments, setAppointments] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
@@ -39,7 +41,11 @@ function TInprogress() {
   // Fetch appointments from backend  ..
   useEffect(() => {
     axios
-      .get(API_BASE_URL)
+      .get(API_BASE_URL,{
+        headers: {
+						Authorization: `Bearer ${token}`,
+					},
+      })
       .then((response) => {
         setAppointments(response.data);
         setLoading(false);
@@ -64,7 +70,11 @@ function TInprogress() {
 
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/appointments/${appointmentId}/techMessage`
+        `http://localhost:5000/api/appointments/${appointmentId}/techMessage`,{
+          headers: {
+						Authorization: `Bearer ${token}`,
+					},
+        }
       );
       setSelectedAppointmentId(appointmentId);
       setTechnicianSuggestion(response.data.techMessage); // Ensure fresh data is fetched
@@ -85,6 +95,10 @@ function TInprogress() {
         `${API_BASE_URL}/${selectedAppointmentId}/tSuggestionWrite`,
         {
           techMessage: technicianSuggestion,
+        },{
+          headers: {
+						Authorization: `Bearer ${token}`,
+					},
         }
       );
 
@@ -118,6 +132,10 @@ function TInprogress() {
         `${API_BASE_URL}/${appointmentId}/workload/${taskId}`,
         {
           status: "Completed"
+        },{
+          headers: {
+						Authorization: `Bearer ${token}`,
+					},
         }
       );
 
@@ -152,6 +170,10 @@ function TInprogress() {
     try {
       await axios.put(`${API_BASE_URL}/${appointmentId}/tStatusUpdate`, {
         status: "Task Done",
+      },{
+        headers: {
+						Authorization: `Bearer ${token}`,
+					},
       });
 
       // Update UI instantly

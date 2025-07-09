@@ -16,10 +16,12 @@ import {
 } from "@mui/material";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import { lightBlue } from "@mui/material/colors";
+import { useAuth } from "../context/AuthContext";
 
 const API_BASE_URL = "http://localhost:5000/api/appointments";
 
 function TCompleted() {
+  const [user,token]=useAuth();
   const [appointments, setAppointments] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
@@ -29,7 +31,11 @@ function TCompleted() {
   useEffect(() => {
     const fetchCompletedJobs = async () => {
       try {
-        const res = await axios.get(API_BASE_URL);
+        const res = await axios.get(API_BASE_URL,{
+          headers: {
+						Authorization: `Bearer ${token}`,
+					},
+        });
         const completedJobs = res.data.filter(
           (appointment) => appointment.status === "Task Done"
         );
