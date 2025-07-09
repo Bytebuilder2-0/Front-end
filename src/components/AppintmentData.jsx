@@ -157,6 +157,7 @@ function AppointmentData() {
 											appointment={appointment}
 											updateAppointment={updateAppointmentInState}
 											showSnackbar={showSnackbar}
+											token={token}
 										/>
 									</TableCell>
 									<TableCell>
