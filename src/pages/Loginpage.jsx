@@ -7,13 +7,12 @@ import LoginSignupNavbar from "../components/LoginSignupNavbar";
 import { LockOpen } from "@mui/icons-material";
 import { jwtDecode } from "jwt-decode";
 
-const LoginForm = () => {
+const Loginpage = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
-	const navigate = useNavigate();
-	const { setUser } = useContext(AuthContext);
 
+	const navigate = useNavigate();
 	const { login } = useContext(AuthContext);
 
 	const handleLogin = async (e) => {
@@ -27,20 +26,21 @@ const LoginForm = () => {
 			});
 
 			const { token } = response.data;
-			login(token);
+			login(token); // Save to AuthContext
 
 			const decoded = jwtDecode(token);
-			const role = decoded.role?.toLowerCase();
+			const userRole = decoded.role?.toLowerCase();
 
-			if (role === "manager") navigate("/ManagerDashboard");
-			else if (role === "technician") navigate("/TDashboard");
-			else if (role === "customer") navigate("/User");
-			else if (role === "supervisor") navigate("/SInitial");
-			else console.error("Unknown role:", role);
+			if (userRole === "manager") navigate("/ManagerDashboard");
+			else if (userRole === "technician") navigate("/TDashboard");
+			else if (userRole === "customer") navigate("/User");
+			else if (userRole === "supervisor") navigate("/SInitial");
+			else navigate("/unauthorized");
 		} catch (err) {
 			setError(err.response?.data?.message || "Login failed");
 		}
 	};
+
 	const avatarStyle = { backgroundColor: "#388e3c", color: "#fff" };
 
 	return (
@@ -50,7 +50,7 @@ const LoginForm = () => {
 				sx={{
 					display: "flex",
 					minHeight: "100vh",
-					backgroundImage: "url(/assets/man2.webp)", //  Replace with your image path
+					backgroundImage: "url(/assets/man2.webp)",
 					backgroundSize: "cover",
 					backgroundPosition: "center",
 					alignItems: "center",
@@ -70,7 +70,7 @@ const LoginForm = () => {
 						boxShadow: 10,
 					}}
 				>
-					<Box align="center" item xs={10} mb={2}>
+					<Box align="center" mb={2}>
 						<Avatar sx={{ width: 60, height: 60 }} style={avatarStyle}>
 							<LockOpen />
 						</Avatar>
@@ -90,13 +90,13 @@ const LoginForm = () => {
 									textDecoration: "none",
 									color: "ActiveCaption",
 									fontWeight: "bold",
-									"&:hover": { color: "#9CE178" },
 								}}
 							>
 								Sign Up
 							</Link>
 						</Typography>
 					</Box>
+
 					<TextField
 						label="Email"
 						type="email"
@@ -106,6 +106,7 @@ const LoginForm = () => {
 						onChange={(e) => setEmail(e.target.value)}
 						required
 					/>
+
 					<TextField
 						label="Password"
 						type="password"
@@ -115,14 +116,16 @@ const LoginForm = () => {
 						onChange={(e) => setPassword(e.target.value)}
 						required
 					/>
+
 					{error && (
 						<Typography color="error" sx={{ mt: 1 }}>
 							{error}
 						</Typography>
 					)}
+
 					<Box
 						sx={{
-							mt: 2,
+							mt: 3,
 							display: "flex",
 							justifyContent: "space-between",
 							alignItems: "center",
@@ -164,4 +167,4 @@ const LoginForm = () => {
 	);
 };
 
-export default LoginForm;
+export default Loginpage;

@@ -100,7 +100,7 @@ const TechnicianAssignmentAndStatusUpdater = ({ appointment, updateAppointment, 
             {/* Fallback: Show assigned technician immediately if available */}
             {!technicians.length && techAssigned && appointment.tech && appointment.tech._id && (
             <MenuItem value={appointment.tech._id}>
-              {appointment.tech.employee_id} - {appointment.tech.technician_id}
+              {appointment.tech.employee_id}
             </MenuItem>
           )}
 
@@ -108,7 +108,7 @@ const TechnicianAssignmentAndStatusUpdater = ({ appointment, updateAppointment, 
 					{technicians.length > 0 ? (
 						technicians.map((tech) => (
 							<MenuItem key={tech._id} value={tech._id}>
-								{tech.employee_id} - {tech.technician_id}
+								{tech.employee_id}
 							</MenuItem>
 						))
 					) : (

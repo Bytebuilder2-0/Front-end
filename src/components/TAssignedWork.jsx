@@ -1,351 +1,372 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Container,
-  Button,
-  Box,
-  Typography,
-  TextField,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  IconButton,
+	Table,
+	TableBody,
+	TableCell,
+	TableContainer,
+	TableHead,
+	TableRow,
+	Paper,
+	Container,
+	Button,
+	Box,
+	Typography,
+	TextField,
+	Dialog,
+	DialogTitle,
+	DialogContent,
+	DialogActions,
+	IconButton,
 } from "@mui/material";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import { lightBlue } from "@mui/material/colors";
-
+import { useAuth } from "../context/AuthContext";
 
 const API_BASE_URL = "http://localhost:5000/api/appointments";
 
 function TAssignedWork() {
-  const [appointments, setAppointments] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [loading, setLoading] = useState(true);
+	const { user, token } = useAuth();
+	const [appointments, setAppointments] = useState([]);
+	const [searchTerm, setSearchTerm] = useState("");
+	const [loading, setLoading] = useState(true);
 
-  const [openDialog, setOpenDialog] = useState(false);
-  const [declineReason, setDeclineReason] = useState("");
-  const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
+	const [openDialog, setOpenDialog] = useState(false);
+	const [declineReason, setDeclineReason] = useState("");
+	const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
 
-  const [expandedWorkload, setExpandedWorkload] = useState({});
-  // Fetch appointments from backend
-  useEffect(() => {
-    axios
-      .get(API_BASE_URL)
-      .then((response) => {
-        setAppointments(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching appointments:", error);
-        setLoading(false);
-      });
-  }, []);
+	const [expandedWorkload, setExpandedWorkload] = useState({});
 
-  // Function to confirm appointment
-  const handleConfirm = async (appointmentId) => {
-    const isConfirmed = window.confirm(
-      "Are you sure you want to confirm this appointment?"
-    );
-    if (!isConfirmed) return; // If user cancels, do nothing
+	// Fetch appointments from backend
+	useEffect(() => {
+		axios
+			.get(API_BASE_URL, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			})
+			.then((response) => {
+				setAppointments(response.data);
+				setLoading(false);
+			})
+			.catch((error) => {
+				console.error("Error fetching appointments:", error);
+				setLoading(false);
+			});
+	}, []);
 
-    try {
-      await axios.put(`${API_BASE_URL}/${appointmentId}/tStatusUpdate`, {
-        status: "Accepted",
-      });
+	// Function to confirm appointment
+	const handleConfirm = async (appointmentId) => {
+		const isConfirmed = window.confirm(
+			"Are you sure you want to confirm this appointment?"
+		);
+		if (!isConfirmed) return; // If user cancels, do nothing
 
-      // Update UI instantly
-      setAppointments((prevAppointments) =>
-        prevAppointments.map((appointment) =>
-          appointment._id === appointmentId
-            ? { ...appointment, status: "Accepted" }
-            : appointment
-        )
-      );
+		try {
+			await axios.put(
+				`${API_BASE_URL}/${appointmentId}/tStatusUpdate`,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				},
+				{
+					status: "Accepted",
+				}
+			);
 
-      alert(" Appointment Confirmed!");
-    } catch (error) {
-      console.error("Error confirming appointment:", error);
-      alert(" Failed to confirm appointment.");
-    }
-  };
+			// Update UI instantly
+			setAppointments((prevAppointments) =>
+				prevAppointments.map((appointment) =>
+					appointment._id === appointmentId
+						? { ...appointment, status: "Accepted" }
+						: appointment
+				)
+			);
 
-  const handleOpenDialog = (appointmentId) => {
-    setSelectedAppointmentId(appointmentId);
-    setDeclineReason("");
-    setOpenDialog(true);
-  };
+			alert(" Appointment Confirmed!");
+		} catch (error) {
+			console.error("Error confirming appointment:", error);
+			alert(" Failed to confirm appointment.");
+		}
+	};
 
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-    setSelectedAppointmentId(null);
-  };
+	const handleOpenDialog = (appointmentId) => {
+		setSelectedAppointmentId(appointmentId);
+		setDeclineReason("");
+		setOpenDialog(true);
+	};
 
-  const handleConfirmDecline = async () => {
-    try {
-      await axios.put(
-        `${API_BASE_URL}/${selectedAppointmentId}/tStatusUpdate`,
-        {
-          status: "Reject2",
-          reason: declineReason,
-        }
-      );
+	const handleCloseDialog = () => {
+		setOpenDialog(false);
+		setSelectedAppointmentId(null);
+	};
 
-      // Update frontend UI
-      setAppointments((prevAppointments) =>
-        prevAppointments.map((appointment) =>
-          appointment._id === selectedAppointmentId
-            ? { ...appointment, status: "Reject2", reason: declineReason }
-            : appointment
-        )
-      );
+	const handleConfirmDecline = async () => {
+		try {
+			await axios.put(
+				`${API_BASE_URL}/${selectedAppointmentId}/tStatusUpdate`,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				},
+				{
+					status: "Reject2",
+					reason: declineReason,
+				}
+			);
 
-      alert(" Appointment Declined!");
-    } catch (error) {
-      console.error("Error declining appointment:", error);
-      alert(" Failed to decline appointment.");
-    } finally {
-      handleCloseDialog();
-    }
-  };
+			// Update frontend UI
+			setAppointments((prevAppointments) =>
+				prevAppointments.map((appointment) =>
+					appointment._id === selectedAppointmentId
+						? { ...appointment, status: "Reject2", reason: declineReason }
+						: appointment
+				)
+			);
 
-  const handleToggleWorkload = (appointmentId) => {
-    setExpandedWorkload((prev) => ({
-      ...prev,
-      [appointmentId]: !prev[appointmentId],
-    }));
-  };
+			alert(" Appointment Declined!");
+		} catch (error) {
+			console.error("Error declining appointment:", error);
+			alert(" Failed to decline appointment.");
+		} finally {
+			handleCloseDialog();
+		}
+	};
 
-  const filteredAppointments = appointments.filter((appointment) =>
-    (appointment.vehicleId || "")
-      .toString()
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase())
-  );
+	const handleToggleWorkload = (appointmentId) => {
+		setExpandedWorkload((prev) => ({
+			...prev,
+			[appointmentId]: !prev[appointmentId],
+		}));
+	};
 
-  return (
-    <Container>
-      <h2>Assigned Works</h2>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={2}
-      >
-        <Typography variant="h5" gutterBottom>
-          Appointments
-        </Typography>
-        <TextField
-          label="Search by Vehicle ID"
-          variant="outlined"
-          size="small"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </Box>
+	const filteredAppointments = appointments
+		// .filter((appointment) => {
+		// 	console.log("🔍 Checking appointment:");
+		// 	console.log("• appointment.tech:", appointment.tech?.toString());
+		// 	console.log("• user.technicianId:", user?.technicianId);
+		// 	console.log("• appointment.status:", appointment.status);
+		// 	const match =
+		// 		appointment.tech?.toString() === user?.technicianId &&
+		// 		appointment.status === "Waiting for Technician Confirmation";
+		// 	console.log("→ match:", match);
+		// 	return match;
+		// })
+		.filter((appointment) =>
+			(appointment.vehicleId || "")
+				.toString()
+				.toLowerCase()
+				.includes(searchTerm.toLowerCase())
+		);
 
-      <TableContainer component={Paper} elevation={3}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>
-                <strong>Vehicle ID</strong>
-              </TableCell>
-              <TableCell>
-                <strong>Vehicle Number</strong>
-              </TableCell>
-              <TableCell>
-                <strong>Appointment Date</strong>
-              </TableCell>
-              <TableCell>
-                <strong>Work Load</strong>
-              </TableCell>
-              <TableCell>
-                <strong>Status</strong>
-              </TableCell>
-              <TableCell>
-                <strong>Actions</strong>
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={6} align="center">
-                  Loading...
-                </TableCell>
-              </TableRow>
-            ) : filteredAppointments.length > 0 ? (
-              // Filter appointments to show only "Pending", "Reject1", or "Confirmed"
-              filteredAppointments
-                .filter((appointment) =>
-                  [
-                    "Waiting for Technician Confirmation",
-                    // "Reject2",
-                    // "Accepted",
-                  ].includes(appointment.status)
-                )
-                .map((appointment) => (
-                  <React.Fragment key={appointment._id}>
-                    <TableRow>
-                      <TableCell>{appointment.vehicleId}</TableCell>
-                      <TableCell>{appointment.vehicleNumber}</TableCell>
-                      <TableCell>
-                        {new Date(appointment.expectedDeliveryDate).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                      </TableCell>
-                      <TableCell>
-                        <IconButton
-                          onClick={() => handleToggleWorkload(appointment._id)}
-                        >
-                          <AssignmentIcon />
-                        </IconButton>
-                      </TableCell>
+	return (
+		<Container>
+			<h2>Assigned Works</h2>
+			<Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+				<Typography variant="h5" gutterBottom>
+					Appointments
+				</Typography>
+				<TextField
+					label="Search by Vehicle ID"
+					variant="outlined"
+					size="small"
+					value={searchTerm}
+					onChange={(e) => setSearchTerm(e.target.value)}
+				/>
+			</Box>
 
-                      <TableCell>
-                        {appointment.status === "Accepted" ? (
-                          <span style={{ color: "green", fontWeight: "bold" }}>
-                            Accepted
-                          </span>
-                        ) : appointment.status === "Reject2" ? (
-                          <span style={{ color: "red", fontWeight: "bold" }}>
-                            Declined
-                          </span>
-                        ) : (
-                          <span style={{ color: "orange", fontWeight: "bold" }}>
-                            Waiting
-                          </span>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {appointment.status === "Accepted" ? (
-                          <Button variant="contained" disabled>
-                            {appointment.status}
-                          </Button>
-                        ) : (
-                          <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={() => handleConfirm(appointment._id)}
-                            style={{ marginRight: "10px" }}
-                          >
-                            Accept
-                          </Button>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {appointment.status === "Reject2" ? (
-                          <Button variant="contained" disabled>
-                            Declined
-                          </Button>
-                        ) : (
-                          <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={() => handleOpenDialog(appointment._id)}
-                            style={{ marginRight: "10px" }}
-                          >
-                            Decline
-                          </Button>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                    {expandedWorkload[appointment._id] && (
-                      <TableRow>
-                        <TableCell colSpan={7} sx={{ textAlign: "center" }}>
-                          <Box display="flex" justifyContent="center">
-                            <Table
-                              size="small"
-                              sx={{
-                                width: "50%",
-                                backgroundColor: lightBlue[50],
-                              }}
-                            >
-                              <TableHead>
-                                <TableRow>
-                                  <TableCell align="center">
-                                    <strong>Step</strong>
-                                  </TableCell>
-                                  <TableCell align="center">
-                                    <strong>Description</strong>
-                                  </TableCell>
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                {appointment.workload.map((task, index) => (
-                                  <TableRow key={task._id || index}>
-                                    <TableCell >
-                                      {task.step}
-                                    </TableCell>
-                                    <TableCell >
-                                      {task.description}
-                                    </TableCell>
-                                  </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
-                          </Box>
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </React.Fragment>
-                ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={6} align="center">
-                  No appointments found
-                </TableCell>
-              </TableRow>
-            )}
-            {/* Decline Reason Dialog */}
+			<TableContainer component={Paper} elevation={3}>
+				<Table>
+					<TableHead>
+						<TableRow>
+							<TableCell>
+								<strong>Vehicle ID</strong>
+							</TableCell>
+							<TableCell>
+								<strong>Vehicle Number</strong>
+							</TableCell>
+							<TableCell>
+								<strong>Appointment Date</strong>
+							</TableCell>
+							<TableCell>
+								<strong>Work Load</strong>
+							</TableCell>
+							<TableCell>
+								<strong>Status</strong>
+							</TableCell>
+							<TableCell>
+								<strong>Actions</strong>
+							</TableCell>
+						</TableRow>
+					</TableHead>
+					<TableBody>
+						{loading ? (
+							<TableRow>
+								<TableCell colSpan={6} align="center">
+									Loading...
+								</TableCell>
+							</TableRow>
+						) : filteredAppointments.length > 0 ? (
+							// Filter appointments to show only "Pending", "Reject1", or "Confirmed"
+							filteredAppointments
+								.filter(
+									(x) =>
+										x.tech?._id?.toString() === user.technicianId &&
+										x.status === "Waiting for Technician Confirmation"
+								)
+								.map((appointment) => (
+									<React.Fragment key={appointment._id}>
+										<TableRow>
+											<TableCell>{appointment.vehicleId}</TableCell>
+											<TableCell>{appointment.vehicleNumber}</TableCell>
+											<TableCell>
+												{new Date(appointment.expectedDeliveryDate).toLocaleDateString(
+													"en-US",
+													{
+														year: "numeric",
+														month: "short",
+														day: "numeric",
+													}
+												)}
+											</TableCell>
+											<TableCell>
+												<IconButton onClick={() => handleToggleWorkload(appointment._id)}>
+													<AssignmentIcon />
+												</IconButton>
+											</TableCell>
 
-            <Dialog open={openDialog} onClose={handleCloseDialog}>
-              <DialogTitle>Decline Appointment</DialogTitle>
-              <DialogContent>
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  label="Reason for Decline"
-                  type="text"
-                  fullWidth
-                  multiline
-                  rows={3}
-                  value={declineReason}
-                  onChange={(e) => setDeclineReason(e.target.value)}
-                  sx={{
-                    "& .MuiInputBase-root": {
-                      alignItems: "flex-start", // aligns text at the top
-                      width: 500,
-                    },
-                  }}
-                />
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleCloseDialog}>Cancel</Button>
-                <Button
-                  onClick={handleConfirmDecline}
-                  color="error"
-                  disabled={declineReason.trim() === ""}
-                >
-                  Confirm Decline
-                </Button>
-              </DialogActions>
-            </Dialog>
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Container>
-  );
+											<TableCell>
+												{appointment.status === "Accepted" ? (
+													<span style={{ color: "green", fontWeight: "bold" }}>
+														Accepted
+													</span>
+												) : appointment.status === "Reject2" ? (
+													<span style={{ color: "red", fontWeight: "bold" }}>
+														Declined
+													</span>
+												) : (
+													<span style={{ color: "orange", fontWeight: "bold" }}>
+														Waiting
+													</span>
+												)}
+											</TableCell>
+											<TableCell>
+												{appointment.status === "Accepted" ? (
+													<Button variant="contained" disabled>
+														{appointment.status}
+													</Button>
+												) : (
+													<Button
+														variant="contained"
+														color="primary"
+														onClick={() => handleConfirm(appointment._id)}
+														style={{ marginRight: "10px" }}
+													>
+														Accept
+													</Button>
+												)}
+											</TableCell>
+											<TableCell>
+												{appointment.status === "Reject2" ? (
+													<Button variant="contained" disabled>
+														Declined
+													</Button>
+												) : (
+													<Button
+														variant="contained"
+														color="secondary"
+														onClick={() => handleOpenDialog(appointment._id)}
+														style={{ marginRight: "10px" }}
+													>
+														Decline
+													</Button>
+												)}
+											</TableCell>
+										</TableRow>
+										{expandedWorkload[appointment._id] && (
+											<TableRow>
+												<TableCell colSpan={7} sx={{ textAlign: "center" }}>
+													<Box display="flex" justifyContent="center">
+														<Table
+															size="small"
+															sx={{
+																width: "50%",
+																backgroundColor: lightBlue[50],
+															}}
+														>
+															<TableHead>
+																<TableRow>
+																	<TableCell align="center">
+																		<strong>Step</strong>
+																	</TableCell>
+																	<TableCell align="center">
+																		<strong>Description</strong>
+																	</TableCell>
+																</TableRow>
+															</TableHead>
+															<TableBody>
+																{appointment.workload.map((task, index) => (
+																	<TableRow key={task._id || index}>
+																		<TableCell>{task.step}</TableCell>
+																		<TableCell>{task.description}</TableCell>
+																	</TableRow>
+																))}
+															</TableBody>
+														</Table>
+													</Box>
+												</TableCell>
+											</TableRow>
+										)}
+									</React.Fragment>
+								))
+						) : (
+							<TableRow>
+								<TableCell colSpan={6} align="center">
+									No appointments found
+								</TableCell>
+							</TableRow>
+						)}
+						{/* Decline Reason Dialog */}
+
+						<Dialog open={openDialog} onClose={handleCloseDialog}>
+							<DialogTitle>Decline Appointment</DialogTitle>
+							<DialogContent>
+								<TextField
+									autoFocus
+									margin="dense"
+									label="Reason for Decline"
+									type="text"
+									fullWidth
+									multiline
+									rows={3}
+									value={declineReason}
+									onChange={(e) => setDeclineReason(e.target.value)}
+									sx={{
+										"& .MuiInputBase-root": {
+											alignItems: "flex-start", // aligns text at the top
+											width: 500,
+										},
+									}}
+								/>
+							</DialogContent>
+							<DialogActions>
+								<Button onClick={handleCloseDialog}>Cancel</Button>
+								<Button
+									onClick={handleConfirmDecline}
+									color="error"
+									disabled={declineReason.trim() === ""}
+								>
+									Confirm Decline
+								</Button>
+							</DialogActions>
+						</Dialog>
+					</TableBody>
+				</Table>
+			</TableContainer>
+		</Container>
+	);
 }
 
 export default TAssignedWork;
