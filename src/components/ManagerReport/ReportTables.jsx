@@ -22,19 +22,19 @@ const ReportTables = ({
   isSmallScreen,
 }) => {
   const statusColors = {
-    pending: lighten(theme.palette.warning.light, 0.2),
-    confirmed: lighten(theme.palette.info.light, 0.1),
-    checking: lighten(theme.palette.secondary.light, 0.1),
-    cancelled: lighten(theme.palette.error.light, 0.2),
-    rejected: lighten(theme.palette.error.dark, 0.1),
-    accepted: lighten(theme.palette.success.light, 0.1),
-    inProgress: lighten(theme.palette.primary.light, 0.1),
-    taskDone: lighten(theme.palette.success.main, 0.1),
-    paid: lighten(theme.palette.success.dark, 0.1),
-    reject1: lighten(theme.palette.error.main, 0.1),
-    reject2: lighten(theme.palette.error.dark, 0.1),
-    waiting: lighten(theme.palette.warning.main, 0.1),
-    "all done": lighten(theme.palette.success.dark, 0.1),
+    pending: `rgb(255, 213, 79)`, // lighten(warning.light, 0.2)
+    confirmed: `rgb(144, 202, 249)`, // lighten(info.light, 0.1)
+    checking: `rgb(206, 147, 216)`, // lighten(secondary.light, 0.1)
+    cancelled: `rgb(239, 154, 154)`, // lighten(error.light, 0.2)
+    rejected: `rgb(198, 40, 40)`, // lighten(error.dark, 0.1)
+    accepted: `rgb(165, 214, 167)`, // lighten(success.light, 0.1)
+    inProgress: `rgb(91, 124, 151)`, // lighten(primary.light, 0.1)
+    taskDone: `rgb(102, 187, 106)`, // lighten(success.main, 0.1)
+    paid: `rgb(56, 142, 60)`, // lighten(success.dark, 0.1)
+    reject1: `rgb(239, 83, 80)`, // lighten(error.main, 0.1)
+    reject2: `rgb(198, 40, 40)`, // lighten(error.dark, 0.1)
+    waiting: `rgb(255, 167, 38)`, // lighten(warning.main, 0.1)
+    "all done": `rgb(56, 142, 60)`, // lighten(success.dark, 0.1)
   };
 
   const getStatusCellStyle = (status, value) => {
@@ -130,7 +130,7 @@ const ReportTables = ({
 
   return (
     <>
-      <Grid item xs={12} sm={12} md={6}>
+      <Grid item xs={12} sm={12} md={6} style={{ marginTop: "25px" }}>
         <Card sx={cardStyle}>
           <CardContent sx={{ p: isSmallScreen ? 1 : 2 }}>
             <Typography
@@ -203,7 +203,7 @@ const ReportTables = ({
         </Card>
       </Grid>
 
-      <Grid item xs={12} sm={12} md={6}>
+      <Grid item xs={12} sm={12} md={6} style={{ marginTop: "25px" }}>
         <Card sx={cardStyle}>
           <CardContent sx={{ p: isSmallScreen ? 1 : 2 }}>
             <Typography
@@ -302,7 +302,7 @@ const ReportTables = ({
         </Card>
       </Grid>
 
-      <Grid item xs={12}>
+      <Grid item xs={12} style={{ marginTop: "30px" }}>
         <Card sx={cardStyle}>
           <CardContent sx={{ p: isSmallScreen ? 1 : 2 }}>
             <Typography
