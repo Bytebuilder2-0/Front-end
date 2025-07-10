@@ -1,107 +1,111 @@
-import React, { useEffect, useState } from 'react';
-import { 
-  List, 
-  ListItem, 
-  ListItemText, 
-  Typography,
-  IconButton,
-  Divider,
-  Box,
-  CircularProgress
-} from '@mui/material';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import {
+	List,
+	ListItem,
+	ListItemText,
+	Typography,
+	IconButton,
+	Divider,
+	Box,
+	CircularProgress,
+} from "@mui/material";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useAuth } from "../../context/AuthContext"; // Import useAuth
 
-//This component for display apppointments in dashboard if has
+// This component displays appointments in dashboard if the user has any
 
-const AppointDetails = ({ userId }) => {
+const AppointDetails = () => {
+	const { user, token } = useAuth(); //  Access user and token
+	const [appointments, setAppointments] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const navigate = useNavigate();
 
-   const API_URL = `http://localhost:5000/api/appointments/user/${userId}`
+	useEffect(() => {
+		const fetchAppointments = async () => {
+			if (!user || !user.id) return;
 
-  const [appointments, setAppointments] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+			try {
+				setLoading(true);
 
-  useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        setLoading(true);
+				const API_URL = `http://localhost:5000/api/appointments/user/${user.id}`;
 
-        const response = await axios.get(API_URL);
+				const response = await axios.get(API_URL, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				});
 
-        const appointmentsData = response.data.data;
-             
-        const filteredAppointments = appointmentsData.filter(
-               appt => appt && !['Cancelled', 'All Done'].includes(appt.status)
-             );
-        
-             setAppointments(filteredAppointments);
-     
-      } catch (error) {
-        console.error('Error fetching appointments:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+				const appointmentsData = response.data.data;
 
-    fetchAppointments();
-  }, [userId]);
+				const filteredAppointments = appointmentsData.filter(
+					(appt) => appt && !["Cancelled", "All Done"].includes(appt.status)
+				);
 
-  if (loading) return <CircularProgress />;
+				setAppointments(filteredAppointments);
+			} catch (error) {
+				console.error("Error fetching appointments:", error);
+			} finally {
+				setLoading(false);
+			}
+		};
 
-  return (
-    <Box>
-      <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold', fontSize:'22px'}}>
-        Your  Appointments
-      </Typography>
-      
-      <List sx={{ width: '100%' }}>
+		fetchAppointments();
+	}, [user?.id, token]);
 
-        {appointments.map((appointment) => (
+	if (loading) return <CircularProgress />;
 
-          <React.Fragment key={appointment._id}>
+	return (
+		<Box>
+			<Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", fontSize: "22px" }}>
+				Your Appointments
+			</Typography>
 
-            <ListItem 
-              secondaryAction={
-                <IconButton edge="end" onClick={() => navigate(`/appointments/${appointment._id}`)}>
-                  <ChevronRightIcon />
-                </IconButton>
-              }
-              sx={{
-                '&:hover': {
-                   boxShadow: '0px 2px 4px rgba(0,0,0,0.1)',
-                  backgroundColor: 'action.hover',
-                  cursor: 'pointer'
-                }
-              }}
-              onClick={() => navigate(`/appointments/${appointment._id}`)} 
-              >
-                
-
-              <ListItemText
-                primary={appointment.model}
-                secondaryTypographyProps={{ component: 'div' }}
-                secondary={
-                  <Box component="div" sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {appointment.services.map((service, i) => (
-                      <Typography component="div"
-                        key={i} >
-                        {service}..
-                      </Typography>
-                    ))}
-                  </Box>
-                }
-              />
-            </ListItem>
-            <Divider  sx={{width:'50%'}} />
-          </React.Fragment>
-          
-        ))}
-        
-      </List>
-    </Box>
-  );
+			<List sx={{ width: "100%" }}>
+				{appointments.map((appointment) => (
+					<React.Fragment key={appointment._id}>
+						<ListItem
+							secondaryAction={
+								<IconButton
+									edge="end"
+									onClick={() => navigate(`/appointments/${appointment._id}`)}
+								>
+									<ChevronRightIcon />
+								</IconButton>
+							}
+							sx={{
+								"&:hover": {
+									boxShadow: "0px 2px 4px rgba(0,0,0,0.1)",
+									backgroundColor: "action.hover",
+									cursor: "pointer",
+								},
+							}}
+							onClick={() => navigate(`/appointments/${appointment._id}`)}
+						>
+							<ListItemText
+								primary={appointment.model}
+								secondaryTypographyProps={{ component: "div" }}
+								secondary={
+									<Box
+										component="div"
+										sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}
+									>
+										{appointment.services.map((service, i) => (
+											<Typography component="div" key={i}>
+												{service}..
+											</Typography>
+										))}
+									</Box>
+								}
+							/>
+						</ListItem>
+						<Divider sx={{ width: "50%" }} />
+					</React.Fragment>
+				))}
+			</List>
+		</Box>
+	);
 };
 
 export default AppointDetails;
