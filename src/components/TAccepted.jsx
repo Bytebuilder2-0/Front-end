@@ -21,10 +21,12 @@ import {
 } from "@mui/material";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import { lightBlue } from "@mui/material/colors";
+import { useAuth } from "../context/AuthContext";
 
 const API_BASE_URL = "http://localhost:5000/api/appointments";
 
 function TAcceptedWork() {
+  const [user,token]=useAuth();
   const [appointments, setAppointments] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
@@ -37,7 +39,11 @@ function TAcceptedWork() {
   // Fetch appointments from backend
   useEffect(() => {
     axios
-      .get(API_BASE_URL)
+      .get(API_BASE_URL,{
+        headers: {
+						Authorization: `Bearer ${token}`,
+					},
+      })
       .then((response) => {
         setAppointments(response.data);
         setLoading(false);
@@ -58,6 +64,10 @@ function TAcceptedWork() {
     try {
       await axios.put(`${API_BASE_URL}/${appointmentId}/tStatusUpdate`, {
         status: "InProgress",
+      },{
+        headers: {
+						Authorization: `Bearer ${token}`,
+					},
       });
 
       // Update UI instantly
@@ -94,6 +104,10 @@ function TAcceptedWork() {
         {
           status: "Reject2",
           reason: declineReason,
+        },{
+          headers: {
+						Authorization: `Bearer ${token}`,
+					},
         }
       );
       // Update frontend UI

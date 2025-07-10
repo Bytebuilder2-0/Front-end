@@ -91,19 +91,35 @@ const router = createBrowserRouter([
 	},
 	{
 		path: "/TDeclined",
-		element: <TechnicianDeclined />,
+		element: (
+			<PrivateRoute allowedRoles={["technician"]}>
+				<TechnicianDeclined />
+			</PrivateRoute>
+		),
 	},
 	{
 		path: "/TCompleted",
-		element: <TechnicianCompleted />,
+		element: (
+			<PrivateRoute allowedRoles={["technician"]}>
+				<TechnicianCompleted />
+			</PrivateRoute>
+		),
 	},
 	{
 		path: "/TInprogress",
-		element: <TechnicianInprogress />,
+		element: (
+			<PrivateRoute allowedRoles={["technician"]}>
+				<TechnicianInprogress />
+			</PrivateRoute>
+		),
 	},
 	{
 		path: "/TAccepted",
-		element: <TechnicianAccepted />,
+		element: (
+			<PrivateRoute allowedRoles={["technician"]}>
+				<TechnicianAccepted />
+			</PrivateRoute>
+		),
 	},
 	{
 		path: "/appointments/new",
