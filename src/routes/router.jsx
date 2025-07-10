@@ -5,7 +5,6 @@ import HomePage from "../pages/Home";
 import Loginpage from "../pages/Loginpage";
 import SignupPage from "../pages/SignupPage";
 
-import VehicleForm from "../pages/VehicleForm";
 import SignInVehicleContainer from "../container/container1";
 
 import AppointmentSubmit from "../pages/User/AppoinmentSubmit";
@@ -34,6 +33,8 @@ import CheckStatus from "../pages/Manager/CheckStatus";
 import Layout from "../pages/supervisor/Layout";
 import PrivateRoute from "../components/Atoms/PrivateRoute";
 import Reports from "../pages/Manager/Report";
+
+import VehicleRegister from "../pages/User/VehicleRegister";
 
 const router = createBrowserRouter([
 	{
@@ -146,8 +147,8 @@ const router = createBrowserRouter([
 		element: <SignupPage />,
 	},
 	{
-		path: "/VehicleForm",
-		element: <VehicleForm />,
+		path: "/VehicleRegister",
+		element:<VehicleRegister />,
 	},
 	{
 		path: "/SignupVReg",

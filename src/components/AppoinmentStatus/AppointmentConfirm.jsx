@@ -3,10 +3,13 @@ import { Typography, Paper, Box, Button,Divider,Alert,Snackbar } from '@mui/mate
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import AlertDialog from '../Appointement/AlertDialog';
+import { useAuth } from "../../context/AuthContext";
 
+const API_URL = 'http://localhost:5000/api/appointments';
 
 const AppointmentConfirm = ({ appointment, onCancel }) => {
   const [openConfirm, setOpenConfirm] = useState(false);
+  const { user, token } = useAuth();
   const [snackbar, setSnackbar] = useState({ 
     open: false, 
     message: '',
@@ -21,9 +24,14 @@ const AppointmentConfirm = ({ appointment, onCancel }) => {
     setIsCancelling(true);
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/appointments/${appointment._id}/statusUpdate`,
-        { status: newStatus }
-      );
+        `${API_URL}/${appointment._id}/statusUpdate`,
+      { status: newStatus },
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }
+    );
 
       
       setSnackbar({

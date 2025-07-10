@@ -1,7 +1,6 @@
 import { Box, Paper, Tab, Tabs } from "@mui/material";  // removed Typography from here
 import React from "react";
 import Signup from "../pages/SignupPage";
-import VehicleForm from "../pages/VehicleForm";
 
 const paperStyle = { width: 460, margin: "20px auto", padding: 10 }; // added padding:20px
 function TabPanel(props) {
@@ -47,9 +46,9 @@ const SignInVehicleContainer = () => {
       <TabPanel value={value} index={0}>
         <Signup /> 
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      {/* <TabPanel value={value} index={1}>
         <VehicleForm />
-      </TabPanel>
+      </TabPanel> */}
     </Paper>
   );
 };

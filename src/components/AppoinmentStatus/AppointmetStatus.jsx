@@ -5,34 +5,51 @@ import AppointmentPending from "./AppointmentPending";
 import AppointmentConfirm from "./AppointmentConfirm";
 import AppointmentInProgress from './AppointmentInProgress';
 import { CircularProgress, Typography } from '@mui/material';
+import { useAuth } from "../../context/AuthContext";
+
+
+const API_URL = 'http://localhost:5000/api/appointments';
 
 const AppointmentStatus = () => {
-  const { id } = useParams(); // Get appointment ID from the URL
+  const { user, token } = useAuth();
+  const { id } = useParams(); // Get appointment ID from URL params
   const [appointment, setAppointment] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  console.log("Id:", id);
 
   const fetchAppointment = async () => {
+       if (!user || !id ||!token) return;
     try {
-      const response = await axios.get(`http://localhost:5000/api/appointments/${id}`);
+      const response = await axios.get(`${API_URL}/${id}`, { // Fixed: Added id to URL
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+
+
       setAppointment(response.data);
     } catch (error) {
       console.error('Error fetching appointment:', error);
+      setError(error.response?.data?.message || error.message);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-
-    fetchAppointment();
-  }, [id]);
+    useEffect(() => {
+      fetchAppointment();
+      const interval = setInterval(fetchAppointment, 30000);
+      return () => clearInterval(interval);
+    }, [user?.id, token, id]);
 
   const handleAppointmentCancel = async (canceledId) => {
     try {
-      // Immediately remove from UI
-      setAppointment(null);
+      await axios.delete(`${API_URL}/${canceledId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       navigate('/appointments/new');
     } catch (error) {
       console.error('Error handling cancellation:', error);
@@ -51,7 +68,12 @@ const AppointmentStatus = () => {
 
   return (
     <div>
-      {appointment.status === 'Pending' && <AppointmentPending appointment={appointment} onCancel={handleAppointmentCancel} />}
+     {(appointment.status === 'Pending' || appointment.status === 'Checking') && (
+      <AppointmentPending 
+        appointment={appointment} 
+        onCancel={handleAppointmentCancel} 
+      />
+    )}
       {appointment.status === 'Confirmed' && <AppointmentConfirm appointment={appointment} onCancel={handleAppointmentCancel}/>}
       {appointment.status === 'InProgress' && <AppointmentInProgress appointment={appointment} />}
 
