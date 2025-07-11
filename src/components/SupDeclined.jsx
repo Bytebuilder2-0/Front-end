@@ -12,25 +12,32 @@ import {
 	Box,
 	TextField,
 } from "@mui/material";
+
 import IssueViewer from "./sub/IssueView";
 import WorkloadManager from "./sub/WorkloadManager";
 import TechnicianAssignmentAndStatusUpdater from "./sub/TechnicianAssignmentAndStatusUpdater";
 import WhatsAppButton from "./sub/WhatsAppButton";
 import Reason from "./sub/Reason";
 import CustomSnackbar from "./sub/CustomSnackbar";
-import { useAuth } from "../context/AuthContext"; //  Add this
+import { useAuth } from "../context/AuthContext";
 
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 
-// Fetch only "Reject2" appointments
-const fetchDeclinedAppointments = async (token) => {
+// Fetch "Reject2" appointments confirmed by the current supervisor
+const fetchDeclinedAppointments = async (supervisorId, token) => {
 	try {
 		const response = await axios.get(`${baseURL}/appointments`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
 		});
-		return response.data.reverse().filter((appt) => appt.status === "Reject2");
+		return response.data
+			.reverse()
+			.filter(
+				(appt) =>
+					appt.status === "Reject2" &&
+					appt.sconfirmedBy?.toString() === supervisorId
+			);
 	} catch (error) {
 		console.error("Error fetching declined appointments:", error);
 		return [];
@@ -38,7 +45,7 @@ const fetchDeclinedAppointments = async (token) => {
 };
 
 const SupDeclined = () => {
-	const { token } = useAuth(); // Use token from context
+	const { user, token } = useAuth();
 	const [appointments, setAppointments] = useState([]);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [snackbarInfo, setSnackbarInfo] = useState({
@@ -48,17 +55,17 @@ const SupDeclined = () => {
 	});
 
 	useEffect(() => {
-		if (!token) return;
+		if (!user || !token) return;
 
 		const getDeclinedAppointments = async () => {
-			const data = await fetchDeclinedAppointments(token);
+			const data = await fetchDeclinedAppointments(user.id, token);
 			setAppointments(data);
 		};
-		getDeclinedAppointments();
 
+		getDeclinedAppointments();
 		const interval = setInterval(getDeclinedAppointments, 5000);
 		return () => clearInterval(interval);
-	}, [token]);
+	}, [user, token]);
 
 	const filteredAppointments = appointments.filter((appointment) =>
 		(appointment.vehicleId || "")
@@ -85,7 +92,7 @@ const SupDeclined = () => {
 
 	return (
 		<Container>
-			<Box display="flex" justifyContent="right" alignItems="center" mb={2}>
+			<Box display="flex" justifyContent="right" alignItems="center" mt={2} mb={2}>
 				<TextField
 					label="Search by Vehicle ID"
 					variant="outlined"
@@ -99,27 +106,13 @@ const SupDeclined = () => {
 				<Table>
 					<TableHead>
 						<TableRow>
-							<TableCell>
-								<strong>Vehicle ID</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Model</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Issue</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Reason</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Workload</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Assign.Tech</strong>
-							</TableCell>
-							<TableCell>
-								<strong>WhatsApp</strong>
-							</TableCell>
+							<TableCell><strong>Vehicle ID</strong></TableCell>
+							<TableCell><strong>Model</strong></TableCell>
+							<TableCell><strong>Issue</strong></TableCell>
+							<TableCell><strong>Reason</strong></TableCell>
+							<TableCell><strong>Workload</strong></TableCell>
+							<TableCell><strong>Assign Tech</strong></TableCell>
+							<TableCell><strong>WhatsApp</strong></TableCell>
 						</TableRow>
 					</TableHead>
 
@@ -140,6 +133,7 @@ const SupDeclined = () => {
 											appointment={appointment}
 											updateAppointment={updateAppointmentInState}
 											showSnackbar={showSnackbar}
+											token={token}
 										/>
 									</TableCell>
 									<TableCell>
