@@ -13,8 +13,7 @@ import {
 } from "@mui/material";
 import ReportCharts from "./ReportCharts";
 import ReportTables from "./ReportTables";
-import html2canvas from "html2canvas";
-import { jsPDF } from "jspdf";
+import ReportDownload from "./ReportDownload";
 import { jwtDecode } from "jwt-decode";
 
 const baseURL = "http://localhost:5000/api";
@@ -31,7 +30,7 @@ if (token) {
   }
 }
 
-// 👉 Handy config object you can reuse
+//  Handy config object you can reuse
 const authConfig = {
   headers: {
     Authorization: `Bearer ${token}`,
@@ -59,7 +58,6 @@ const ReportMain = () => {
   const [departmentStatusData, setDepartmentStatusData] = useState([]);
   const [showReport, setShowReport] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [pdfLoading, setPdfLoading] = useState(false);
   const reportRef = useRef(null);
 
   useEffect(() => {
@@ -98,162 +96,6 @@ const ReportMain = () => {
     setShowReport(true);
   };
 
-  const generatePDF = async () => {
-    if (!reportRef.current) return;
-
-    setPdfLoading(true);
-    try {
-      // Create a new PDF with landscape orientation
-      const pdf = new jsPDF({
-        orientation: "landscape",
-        unit: "mm",
-      });
-
-      const element = reportRef.current;
-
-      // Hide all duplicate chart canvases
-      const charts = element.querySelectorAll(".chart-container");
-      charts.forEach((chart) => {
-        const canvases = chart.querySelectorAll("canvas");
-        canvases.forEach((canvas, index) => {
-          if (index > 0) canvas.style.display = "none";
-        });
-      });
-
-      // Get the total height of the content
-      const totalHeight = element.scrollHeight;
-
-      // PDF page dimensions (A4 landscape)
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-
-      // Margins (10mm on each side)
-      const margin = 10;
-      const contentWidth = pdfWidth - margin * 2;
-
-      // Calculate scale to fit content width
-      const scale = contentWidth / element.scrollWidth;
-
-      // Calculate how much content fits on one page (in pixels)
-      const pageContentHeight = (pdfHeight - margin * 2) / scale;
-
-      let position = 0;
-      let pageNum = 1;
-
-      // First render pass to ensure all elements are loaded
-      await html2canvas(element, {
-        scrollY: 0,
-        height: totalHeight,
-        windowHeight: totalHeight,
-        scale: 1,
-        useCORS: true,
-        backgroundColor: theme.palette.background.default,
-        logging: true,
-        allowTaint: true,
-        onclone: (clonedDoc) => {
-          // Ensure all elements are visible for capture
-          clonedDoc.getElementById("report-content").style.overflow = "visible";
-
-          // Force all tables to be fully expanded
-          clonedDoc.querySelectorAll("table").forEach((table) => {
-            table.style.width = "100%";
-            table.style.overflow = "visible";
-          });
-
-          // Hide duplicate chart canvases
-          clonedDoc.querySelectorAll(".chart-container").forEach((chart) => {
-            const canvases = chart.querySelectorAll("canvas");
-            canvases.forEach((canvas, index) => {
-              if (index > 0) canvas.style.display = "none";
-            });
-          });
-        },
-      });
-
-      // Now capture page by page
-      while (position < totalHeight) {
-        if (pageNum > 1) {
-          pdf.addPage([pdfWidth, pdfHeight], "landscape");
-        }
-
-        // Calculate the height to capture for this page
-        const captureHeight = Math.min(
-          pageContentHeight,
-          totalHeight - position
-        );
-
-        const canvas = await html2canvas(element, {
-          scrollY: -position,
-          height: captureHeight,
-          windowHeight: captureHeight,
-          scale: scale * 2, // Higher quality
-          useCORS: true,
-          backgroundColor: theme.palette.background.default,
-          logging: true,
-          allowTaint: true,
-          ignoreElements: (el) => {
-            // Skip duplicate canvas elements and hidden elements
-            return (
-              (el.tagName === "CANVAS" && el.style.display === "none") ||
-              el.classList.contains("MuiDataGrid-main")
-            );
-          },
-          onclone: (clonedDoc) => {
-            // Ensure tables are fully expanded
-            clonedDoc.querySelectorAll("table").forEach((table) => {
-              table.style.width = "100%";
-              table.style.overflow = "visible";
-            });
-          },
-        });
-
-        const imgData = canvas.toDataURL("image/jpeg", 0.95);
-
-        // Calculate image dimensions to maintain aspect ratio
-        const imgWidth = contentWidth;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-        // Add image to PDF
-        pdf.addImage(imgData, "JPEG", margin, margin, imgWidth, imgHeight);
-
-        // Add footer with page number
-        pdf.setFontSize(10);
-        pdf.setTextColor(100);
-        pdf.text(
-          `Page ${pageNum}`,
-          pdfWidth - margin - 10,
-          pdfHeight - margin / 2
-        );
-
-        position += pageContentHeight;
-        pageNum++;
-      }
-
-      // Add header to first page
-      pdf.setPage(1);
-      pdf.setFontSize(18);
-      pdf.setTextColor(40);
-      pdf.text("Appointment Report", pdfWidth / 2, margin + 5, {
-        align: "center",
-      });
-
-      pdf.setFontSize(12);
-      pdf.text(
-        `Generated on: ${new Date().toLocaleString()}`,
-        pdfWidth / 2,
-        margin + 10,
-        { align: "center" }
-      );
-
-      // Save the PDF
-      pdf.save("appointment_report.pdf");
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-    } finally {
-      setPdfLoading(false);
-    }
-  };
-
   const workingAppointmentsCount =
     counts.confirmed +
     counts.inProgress +
@@ -261,10 +103,13 @@ const ReportMain = () => {
     counts.accepted +
     counts.rejected;
   const completedCount = counts.taskDone + counts.paid;
-  const cancelledRejectedCount = counts.cancelled + counts.rejected;
+  const cancelledRejectedCount = counts.cancelled;
 
   return (
-    <Box sx={{ p: { xs: 1, sm: 2, md: 3 }, overflowX: "hidden" }}>
+    <Box
+      sx={{ p: { xs: 1, sm: 2, md: 3 }, overflowX: "hidden" }}
+      ref={reportRef}
+    >
       {!showReport && (
         <Box
           sx={{
@@ -300,55 +145,27 @@ const ReportMain = () => {
 
       {showReport && (
         <>
-          <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={generatePDF}
-              disabled={pdfLoading || loading}
-              startIcon={
-                pdfLoading ? (
-                  <CircularProgress size={20} color="inherit" />
-                ) : null
-              }
+          {loading ? (
+            <Box
               sx={{
-                px: { xs: 2, sm: 3 },
-                py: { xs: 1, sm: 1.5 },
-                fontSize: { xs: "0.8rem", sm: "0.9rem" },
-                fontWeight: "bold",
-                borderRadius: "8px",
-                boxShadow: 2,
-                "&:hover": {
-                  boxShadow: 4,
-                  transform: "translateY(-1px)",
-                },
-                transition: "all 0.3s ease",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                minHeight: "50vh",
               }}
             >
-              {pdfLoading ? "Generating PDF..." : "Download PDF Report"}
-            </Button>
-          </Box>
-
-          <div
-            ref={reportRef}
-            id="report-content"
-            style={{
-              background: theme.palette.background.default,
-              overflow: "visible",
-            }}
-          >
-            {loading ? (
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  minHeight: "50vh",
-                }}
-              >
-                <CircularProgress size={60} thickness={4} />
+              <CircularProgress size={60} thickness={4} />
+            </Box>
+          ) : (
+            <>
+              <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+                <ReportDownload
+                  reportRef={reportRef}
+                  counts={counts}
+                  isSmallScreen={isSmallScreen}
+                />
               </Box>
-            ) : (
+
               <Grid container spacing={isSmallScreen ? 1 : 2}>
                 <Grid item xs={12}>
                   <Grid container spacing={isSmallScreen ? 1 : 2}>
@@ -489,7 +306,7 @@ const ReportMain = () => {
                             gutterBottom
                             fontSize={isSmallScreen ? "0.75rem" : "1rem"}
                           >
-                            Cancelled/Rejected
+                            Cancelled
                           </Typography>
                           <Typography
                             variant="h3"
@@ -507,8 +324,7 @@ const ReportMain = () => {
                               fontSize: isSmallScreen ? "0.6rem" : "0.8rem",
                             }}
                           >
-                            (Cancelled: {counts.cancelled}, Rejected:{" "}
-                            {counts.rejected})
+                            (Cancelled: {counts.cancelled})
                           </Typography>
                         </CardContent>
                       </Card>
@@ -532,8 +348,8 @@ const ReportMain = () => {
                   isSmallScreen={isSmallScreen}
                 />
               </Grid>
-            )}
-          </div>
+            </>
+          )}
         </>
       )}
     </Box>

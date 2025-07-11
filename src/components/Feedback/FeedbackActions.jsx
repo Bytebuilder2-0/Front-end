@@ -1,70 +1,65 @@
-// src/components/Feedback/FeedbackActions.jsx
-
 import { Button, Box, Grid } from "@mui/material";
 import axios from "axios";
 import ButtonLink from "./ButtonLink";
 import { useState } from "react";
 import SuccessSnackbar from "../ServiceManage/SuccessSnackbar";
-import ConfirmDeleteDialog from "../ServiceManage/ConfirmDeleteDialog"; // ✅ Import
-
-import { jwtDecode } from "jwt-decode";
-
-const API_URL = "http://localhost:5000/api/feedback";
-const token = localStorage.getItem("token");
-
-let decoded = null;
-if (token) {
-  try {
-    decoded = jwtDecode(token);
-    console.log(decoded.id); // optional
-  } catch (err) {
-    console.error("Invalid token:", err);
-  }
-}
-
-//  Handy config object you can reuse
-const authConfig = {
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
-};
+import ConfirmDeleteDialog from "../ServiceManage/ConfirmDeleteDialog";
 
 const FeedbackActions = ({ feedback, onUpdate }) => {
   const [deleted, setDeleted] = useState(false);
   const [actionStatus, setActionStatus] = useState(feedback.actionStatus);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false); // ✅ New state for delete confirm
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
 
-  //  Open Confirm Delete Dialog
+  const token = localStorage.getItem("token");
+  const authConfig = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
   const handleDeleteClick = () => {
     setConfirmDeleteOpen(true);
   };
 
-  //  Actually delete after confirm
   const handleConfirmDelete = async () => {
     try {
-      await axios.put(`${API_URL}/${feedback._id}/delete`, authConfig);
+      await axios.put(
+        `http://localhost:5000/api/feedback/${feedback._id}/delete`,
+        {},
+        authConfig
+      );
+
       setSnackbarMessage("Feedback successfully deleted!");
       setSnackbarOpen(true);
-      setDeleted(true);
-      onUpdate(feedback._id);
+
+      // Wait for snackbar to show before triggering deletion
+      setTimeout(() => {
+        setDeleted(true);
+        onUpdate(feedback._id);
+      }, 1000);
+
       setConfirmDeleteOpen(false);
     } catch (err) {
       console.error("Error deleting feedback:", err);
+      setSnackbarMessage("Error deleting feedback!");
+      setSnackbarOpen(true);
     }
   };
-
   const handleCancelDelete = () => {
     setConfirmDeleteOpen(false); // Close without deleting
   };
 
-  // Toggle Add/Remove Action
   const handleActionUpdate = async () => {
     try {
       const newStatus = actionStatus === "yes" ? "no" : "yes";
       setActionStatus(newStatus);
-      await axios.put(`${API_URL}/${feedback._id}/action`, authConfig);
+      await axios.put(
+        `http://localhost:5000/api/feedback/${feedback._id}/action`,
+        {},
+        authConfig
+      );
       onUpdate();
 
       setSnackbarMessage(
@@ -78,7 +73,7 @@ const FeedbackActions = ({ feedback, onUpdate }) => {
     }
   };
 
-  if (deleted) return null;
+  if (deleted) return null; // If deleted, return null to hide this component
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -111,7 +106,7 @@ const FeedbackActions = ({ feedback, onUpdate }) => {
           <Button
             variant="contained"
             color="error"
-            onClick={handleDeleteClick} // Ask confirmation before delete
+            onClick={handleDeleteClick}
             fullWidth
             size="small"
           >
@@ -120,19 +115,18 @@ const FeedbackActions = ({ feedback, onUpdate }) => {
         </Grid>
       </Grid>
 
-      {/*  Confirm Delete Dialog */}
       <ConfirmDeleteDialog
         open={confirmDeleteOpen}
         onClose={handleCancelDelete}
         onConfirm={handleConfirmDelete}
-        itemName={`feedback ID: ${feedback.feedbackId}`} //  Pass item name
+        itemName={`feedback ID: ${feedback.feedbackId}`}
       />
 
-      {/*  Success Snackbar */}
+      {/* Snackbar to show success message */}
       <SuccessSnackbar
         open={snackbarOpen}
         message={snackbarMessage}
-        onClose={() => setSnackbarOpen(false)}
+        onClose={() => setSnackbarOpen(false)} // Close snackbar on manual close
       />
     </Box>
   );

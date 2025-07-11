@@ -19,7 +19,7 @@ const FeedbackInfo = ({ feedback }) => {
     <Box sx={{ width: "100%" }}>
       <Grid container spacing={0.5}>
         {" "}
-        {/*  smaller spacing */}
+        {/* smaller spacing */}
         {infoData.map((item, index) => (
           <Grid
             key={index}

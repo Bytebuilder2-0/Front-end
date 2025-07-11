@@ -1,36 +1,36 @@
-// src/components/Feedback/Feedback.jsx
-
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Container, Typography, Paper, Box } from "@mui/material";
 import FeedbackList from "./FeedbackList";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; // Importing jwtDecode
 
 const API_URL = "http://localhost:5000/api/feedback";
-const token = localStorage.getItem("token");
 
-let decoded = null;
-if (token) {
-  try {
-    decoded = jwtDecode(token);
-    console.log(decoded.id); // optional
-  } catch (err) {
-    console.error("Invalid token:", err);
-  }
-}
-
-//  Handy config object you can reuse
-const authConfig = {
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
-};
 const Feedback = () => {
   const [feedbacks, setFeedbacks] = useState([]);
 
+  // Retrieve and decode token
+  const token = localStorage.getItem("token");
+  let decoded = null;
+
+  if (token) {
+    try {
+      decoded = jwtDecode(token);
+      console.log(decoded.id); // Optional: Log decoded token details
+    } catch (err) {
+      console.error("Invalid token:", err);
+    }
+  }
+
+  const authConfig = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
   const fetchFeedbacks = async () => {
     try {
-      const res = await axios.get(API_URL, authConfig);
+      const res = await axios.get(API_URL, authConfig); // Pass authConfig for API requests
       setFeedbacks(res.data.data);
     } catch (error) {
       console.error("Error fetching feedback:", error);
