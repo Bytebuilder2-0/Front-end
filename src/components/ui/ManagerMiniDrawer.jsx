@@ -33,6 +33,8 @@ import {
   Report as ReportIcon,
   AccountCircle,
 } from "@mui/icons-material";
+import Notify from "../Atoms/Notify";
+import Account from "../Atoms/Account";
 
 // Define the width of the drawer
 const drawerWidth = 240;
@@ -216,15 +218,9 @@ export default function ManagerSidebar({ children }) {
             }}
           >
             {/* Notifications Icon with badge */}
-            <IconButton size="large" color="inherit">
-              <Badge badgeContent={0} color="error">
-                <NotificationsIcon sx={{ color: "white" }} />
-              </Badge>
-            </IconButton>
+           <Notify/>
             {/* Account Profile Icon */}
-            <IconButton size="large" edge="end" color="inherit">
-              <AccountCircle sx={{ color: "white" }} />
-            </IconButton>
+           <Account/>
           </Box>
         </Toolbar>
       </AppBar>
