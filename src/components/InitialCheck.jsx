@@ -20,118 +20,79 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import IssueViewer from "./sub/IssueView";
 import ConfirmationDialog from "./sub/Confirmation";
 import CustomSnackbar from "./sub/CustomSnackbar";
-import { jwtDecode } from "jwt-decode";
+import { useAuth } from "../context/AuthContext"; //  use the Auth context
 
-// API Base URL
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 
-const token = localStorage.getItem("token");
-
-let decoded = null;
-
-if (token) {
-	try {
-		decoded = jwtDecode(token);
-		console.log(decoded.id); // optional
-	} catch (err) {
-		console.error("Invalid token:", err);
-		decoded = null;
-	}
-}
-
-// Fetch only "Pending" appointments
-const fetchAppointments = async () => {
+const fetchAppointments = async (token) => {
 	try {
 		const response = await axios.get(`${baseURL}/appointments`, {
 			headers: {
-				Authorization: `Bearer ${localStorage.getItem("token")}`,
+				Authorization: `Bearer ${token}`,
 			},
 		});
-
 		return response.data
 			.reverse()
-			.filter((appointment_obj) => appointment_obj.status === "Pending");
+			.filter((appointment) => appointment.status === "Pending");
 	} catch (error) {
 		console.error("Error fetching appointments:", error);
-
-		//Array returning, so that app won't crashed
 		return [];
 	}
 };
 
-// Update appointment status and remove from current table
 const updateAppointmentStatus = async (
 	appointmentId,
 	newStatus,
 	supervised,
-	setAppointments
+	setAppointments,
+	token
 ) => {
 	try {
 		await axios.put(
 			`${baseURL}/appointments/${appointmentId}/statusUpdate`,
-			{
-				status: newStatus,
-			},
-			{
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-			}
+			{ status: newStatus },
+			{ headers: { Authorization: `Bearer ${token}` } }
 		);
 
 		await axios.put(
 			`${baseURL}/appointments/${appointmentId}/superby`,
-			{
-				sconfirmedBy: supervised,
-			},
-			{
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-			}
+			{ sconfirmedBy: supervised },
+			{ headers: { Authorization: `Bearer ${token}` } }
 		);
 
-		// Remove updated appointment
-		setAppointments((appointments) => {
-			return appointments.filter(
-				(appointment_obj) => appointment_obj._id !== appointmentId
-			);
-		});
+		setAppointments((appointments) =>
+			appointments.filter((a) => a._id !== appointmentId)
+		);
 	} catch (error) {
 		console.error(`Error updating appointment status to ${newStatus}:`, error);
 	}
 };
 
 const InitialCheck = () => {
-	//All appointments
 	const [appointments, setAppointments] = useState([]);
-
 	const [searchTerm, setSearchTerm] = useState("");
-
 	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-
 	const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
-
 	const [snackbarInfo, setSnackbarInfo] = useState({
 		open: false,
 		message: "",
-		severity: "success", //Status
+		severity: "success",
 	});
 
-	//Runs only in every intial mount of the component
+	const { user, token } = useAuth(); // grab from context
+
 	useEffect(() => {
 		const getAppointments = async () => {
-			const data = await fetchAppointments();
-			setAppointments(data);
+			if (token) {
+				const data = await fetchAppointments(token);
+				setAppointments(data);
+			}
 		};
+
 		getAppointments();
-
-		//Refresh every 5 sec
 		const interval = setInterval(getAppointments, 5000);
-
-		//Runs when unmounting the component
 		return () => clearInterval(interval);
-	}, []);
+	}, [token]);
 
 	const filteredAppointments = appointments.filter((appointment) =>
 		String(
@@ -154,6 +115,7 @@ const InitialCheck = () => {
 					onChange={(e) => setSearchTerm(e.target.value)}
 				/>
 			</Box>
+
 			<TableContainer
 				component={Paper}
 				sx={{ marginTop: 2, overflow: "auto", maxHeight: 400 }}
@@ -200,8 +162,6 @@ const InitialCheck = () => {
 											}
 										)}
 									</TableCell>
-
-									{/*Status with color */}
 									<TableCell>
 										<span
 											style={{
@@ -218,15 +178,12 @@ const InitialCheck = () => {
 											{appointment.status}
 										</span>
 									</TableCell>
-
 									<TableCell>
 										<Tooltip title="Accept">
 											<IconButton
 												color="success"
 												onClick={() => {
-													// save which appointment you clicked
 													setSelectedAppointmentId(appointment._id);
-													// open the confirmation dialog
 													setConfirmDialogOpen(true);
 												}}
 												sx={{ fontSize: 30 }}
@@ -238,34 +195,33 @@ const InitialCheck = () => {
 								</TableRow>
 							))
 						) : (
-							//If no Filtered Items
 							<TableRow>
 								<TableCell colSpan={6} align="center">
-									No Appointments Founded
+									No Appointments Found
 								</TableCell>
 							</TableRow>
 						)}
 					</TableBody>
 				</Table>
 			</TableContainer>
+
 			<ConfirmationDialog
 				open={confirmDialogOpen}
 				title="Confirm Appointment"
 				message="Are you sure you want to confirm this appointment?"
 				onConfirm={async () => {
-					if (!decoded || !decoded.id) {
+					if (!user || !user.id) {
 						console.error("User not authenticated.");
 						return;
 					}
 					await updateAppointmentStatus(
 						selectedAppointmentId,
 						"Confirmed",
-						decoded.id,
-						setAppointments
+						user.id,
+						setAppointments,
+						token
 					);
 					setConfirmDialogOpen(false);
-
-					// after success, show snackbar
 					setSnackbarInfo({
 						open: true,
 						message: "Appointment Confirmed Successfully!",
@@ -274,8 +230,6 @@ const InitialCheck = () => {
 				}}
 				onCancel={() => {
 					setConfirmDialogOpen(false);
-
-					//after failure
 					setSnackbarInfo({
 						open: true,
 						message: "Appointment not accepted",
@@ -286,7 +240,6 @@ const InitialCheck = () => {
 
 			<CustomSnackbar
 				open={snackbarInfo.open}
-				//change without lossing other info in the object
 				onClose={() => setSnackbarInfo({ ...snackbarInfo, open: false })}
 				message={snackbarInfo.message}
 				action={snackbarInfo.severity}
