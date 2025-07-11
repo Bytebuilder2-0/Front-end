@@ -65,13 +65,11 @@ function TAssignedWork() {
 		try {
 			await axios.put(
 				`${API_BASE_URL}/${appointmentId}/tStatusUpdate`,
+				{ status: "Accepted" },
 				{
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},
-				},
-				{
-					status: "Accepted",
 				}
 			);
 
@@ -107,13 +105,13 @@ function TAssignedWork() {
 			await axios.put(
 				`${API_BASE_URL}/${selectedAppointmentId}/tStatusUpdate`,
 				{
+					status: "Reject2",
+					reason: declineReason,
+				},
+				{
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},
-				},
-				{
-					status: "Reject2",
-					reason: declineReason,
 				}
 			);
 

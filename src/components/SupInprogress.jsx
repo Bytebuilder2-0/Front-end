@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Container, Box,TextField } from "@mui/material";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableContainer,
+	TableHead,
+	TableRow,
+	Paper,
+	Container,
+	Box,
+	TextField,
+} from "@mui/material";
 
 import IssueViewer from "./sub/IssueView";
 import TechMessageView from "./sub/TechMessageView";
@@ -11,21 +22,22 @@ import CustomSnackbar from "./sub/CustomSnackbar";
 
 import { useAuth } from "../context/AuthContext";
 
-// API Base URL
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 
-// Fetch all appointments(status=Accepted,Inprogress)
+// Fetch appointments with status Confirmed or Waiting for Technician Confirmation
 const fetchAppointments = async (supervisorId, token) => {
 	try {
-		const response = await axios.get(`${baseURL}/appointments`,{
-			headers:{
-				Authorization: `Bearer ${token}`
-			}
+		const response = await axios.get(`${baseURL}/appointments`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
 		});
-		return response.data.reverse().filter(
-			(x) =>
+		return response.data
+			.reverse()
+			.filter(
+				(x) =>
 					x.sconfirmedBy?.toString() === supervisorId &&
-					( x.status === "Accepted" || x.status === "InProgress")
+					(x.status === "Accepted" || x.status === "InProgress")
 			);
 	} catch (error) {
 		console.error("Error fetching appointments:", error);
@@ -34,40 +46,43 @@ const fetchAppointments = async (supervisorId, token) => {
 };
 
 const SupInprogress = () => {
-		const { user, token } = useAuth();
+	const { user, token } = useAuth();
 	const [appointments, setAppointments] = useState([]);
 	const [searchTerm, setSearchTerm] = useState("");
 
 	const [snackbarInfo, setSnackbarInfo] = useState({
 		open: false,
 		message: "",
-		severity: "success", // or error,info,warning
+		severity: "success",
 	});
 
 	useEffect(() => {
-			if (!user || !token) return;
+		if (!user || !token) return;
 
 		const getAppointments = async () => {
 			const data = await fetchAppointments(user.id, token);
 			setAppointments(data);
 		};
 		getAppointments();
-		//Polling every 5 sec
+
 		const interval = setInterval(getAppointments, 5000);
 
-		//Clear polling after component unmount
 		return () => clearInterval(interval);
-	},  [user, token]);
+	}, [user, token]);
 
-	//Child components appointment get updated, will reflect that back in parent witout refreshing
 	const updateAppointmentInState = (updatedAppointment) => {
 		setAppointments((prevAppointments) =>
-			prevAppointments.map((appt) => (appt._id === updatedAppointment._id ? updatedAppointment : appt))
+			prevAppointments.map((appt) =>
+				appt._id === updatedAppointment._id ? updatedAppointment : appt
+			)
 		);
 	};
 
 	const filteredAppointments = appointments.filter((appointment) =>
-		(appointment.vehicleId || "").toLowerCase().includes(searchTerm.toLowerCase())
+		(appointment.vehicleId || "")
+			.toString()
+			.toLowerCase()
+			.includes(searchTerm.toLowerCase())
 	);
 
 	const showSnackbar = (message, severity) => {
@@ -80,8 +95,7 @@ const SupInprogress = () => {
 
 	return (
 		<Container>
-			<Box display="flex" justifyContent="space-between" alignItems="center" mb={2} mt={2}></Box>
-			<Box display="flex" justifyContent="right" alignItems="center" mb={2}>
+			<Box display="flex" justifyContent="right" alignItems="center" mb={2} mt={2}>
 				<TextField
 					label="Search by Vehicle ID"
 					variant="outlined"
@@ -90,6 +104,7 @@ const SupInprogress = () => {
 					onChange={(e) => setSearchTerm(e.target.value)}
 				/>
 			</Box>
+
 			<TableContainer component={Paper} sx={{ marginTop: 2 }}>
 				<Table>
 					<TableHead>
@@ -112,8 +127,12 @@ const SupInprogress = () => {
 							<TableCell>
 								<strong>Update Workload</strong>
 							</TableCell>
+							<TableCell>
+								<strong>WhatsApp</strong>
+							</TableCell>
 						</TableRow>
 					</TableHead>
+
 					<TableBody>
 						{filteredAppointments.length > 0 ? (
 							filteredAppointments.map((appointment) => (
@@ -146,16 +165,16 @@ const SupInprogress = () => {
 								</TableRow>
 							))
 						) : (
-							//If no Filtered Items
 							<TableRow>
-								<TableCell colSpan={6} align="center">
-									No Appointments Founded
+								<TableCell colSpan={7} align="center">
+									No Appointments Found
 								</TableCell>
 							</TableRow>
 						)}
 					</TableBody>
 				</Table>
 			</TableContainer>
+
 			<CustomSnackbar
 				open={snackbarInfo.open}
 				message={snackbarInfo.message}
