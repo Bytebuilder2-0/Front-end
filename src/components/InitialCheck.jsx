@@ -134,7 +134,13 @@ const InitialCheck = () => {
 	}, []);
 
 	const filteredAppointments = appointments.filter((appointment) =>
-		(appointment.vehicleId || "").toLowerCase().includes(searchTerm.toLowerCase())
+		String(
+			typeof appointment.vehicleId === "object"
+				? appointment.vehicleId?.vehicleNumber || ""
+				: appointment.vehicleId || ""
+		)
+			.toLowerCase()
+			.includes(searchTerm.toLowerCase())
 	);
 
 	return (

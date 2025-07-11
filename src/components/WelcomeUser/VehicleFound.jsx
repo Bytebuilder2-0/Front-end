@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 const VehicleFound = ({ vehicles }) => {
   const navigate = useNavigate();
-  
+    const theme = useTheme();
 
   return (
     <>
