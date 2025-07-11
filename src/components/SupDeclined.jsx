@@ -34,9 +34,8 @@ const fetchDeclinedAppointments = async (supervisorId, token) => {
 		return response.data
 			.reverse()
 			.filter(
-				(appt) =>
-					appt.status === "Reject2" &&
-					appt.sconfirmedBy?.toString() === supervisorId
+				(app) =>
+					app.status === "Reject2"  && app.sconfirmedBy?.toString() === supervisorId
 			);
 	} catch (error) {
 		console.error("Error fetching declined appointments:", error);
@@ -106,13 +105,27 @@ const SupDeclined = () => {
 				<Table>
 					<TableHead>
 						<TableRow>
-							<TableCell><strong>Vehicle ID</strong></TableCell>
-							<TableCell><strong>Model</strong></TableCell>
-							<TableCell><strong>Issue</strong></TableCell>
-							<TableCell><strong>Reason</strong></TableCell>
-							<TableCell><strong>Workload</strong></TableCell>
-							<TableCell><strong>Assign Tech</strong></TableCell>
-							<TableCell><strong>WhatsApp</strong></TableCell>
+							<TableCell>
+								<strong>Vehicle ID</strong>
+							</TableCell>
+							<TableCell>
+								<strong>Model</strong>
+							</TableCell>
+							<TableCell>
+								<strong>Issue</strong>
+							</TableCell>
+							<TableCell>
+								<strong>Reason</strong>
+							</TableCell>
+							<TableCell>
+								<strong>Workload</strong>
+							</TableCell>
+							<TableCell>
+								<strong>Assign Tech</strong>
+							</TableCell>
+							<TableCell>
+								<strong>WhatsApp</strong>
+							</TableCell>
 						</TableRow>
 					</TableHead>
 
