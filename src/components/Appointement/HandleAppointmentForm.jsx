@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useAuth } from "../../context/AuthContext";
 
-const HandleAppointmentForm = (userId) => {
 
+const HandleAppointmentForm = () => {
+
+  const { user, token } = useAuth();
   const [vehicles, setVehicles] = useState([]);
   const [services, setServices] = useState([]);
   const [formData, setFormData] = useState({
@@ -19,22 +22,34 @@ const HandleAppointmentForm = (userId) => {
   const [errors, setErrors] = useState({});
   const [disabledVehicles, setDisabledVehicles] = useState([]); //Track vehicles with active appointments
 
+
   const fetchData = async () => {
+     if (!user || !user.id ||!token) return;
     try {
-      console.log('Fetching data for user:', userId);
+      console.log('Fetching data for user:', user.id);
+
+      const API_URL = `http://localhost:5000/api/appointments/vehicles/${user.id}`;
       
-      const vehiclesResponse = await axios.get(
-        `http://localhost:5000/api/appointments/vehicles/${userId}`
-      );
+      const vehiclesResponse = await axios.get(API_URL, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
       console.log('Vehicles response:', vehiclesResponse.data);
       setVehicles(vehiclesResponse.data);
 
-      const servicesResponse = await axios.get('http://localhost:5000/api/appointments/services');
+
+        const servicesResponse = await axios.get(
+        'http://localhost:5000/api/appointments/services',
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       setServices(servicesResponse.data);
 
-        const appointmentsResponse = await axios.get(
-          `http://localhost:5000/api/appointments/user/${userId}`
-        );
+         const appointmentsResponse = await axios.get(
+        `http://localhost:5000/api/appointments/user/${user.id}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
         console.log('Appointments response:', appointmentsResponse.data);
 
         const activeAppointments = appointmentsResponse.data.data.filter(
@@ -55,6 +70,14 @@ const HandleAppointmentForm = (userId) => {
       console.error('Error fetching data:',  error.response ? error.response.data : error.message);
     }
   };
+
+   useEffect(() => {
+    fetchData();
+    const interval = setInterval(fetchData, 30000);
+    return () => clearInterval(interval);
+  }, [user?.id, token]);  // Only depend on auth context
+
+
 
   const handleVehicleChange = (e) => {
     const vehicleObject = e.target.value;
@@ -116,8 +139,9 @@ useEffect(() => {
 
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/appointments/${userId}`,
-        formData
+        `http://localhost:5000/api/appointments/${user.id}`,
+        formData,
+        { headers: { Authorization: `Bearer ${token}` } }
       );
         setDisabledVehicles([...disabledVehicles, formData.vehicleObject]);
         await fetchData();
