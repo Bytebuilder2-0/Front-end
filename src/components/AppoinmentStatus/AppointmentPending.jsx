@@ -13,9 +13,13 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import AlertDialog from '../Appointement/AlertDialog';
+import { useAuth } from "../../context/AuthContext";
+
+const API_URL = 'http://localhost:5000/api/appointments';
 
 const AppointmentPending = ({ appointment, onCancel }) => {
   const [openConfirm, setOpenConfirm] = useState(false);
+  const { user, token } = useAuth();
   const [snackbar, setSnackbar] = useState({ 
     open: false, 
     message: '',
@@ -30,10 +34,14 @@ const AppointmentPending = ({ appointment, onCancel }) => {
     setIsCancelling(true);
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/appointments/${appointment._id}/statusUpdate`,
-        { status: newStatus }
-      );
-
+        `${API_URL}/${appointment._id}/statusUpdate`,
+      { status: newStatus },
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }
+    );
       
       setSnackbar({
         open: true,

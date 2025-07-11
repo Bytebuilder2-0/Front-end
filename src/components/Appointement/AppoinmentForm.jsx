@@ -5,8 +5,7 @@ import HandleAppointmentForm from './HandleAppointmentForm';
 import AlertDialog from './AlertDialog';
 import VehicleSelection from './VehicleSelection';
 
-const AppointmentSubmit = ({userId}) => {
-  // Hardcoded user ID for testing
+const AppointmentSubmit = () => {
 
   const {
     vehicles,
@@ -14,21 +13,17 @@ const AppointmentSubmit = ({userId}) => {
     formData,
     errors,
     disabledVehicles = [],
-    fetchData,
     handleVehicleChange,
     handleServiceChange,
     handleInputChange,
     handleSubmit,
     handleReset
-  } = HandleAppointmentForm(userId);
+  } = HandleAppointmentForm();
   
   const navigate = useNavigate(); 
   const [showAlert, setShowAlert] = useState(false);
   const [createdAppointment, setCreatedAppointment] = useState(null); // Store created appointment data
 
- useEffect(() => {
-    fetchData();
-  }, [userId]);
 
 const handleFormSubmit = async (e) => {
   e.preventDefault();
@@ -49,7 +44,7 @@ const handleFormSubmit = async (e) => {
 const handleAlertClose = () => {
   if (createdAppointment.appointment && createdAppointment.appointment._id) {
     setShowAlert(false);
-    navigate(`/appointments/${createdAppointment.appointment._id}`); // Redirect to the appointment details page
+    navigate(`/User`); // Redirect to the appointment details page
   } else {
     console.error('Appointment ID is undefined'); 
   }

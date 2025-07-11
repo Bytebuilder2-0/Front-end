@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { TextField, Button, Typography, Container, Paper, Box, Avatar, Grid } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import axios from 'axios';
+import { useAuth } from '../../context/AuthContext';
+
 
 const VehicleForm = () => {
+  const { user, token } = useAuth();
   const [formData, setFormData] = useState({
     type: '',
     model: '',
