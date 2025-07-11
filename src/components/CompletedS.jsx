@@ -32,8 +32,7 @@ const fetchAppointments = async (supervisorId, token) => {
 		});
 		return response.data.filter(
 			(appt) =>
-				appt.status === "Task Done" &&
-				appt.sconfirmedBy?.toString() === supervisorId
+				appt.status === "Task Done" && appt.sconfirmedBy?.toString() === supervisorId
 		);
 	} catch (error) {
 		console.error("Error fetching appointments:", error);
@@ -77,8 +76,11 @@ function CompletedS() {
 		setSnackbarInfo({ open: true, message, severity });
 	};
 
+	// FIXED: Convert vehicleId to string before calling toLowerCase()
 	const filteredAppointments = appointments.filter((appointment) =>
-		(appointment.vehicleId || "").toLowerCase().includes(searchTerm.toLowerCase())
+		String(appointment.vehicleId || "")
+			.toLowerCase()
+			.includes(searchTerm.toLowerCase())
 	);
 
 	return (
@@ -97,13 +99,27 @@ function CompletedS() {
 				<Table>
 					<TableHead>
 						<TableRow>
-							<TableCell><strong>Vehicle ID</strong></TableCell>
-							<TableCell><strong>Model</strong></TableCell>
-							<TableCell><strong>Description</strong></TableCell>
-							<TableCell><strong>Budget</strong></TableCell>
-							<TableCell><strong>Invoice</strong></TableCell>
-							<TableCell><strong>Payment</strong></TableCell>
-							<TableCell><strong>Contact</strong></TableCell>
+							<TableCell>
+								<strong>Vehicle ID</strong>
+							</TableCell>
+							<TableCell>
+								<strong>Model</strong>
+							</TableCell>
+							<TableCell>
+								<strong>Description</strong>
+							</TableCell>
+							<TableCell>
+								<strong>Budget</strong>
+							</TableCell>
+							<TableCell>
+								<strong>Invoice</strong>
+							</TableCell>
+							<TableCell>
+								<strong>Payment</strong>
+							</TableCell>
+							<TableCell>
+								<strong>Contact</strong>
+							</TableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
