@@ -20,56 +20,91 @@ import { jwtDecode } from "jwt-decode";
 const API_BASE_URL = "http://localhost:5000/api/appointments";
 const token = localStorage.getItem("token");
 
-let decoded = null;
-if (token) {
-  try {
-    decoded = jwtDecode(token);
-    console.log(decoded.id); // optional
-  } catch (err) {
-    console.error("Invalid token:", err);
-  }
-}
+// Status configuration object for better maintainability
+const STATUS_CONFIG = {
+  Pending: { color: "orange", label: "Pending" },
+  Cancelled: { color: "red", label: "Cancelled" },
+  Confirmed: { color: "green", label: "Confirmed" },
+  Reject1: { color: "red", label: "Rejected" },
+  Reject2: { color: "red", label: "Rejected" },
+  "Waiting for Technician Confirmation": {
+    color: "#fb8c00",
+    label: "Waiting for Tech",
+  },
+  Accepted: { color: "#1976d2", label: "Accepted" },
+  InProgress: { color: "#fb8c00", label: "In Progress" },
+  "Task Done": { color: "green", label: "Completed" },
+};
 
-// 👉 Handy config object you can reuse
+const allowedStatuses = Object.keys(STATUS_CONFIG);
+
 const authConfig = {
   headers: {
     Authorization: `Bearer ${token}`,
   },
 };
 
-const allowedStatuses = [
-  "Pending",
-  "Cancelled",
-  "Confirmed",
-  "Reject1",
-  "Waiting for Technician Confirmation",
-  "Accepted",
-  "Reject2",
-  "InProgress",
-  "Task Done",
-];
-
 const CheckStatus = () => {
   const [appointments, setAppointments] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios
-      .get(API_BASE_URL, authConfig)
-      .then((res) => {
-        const filtered = res.data.filter((appt) =>
-          allowedStatuses.includes(appt.status)
-        );
-        setAppointments(filtered.reverse());
-      })
-      .catch((err) => console.error("Error fetching appointments:", err));
+    const fetchAppointments = async () => {
+      try {
+        const res = await axios.get(API_BASE_URL, authConfig);
+        const filtered = res.data
+          .filter((appt) => allowedStatuses.includes(appt.status))
+          .reverse();
+        setAppointments(filtered);
+      } catch (err) {
+        console.error("Error fetching appointments:", err);
+        setError("Failed to load appointments. Please try again later.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAppointments();
   }, []);
 
   const filteredAppointments = appointments.filter((appointment) =>
-    (appointment.vehicleId || "")
+    String(appointment.vehicleId || "")
       .toLowerCase()
       .includes(searchTerm.toLowerCase())
   );
+
+  const getStatusDisplay = (status) => {
+    const config = STATUS_CONFIG[status] || { color: "gray", label: status };
+    return (
+      <Typography
+        sx={{
+          color: config.color,
+          fontWeight: 600,
+          fontSize: "0.9rem",
+        }}
+      >
+        {config.label}
+      </Typography>
+    );
+  };
+
+  if (isLoading) {
+    return (
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Typography>Loading appointments...</Typography>
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Typography color="error">{error}</Typography>
+      </Container>
+    );
+  }
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
@@ -122,33 +157,7 @@ const CheckStatus = () => {
                       <WhatsAppButton phone={appointment.contactNumber} />
                     </TableCell>
                     <TableCell align="center">
-                      <Typography
-                        sx={{
-                          color:
-                            appointment.status === "Pending"
-                              ? "orange"
-                              : appointment.status === "Cancelled"
-                              ? "red"
-                              : ["Reject1", "Reject2"].includes(
-                                  appointment.status
-                                )
-                              ? "red"
-                              : appointment.status === "Confirmed"
-                              ? "green"
-                              : appointment.status === "Accepted"
-                              ? "#1976d2"
-                              : appointment.status === "Task Done"
-                              ? "green"
-                              : appointment.status === "InProgress"
-                              ? "#fb8c00"
-                              : "gray",
-                          fontWeight: 600,
-                          textTransform: "capitalize",
-                          fontSize: "0.9rem",
-                        }}
-                      >
-                        {appointment.status}
-                      </Typography>
+                      {getStatusDisplay(appointment.status)}
                     </TableCell>
                   </TableRow>
                 ))
@@ -156,7 +165,9 @@ const CheckStatus = () => {
                 <TableRow>
                   <TableCell colSpan={5} align="center" sx={{ py: 5 }}>
                     <Typography variant="h6" color="textSecondary">
-                      No appointments found
+                      {searchTerm
+                        ? "No matching appointments found"
+                        : "No appointments available"}
                     </Typography>
                   </TableCell>
                 </TableRow>

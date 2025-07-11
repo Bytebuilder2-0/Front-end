@@ -14,7 +14,7 @@ import {
   Paper,
 } from "@mui/material";
 import WhatsAppButton from "../sub/WhatsAppButton";
-import DeatailsViewer from "../ManagerDashboard/viewDeatails"; // Full appointment details modal
+import DeatailsViewer from "../ManagerDashboard/viewDeatails";
 import { jwtDecode } from "jwt-decode";
 
 const API_URL = "http://localhost:5000/api/appointments";
@@ -25,13 +25,11 @@ let decoded = null;
 if (token) {
   try {
     decoded = jwtDecode(token);
-    console.log(decoded.id); // optional
   } catch (err) {
     console.error("Invalid token:", err);
   }
 }
 
-// 👉 Handy config object you can reuse
 const authConfig = {
   headers: {
     Authorization: `Bearer ${token}`,
@@ -46,9 +44,13 @@ const ApointmentHistory = () => {
     const fetchAppointments = async () => {
       try {
         const res = await axios.get(API_URL, authConfig);
-        setAppointments(
-          res.data.reverse().filter((appt) => appt.status === "Paid")
-        );
+        // Filter for completed appointments (adjust statuses as needed)
+        const completedAppointments = res.data
+          .reverse()
+          .filter((appt) =>
+            ["Paid", "Completed", "Finished"].includes(appt.status)
+          );
+        setAppointments(completedAppointments);
       } catch (error) {
         console.error("Error fetching appointments:", error);
       }
@@ -56,13 +58,15 @@ const ApointmentHistory = () => {
     fetchAppointments();
   }, []);
 
-  const filtered = appointments.filter((appt) =>
-    (appt.vehicleId || "").toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredAppointments = appointments.filter((appt) =>
+    String(appt.vehicleId || "")
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
   );
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Paper elevation={6} sx={{ p: 3, borderRadius: 4 }}>
+      <Paper elevation={6} sx={{ p: 3, borderRadius: "16px" }}>
         {/* Header */}
         <Box
           display="flex"
@@ -70,10 +74,7 @@ const ApointmentHistory = () => {
           alignItems="center"
           mb={2}
         >
-          <Typography
-            variant="h5"
-            sx={{ fontWeight: "bold", color: "#1976d2" }}
-          >
+          <Typography variant="h5" fontWeight="bold" color="#1976d2">
             Appointment History
           </Typography>
           <TextField
@@ -112,8 +113,8 @@ const ApointmentHistory = () => {
             </TableHead>
 
             <TableBody>
-              {filtered.length > 0 ? (
-                filtered.map((appointment) => (
+              {filteredAppointments.length > 0 ? (
+                filteredAppointments.map((appointment) => (
                   <TableRow key={appointment._id}>
                     <TableCell align="center">
                       {appointment.vehicleId}
@@ -129,9 +130,10 @@ const ApointmentHistory = () => {
                       <Typography
                         sx={{
                           color:
-                            appointment.status === "Pending"
+                            appointment.status === "Paid" ||
+                            appointment.status === "Completed"
                               ? "green"
-                              : ["Cancelled", "Reject1"].includes(
+                              : ["Cancelled", "Rejected"].includes(
                                   appointment.status
                                 )
                               ? "red"
@@ -146,7 +148,7 @@ const ApointmentHistory = () => {
                     </TableCell>
                     <TableCell align="center">
                       <Typography variant="body2" color="textSecondary">
-                        No invoice
+                        {appointment.invoiceId || "No invoice"}
                       </Typography>
                     </TableCell>
                   </TableRow>

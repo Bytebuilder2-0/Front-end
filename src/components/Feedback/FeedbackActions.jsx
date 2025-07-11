@@ -4,6 +4,10 @@ import ButtonLink from "./ButtonLink";
 import { useState } from "react";
 import SuccessSnackbar from "../ServiceManage/SuccessSnackbar";
 import ConfirmDeleteDialog from "../ServiceManage/ConfirmDeleteDialog";
+import AppointmentDetailsModal from "./AppointmentDetailsModal";
+
+// Base URL configuration
+const API_BASE_URL = "http://localhost:5000/api";
 
 const FeedbackActions = ({ feedback, onUpdate }) => {
   const [deleted, setDeleted] = useState(false);
@@ -11,12 +15,33 @@ const FeedbackActions = ({ feedback, onUpdate }) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+  const [appointmentDetails, setAppointmentDetails] = useState(null);
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+  const [loadingDetails, setLoadingDetails] = useState(false);
 
   const token = localStorage.getItem("token");
   const authConfig = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
+  };
+
+  const fetchAppointmentDetails = async (appointmentId) => {
+    try {
+      setLoadingDetails(true);
+      const res = await axios.get(
+        `${API_BASE_URL}/appointments/${appointmentId}`,
+        authConfig
+      );
+      setAppointmentDetails(res.data);
+      setDetailsModalOpen(true);
+    } catch (err) {
+      console.error("Error fetching appointment details:", err);
+      setSnackbarMessage("Failed to load appointment details");
+      setSnackbarOpen(true);
+    } finally {
+      setLoadingDetails(false);
+    }
   };
 
   const handleDeleteClick = () => {
@@ -26,7 +51,7 @@ const FeedbackActions = ({ feedback, onUpdate }) => {
   const handleConfirmDelete = async () => {
     try {
       await axios.put(
-        `http://localhost:5000/api/feedback/${feedback._id}/delete`,
+        `${API_BASE_URL}/feedback/${feedback._id}/delete`,
         {},
         authConfig
       );
@@ -34,7 +59,6 @@ const FeedbackActions = ({ feedback, onUpdate }) => {
       setSnackbarMessage("Feedback successfully deleted!");
       setSnackbarOpen(true);
 
-      // Wait for snackbar to show before triggering deletion
       setTimeout(() => {
         setDeleted(true);
         onUpdate(feedback._id);
@@ -47,8 +71,9 @@ const FeedbackActions = ({ feedback, onUpdate }) => {
       setSnackbarOpen(true);
     }
   };
+
   const handleCancelDelete = () => {
-    setConfirmDeleteOpen(false); // Close without deleting
+    setConfirmDeleteOpen(false);
   };
 
   const handleActionUpdate = async () => {
@@ -56,7 +81,7 @@ const FeedbackActions = ({ feedback, onUpdate }) => {
       const newStatus = actionStatus === "yes" ? "no" : "yes";
       setActionStatus(newStatus);
       await axios.put(
-        `http://localhost:5000/api/feedback/${feedback._id}/action`,
+        `${API_BASE_URL}/feedback/${feedback._id}/action`,
         {},
         authConfig
       );
@@ -70,10 +95,12 @@ const FeedbackActions = ({ feedback, onUpdate }) => {
       setSnackbarOpen(true);
     } catch (err) {
       console.error("Error updating action status:", err);
+      setSnackbarMessage("Error updating feedback status");
+      setSnackbarOpen(true);
     }
   };
 
-  if (deleted) return null; // If deleted, return null to hide this component
+  if (deleted) return null;
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
@@ -85,15 +112,30 @@ const FeedbackActions = ({ feedback, onUpdate }) => {
             onClick={handleActionUpdate}
             fullWidth
             size="small"
+            disabled={loadingDetails}
           >
             {actionStatus === "yes" ? "Remove" : "Add"}
           </Button>
         </Grid>
 
         <Grid item xs={6}>
-          <ButtonLink to={`/service-details/${feedback.feedbackId}`}>
-            Service Details
-          </ButtonLink>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={() => fetchAppointmentDetails(feedback.appointmentId)}
+            fullWidth
+            size="small"
+            disabled={loadingDetails}
+            sx={{
+              borderRadius: "8px",
+              fontWeight: "bold",
+              "&:hover": {
+                backgroundColor: "#f0f0f0",
+              },
+            }}
+          >
+            {loadingDetails ? "Loading..." : "Relevant Details"}
+          </Button>
         </Grid>
 
         <Grid item xs={6}>
@@ -109,11 +151,18 @@ const FeedbackActions = ({ feedback, onUpdate }) => {
             onClick={handleDeleteClick}
             fullWidth
             size="small"
+            disabled={loadingDetails}
           >
             Delete
           </Button>
         </Grid>
       </Grid>
+
+      <AppointmentDetailsModal
+        appointment={appointmentDetails}
+        open={detailsModalOpen}
+        onClose={() => setDetailsModalOpen(false)}
+      />
 
       <ConfirmDeleteDialog
         open={confirmDeleteOpen}
@@ -122,11 +171,10 @@ const FeedbackActions = ({ feedback, onUpdate }) => {
         itemName={`feedback ID: ${feedback.feedbackId}`}
       />
 
-      {/* Snackbar to show success message */}
       <SuccessSnackbar
         open={snackbarOpen}
         message={snackbarMessage}
-        onClose={() => setSnackbarOpen(false)} // Close snackbar on manual close
+        onClose={() => setSnackbarOpen(false)}
       />
     </Box>
   );
