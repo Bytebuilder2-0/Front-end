@@ -18,13 +18,14 @@ import { useAuth } from "../context/AuthContext";
 const API_BASE_URL = "http://localhost:5000/api/appointments";
 
 function TDeclined() {
-	const [user, token] = useAuth();
+	const { user, token } = useAuth(); //Ensure user and token are retrieved properly
 	const [appointments, setAppointments] = useState([]);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [loading, setLoading] = useState(true);
 
-	// Fetch appointments from backend  ..
 	useEffect(() => {
+		if (!token || !user) return; //  Block fetching if user is not authenticated
+
 		axios
 			.get(API_BASE_URL, {
 				headers: {
@@ -39,14 +40,21 @@ function TDeclined() {
 				console.error("Error fetching appointments:", error);
 				setLoading(false);
 			});
-	}, []);
+	}, [token, user]);
 
-	const filteredAppointments = appointments.filter((appointment) =>
-		(appointment.vehicleId || "")
-			.toString()
-			.toLowerCase()
-			.includes(searchTerm.toLowerCase())
-	);
+	// Filter by status and technician match
+	const filteredAppointments = appointments
+		.filter(
+			(app) =>
+				app.status === "Reject2" &&
+				app.tech?._id?.toString() === user?.technicianId
+		)
+		.filter((appointment) =>
+			(appointment.vehicleId || "")
+				.toString()
+				.toLowerCase()
+				.includes(searchTerm.toLowerCase())
+		);
 
 	return (
 		<Container>
@@ -68,21 +76,11 @@ function TDeclined() {
 				<Table>
 					<TableHead>
 						<TableRow>
-							<TableCell>
-								<strong>Vehicle ID</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Vehicle Number</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Service description</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Declined Reason</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Date</strong>
-							</TableCell>
+							<TableCell><strong>Vehicle ID</strong></TableCell>
+							<TableCell><strong>Vehicle Number</strong></TableCell>
+							<TableCell><strong>Service Description</strong></TableCell>
+							<TableCell><strong>Decline Reason</strong></TableCell>
+							<TableCell><strong>Date</strong></TableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
@@ -93,23 +91,21 @@ function TDeclined() {
 								</TableCell>
 							</TableRow>
 						) : filteredAppointments.length > 0 ? (
-							filteredAppointments
-								.filter((appointment) => ["Reject2"].includes(appointment.status))
-								.map((appointment) => (
-									<TableRow key={appointment._id}>
-										<TableCell>{appointment.vehicleId}</TableCell>
-										<TableCell>{appointment.vehicleNumber}</TableCell>
-										<TableCell>{appointment.issue}</TableCell>
-										<TableCell>{appointment.reason}</TableCell>
-										<TableCell>
-											{new Date(appointment.appointmentDate).toLocaleDateString()}
-										</TableCell>
-									</TableRow>
-								))
+							filteredAppointments.map((appointment) => (
+								<TableRow key={appointment._id}>
+									<TableCell>{appointment.vehicleId}</TableCell>
+									<TableCell>{appointment.vehicleNumber}</TableCell>
+									<TableCell>{appointment.issue}</TableCell>
+									<TableCell>{appointment.reason}</TableCell>
+									<TableCell>
+										{new Date(appointment.appointmentDate).toLocaleDateString()}
+									</TableCell>
+								</TableRow>
+							))
 						) : (
 							<TableRow>
 								<TableCell colSpan={6} align="center">
-									No matching appointments
+									No declined appointments found
 								</TableCell>
 							</TableRow>
 						)}

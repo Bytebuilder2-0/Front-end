@@ -21,24 +21,30 @@ import { useAuth } from "../context/AuthContext";
 const API_BASE_URL = "http://localhost:5000/api/appointments";
 
 function TCompleted() {
-  const [user,token]=useAuth();
+  const { user, token } = useAuth();
   const [appointments, setAppointments] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
-
-   const [expandedWorkload, setExpandedWorkload] = useState({});
+  const [expandedWorkload, setExpandedWorkload] = useState({});
 
   useEffect(() => {
     const fetchCompletedJobs = async () => {
+      if (!token || !user?.technicianId) return;
+
       try {
-        const res = await axios.get(API_BASE_URL,{
+        const res = await axios.get(API_BASE_URL, {
           headers: {
-						Authorization: `Bearer ${token}`,
-					},
+            Authorization: `Bearer ${token}`,
+          },
         });
+
+        //  Filter only "Task Done" and assigned to this technician
         const completedJobs = res.data.filter(
-          (appointment) => appointment.status === "Task Done"
+          (appointment) =>
+            appointment.status === "Task Done" &&
+            appointment.tech?._id?.toString() === user.technicianId
         );
+
         setAppointments(completedJobs);
       } catch (error) {
         console.error("Failed to fetch completed jobs", error);
@@ -48,7 +54,7 @@ function TCompleted() {
     };
 
     fetchCompletedJobs();
-  }, []);
+  }, [token, user]);
 
   const handleToggleWorkload = (appointmentId) => {
     setExpandedWorkload((prev) => ({
@@ -89,21 +95,11 @@ function TCompleted() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>
-                <strong>Vehicle ID</strong>
-              </TableCell>
-              <TableCell>
-                <strong>Vehicle Number</strong>
-              </TableCell>
-              <TableCell>
-                <strong>Model</strong>
-              </TableCell>
-              <TableCell>
-                <strong>Workload</strong>
-              </TableCell>
-              <TableCell>
-                <strong>Date</strong>
-              </TableCell>
+              <TableCell><strong>Vehicle ID</strong></TableCell>
+              <TableCell><strong>Vehicle Number</strong></TableCell>
+              <TableCell><strong>Model</strong></TableCell>
+              <TableCell><strong>Workload</strong></TableCell>
+              <TableCell><strong>Date</strong></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -116,7 +112,7 @@ function TCompleted() {
             ) : filteredAppointments.length > 0 ? (
               filteredAppointments.map((appointment) => (
                 <React.Fragment key={appointment._id}>
-                  <TableRow key={appointment._id}>
+                  <TableRow>
                     <TableCell>{appointment.vehicleId}</TableCell>
                     <TableCell>{appointment.vehicleNumber}</TableCell>
                     <TableCell>{appointment.model}</TableCell>
@@ -128,14 +124,12 @@ function TCompleted() {
                       </IconButton>
                     </TableCell>
                     <TableCell>
-                      {new Date(
-                        appointment.appointmentDate
-                      ).toLocaleDateString()}
+                      {new Date(appointment.appointmentDate).toLocaleDateString()}
                     </TableCell>
                   </TableRow>
                   {expandedWorkload[appointment._id] && (
                     <TableRow>
-                      <TableCell colSpan={7} sx={{ textAlign: "center" }}>
+                      <TableCell colSpan={6} sx={{ textAlign: "center" }}>
                         <Box display="flex" justifyContent="center">
                           <Table
                             size="small"
