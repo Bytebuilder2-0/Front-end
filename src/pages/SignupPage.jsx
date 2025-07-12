@@ -76,7 +76,7 @@ const Signup = () => {
 				role: formData.role,
 			};
 
-			const res = await axios.post('${import.meta.env.VITE_API_BASE_URL}/auth/register', payload);
+			const res = await axios.post("http://localhost:5000/api/auth/register", payload);
 			alert("Signup successful!");
 			console.log(res);
 			setFormData({
