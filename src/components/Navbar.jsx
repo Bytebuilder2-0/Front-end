@@ -29,15 +29,15 @@ const Navbar = () => {
   }
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: "#0660f3d3" }}>
+    <AppBar position="relative" sx={{ backgroundColor: "#0660f3d3" }}>
       <Toolbar>
         {/* Company Logo Section */}
          <Box sx={{ flexGrow: 1 }}>
           <Link to="/">
             <img
-              src="/public/assets/frame.jpg"
+              src="/assets/image.png"
               alt="Logo"
-              style={{ height: 40 }}
+              style={{ height: 60 }}
             />
           </Link>
         </Box>
@@ -60,15 +60,11 @@ const Navbar = () => {
           <Button color="inherit" component={Link} to="/Loginpage" sx={{ marginRight: 2 }}>
             Login
           </Button>
-          {/* <Button color="inherit" component={Link} to="/SignupPage" sx={{ marginRight: 2 }}>
-            Sign Up
-          </Button> */}
-          <Button
-            color="inherit"
-            onClick={handleLogoutClick} // Attach the logout function here
-            sx={{ marginRight: 2 }}
-          >
-            Logout
+           <Button color="inherit"  href="#services" sx={{ mx: 1 }}>
+            Services
+          </Button>
+          <Button color="inherit"  href="#contact" sx={{ mx: 1 }}>
+            Contact Us
           </Button>
         </Box>
 
