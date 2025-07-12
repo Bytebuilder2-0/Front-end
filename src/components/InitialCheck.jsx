@@ -12,7 +12,9 @@ import {
 	Box,
 	TextField,
 	IconButton,
-	Tooltip,Typography,Chip
+	Tooltip,
+	Typography,
+	Chip,
 } from "@mui/material";
 
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -216,6 +218,34 @@ const InitialCheck = () => {
 				open={confirmDialogOpen}
 				title="Confirm Appointment"
 				message="Are you sure you want to confirm this appointment?"
+				dialogSx={{
+					borderRadius: 3,
+					boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
+					p: 2,
+				}}
+				titleSx={{
+					fontSize: "1.5rem",
+					fontWeight: "bold",
+					color: "#2E7D32", // Greenish title
+				}}
+				messageSx={{
+					fontSize: "1rem",
+					color: "#555",
+				}}
+				confirmButtonSx={{
+					backgroundColor: "#2E7D32",
+					color: "#fff",
+					"&:hover": {
+						backgroundColor: "#1B5E20",
+					},
+				}}
+				cancelButtonSx={{
+					color: "#f44336",
+					borderColor: "#f44336",
+					"&:hover": {
+						backgroundColor: "#fdecea",
+					},
+				}}
 				onConfirm={async () => {
 					if (!user || !user.id) {
 						console.error("User not authenticated.");
