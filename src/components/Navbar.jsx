@@ -13,7 +13,7 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: 'rgba(0, 0, 0, 0.7)' }}>
+    <AppBar position="static" sx={{ backgroundColor: 'rgba(39, 84, 245, 0.8)' }}>
       <Toolbar>
         <Box sx={{ flexGrow: 1 }}>
           <Link to="/">
