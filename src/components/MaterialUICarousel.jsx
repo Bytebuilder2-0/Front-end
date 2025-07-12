@@ -96,24 +96,42 @@ const ResponsiveCarousel = () => {
             >
               {item.isIntro ? (
                 <>
-                  <Typography
-                    variant="h2"
-                    fontWeight="bold"
-                    gutterBottom
-                    sx={{ fontSize: { xs: "2.5rem", md: "4rem" }, textShadow: "3px 3px 6px rgba(0,0,0,0.8)",
-                    }}
-                  >
-                    Welcome to Garage24
-                  </Typography>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    size="large"
-                    component={Link} to="/SignupPage"
-                    sx={{ mt: 2 }}
-                  >
-                    Register Now
-                  </Button>
+                 <>
+  <Typography
+    variant="h2"
+    fontWeight="bold"
+    gutterBottom
+    sx={{
+      fontSize: { xs: "2.5rem", md: "4rem" },
+      textShadow: "3px 3px 6px rgba(0,0,0,0.8)",
+    }}
+  >
+    Welcome to Garage24
+  </Typography>
+
+  <Typography
+    variant="h6"
+    sx={{
+      mt: 1,
+      fontSize: { xs: "1rem", md: "1.2rem" },
+      fontWeight: 400,
+    }}
+  >
+    New here? click below to register and get started!
+  </Typography>
+
+  <Button
+    variant="contained"
+    color="primary"
+    size="large"
+    component={Link}
+    to="/SignupPage"
+    sx={{ mt: 3 }}
+  >
+    Register Now
+  </Button>
+</>
+
                 </>
               ) : (
                 <>

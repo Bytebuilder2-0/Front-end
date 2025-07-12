@@ -9,6 +9,8 @@ import HowItWorks from "../components/HowItWorks";
 import FeedbackSlider from "../components/FeedbackSlider";
 import Footer from "../components/Footer";
 import Services from "../components/Services";
+import { GlobalStyles } from "@mui/material";
+
 
 const aboutItems = [
   {
@@ -37,6 +39,14 @@ const HomePage = () => {
   return (
     <>
       <Navbar />
+      <GlobalStyles
+  styles={{
+    html: {
+      scrollBehavior: "smooth",
+    },
+  }}
+/>
+
 
       <ResponsiveCarousel />
 
@@ -75,11 +85,15 @@ const HomePage = () => {
           ))}
         </Grid>
       </Box>
-      <Services/>
+      <div id="services">
+        <Services />
+      </div>
+
       <HowItWorks/>
       {/* <FeedbackSlider/> */}
+      <div id ="contact">
       <Footer/>
-
+          </div>
     </>
   );
 };
