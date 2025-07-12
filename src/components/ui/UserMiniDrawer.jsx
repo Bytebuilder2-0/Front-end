@@ -2,6 +2,7 @@ import * as React from "react";
 import { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import axios from "axios";
+import { useAuth } from '../../context/AuthContext';
 
 import {
 	Box,
@@ -111,6 +112,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 export default function UserMiniDrawer({ userId }) {
+	const { user, token } = useAuth();
 	const [open, setOpen] = React.useState(true);
 	const navigate = useNavigate();
 	const [expanded, setExpanded] = useState({ "My Appointments": false });
@@ -126,11 +128,17 @@ export default function UserMiniDrawer({ userId }) {
 		const fetchAppointments = async () => {
 			try {
 				setLoading(true);
-				const response = await axios.get(
-					`http://localhost:5000/api/appointments/user/${userId}`
-				);
+				const API_URL = `http://localhost:5000/api/appointments/user/${userId}`
+				const response = await axios.get(API_URL, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+				});
 
 				let appointmentsData = response.data;
+				console.log("Filtered appointments:", 
+  appointments.filter((appt) => !["Cancelled", "All done", "Reject1"].includes(appt?.status))
+);
 				if (appointmentsData && !Array.isArray(appointmentsData)) {
 					// If backend wraps array in an object (like { data: [...] })
 					if (
@@ -158,7 +166,10 @@ export default function UserMiniDrawer({ userId }) {
 		if (userId) {
 			fetchAppointments();
 		}
-	}, [userId]);
+	}, [userId, token]);
+
+	
+	
 
 	const handleExpandClick = (menuItem) => {
 		setExpanded((prev) => ({ ...prev, [menuItem]: !prev[menuItem] }));
@@ -257,7 +268,7 @@ export default function UserMiniDrawer({ userId }) {
 							icon: <ListIcon />,
 							hasChildren: true,
 							children: appointments
-								.filter((appt) => !["Cancelled", "All done"].includes(appt?.status))
+								.filter((appt) => !["Cancelled", "All done","Reject1"].includes(appt?.status))
 								.map((appt) => ({
 									path: `/appointments/${appt._id}`,
 									label: appt.model || `Vehicle ${appt._id.substring(0, 4)}`, // Fallback to partial ID if no model
@@ -284,8 +295,10 @@ export default function UserMiniDrawer({ userId }) {
 									<ListItemText primary={item.label} sx={{ opacity: open ? 1 : 0 }} />
 									{item.hasChildren &&
 										(expanded[item.label] ? <ExpandLess /> : <ExpandMore />)}
+										
 								</ListItemButton>
 							</ListItem>
+							
 
 							{item.hasChildren && expanded[item.label] && (
 								<List component="div" disablePadding>
