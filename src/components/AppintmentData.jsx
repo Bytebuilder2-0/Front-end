@@ -11,6 +11,7 @@ import {
 	Container,
 	TextField,
 	Box,
+	Typography,
 } from "@mui/material";
 
 import WorkloadManager from "./sub/WorkloadManager";
@@ -109,43 +110,36 @@ function AppointmentData() {
 
 			<TableContainer
 				component={Paper}
-				elevation={3}
 				sx={{
-					// Adjust the height according to the number of rows you want to display
+					marginTop: 2,
+					overflow: "auto",
 					maxHeight: 400,
-
-					// Enable vertical scroll when content overflows
-					overflowY: "auto",
+					borderRadius: 2,
+					boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
 				}}
 			>
-				<Table stickyHeader>
+				<Table stickyHeader aria-label="appointment table">
 					<TableHead>
-						<TableRow>
-							<TableCell>
-								<strong>Vehicle ID</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Vehicle Number</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Model</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Issue</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Workload</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Assign Technician</strong>
-							</TableCell>
+						<TableRow sx={{ "& th": { fontWeight: "bold", backgroundColor: "#f5f5f5" } }}>
+							<TableCell>Vehicle ID</TableCell>
+							<TableCell>Vehicle Number</TableCell>
+							<TableCell>Model</TableCell>
+							<TableCell>Issue</TableCell>
+							<TableCell>Workload</TableCell>
+							<TableCell>Assign Technician</TableCell>
 						</TableRow>
 					</TableHead>
 
 					<TableBody>
 						{filteredAppointments.length > 0 ? (
 							filteredAppointments.map((appointment) => (
-								<TableRow key={appointment._id}>
+								<TableRow
+									key={appointment._id}
+									sx={{
+										"&:nth-of-type(odd)": { backgroundColor: "#fafafa" },
+										"&:hover": { backgroundColor: "#e0e0e0" },
+									}}
+								>
 									<TableCell>{appointment.vehicleId}</TableCell>
 									<TableCell>{appointment.vehicleNumber}</TableCell>
 									<TableCell>{appointment.model}</TableCell>
@@ -171,14 +165,17 @@ function AppointmentData() {
 							))
 						) : (
 							<TableRow>
-								<TableCell colSpan={6} align="center">
-									No matching appointments
+								<TableCell colSpan={6} align="center" sx={{ py: 4 }}>
+									<Typography variant="h6" color="text.secondary">
+										No matching appointments
+									</Typography>
 								</TableCell>
 							</TableRow>
 						)}
 					</TableBody>
 				</Table>
 			</TableContainer>
+
 			<CustomSnackbar
 				open={snackbarInfo.open}
 				message={snackbarInfo.message}

@@ -11,6 +11,7 @@ import {
 	Box,
 	Container,
 	TextField,
+	Typography,
 } from "@mui/material";
 
 import IssueViewer from "./sub/IssueView";
@@ -95,37 +96,39 @@ function CompletedS() {
 				/>
 			</Box>
 
-			<TableContainer component={Paper} sx={{ marginTop: 2 }}>
-				<Table>
+			<TableContainer
+				component={Paper}
+				sx={{
+					marginTop: 2,
+					overflow: "auto",
+					maxHeight: 400,
+					borderRadius: 2,
+					boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
+				}}
+			>
+				<Table stickyHeader aria-label="budget invoice payment table">
 					<TableHead>
-						<TableRow>
-							<TableCell>
-								<strong>Vehicle ID</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Model</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Description</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Budget</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Invoice</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Payment</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Contact</strong>
-							</TableCell>
+						<TableRow sx={{ "& th": { fontWeight: "bold", backgroundColor: "#f5f5f5" } }}>
+							<TableCell>Vehicle ID</TableCell>
+							<TableCell>Model</TableCell>
+							<TableCell>Description</TableCell>
+							<TableCell>Budget</TableCell>
+							<TableCell>Invoice</TableCell>
+							<TableCell>Payment</TableCell>
+							<TableCell>Contact</TableCell>
 						</TableRow>
 					</TableHead>
+
 					<TableBody>
 						{filteredAppointments.length > 0 ? (
 							filteredAppointments.map((appointment) => (
-								<TableRow key={appointment._id}>
+								<TableRow
+									key={appointment._id}
+									sx={{
+										"&:nth-of-type(odd)": { backgroundColor: "#fafafa" },
+										"&:hover": { backgroundColor: "#e0e0e0" },
+									}}
+								>
 									<TableCell>{appointment.vehicleId}</TableCell>
 									<TableCell>{appointment.model}</TableCell>
 									<TableCell>
@@ -150,8 +153,10 @@ function CompletedS() {
 							))
 						) : (
 							<TableRow>
-								<TableCell colSpan={7} align="center">
-									No matching appointments found
+								<TableCell colSpan={7} align="center" sx={{ py: 4 }}>
+									<Typography variant="h6" color="text.secondary">
+										No matching appointments found
+									</Typography>
 								</TableCell>
 							</TableRow>
 						)}
