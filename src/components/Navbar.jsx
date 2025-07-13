@@ -1,148 +1,183 @@
+"use client"
 
 import { useState } from "react"
-import { Link } from "react-router-dom";
-import { AppBar, Toolbar, Typography, Button, Box, Avatar, Menu, MenuItem, IconButton, Link as MuiLink } from "@mui/material"
-import { AccountCircle, Business } from "@mui/icons-material"
-import handleLogoutClick from "../utils/logout"
+import { Link } from "react-router-dom"
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Box,
+  Container,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material"
+import MenuIcon from "@mui/icons-material/Menu"
+import LoginIcon from "@mui/icons-material/Login"
+import BuildIcon from "@mui/icons-material/Build"
+import ContactMailIcon from "@mui/icons-material/ContactMail"
 
 const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [anchorEl, setAnchorEl] = useState(null)
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"))
 
-  const handleLogin = () => {
-    setIsLoggedIn(true)
-    console.log("User logged in")
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen)
   }
 
-  const handleLogout = () => {
-    setIsLoggedIn(false)
-    setAnchorEl(null)
-    console.log("User logged out")
-  }
+  const navItems = [
+    { label: "Services", href: "#services", icon: <BuildIcon /> },
+    { label: "Contact Us", href: "#contact", icon: <ContactMailIcon /> },
+    { label: "Login", href: "/Loginpage", icon: <LoginIcon />, isButton: true },
+  ]
 
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget)
-  }
-
-  const handleMenuClose = () => {
-    setAnchorEl(null)
-  }
-
-  return (
-    <AppBar position="relative" sx={{ backgroundColor: "#0660f3d3" }}>
-      <Toolbar>
-        {/* Company Logo Section */}
-         <Box sx={{ flexGrow: 1 }}>
-          <Link to="/">
-            <img
-              src="/assets/image.png"
-              alt="Logo"
-              style={{ height: 60 }}
-            />
-          </Link>
-        </Box>
-        {/* <Box sx={{ display: "flex", alignItems: "center", flexGrow: 1 }}>
-          <Business sx={{ mr: 1, fontSize: 28 }} />
-          <Typography
-            variant="h6"
-            component="div"
-            sx={{
-              fontWeight: "bold",
-              letterSpacing: 1,
-            }}
-          >
-          
-          </Typography>
-        </Box> */}
-
-        {/* Navigation Links (Optional) */}
-       <Box>
-          <Button color="inherit" component={Link} to="/Loginpage" sx={{ marginRight: 2 }}>
-            Login
-          </Button>
-           <Button color="inherit"  href="#services" sx={{ mx: 1 }}>
-            Services
-          </Button>
-          <Button color="inherit"  href="#contact" sx={{ mx: 1 }}>
-            Contact Us
-          </Button>
-        </Box>
-
-
-
-
-        {/* <Box sx={{ display: { xs: "none", md: "flex" }, mr: 2 }}>
-          
-          <Button color="inherit" sx={{ mx: 1 }}>
-            About
-          </Button>
-          <Button color="inherit" sx={{ mx: 1 }}>
-            Services
-          </Button>
-          <Button color="inherit" sx={{ mx: 1 }}>
-            Contact
-          </Button>
-          <Button color="inherit" component={Link} to="/Loginpage" sx={{ marginRight: 2 }}>
-            Login
-          </Button>
-        </Box> */}
-
-        {/* Authentication Section
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          {!isLoggedIn ? (
+  const drawer = (
+    <Box onClick={handleDrawerToggle} sx={{ textAlign: "center", pt: 2 }}>
+      <Typography variant="h6" sx={{ my: 2, fontWeight: "bold", color: "primary.main" }}>
+        Garage24
+      </Typography>
+      <List>
+        {navItems.map((item) => (
+          <ListItem key={item.label} disablePadding>
             <Button
-              color="inherit"
-              variant="outlined"
-              onClick={handleLogin}
+              component={item.href.startsWith("#") ? "a" : Link}
+              to={item.href.startsWith("#") ? undefined : item.href}
+              href={item.href.startsWith("#") ? item.href : undefined}
+              fullWidth
+              startIcon={item.icon}
               sx={{
-                borderColor: "white",
-                "&:hover": {
-                  borderColor: "white",
-                  backgroundColor: "rgba(255, 255, 255, 0.1)",
-                },
+                justifyContent: "flex-start",
+                px: 3,
+                py: 2,
+                color: item.isButton ? "primary.main" : "text.primary",
+                fontWeight: item.isButton ? "bold" : "normal",
               }}
             >
-              Login
+              {item.label}
             </Button>
-          ) : (
-            <>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  )
+
+  return (
+    <>
+      <AppBar
+        position="sticky"
+        elevation={0}
+        sx={{
+          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+          backdropFilter: "blur(20px)",
+          borderBottom: "1px solid rgba(255,255,255,0.1)",
+        }}
+      >
+        <Container maxWidth="xl">
+          <Toolbar sx={{ py: 1 }}>
+            {/* Logo Section */}
+            <Box sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
+              <Link to="/" style={{ textDecoration: "none", display: "flex", alignItems: "center" }}>
+                <img
+                  src="/assets/image.png"
+                  alt="Garage24 Logo"
+                  style={{
+                    height: 50,
+                    marginRight: 12,
+                    filter: "brightness(1.2)",
+                  }}
+                />
+                {/* <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: 800,
+                    color: "white",
+                    textShadow: "0 2px 10px rgba(0,0,0,0.3)",
+                    display: { xs: "none", sm: "block" },
+                  }}
+                >
+                  Garage24
+                </Typography> */}
+              </Link>
+            </Box>
+
+            {/* Desktop Navigation */}
+            {!isMobile && (
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                {navItems.map((item) => (
+                  <Button
+                    key={item.label}
+                    component={item.href.startsWith("#") ? "a" : Link}
+                    to={item.href.startsWith("#") ? undefined : item.href}
+                    href={item.href.startsWith("#") ? item.href : undefined}
+                    startIcon={item.icon}
+                    variant={item.isButton ? "contained" : "text"}
+                    sx={{
+                      color: item.isButton ? "primary.main" : "white",
+                      fontWeight: "600",
+                      px: 3,
+                      py: 1,
+                      mx: 0.5,
+                      borderRadius: 2,
+                      backgroundColor: item.isButton ? "white" : "transparent",
+                      "&:hover": {
+                        backgroundColor: item.isButton ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.1)",
+                        transform: "translateY(-1px)",
+                      },
+                      transition: "all 0.3s ease",
+                    }}
+                  >
+                    {item.label}
+                  </Button>
+                ))}
+              </Box>
+            )}
+
+            {/* Mobile Menu Button */}
+            {isMobile && (
               <IconButton
-                size="large"
-                edge="end"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenuOpen}
                 color="inherit"
+                aria-label="open drawer"
+                edge="start"
+                onClick={handleDrawerToggle}
+                sx={{
+                  backgroundColor: "rgba(255,255,255,0.1)",
+                  "&:hover": {
+                    backgroundColor: "rgba(255,255,255,0.2)",
+                  },
+                }}
               >
-                <Avatar sx={{ width: 32, height: 32, backgroundColor: "#f50057" }}>
-                  <AccountCircle />
-                </Avatar>
+                <MenuIcon />
               </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleMenuClose}
-              >
-                <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-                <MenuItem onClick={handleMenuClose}>My Account</MenuItem>
-                <MenuItem onClick={handleLogout}>Logout</MenuItem>
-              </Menu>
-            </>
-          )}
-        </Box> */}
-      </Toolbar>
-    </AppBar>
+            )}
+          </Toolbar>
+        </Container>
+      </AppBar>
+
+      {/* Mobile Drawer */}
+      <Drawer
+        variant="temporary"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{
+          keepMounted: true,
+        }}
+        sx={{
+          display: { xs: "block", md: "none" },
+          "& .MuiDrawer-paper": {
+            boxSizing: "border-box",
+            width: 280,
+            background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
+          },
+        }}
+      >
+        {drawer}
+      </Drawer>
+    </>
   )
 }
 
