@@ -11,29 +11,29 @@ const slideData = [
     isIntro: true,
   },
   {
-    image: "/assets/mount.jpg",
+    image: "/assets/fulldiag.webp",
     title: "Premium Car Service",
     description: "Get full diagnostics and expert repair.",
   },
   {
-    image: "/assets/fungi.jpg",
+    image: "/assets/car-wash.jpg",
     title: "Complete Car Wash",
     description: "Shine and polish like brand new.",
   },
   {
-    image: "/assets/tree.jpg",
+    image: "/assets/alloywhl.jpg",
     title: "Tyre & Brake Check",
     description: "Safety starts with strong foundations.",
   },
   {
-    image: "/assets/tree.jpg",
+    image: "/assets/acRep.jpeg",
     title: "A/C Repairing",
     description: "Cool and comfortable drives.",
   },
   {
-    image: "/assets/tree.jpg",
-    title: "Body Wash",
-    description: "Give your car a fresh look.",
+    image: "/assets/electricdiag.webp",
+    title: "Electric Diagnosis",
+    description: "minimize electrical issues.",
   },
 ]
 
@@ -151,7 +151,7 @@ const ResponsiveCarousel = () => {
                           py: 2,
                           fontSize: "1.1rem",
                           fontWeight: "bold",
-                          background: "linear-gradient(45deg, #2196F3, #21CBF3)",
+                          background: "linear-gradient(45deg, #1a237e, #1976d2)",
                           boxShadow: "0 8px 25px rgba(33, 150, 243, 0.3)",
                           "&:hover": {
                             background: "linear-gradient(45deg, #1976D2, #1CB5E0)",
