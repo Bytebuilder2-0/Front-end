@@ -33,7 +33,7 @@ const HowItWorks = () => {
 		<Box
 			sx={{
 				py: { xs: 8, md: 12 },
-				background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+				background: "linear-gradient(135deg, #82b1ff 0%, #1a237e 100%)",
 				position: "relative",
 				overflow: "hidden",
 			}}
