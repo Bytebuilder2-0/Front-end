@@ -1,3 +1,5 @@
+
+
 import ResponsiveCarousel from "../components/MaterialUICarousel";
 import { Box, Typography, Grid, Card, CardContent, Container, Chip } from "@mui/material";
 import Navbar from "../components/Navbar";
@@ -69,7 +71,7 @@ const HomePage = () => {
 				sx={{
 					py: { xs: 8, md: 12 },
 					px: { xs: 2, sm: 4, md: 6 },
-					background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+					background: "linear-gradient(135deg, #82b1ff 0%, #1a237e 100%)",
 					position: "relative",
 					overflow: "hidden",
 					"&::before": {
@@ -87,20 +89,7 @@ const HomePage = () => {
 				<Container maxWidth="xl">
 					{/* Section Header */}
 					<Box sx={{ textAlign: "center", mb: 8, position: "relative", zIndex: 1 }}>
-						<Chip
-							label="Why Choose Us"
-							sx={{
-								mb: 3,
-								bgcolor: "rgba(255,255,255,0.2)",
-								color: "white",
-								fontWeight: "bold",
-								fontSize: "0.9rem",
-								px: 3,
-								py: 1,
-								backdropFilter: "blur(10px)",
-								border: "1px solid rgba(255,255,255,0.3)",
-							}}
-						/>
+						
 						<Typography
 							variant="h3"
 							component="h2"
@@ -128,7 +117,7 @@ const HomePage = () => {
 						</Typography>
 					</Box>
 
-					{/* Features Grid */}
+					
 					<Grid container spacing={4} sx={{ position: "relative", zIndex: 1 }}>
 						{aboutItems.map((item, index) => (
 							<Grid item xs={12} sm={6} lg={3} key={index}>
@@ -192,7 +181,7 @@ const HomePage = () => {
 											{item.icon}
 										</Box>
 
-										{/* Content */}
+										// Content 
 										<Box
 											className="feature-content"
 											sx={{ transition: "all 0.3s ease", flex: 1 }}

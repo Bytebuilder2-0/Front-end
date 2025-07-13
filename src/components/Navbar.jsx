@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState } from "react"
@@ -72,7 +73,7 @@ const Navbar = () => {
         position="sticky"
         elevation={0}
         sx={{
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+          background: "linear-gradient(135deg, #3f51b5 0%, #1a237e 100%)",
           backdropFilter: "blur(20px)",
           borderBottom: "1px solid rgba(255,255,255,0.1)",
         }}
@@ -86,26 +87,17 @@ const Navbar = () => {
                   src="/assets/image.png"
                   alt="Garage24 Logo"
                   style={{
-                    height: 50,
-                    marginRight: 12,
-                    filter: "brightness(1.2)",
+                    height: 70,
+                    marginRight: 0,
+                    marginLeft: -200,
+                    filter: "brightness(1.1)",
                   }}
                 />
-                {/* <Typography
-                  variant="h5"
-                  sx={{
-                    fontWeight: 800,
-                    color: "white",
-                    textShadow: "0 2px 10px rgba(0,0,0,0.3)",
-                    display: { xs: "none", sm: "block" },
-                  }}
-                >
-                  Garage24
-                </Typography> */}
+              
               </Link>
             </Box>
 
-            {/* Desktop Navigation */}
+            {/* Navigation */}
             {!isMobile && (
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 {navItems.map((item) => (

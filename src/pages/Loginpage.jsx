@@ -1,3 +1,5 @@
+
+
 "use client"
 
 import { useState, useContext } from "react"
@@ -75,7 +77,7 @@ const Loginpage = () => {
       <Box
         sx={{
           minHeight: "100vh",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+          background: "linear-gradient(135deg, #82b1ff 0%, #1a237e 100%)",
           position: "relative",
           overflow: "hidden",
           "&::before": {
@@ -212,7 +214,7 @@ const Loginpage = () => {
                     left: 0,
                     right: 0,
                     height: "4px",
-                    background: "linear-gradient(90deg, #667eea, #764ba2)",
+                    background: "linear-gradient(90deg, #82b1ff, #1a237e)",
                   },
                 }}
               >
@@ -225,7 +227,7 @@ const Loginpage = () => {
                         height: 80,
                         mx: "auto",
                         mb: 2,
-                        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                        background: "linear-gradient(135deg, #82b1ff 0%, #1a237e 100%)",
                         boxShadow: "0 8px 25px rgba(102, 126, 234, 0.3)",
                       }}
                     >
@@ -236,7 +238,7 @@ const Loginpage = () => {
                       sx={{
                         fontWeight: 700,
                         mb: 1,
-                        background: "linear-gradient(45deg, #667eea, #764ba2)",
+                        background: "linear-gradient(45deg, #82b1ff, #1a237e)",
                         backgroundClip: "text",
                         WebkitBackgroundClip: "text",
                         WebkitTextFillColor: "transparent",
@@ -271,7 +273,7 @@ const Loginpage = () => {
                       margin="normal"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      required
+                      required 
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
@@ -284,14 +286,14 @@ const Loginpage = () => {
                         "& .MuiOutlinedInput-root": {
                           borderRadius: 2,
                           "&:hover fieldset": {
-                            borderColor: "#667eea",
+                            borderColor: "#82b1ff",
                           },
                           "&.Mui-focused fieldset": {
-                            borderColor: "#667eea",
+                            borderColor: "#82b1ff",
                           },
                         },
                         "& .MuiInputLabel-root.Mui-focused": {
-                          color: "#667eea",
+                          color: "#82b1ff",
                         },
                       }}
                     />
@@ -323,14 +325,14 @@ const Loginpage = () => {
                         "& .MuiOutlinedInput-root": {
                           borderRadius: 2,
                           "&:hover fieldset": {
-                            borderColor: "#667eea",
+                            borderColor: "#82b1ff",
                           },
                           "&.Mui-focused fieldset": {
-                            borderColor: "#667eea",
+                            borderColor: "#82b1ff",
                           },
                         },
                         "& .MuiInputLabel-root.Mui-focused": {
-                          color: "#667eea",
+                          color: "#82b1ff",
                         },
                       }}
                     />
@@ -361,7 +363,7 @@ const Loginpage = () => {
                         fontSize: "1.1rem",
                         fontWeight: "bold",
                         borderRadius: 2,
-                        background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                        background: "linear-gradient(135deg, #82b1ff 0%, #1a237e 100%)",
                         boxShadow: "0 8px 25px rgba(102, 126, 234, 0.3)",
                         "&:hover": {
                           background: "linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%)",
@@ -379,10 +381,10 @@ const Loginpage = () => {
 
                     <Box sx={{ textAlign: "center" }}>
                       <Link
-                        to="#"
+                        to="/forgot-password"
                         style={{
                           textDecoration: "none",
-                          color: "#667eea",
+                          color: "#82b1ff",
                           fontWeight: "600",
                           fontSize: "0.9rem",
                         }}
@@ -404,7 +406,7 @@ const Loginpage = () => {
                   }}
                 >
                   <Typography variant="caption" color="text.secondary" fontWeight="600">
-                    Secure Login • SSL Protected
+                    Secure Login 
                   </Typography>
                 </Box>
               </Paper>
