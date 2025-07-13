@@ -136,9 +136,9 @@ export default function TechnicianMiniDrawer({ children }) {
 			icon: <ApprovalIcon sx={{ color: "#ffffff" }} />,
 		},
 		{
-			path: "/TDeclined",
-			label: "Declined",
-			icon: <ErrorIcon sx={{ color: "#ffffff" }} />,
+			path: "/TInprogress",
+			label: "InProgress",
+			icon: <AutoGraphIcon sx={{ color: "#ffffff" }} />,
 		},
 		{
 			path: "/TCompleted",
@@ -146,9 +146,9 @@ export default function TechnicianMiniDrawer({ children }) {
 			icon: <DoneOutlineIcon color="success" />,
 		},
 		{
-			path: "/TInprogress",
-			label: "InProgress",
-			icon: <AutoGraphIcon sx={{ color: "#ffffff" }} />,
+			path: "/TDeclined",
+			label: "Declined",
+			icon: <ErrorIcon sx={{ color: "#ffffff" }} />,
 		},
 	];
 
