@@ -61,6 +61,12 @@ const StatusSummary = () => {
       count: counts.total,
       image: "/assets/purchase.png.png",
     },
+      {
+      title: "Checking", //  new card
+      subheader: "Checking Appointment Count",
+      count: counts.checking,
+      image: "https://cdn-icons-png.flaticon.com/512/3500/3500833.png", //  use an appropriate icon
+    },
     {
       title: "Pending",
       subheader: "Pending Appointment Count",
@@ -73,12 +79,7 @@ const StatusSummary = () => {
       count: counts.confirmed,
       image: "/assets/success.jpg",
     },
-    {
-      title: "Checking", //  new card
-      subheader: "Checking Appointment Count",
-      count: counts.Checking,
-      image: "https://cdn-icons-png.flaticon.com/512/3500/3500833.png", //  use an appropriate icon
-    },
+  
   ];
 
   return (
