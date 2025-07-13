@@ -1,6 +1,4 @@
-"use client"
-
-import { useState, useContext } from "react"
+import { useState } from "react"
 import {
   TextField,
   Button,
@@ -10,64 +8,39 @@ import {
   Paper,
   Container,
   InputAdornment,
-  IconButton,
-  Chip,
   Fade,
   Slide,
+  Chip,
 } from "@mui/material"
+import { Email, LockReset } from "@mui/icons-material"
+import { Link } from "react-router-dom"
 import axios from "axios"
-import { Link, useNavigate } from "react-router-dom"
-import { AuthContext } from "../context/AuthContext"
 import LoginSignupNavbar from "../components/LoginSignupNavbar"
-import { LockOpen, Email, Visibility, VisibilityOff, DirectionsCar, Security, Speed } from "@mui/icons-material"
-import { jwtDecode } from "jwt-decode"
 
-const Loginpage = () => {
+const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [message, setMessage] = useState("")
   const [error, setError] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const navigate = useNavigate()
-  const { login } = useContext(AuthContext)
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+    setMessage("")
     setError("")
     setIsLoading(true)
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/login`, {
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/forgot-password`, {
         email,
-        password,
       })
 
-      const { token } = response.data
-      login(token)
-      const decoded = jwtDecode(token)
-      const userRole = decoded.role?.toLowerCase()
-
-      if (userRole === "manager") navigate("/ManagerDashboard")
-      else if (userRole === "technician") navigate("/TDashboard")
-      else if (userRole === "customer") navigate("/User")
-      else if (userRole === "supervisor") navigate("/SInitial")
-      else navigate("/unauthorized")
+      setMessage(response.data.message || "Password reset link sent.")
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed")
+      setError(err.response?.data?.message || "Something went wrong.")
     } finally {
       setIsLoading(false)
     }
   }
-
-  const handleTogglePasswordVisibility = () => {
-    setShowPassword(!showPassword)
-  }
-
-  const features = [
-    { icon: <DirectionsCar />, text: "Premium Service" },
-    { icon: <Security />, text: "Secure Platform" },
-    { icon: <Speed />, text: "Quick Booking" },
-  ]
 
   return (
     <>
@@ -113,7 +86,7 @@ const Loginpage = () => {
               flexDirection: { xs: "column", md: "row" },
             }}
           >
-            {/* Left Side - Welcome Section */}
+            {/* Left Side - Description */}
             <Fade in timeout={1000}>
               <Box
                 sx={{
@@ -136,52 +109,14 @@ const Loginpage = () => {
                     WebkitTextFillColor: "transparent",
                   }}
                 >
-                  Welcome Back to
-                  <br />
-                  Garage24
+                  Forgot Your Password?
                 </Typography>
-                <Typography
-                  variant="h6"
-                  sx={{
-                    mb: 4,
-                    opacity: 0.9,
-                    fontSize: { xs: "1.1rem", md: "1.3rem" },
-                    lineHeight: 1.6,
-                  }}
-                >
-                  Your trusted automotive service partner. Sign in to access your dashboard and manage your vehicle
-                  services.
+                <Typography variant="h6" sx={{ mb: 4, opacity: 0.9 }}>
+                  No worries! Just enter your email and we'll send you a reset link.
                 </Typography>
-
-                {/* Features */}
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 4 }}>
-                  {features.map((feature, index) => (
-                    <Slide key={index} direction="right" in timeout={1000 + index * 200}>
-                      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                        <Box
-                          sx={{
-                            width: 50,
-                            height: 50,
-                            borderRadius: "50%",
-                            background: "rgba(255,255,255,0.2)",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            backdropFilter: "blur(10px)",
-                          }}
-                        >
-                          {feature.icon}
-                        </Box>
-                        <Typography variant="body1" fontWeight="600">
-                          {feature.text}
-                        </Typography>
-                      </Box>
-                    </Slide>
-                  ))}
-                </Box>
 
                 <Chip
-                  label="Trusted by 10,000+ customers"
+                  label="Reset with ease & security"
                   sx={{
                     bgcolor: "rgba(255,255,255,0.2)",
                     color: "white",
@@ -193,7 +128,7 @@ const Loginpage = () => {
               </Box>
             </Fade>
 
-            {/* Right Side - Login Form */}
+            {/* Right Side - Form */}
             <Slide direction="left" in timeout={800}>
               <Paper
                 elevation={24}
@@ -204,16 +139,6 @@ const Loginpage = () => {
                   border: "1px solid rgba(255, 255, 255, 0.2)",
                   borderRadius: 4,
                   overflow: "hidden",
-                  position: "relative",
-                  "&::before": {
-                    content: '""',
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: "4px",
-                    background: "linear-gradient(90deg, #82b1ff, #1a237e)",
-                  },
                 }}
               >
                 <Box sx={{ p: { xs: 4, sm: 6 } }}>
@@ -229,7 +154,7 @@ const Loginpage = () => {
                         boxShadow: "0 8px 25px rgba(102, 126, 234, 0.3)",
                       }}
                     >
-                      <LockOpen sx={{ fontSize: 40 }} />
+                      <LockReset sx={{ fontSize: 40 }} />
                     </Avatar>
                     <Typography
                       variant="h4"
@@ -242,28 +167,15 @@ const Loginpage = () => {
                         WebkitTextFillColor: "transparent",
                       }}
                     >
-                      Sign In
+                      Reset Password
                     </Typography>
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      Access your Garage24 account
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Don't have an account?{" "}
-                      <Link
-                        to="/SignupPage"
-                        style={{
-                          textDecoration: "none",
-                          color: "#667eea",
-                          fontWeight: "bold",
-                        }}
-                      >
-                        Sign Up Here
-                      </Link>
+                      Enter your email to receive a password reset link
                     </Typography>
                   </Box>
 
                   {/* Form */}
-                  <Box component="form" onSubmit={handleLogin}>
+                  <Box component="form" onSubmit={handleSubmit}>
                     <TextField
                       label="Email Address"
                       type="email"
@@ -271,7 +183,7 @@ const Loginpage = () => {
                       margin="normal"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      required 
+                      required
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
@@ -296,45 +208,11 @@ const Loginpage = () => {
                       }}
                     />
 
-                    <TextField
-                      label="Password"
-                      type={showPassword ? "text" : "password"}
-                      fullWidth
-                      margin="normal"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <LockOpen sx={{ color: "text.secondary" }} />
-                          </InputAdornment>
-                        ),
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton onClick={handleTogglePasswordVisibility} edge="end">
-                              {showPassword ? <VisibilityOff /> : <Visibility />}
-                            </IconButton>
-                          </InputAdornment>
-                        ),
-                      }}
-                      sx={{
-                        mb: 3,
-                        "& .MuiOutlinedInput-root": {
-                          borderRadius: 2,
-                          "&:hover fieldset": {
-                            borderColor: "#82b1ff",
-                          },
-                          "&.Mui-focused fieldset": {
-                            borderColor: "#82b1ff",
-                          },
-                        },
-                        "& .MuiInputLabel-root.Mui-focused": {
-                          color: "#82b1ff",
-                        },
-                      }}
-                    />
-
+                    {message && (
+                      <Typography color="primary" sx={{ mb: 2 }}>
+                        {message}
+                      </Typography>
+                    )}
                     {error && (
                       <Typography
                         color="error"
@@ -357,7 +235,6 @@ const Loginpage = () => {
                       disabled={isLoading}
                       sx={{
                         py: 2,
-                        mb: 3,
                         fontSize: "1.1rem",
                         fontWeight: "bold",
                         borderRadius: 2,
@@ -374,38 +251,15 @@ const Loginpage = () => {
                         transition: "all 0.3s ease",
                       }}
                     >
-                      {isLoading ? "Signing In..." : "Sign In"}
+                      {isLoading ? "Sending..." : "Send Reset Link"}
                     </Button>
 
-                    <Box sx={{ textAlign: "center" }}>
-                      <Link
-                        to="/forgot-password"
-                        style={{
-                          textDecoration: "none",
-                          color: "#82b1ff",
-                          fontWeight: "600",
-                          fontSize: "0.9rem",
-                        }}
-                      >
-                        Forgot your password?
+                    <Box sx={{ textAlign: "center", mt: 3 }}>
+                      <Link to="/Loginpage" style={{ color: "#82b1ff", fontWeight: "600" }}>
+                        Back to Login
                       </Link>
                     </Box>
                   </Box>
-                </Box>
-
-                {/* Bottom Decoration */}
-                <Box
-                  sx={{
-                    height: 60,
-                    background: "linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Typography variant="caption" color="text.secondary" fontWeight="600">
-                    Secure Login 
-                  </Typography>
                 </Box>
               </Paper>
             </Slide>
@@ -416,4 +270,4 @@ const Loginpage = () => {
   )
 }
 
-export default Loginpage
+export default ForgotPasswordPage;
