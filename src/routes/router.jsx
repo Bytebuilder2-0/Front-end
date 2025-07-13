@@ -33,6 +33,7 @@ import CheckStatus from "../pages/Manager/CheckStatus";
 import Layout from "../pages/supervisor/Layout";
 import PrivateRoute from "../components/Atoms/PrivateRoute";
 import Reports from "../pages/Manager/Report";
+import FeedBackUser from "../pages/User/FeedBackUser";
 
 import VehicleRegister from "../pages/User/VehicleRegister";
 
@@ -155,6 +156,10 @@ const router = createBrowserRouter([
     element: <SignInVehicleContainer />,
   },
   {
+    path: "/UserFeedback",
+    element: <FeedBackUser />,
+  },
+  {
     path: "/ManageServices",
     element: (
       <PrivateRoute allowedRoles={["manager"]}>
@@ -194,7 +199,6 @@ const router = createBrowserRouter([
       </PrivateRoute>
     ),
   },
-  ,
   {
     path: "/feedback",
     element: (
