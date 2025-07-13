@@ -43,7 +43,7 @@ function Notify() {
 				color="inherit"
 				onClick={handleMenuOpen}
 			>
-				<Badge badgeContent={unreadCount} color="error">
+				<Badge badgeContent={0} color="error">  
 					<NotificationsIcon sx={{ color: "#33383E" }} fontSize="large" />
 				</Badge>
 			</IconButton>
