@@ -23,17 +23,17 @@ const token = localStorage.getItem("token");
 // Status configuration object for better maintainability
 const STATUS_CONFIG = {
   Pending: { color: "orange", label: "Pending" },
-  Cancelled: { color: "red", label: "Cancelled" },
-  Confirmed: { color: "green", label: "Confirmed" },
-  Reject1: { color: "red", label: "Rejected" },
-  Reject2: { color: "red", label: "Rejected" },
+  //Cancelled: { color: "red", label: "Cancelled" },
+  Confirmed: { color: "#736953ff", label: "Confirmed" },
+  Reject1: { color: "#28c930ff", label: "Rejected" },
+  Reject2: { color: "#d08b09ff", label: "Tech Rejected" },
   "Waiting for Technician Confirmation": {
-    color: "#fb8c00",
+    color: "#765834ff",
     label: "Waiting for Tech",
   },
   Accepted: { color: "#1976d2", label: "Accepted" },
-  InProgress: { color: "#fb8c00", label: "In Progress" },
-  "Task Done": { color: "green", label: "Completed" },
+  InProgress: { color: "#6e0bccff", label: "In Progress" },
+  "Task Done": { color: "#129b02ff", label: "Completed" },
 };
 
 const allowedStatuses = Object.keys(STATUS_CONFIG);
@@ -132,13 +132,17 @@ const CheckStatus = () => {
           <Table>
             <TableHead>
               <TableRow>
-                {["Vehicle ID", "Model", "Details", "Contact", "Status"].map(
-                  (head) => (
-                    <TableCell align="center" key={head}>
-                      <strong>{head}</strong>
-                    </TableCell>
-                  )
-                )}
+                {[
+                  "Vehicle ID",
+                  "Expected Delivery Date",
+                  "Details",
+                  "Contact",
+                  "Status",
+                ].map((head) => (
+                  <TableCell align="center" key={head}>
+                    <strong>{head}</strong>
+                  </TableCell>
+                ))}
               </TableRow>
             </TableHead>
 
@@ -149,7 +153,12 @@ const CheckStatus = () => {
                     <TableCell align="center">
                       {appointment.vehicleId}
                     </TableCell>
-                    <TableCell align="center">{appointment.model}</TableCell>
+                    <TableCell align="center">
+                      {" "}
+                      {new Date(
+                        appointment.expectedDeliveryDate
+                      ).toLocaleDateString()}
+                    </TableCell>
                     <TableCell align="center">
                       <DeatailsViewer appointment={appointment} />
                     </TableCell>
