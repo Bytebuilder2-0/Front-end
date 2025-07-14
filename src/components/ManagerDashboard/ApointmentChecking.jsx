@@ -14,7 +14,6 @@ import {
   Paper,
   IconButton,
   Tooltip,
-  Button,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -33,7 +32,6 @@ let decoded = null;
 if (token) {
   try {
     decoded = jwtDecode(token);
-    console.log(decoded.id); // optional
   } catch (err) {
     console.error("Invalid token:", err);
   }
@@ -48,7 +46,8 @@ const authConfig = {
 
 const ApointmentChecking = () => {
   const [appointments, setAppointments] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(""); // For Vehicle ID search
+  const [preferredDate, setPreferredDate] = useState(""); // For Preferred Date filter
   const [confirmDialog, setConfirmDialog] = useState({
     open: false,
     appointment: null,
@@ -88,6 +87,9 @@ const ApointmentChecking = () => {
           newStatus === "Pending" ? "accepted" : "rejected"
         } successfully!`,
       });
+
+      // Reload the page after status update
+      window.location.reload();
     } catch (err) {
       console.error("Error updating status:", err);
     }
@@ -120,6 +122,55 @@ const ApointmentChecking = () => {
     setSelectedAppointment(null); // Reset the selected appointment
   };
 
+  // Function to handle date input format and apply filtering based on full date, month, or day
+  const getDateFilterType = (dateInput) => {
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/; // Full Date (YYYY-MM-DD)
+    const monthRegex = /^\d{2}$/; // Month (MM)
+    const dayRegex = /^\d{2}$/; // Day (DD)
+
+    if (dateRegex.test(dateInput)) {
+      return "full"; // Full date format (YYYY-MM-DD)
+    } else if (monthRegex.test(dateInput)) {
+      return "month"; // Month format (MM)
+    } else if (dayRegex.test(dateInput)) {
+      return "day"; // Day format (DD)
+    } else {
+      return "none"; // Invalid input
+    }
+  };
+
+  // Filter appointments based on Vehicle ID and Preferred Date (Date, Month, or Day)
+  const filteredAppointments = appointments.filter((appointment) => {
+    const matchesVehicleId = String(appointment.vehicleId || "")
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    const dateFilterType = getDateFilterType(preferredDate);
+
+    let matchesPreferredDate = true;
+
+    if (dateFilterType === "full") {
+      // Full date format (YYYY-MM-DD)
+      matchesPreferredDate =
+        new Date(appointment.preferredDate).toISOString().split("T")[0] ===
+        preferredDate;
+    } else if (dateFilterType === "month") {
+      // Month format (MM)
+      const appointmentMonth = new Date(appointment.preferredDate)
+        .toISOString()
+        .slice(5, 7); // Extract MM
+      matchesPreferredDate = appointmentMonth === preferredDate;
+    } else if (dateFilterType === "day") {
+      // Day format (DD)
+      const appointmentDay = new Date(appointment.preferredDate)
+        .toISOString()
+        .slice(8, 10); // Extract DD
+      matchesPreferredDate = appointmentDay === preferredDate;
+    }
+
+    return matchesVehicleId && matchesPreferredDate;
+  });
+
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Paper elevation={6} sx={{ p: 3, borderRadius: "16px" }}>
@@ -133,13 +184,28 @@ const ApointmentChecking = () => {
           <Typography variant="h5" fontWeight="bold" color="#1976d2">
             Manage Appointment Checking
           </Typography>
-          <TextField
-            label="Search by Vehicle ID"
-            variant="outlined"
-            size="small"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+
+          <Box display="flex" alignItems="center">
+            <TextField
+              label="Search by Vehicle ID"
+              variant="outlined"
+              size="small"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              sx={{ mr: 2 }}
+            />
+
+            <TextField
+              label="Filter by Preferred Date"
+              type="date"
+              variant="outlined"
+              size="small"
+              value={preferredDate}
+              onChange={(e) => setPreferredDate(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+              sx={{ width: 200 }}
+            />
+          </Box>
         </Box>
 
         {/* Table */}
@@ -163,13 +229,8 @@ const ApointmentChecking = () => {
             </TableHead>
 
             <TableBody>
-              {appointments
-                .filter((a) =>
-                  String(a.vehicleId || "")
-                    .toLowerCase()
-                    .includes(searchTerm.toLowerCase())
-                )
-                .map((appointment) => (
+              {filteredAppointments.length > 0 ? (
+                filteredAppointments.map((appointment) => (
                   <TableRow key={appointment._id}>
                     <TableCell align="center">
                       {appointment.vehicleId}
@@ -235,13 +296,14 @@ const ApointmentChecking = () => {
                       </Tooltip>
                     </TableCell>
                   </TableRow>
-                ))}
-
-              {appointments.length === 0 && (
+                ))
+              ) : (
                 <TableRow>
                   <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
                     <Typography variant="h6" color="textSecondary">
-                      No appointments found
+                      {searchTerm || preferredDate
+                        ? "No matching appointments found"
+                        : "No appointments available"}
                     </Typography>
                   </TableCell>
                 </TableRow>

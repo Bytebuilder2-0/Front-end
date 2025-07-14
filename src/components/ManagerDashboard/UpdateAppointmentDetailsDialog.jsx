@@ -56,7 +56,11 @@ const UpdateAppointmentDetailsDialog = ({ appointment, open, onClose }) => {
       setExpectedDeliveryDate(
         new Date(appointment.expectedDeliveryDate).toISOString().split("T")[0]
       );
-      setPreferredTime(convertTo24HourFormat(appointment.preferredTime));
+      setPreferredTime(
+        appointment.preferredTime
+          ? convertTo24HourFormat(appointment.preferredTime)
+          : ""
+      );
     }
   }, [appointment]);
 
@@ -102,6 +106,7 @@ const UpdateAppointmentDetailsDialog = ({ appointment, open, onClose }) => {
 
       // Close the dialog after successful update
       onClose();
+      window.location.reload();
     } catch (error) {
       console.error("Error updating appointment details:", error);
     }
@@ -162,19 +167,26 @@ const UpdateAppointmentDetailsDialog = ({ appointment, open, onClose }) => {
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle>Confirm Changes</DialogTitle>
+        <DialogTitle>Confirm Edit</DialogTitle>
         <Divider />
         <DialogContent>
-          <Typography>Are you sure you want to save these changes?</Typography>
+          <Typography>
+            Are you sure you want to change the appointment details?
+          </Typography>
         </DialogContent>
         <DialogActions>
           <Button
             onClick={() => setOpenConfirmationDialog(false)}
-            color="error"
+            color="primary"
+            variant="outlined"
           >
             Cancel
           </Button>
-          <Button onClick={handleConfirmSave} color="primary">
+          <Button
+            onClick={handleConfirmSave}
+            color="primary"
+            variant="contained"
+          >
             Confirm
           </Button>
         </DialogActions>

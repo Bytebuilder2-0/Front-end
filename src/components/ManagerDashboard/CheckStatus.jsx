@@ -5,6 +5,10 @@ import {
   Box,
   Typography,
   TextField,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
   Table,
   TableBody,
   TableCell,
@@ -23,9 +27,8 @@ const token = localStorage.getItem("token");
 // Status configuration object for better maintainability
 const STATUS_CONFIG = {
   Pending: { color: "orange", label: "Pending" },
-  //Cancelled: { color: "red", label: "Cancelled" },
   Confirmed: { color: "#736953ff", label: "Confirmed" },
-  Reject1: { color: "#28c930ff", label: "Rejected" },
+  //Reject1: { color: "#28c930ff", label: "Rejected" },
   Reject2: { color: "#d08b09ff", label: "Tech Rejected" },
   "Waiting for Technician Confirmation": {
     color: "#765834ff",
@@ -46,7 +49,8 @@ const authConfig = {
 
 const CheckStatus = () => {
   const [appointments, setAppointments] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(""); // For vehicle ID search
+  const [selectedStatus, setSelectedStatus] = useState(""); // For filtering by status
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -55,7 +59,7 @@ const CheckStatus = () => {
       try {
         const res = await axios.get(API_BASE_URL, authConfig);
         const filtered = res.data
-          .filter((appt) => allowedStatuses.includes(appt.status))
+          .filter((appt) => allowedStatuses.includes(appt.status)) // Initial filter by allowed statuses
           .reverse();
         setAppointments(filtered);
       } catch (err) {
@@ -69,11 +73,17 @@ const CheckStatus = () => {
     fetchAppointments();
   }, []);
 
-  const filteredAppointments = appointments.filter((appointment) =>
-    String(appointment.vehicleId || "")
+  // Filter appointments based on search term (vehicle ID) and selected status
+  const filteredAppointments = appointments.filter((appointment) => {
+    const matchesVehicle = String(appointment.vehicleId || "")
       .toLowerCase()
-      .includes(searchTerm.toLowerCase())
-  );
+      .includes(searchTerm.toLowerCase());
+
+    const matchesStatus =
+      selectedStatus === "" || appointment.status === selectedStatus;
+
+    return matchesVehicle && matchesStatus;
+  });
 
   const getStatusDisplay = (status) => {
     const config = STATUS_CONFIG[status] || { color: "gray", label: status };
@@ -119,13 +129,33 @@ const CheckStatus = () => {
             Check Appointment Status
           </Typography>
 
-          <TextField
-            label="Search by Vehicle ID"
-            variant="outlined"
-            size="small"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+          <Box display="flex" alignItems="center">
+            <TextField
+              label="Search by Vehicle ID"
+              variant="outlined"
+              size="small"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              sx={{ mr: 2 }}
+            />
+
+            <FormControl size="small">
+              <InputLabel>Status</InputLabel>
+              <Select
+                label="Status"
+                value={selectedStatus}
+                onChange={(e) => setSelectedStatus(e.target.value)}
+                sx={{ minWidth: 120 }}
+              >
+                <MenuItem value="">All</MenuItem>
+                {allowedStatuses.map((status) => (
+                  <MenuItem key={status} value={status}>
+                    {STATUS_CONFIG[status].label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
         </Box>
 
         <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
@@ -154,7 +184,6 @@ const CheckStatus = () => {
                       {appointment.vehicleId}
                     </TableCell>
                     <TableCell align="center">
-                      {" "}
                       {new Date(
                         appointment.expectedDeliveryDate
                       ).toLocaleDateString()}
@@ -174,7 +203,7 @@ const CheckStatus = () => {
                 <TableRow>
                   <TableCell colSpan={5} align="center" sx={{ py: 5 }}>
                     <Typography variant="h6" color="textSecondary">
-                      {searchTerm
+                      {searchTerm || selectedStatus
                         ? "No matching appointments found"
                         : "No appointments available"}
                     </Typography>
