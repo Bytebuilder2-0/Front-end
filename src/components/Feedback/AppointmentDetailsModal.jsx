@@ -22,6 +22,25 @@ const AppointmentDetailsModal = ({ appointment, open, onClose }) => {
       <Divider />
 
       <DialogContent dividers sx={{ py: 3 }}>
+        {/* Customer Information */}
+        <Box mb={3}>
+          <Typography variant="h6" sx={{ color: "#1976d2", mb: 1 }}>
+            Customer Information
+          </Typography>
+          {appointment.userId && appointment.userId.name ? (
+            <>
+              <Typography>
+                <strong>Name:</strong> {appointment.userId.name}
+              </Typography>
+              <Typography>
+                <strong>Email:</strong> {appointment.userId.email || "N/A"}
+              </Typography>
+            </>
+          ) : (
+            <Typography>Customer information not available</Typography>
+          )}
+        </Box>
+
         {/* Vehicle Info */}
         <Box mb={3}>
           <Typography variant="h6" sx={{ color: "#1976d2", mb: 1 }}>

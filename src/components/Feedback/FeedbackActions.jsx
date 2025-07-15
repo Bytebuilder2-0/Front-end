@@ -30,7 +30,7 @@ const FeedbackActions = ({ feedback, onUpdate }) => {
     try {
       setLoadingDetails(true);
       const res = await axios.get(
-        `${API_BASE_URL}/appointments/${appointmentId}`,
+        `${API_BASE_URL}/appointments/manager/${appointmentId}`,
         authConfig
       );
       setAppointmentDetails(res.data);
