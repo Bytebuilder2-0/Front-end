@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TextField, Button, Box } from "@mui/material";
 
-const ServiceForm = ({ onAdd }) => {
+const ServiceForm = ({ onAdd, disabled }) => {
   const [name, setName] = useState("");
 
   const handleSubmit = async (e) => {
@@ -28,6 +28,7 @@ const ServiceForm = ({ onAdd }) => {
         value={name}
         onChange={(e) => setName(e.target.value)}
         fullWidth
+        disabled={disabled}
         sx={{
           backgroundColor: "white",
           borderRadius: 2,
@@ -37,12 +38,13 @@ const ServiceForm = ({ onAdd }) => {
         type="submit"
         variant="contained"
         color="primary"
+        disabled={disabled}
         sx={{
           borderRadius: "8px",
           fontWeight: "bold",
           textTransform: "none",
           px: 3,
-          '&:hover': {
+          "&:hover": {
             backgroundColor: "#1565c0",
           },
         }}

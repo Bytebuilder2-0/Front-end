@@ -8,6 +8,7 @@ import {
   DialogTitle,
   Divider,
   Typography,
+  colors,
 } from "@mui/material";
 import axios from "axios";
 import SuccessSnackbar from "../ServiceManage/SuccessSnackbar"; // Import SuccessSnackbar
@@ -167,11 +168,12 @@ const UpdateAppointmentDetailsDialog = ({ appointment, open, onClose }) => {
         maxWidth="sm"
         fullWidth
       >
-        <DialogTitle>Confirm Edit</DialogTitle>
+        <DialogTitle color="primary">Confirm Edit</DialogTitle>
         <Divider />
         <DialogContent>
           <Typography>
-            Are you sure you want to change the appointment details?
+            Are you sure you want to change the{" "}
+            <span style={{ color: "#1976d2" }}>appointment details?</span>
           </Typography>
         </DialogContent>
         <DialogActions>

@@ -10,9 +10,12 @@ const FeedbackItem = ({ feedback, onUpdate }) => {
   const [reply, setReply] = useState(feedback.reply || "");
   const [isReplying, setIsReplying] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false); // Manage button state
 
   const handleReplySubmit = async (updatedReply) => {
     if (!updatedReply.trim()) return;
+
+    setIsButtonDisabled(true); // Disable the button when reply is being submitted
 
     const token = localStorage.getItem("token");
     const authConfig = {
@@ -27,13 +30,15 @@ const FeedbackItem = ({ feedback, onUpdate }) => {
         { reply: updatedReply },
         authConfig
       );
-      setReply(updatedReply);
-      setIsReplying(false);
 
-      setSnackbarOpen(true);
-      onUpdate();
+      setReply(updatedReply);
+      setIsReplying(false); // Stop the reply editor after success
+      setSnackbarOpen(true); // Show success snackbar
+      onUpdate(); // Call update function
     } catch (err) {
       console.error("Error updating reply:", err);
+    } finally {
+      setIsButtonDisabled(false); // Re-enable the button after operation
     }
   };
 
@@ -58,6 +63,7 @@ const FeedbackItem = ({ feedback, onUpdate }) => {
             color="primary"
             onClick={() => setIsReplying(true)}
             size="small"
+            disabled={isButtonDisabled} // Disable button based on isButtonDisabled state
           >
             {reply ? "Edit Reply" : "Add Reply"}
           </Button>
