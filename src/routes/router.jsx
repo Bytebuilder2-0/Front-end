@@ -155,6 +155,9 @@ const router = createBrowserRouter([
     element: <SignInVehicleContainer />,
   },
   {
+    //add user profilee edit route
+  },
+  {
     path: "/ManageServices",
     element: (
       <PrivateRoute allowedRoles={["manager"]}>
