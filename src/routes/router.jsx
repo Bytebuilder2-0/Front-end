@@ -36,6 +36,7 @@ import Reports from "../pages/Manager/Report";
 import FeedBackUser from "../pages/User/FeedBackUser";
 
 import VehicleRegister from "../pages/User/VehicleRegister";
+import DisplayFeedBack from "../components/FeedbackDisplay";
 
 const router = createBrowserRouter([
   {
@@ -206,6 +207,10 @@ const router = createBrowserRouter([
         <FeedbackPage />
       </PrivateRoute>
     ),
+  },
+  {
+    path: "/DisplayFeedBack",
+    element: <DisplayFeedBack />,
   },
 ]);
 
