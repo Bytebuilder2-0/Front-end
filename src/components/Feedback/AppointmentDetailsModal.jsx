@@ -138,6 +138,46 @@ const AppointmentDetailsModal = ({ appointment, open, onClose }) => {
             </Typography>
           </Box>
         )}
+        {appointment.sconfirmedBy && (
+          <Box mb={3}>
+            <Typography variant="h6" sx={{ color: "#1976d2", mb: 1 }}>
+              Supervisor Information
+            </Typography>
+            {appointment.sconfirmedBy.fullName && (
+              <Typography>
+                <strong>Name:</strong> {appointment.sconfirmedBy.fullName}
+              </Typography>
+            )}
+            {appointment.sconfirmedBy.userName && (
+              <Typography>
+                <strong>Username:</strong> {appointment.sconfirmedBy.userName}
+              </Typography>
+            )}
+          </Box>
+        )}
+        {/* Technician Information */}
+        {appointment.tech && (
+          <Box mb={3}>
+            <Typography variant="h6" sx={{ color: "#1976d2", mb: 1 }}>
+              Technician Information
+            </Typography>
+            {appointment.tech.fullName && (
+              <Typography>
+                <strong>Name:</strong> {appointment.tech.fullName}
+              </Typography>
+            )}
+            {appointment.tech.department && (
+              <Typography>
+                <strong>Department:</strong> {appointment.tech.department}
+              </Typography>
+            )}
+            {appointment.tech.employee_id && (
+              <Typography>
+                <strong>Employee ID:</strong> {appointment.tech.employee_id}
+              </Typography>
+            )}
+          </Box>
+        )}
 
         {/* Workload */}
         {Array.isArray(appointment.workload) &&
