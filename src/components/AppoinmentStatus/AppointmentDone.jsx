@@ -100,7 +100,7 @@ const AppointmentDone = ({ appointment }) => {
             //   onClick={ }
               sx={{ ml: 2 }}
             >
-              Leave Feedback
+              Make The Payment
             </Button>
             
           </Box>
