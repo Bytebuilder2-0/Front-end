@@ -29,8 +29,14 @@ const FeedbackActions = ({ feedback, onUpdate }) => {
   const fetchAppointmentDetails = async (appointmentId) => {
     try {
       setLoadingDetails(true);
+      // Make sure appointmentId is a string, not an object
+      const id =
+        typeof appointmentId === "object"
+          ? appointmentId._id || appointmentId.toString()
+          : appointmentId;
+
       const res = await axios.get(
-        `${API_BASE_URL}/appointments/manager/${appointmentId}`,
+        `${API_BASE_URL}/appointments/manager/${id}`,
         authConfig
       );
       setAppointmentDetails(res.data);
