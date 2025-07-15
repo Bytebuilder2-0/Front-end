@@ -12,7 +12,7 @@ import {
   Alert,
   Paper,
   Rating,
-  Grid,
+  Grid, // Import Grid for layout
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
@@ -65,7 +65,7 @@ const FeedbackDisplay = () => {
   }));
 
   const FeedbackCard = ({ feedback }) => {
-    // Fallback avatar for human-like appearance (using initials)
+    // Generate fallback avatar using UI Avatars service (based on username)
     const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(
       feedback.username || "User"
     )}&background=random&color=fff&font-size=0.3`;
@@ -75,7 +75,7 @@ const FeedbackDisplay = () => {
         <CardHeader
           avatar={
             <Avatar
-              src={feedback.avatarUrl || fallbackAvatar}
+              src={fallbackAvatar} // Use UI Avatars for human-like avatars
               alt={feedback.username || "User"}
               sx={{ width: 40, height: 40 }}
               imgProps={{
