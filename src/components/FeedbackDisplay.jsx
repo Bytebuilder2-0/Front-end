@@ -12,7 +12,7 @@ import {
   Alert,
   Paper,
   Rating,
-  Grid, // Import Grid for layout
+  Grid,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
@@ -46,28 +46,29 @@ const FeedbackDisplay = () => {
 
   const StyledCard = styled(Card)(({ theme }) => ({
     marginBottom: theme.spacing(2),
-    boxShadow: theme.shadows[1], // Reduced shadow for a lighter look
+    boxShadow: theme.shadows[1],
     borderRadius: theme.shape.borderRadius * 2,
-    height: "auto", // Set to 'auto' to adjust based on content
-    maxHeight: "250px", // More aggressive height limit
-    padding: theme.spacing(1), // Reduced padding for compact design
-    overflow: "hidden", // Ensure content does not overflow
+    height: "auto",
+    maxHeight: "250px",
+    padding: theme.spacing(1),
+    overflow: "hidden",
   }));
 
   const AdminReplyBox = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.grey[100],
-    padding: theme.spacing(1), // Reduced padding for compactness
+    padding: theme.spacing(1),
     borderRadius: theme.shape.borderRadius,
     borderLeft: `4px solid ${theme.palette.primary.main}`,
-    marginTop: theme.spacing(0.5), // Smaller margin for tighter layout
-    maxHeight: "80px", // Further reduce height for the admin reply
+    marginTop: theme.spacing(0.5),
+    maxHeight: "80px",
     overflow: "hidden",
   }));
 
   const FeedbackCard = ({ feedback }) => {
+    // Fallback avatar for human-like appearance (using initials)
     const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(
       feedback.username || "User"
-    )}&background=random`;
+    )}&background=random&color=fff&font-size=0.3`;
 
     return (
       <StyledCard>
@@ -76,7 +77,7 @@ const FeedbackDisplay = () => {
             <Avatar
               src={feedback.avatarUrl || fallbackAvatar}
               alt={feedback.username || "User"}
-              sx={{ width: 40, height: 40 }} // Reduced avatar size
+              sx={{ width: 40, height: 40 }}
               imgProps={{
                 onError: (e) => {
                   e.target.src = fallbackAvatar;
@@ -117,7 +118,6 @@ const FeedbackDisplay = () => {
             {feedback.userComment || "No comment provided"}
           </Typography>
 
-          {/* Display the star rating */}
           <Box display="flex" alignItems="center" mb={1}>
             <Rating
               value={feedback.rating || 0}
