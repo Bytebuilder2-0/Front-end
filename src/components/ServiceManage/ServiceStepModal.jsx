@@ -12,7 +12,13 @@ import ConfirmDeleteDialog from "./ConfirmDeleteDialog";
 import ConfirmEditDialog from "./ConfirmEditDialog";
 import SuccessSnackbar from "./SuccessSnackbar";
 
-const ServiceStepModal = ({ open, onClose, onSave, initialSteps }) => {
+const ServiceStepModal = ({
+  open,
+  onClose,
+  onSave,
+  initialSteps,
+  disabled,
+}) => {
   const [steps, setSteps] = useState(initialSteps || []);
   const [confirmDeleteIndex, setConfirmDeleteIndex] = useState(null);
   const [confirmSaveOpen, setConfirmSaveOpen] = useState(false);
@@ -20,10 +26,7 @@ const ServiceStepModal = ({ open, onClose, onSave, initialSteps }) => {
   const [successMessage, setSuccessMessage] = useState("");
 
   const handleAddStep = () => {
-    setSteps((prev) => [
-      ...prev,
-      { step: prev.length + 1, description: "" }
-    ]);
+    setSteps((prev) => [...prev, { step: prev.length + 1, description: "" }]);
   };
 
   const handleRequestDeleteStep = (index) => {
@@ -48,7 +51,9 @@ const ServiceStepModal = ({ open, onClose, onSave, initialSteps }) => {
   };
 
   const handleConfirmSaveSteps = () => {
-    const filteredSteps = steps.filter((step) => step.description.trim() !== "");
+    const filteredSteps = steps.filter(
+      (step) => step.description.trim() !== ""
+    );
 
     setSteps(filteredSteps);
     onSave(filteredSteps);
@@ -64,7 +69,7 @@ const ServiceStepModal = ({ open, onClose, onSave, initialSteps }) => {
 
   return (
     <>
-      <Modal open={open} onClose={onClose}>
+      <Modal open={open} onClose={disabled ? undefined : onClose}>
         <Box
           sx={{
             position: "absolute",
@@ -83,7 +88,10 @@ const ServiceStepModal = ({ open, onClose, onSave, initialSteps }) => {
           </Typography>
 
           {steps.map((step, index) => (
-            <Box key={index} sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
+            <Box
+              key={index}
+              sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}
+            >
               <Typography>{step.step}.</Typography>
               <TextField
                 fullWidth
@@ -95,9 +103,14 @@ const ServiceStepModal = ({ open, onClose, onSave, initialSteps }) => {
                   newSteps[index].description = e.target.value;
                   setSteps(newSteps);
                 }}
+                disabled={disabled}
                 sx={{ backgroundColor: "#f9f9f9", borderRadius: 2 }}
               />
-              <IconButton color="error" onClick={() => handleRequestDeleteStep(index)}>
+              <IconButton
+                color="error"
+                onClick={() => handleRequestDeleteStep(index)}
+                disabled={disabled}
+              >
                 <Delete />
               </IconButton>
             </Box>
@@ -108,6 +121,7 @@ const ServiceStepModal = ({ open, onClose, onSave, initialSteps }) => {
             variant="contained"
             sx={{ mt: 2, borderRadius: 2 }}
             onClick={handleAddStep}
+            disabled={disabled}
           >
             Add Step
           </Button>
@@ -118,6 +132,7 @@ const ServiceStepModal = ({ open, onClose, onSave, initialSteps }) => {
               color="success"
               sx={{ width: "48%", borderRadius: 2 }}
               onClick={handleRequestSaveSteps}
+              disabled={disabled}
             >
               Save
             </Button>
@@ -126,6 +141,7 @@ const ServiceStepModal = ({ open, onClose, onSave, initialSteps }) => {
               color="error"
               sx={{ width: "48%", borderRadius: 2 }}
               onClick={onClose}
+              disabled={disabled}
             >
               Cancel
             </Button>
@@ -138,7 +154,9 @@ const ServiceStepModal = ({ open, onClose, onSave, initialSteps }) => {
         open={confirmDeleteIndex !== null}
         onClose={() => setConfirmDeleteIndex(null)}
         onConfirm={handleConfirmDeleteStep}
-        itemName={`Step ${confirmDeleteIndex !== null ? confirmDeleteIndex + 1 : ""}`}
+        itemName={`Step ${
+          confirmDeleteIndex !== null ? confirmDeleteIndex + 1 : ""
+        }`}
       />
 
       {/* Confirm Save Dialog */}

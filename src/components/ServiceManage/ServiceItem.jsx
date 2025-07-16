@@ -1,39 +1,64 @@
 import React, { useState } from "react";
-import { ListItem, ListItemText, Checkbox, TextField, Button, Box } from "@mui/material";
+import {
+  ListItem,
+  ListItemText,
+  Checkbox,
+  TextField,
+  Button,
+  Box,
+} from "@mui/material";
 import ConfirmDeleteDialog from "./ConfirmDeleteDialog";
 import ConfirmEditDialog from "./ConfirmEditDialog";
-import ServiceStepModal from "./ServiceStepModal"; // Import Step Modal
-import { updateServiceSteps } from "./serviceApi"; // Import API
+import ServiceStepModal from "./ServiceStepModal";
+import { updateServiceSteps } from "./serviceApi";
 
-const ServiceItem = ({ service, onToggle, onDelete, onUpdate }) => {
-  const [isEditing, setIsEditing] = useState(false);
+const ServiceItem = ({
+  service,
+  onToggle,
+  onDelete,
+  onUpdate,
+  editingId,
+  setEditingId,
+  isActionInProgress,
+}) => {
   const [editedName, setEditedName] = useState(service.name);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [editConfirmDialogOpen, setEditConfirmDialogOpen] = useState(false);
-
-  // Step-related states
   const [stepModalOpen, setStepModalOpen] = useState(false);
   const [serviceSteps, setServiceSteps] = useState(service.steps || []);
-  const [stepsAdded, setStepsAdded] = useState(service.steps && service.steps.length > 0); // Check if steps already exist
+  const [stepsAdded, setStepsAdded] = useState(
+    service.steps && service.steps.length > 0
+  );
 
-  // Save edited service name
+  const isEditing = editingId === service._id;
+
+  const handleStartEditing = () => {
+    setEditingId(service._id);
+    setEditedName(service.name);
+  };
+
+  const handleCancelEditing = () => {
+    setEditingId(null);
+    setEditedName(service.name);
+  };
+
   const handleSave = () => {
     if (editedName.trim() && editedName !== service.name) {
       setEditConfirmDialogOpen(true);
+    } else {
+      setEditingId(null);
     }
   };
 
   const handleEditConfirmed = () => {
     onUpdate(service._id, editedName);
     setEditConfirmDialogOpen(false);
-    setIsEditing(false);
   };
 
-  // Save steps to backend
   const handleStepSave = async (steps) => {
     setServiceSteps(steps);
     await updateServiceSteps(service._id, steps);
-    setStepsAdded(true); // Mark that steps are added
+    setStepsAdded(true);
     setStepModalOpen(false);
   };
 
@@ -47,13 +72,12 @@ const ServiceItem = ({ service, onToggle, onDelete, onUpdate }) => {
           gap: 2,
         }}
       >
-        {/* Checkbox */}
         <Checkbox
           checked={service.selected}
           onChange={() => onToggle(service._id, service.selected)}
+          disabled={isActionInProgress || isEditing}
         />
 
-        {/* Service Name / Editing Field */}
         {isEditing ? (
           <TextField
             value={editedName}
@@ -72,44 +96,67 @@ const ServiceItem = ({ service, onToggle, onDelete, onUpdate }) => {
           />
         )}
 
-        {/* Action Buttons */}
         <Box display="flex" gap={1}>
-          {/* Edit / Save Button */}
-          <Button
-            variant="outlined"
-            color={isEditing ? "success" : "primary"}
-            size="small"
-            onClick={() => (isEditing ? handleSave() : setIsEditing(true))}
-            sx={{ minWidth: "100px" }}
-          >
-            {isEditing ? "Save" : "Edit"}
-          </Button>
-
-          {/* Add Step / Edit Steps Button */}
-          <Button
-            variant="outlined"
-            color="secondary"
-            size="small"
-            onClick={() => setStepModalOpen(true)}
-            sx={{ minWidth: "100px" }}
-          >
-            {stepsAdded ? "Edit Steps" : "Add Step"}
-          </Button>
-
-          {/* Delete Button */}
-          <Button
-            variant="outlined"
-            color="error"
-            size="small"
-            onClick={() => setConfirmDialogOpen(true)}
-            sx={{ minWidth: "100px" }}
-          >
-            Delete
-          </Button>
+          {isEditing ? (
+            <>
+              <Button
+                variant="outlined"
+                color="success"
+                size="small"
+                onClick={handleSave}
+                disabled={isActionInProgress}
+                sx={{ minWidth: "100px" }}
+              >
+                Save
+              </Button>
+              <Button
+                variant="outlined"
+                color="error"
+                size="small"
+                onClick={handleCancelEditing}
+                disabled={isActionInProgress}
+                sx={{ minWidth: "100px" }}
+              >
+                Cancel
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                variant="outlined"
+                color="primary"
+                size="small"
+                onClick={handleStartEditing}
+                disabled={isActionInProgress || editingId !== null}
+                sx={{ minWidth: "100px" }}
+              >
+                Edit
+              </Button>
+              <Button
+                variant="outlined"
+                color="secondary"
+                size="small"
+                onClick={() => setStepModalOpen(true)}
+                disabled={isActionInProgress || editingId !== null}
+                sx={{ minWidth: "100px" }}
+              >
+                {stepsAdded ? "Edit Steps" : "Add Step"}
+              </Button>
+              <Button
+                variant="outlined"
+                color="error"
+                size="small"
+                onClick={() => setConfirmDialogOpen(true)}
+                disabled={isActionInProgress || editingId !== null}
+                sx={{ minWidth: "100px" }}
+              >
+                Delete
+              </Button>
+            </>
+          )}
         </Box>
       </ListItem>
 
-      {/* Confirm Delete Dialog */}
       <ConfirmDeleteDialog
         open={confirmDialogOpen}
         onClose={() => setConfirmDialogOpen(false)}
@@ -120,7 +167,6 @@ const ServiceItem = ({ service, onToggle, onDelete, onUpdate }) => {
         itemName={service.name}
       />
 
-      {/* Confirm Edit Dialog */}
       <ConfirmEditDialog
         open={editConfirmDialogOpen}
         onClose={() => setEditConfirmDialogOpen(false)}
@@ -129,12 +175,12 @@ const ServiceItem = ({ service, onToggle, onDelete, onUpdate }) => {
         editedName={editedName}
       />
 
-      {/* Service Step Modal */}
       <ServiceStepModal
         open={stepModalOpen}
         onClose={() => setStepModalOpen(false)}
         onSave={handleStepSave}
         initialSteps={serviceSteps}
+        disabled={isActionInProgress}
       />
     </>
   );

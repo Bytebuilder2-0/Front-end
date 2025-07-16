@@ -22,6 +22,25 @@ const AppointmentDetailsModal = ({ appointment, open, onClose }) => {
       <Divider />
 
       <DialogContent dividers sx={{ py: 3 }}>
+        {/* Customer Information */}
+        <Box mb={3}>
+          <Typography variant="h6" sx={{ color: "#1976d2", mb: 1 }}>
+            Customer Information
+          </Typography>
+          {appointment.userId && appointment.userId.name ? (
+            <>
+              <Typography>
+                <strong>Name:</strong> {appointment.userId.name}
+              </Typography>
+              <Typography>
+                <strong>Email:</strong> {appointment.userId.email || "N/A"}
+              </Typography>
+            </>
+          ) : (
+            <Typography>Customer information not available</Typography>
+          )}
+        </Box>
+
         {/* Vehicle Info */}
         <Box mb={3}>
           <Typography variant="h6" sx={{ color: "#1976d2", mb: 1 }}>
@@ -117,6 +136,46 @@ const AppointmentDetailsModal = ({ appointment, open, onClose }) => {
             <Typography>
               <strong>Contact Number:</strong> {appointment.contactNumber}
             </Typography>
+          </Box>
+        )}
+        {appointment.sconfirmedBy && (
+          <Box mb={3}>
+            <Typography variant="h6" sx={{ color: "#1976d2", mb: 1 }}>
+              Supervisor Information
+            </Typography>
+            {appointment.sconfirmedBy.fullName && (
+              <Typography>
+                <strong>Name:</strong> {appointment.sconfirmedBy.fullName}
+              </Typography>
+            )}
+            {appointment.sconfirmedBy.userName && (
+              <Typography>
+                <strong>Username:</strong> {appointment.sconfirmedBy.userName}
+              </Typography>
+            )}
+          </Box>
+        )}
+        {/* Technician Information */}
+        {appointment.tech && (
+          <Box mb={3}>
+            <Typography variant="h6" sx={{ color: "#1976d2", mb: 1 }}>
+              Technician Information
+            </Typography>
+            {appointment.tech.fullName && (
+              <Typography>
+                <strong>Name:</strong> {appointment.tech.fullName}
+              </Typography>
+            )}
+            {appointment.tech.department && (
+              <Typography>
+                <strong>Department:</strong> {appointment.tech.department}
+              </Typography>
+            )}
+            {appointment.tech.employee_id && (
+              <Typography>
+                <strong>Employee ID:</strong> {appointment.tech.employee_id}
+              </Typography>
+            )}
           </Box>
         )}
 

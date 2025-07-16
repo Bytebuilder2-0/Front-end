@@ -15,32 +15,38 @@ const ServiceManager = () => {
   const [services, setServices] = useState([]);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [editingId, setEditingId] = useState(null);
+  const [isActionInProgress, setIsActionInProgress] = useState(false);
 
   useEffect(() => {
     fetchServices().then(setServices);
   }, []);
 
   const handleToggle = async (id, selected) => {
-    await toggleService(id, !selected);
-    setServices((prev) =>
-      prev.map((service) =>
-        service._id === id ? { ...service, selected: !selected } : service
-      )
-    );
-    setSnackbarMessage("Service status updated successfully.");
-    setSnackbarOpen(true);
+    setIsActionInProgress(true);
+    try {
+      await toggleService(id, !selected);
+      setServices((prev) =>
+        prev.map((service) =>
+          service._id === id ? { ...service, selected: !selected } : service
+        )
+      );
+      setSnackbarMessage("Service status updated successfully.");
+      setSnackbarOpen(true);
+    } finally {
+      setIsActionInProgress(false);
+    }
   };
 
   const handleAdd = async (name) => {
+    setIsActionInProgress(true);
     const tempId = Date.now(); // Temporary ID
     setServices((prev) => [...prev, { _id: tempId, name, selected: false }]);
     try {
       const newService = await addService(name);
       if (newService && newService._id) {
         setServices((prev) =>
-          prev.map((service) =>
-            service._id === tempId ? newService : service
-          )
+          prev.map((service) => (service._id === tempId ? newService : service))
         );
         setSnackbarMessage(`"${name}" added successfully.`);
       } else {
@@ -52,28 +58,40 @@ const ServiceManager = () => {
       setSnackbarMessage("Error adding service.");
     }
     setSnackbarOpen(true);
+    setIsActionInProgress(false);
   };
 
   const handleDelete = async (id, name) => {
-    await deleteService(id);
-    setServices((prev) => prev.filter((service) => service._id !== id));
-    setSnackbarMessage(`"${name}" deleted successfully.`);
-    setSnackbarOpen(true);
+    setIsActionInProgress(true);
+    try {
+      await deleteService(id);
+      setServices((prev) => prev.filter((service) => service._id !== id));
+      setSnackbarMessage(`"${name}" deleted successfully.`);
+      setSnackbarOpen(true);
+    } finally {
+      setIsActionInProgress(false);
+    }
   };
 
   const handleUpdate = async (id, name) => {
-    const updated = await updateService(id, name);
-    if (updated && updated.name) {
-      setServices((prev) =>
-        prev.map((service) =>
-          service._id === id ? { ...service, name: updated.name } : service
-        )
-      );
-      setSnackbarMessage(`"${name}" updated successfully.`);
-    } else {
-      setSnackbarMessage("Error updating service.");
+    setIsActionInProgress(true);
+    try {
+      const updated = await updateService(id, name);
+      if (updated && updated.name) {
+        setServices((prev) =>
+          prev.map((service) =>
+            service._id === id ? { ...service, name: updated.name } : service
+          )
+        );
+        setSnackbarMessage(`"${name}" updated successfully.`);
+      } else {
+        setSnackbarMessage("Error updating service.");
+      }
+      setSnackbarOpen(true);
+      setEditingId(null);
+    } finally {
+      setIsActionInProgress(false);
     }
-    setSnackbarOpen(true);
   };
 
   return (
@@ -98,12 +116,16 @@ const ServiceManager = () => {
           >
             Manage Services
           </Typography>
-          <Typography variant="subtitle1" align="center" sx={{ color: "gray", mt: 1 }}>
+          <Typography
+            variant="subtitle1"
+            align="center"
+            sx={{ color: "gray", mt: 1 }}
+          >
             Add, Edit, and Organize Your Services Easily
           </Typography>
         </Box>
 
-        <ServiceForm onAdd={handleAdd} />
+        <ServiceForm onAdd={handleAdd} disabled={isActionInProgress} />
 
         <Typography variant="h5" sx={{ mt: 4, mb: 2 }} fontWeight="bold">
           Your Services
@@ -128,6 +150,9 @@ const ServiceManager = () => {
             onToggle={handleToggle}
             onDelete={handleDelete}
             onUpdate={handleUpdate}
+            editingId={editingId}
+            setEditingId={setEditingId}
+            isActionInProgress={isActionInProgress}
           />
         )}
       </Paper>
