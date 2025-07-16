@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 import {
 	Box,
 	Card,
@@ -8,9 +10,23 @@ import {
 	Typography,
 	Button,
 } from "@mui/material";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle"; // ✅ MUI Icon
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+
+// Replace with your actual API base URL or environment variable
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default function PaymentSuccess() {
+	const { appointmentId } = useParams();
+
+	useEffect(() => {
+		if (appointmentId) {
+			axios
+				.put(`${API_BASE_URL}/payment/update-status`, { appointmentId })
+				.then((res) => console.log(" Payment updated:", res.data))
+				.catch((err) => console.error(" Error updating payment:", err));
+		}
+	}, [appointmentId]);
+
 	return (
 		<Box
 			sx={{
