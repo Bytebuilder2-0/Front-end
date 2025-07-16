@@ -156,10 +156,10 @@ const FeedbackAll = () => {
       )}
 
       <FeedbackForm
-  open={feedbackState.open}
-  onClose={() => setFeedbackState({ open: false, appointmentId: null })}
-  appointmentId={feedbackState.appointmentId}
-  onSubmitted={() => fetchData()} 
+        open={feedbackState.open}
+        onClose={() => setFeedbackState({ open: false, appointmentId: null })}
+        appointmentId={feedbackState.appointmentId}
+        onSubmitted={() => fetchData()} 
 />
 
     </Box>

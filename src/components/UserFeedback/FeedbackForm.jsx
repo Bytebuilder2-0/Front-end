@@ -16,16 +16,16 @@ import {
 import { Star, Send, Close } from "@mui/icons-material";
 import { useAuth } from '../../context/AuthContext';
 import axios from "axios";
-// import { useErrorBoundary } from "react-error-boundary";
+
 
 const FeedbackForm = ({ open, onClose, appointmentId }) => {
-  const { token } = useAuth();
+  const { user, token } = useAuth();
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  // const { showBoundary } = useErrorBoundary();
+
 
   const handleSubmit = async () => {
     if (!rating) {
@@ -33,10 +33,11 @@ const FeedbackForm = ({ open, onClose, appointmentId }) => {
       return;
     }
 
-    if (!appointmentId) {
-      setError("Invalid appointment reference");
-      return;
+    if (appointmentId) {
+        console.log( 'AAPP : ', appointmentId);
     }
+    
+
 
     setLoading(true);
     setError("");
@@ -50,29 +51,30 @@ const FeedbackForm = ({ open, onClose, appointmentId }) => {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
           },
+          
           validateStatus: (status) => status < 500
         }
       );
 
-      if (response.status === 200) {
-        setSubmitted(true);
-        setTimeout(() => {
-          handleClose();
-        }, 1500);
-      } else {
-        throw new Error(response.data?.message || "Failed to submit feedback");
-      }
-    } catch (err) {
-      console.error("Feedback submission error:", err);
-      if (err.response?.status === 401 || err.response?.status === 404) {
-        setError(err.response.data?.message || err.message);
-      } else {
-        showBoundary(err);
-      }
-    } finally {
-      setLoading(false);
+
+       if (response.data.success) {
+      setSubmitted(true);
+      setTimeout(handleClose, 1500);
+    } else {
+      throw new Error(response.data.message || "Failed to submit feedback");
     }
+    } catch (err) {
+  console.error("Feedback submission error:", {
+    error: err,
+    response: err.response
+  });
+  
+}
+finally {
+    setLoading(false);
+  }
   };
+  
 
   const handleClose = () => {
     onClose();
