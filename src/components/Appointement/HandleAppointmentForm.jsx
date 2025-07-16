@@ -117,7 +117,6 @@ useEffect(() => {
     
     if (!formData.vehicleObject) newErrors.vehicleObject = 'Vehicle selection is required';
     if (formData.services.length === 0) newErrors.services = 'At least one service required';
-    if (!formData.issue) newErrors.issue = 'Vehicle issue is required';
     if (!formData.preferredDate) newErrors.preferredDate = 'Preferred date is required';
     if (!formData.preferredTime) newErrors.preferredTime = 'Preferred time is required';
     if (!formData.expectedDeliveryDate) newErrors.expectedDeliveryDate = 'Delivery date is required';
