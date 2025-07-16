@@ -13,7 +13,7 @@ import {
 	TableRow,
 	Paper,
 	Button,
-  Box,
+	Box,
 } from "@mui/material";
 
 const baseURL = import.meta.env.VITE_API_BASE_URL;
@@ -41,7 +41,7 @@ function InvoiceView({ appointment }) {
 			<ReceiptIcon fontSize="large" style={{ cursor: "pointer" }} onClick={fetchBudget} />
 
 			<Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm">
-				<DialogTitle sx={{textAlign:"center"}}>Budget Details</DialogTitle>
+				<DialogTitle sx={{ textAlign: "center" }}>Budget Details</DialogTitle>
 				<DialogContent>
 					{budget ? (
 						<TableContainer component={Paper}>
@@ -68,7 +68,7 @@ function InvoiceView({ appointment }) {
 						<p>Loading...</p>
 					)}
 				</DialogContent>
-				<Box sx={{ display: "flex", justifyContent: "center", mt: 2,mb:1 }}>
+				<Box sx={{ display: "flex", justifyContent: "center", mt: 2, mb: 1 }}>
 					<Button
 						onClick={() => setOpen(false)}
 						color="error"
