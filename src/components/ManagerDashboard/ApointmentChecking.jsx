@@ -60,11 +60,17 @@ const ApointmentChecking = () => {
   useEffect(() => {
     axios
       .get(API_BASE_URL, authConfig)
-      .then((res) =>
-        setAppointments(
-          res.data.reverse().filter((appt) => appt.status === "Checking")
-        )
-      )
+      .then((res) => {
+        // Sort appointments: Checking first, then Pending
+        const sortedAppointments = res.data
+          .filter((appt) => ["Checking", "Pending"].includes(appt.status))
+          .sort((a, b) => {
+            if (a.status === "Checking" && b.status !== "Checking") return -1;
+            if (a.status !== "Checking" && b.status === "Checking") return 1;
+            return 0;
+          });
+        setAppointments(sortedAppointments);
+      })
       .catch((err) => console.error("Error fetching appointments:", err));
   }, []);
 
@@ -150,21 +156,18 @@ const ApointmentChecking = () => {
     let matchesPreferredDate = true;
 
     if (dateFilterType === "full") {
-      // Full date format (YYYY-MM-DD)
       matchesPreferredDate =
         new Date(appointment.preferredDate).toISOString().split("T")[0] ===
         preferredDate;
     } else if (dateFilterType === "month") {
-      // Month format (MM)
       const appointmentMonth = new Date(appointment.preferredDate)
         .toISOString()
-        .slice(5, 7); // Extract MM
+        .slice(5, 7);
       matchesPreferredDate = appointmentMonth === preferredDate;
     } else if (dateFilterType === "day") {
-      // Day format (DD)
       const appointmentDay = new Date(appointment.preferredDate)
         .toISOString()
-        .slice(8, 10); // Extract DD
+        .slice(8, 10);
       matchesPreferredDate = appointmentDay === preferredDate;
     }
 
@@ -251,7 +254,7 @@ const ApointmentChecking = () => {
                             appointment.status === "Checking"
                               ? "#3c4caaff"
                               : appointment.status === "Pending"
-                              ? "green"
+                              ? "orange"
                               : ["Cancelled", "Reject1"].includes(
                                   appointment.status
                                 )
@@ -265,35 +268,50 @@ const ApointmentChecking = () => {
                         {appointment.status}
                       </Typography>
                     </TableCell>
+
                     <TableCell align="center">
-                      <Tooltip title="Accept">
-                        <IconButton
-                          color="success"
-                          onClick={() =>
-                            handleClickAction(appointment, "Accept")
-                          }
-                        >
-                          <CheckCircleIcon sx={{ fontSize: 26 }} />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Reject">
-                        <IconButton
-                          color="error"
-                          onClick={() =>
-                            handleClickAction(appointment, "Reject")
-                          }
-                        >
-                          <CancelIcon sx={{ fontSize: 26 }} />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Edit Appointment Details">
-                        <IconButton
-                          color="primary"
-                          onClick={() => handleOpenUpdateDialog(appointment)}
-                        >
-                          <VisibilityIcon sx={{ fontSize: 22 }} />
-                        </IconButton>
-                      </Tooltip>
+                      <Box
+                        display="flex"
+                        justifyContent="center"
+                        alignItems="center"
+                        gap={1}
+                      >
+                        {/* Edit Appointment Button */}
+                        <Tooltip title="Edit Appointment Details">
+                          <IconButton
+                            color="primary"
+                            onClick={() => handleOpenUpdateDialog(appointment)}
+                          >
+                            <VisibilityIcon sx={{ fontSize: 22 }} />
+                          </IconButton>
+                        </Tooltip>
+
+                        {/* Accept Button - Only show if status is not "Pending" */}
+                        {appointment.status !== "Pending" && (
+                          <Tooltip title="Accept">
+                            <IconButton
+                              color="success"
+                              onClick={() =>
+                                handleClickAction(appointment, "Accept")
+                              }
+                            >
+                              <CheckCircleIcon sx={{ fontSize: 26 }} />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+
+                        {/* Reject Button */}
+                        <Tooltip title="Reject">
+                          <IconButton
+                            color="error"
+                            onClick={() =>
+                              handleClickAction(appointment, "Reject")
+                            }
+                          >
+                            <CancelIcon sx={{ fontSize: 26 }} />
+                          </IconButton>
+                        </Tooltip>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 ))

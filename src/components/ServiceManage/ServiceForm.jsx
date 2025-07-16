@@ -49,7 +49,7 @@ const ServiceForm = ({ onAdd, disabled }) => {
           },
         }}
       >
-        Add
+        ADD
       </Button>
     </Box>
   );

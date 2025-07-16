@@ -1,16 +1,7 @@
 import React, { useState } from "react";
-import {
-  ListItem,
-  ListItemText,
-  Checkbox,
-  TextField,
-  Button,
-  Box,
-} from "@mui/material";
+import { ListItem, TextField, Button, Box, Typography } from "@mui/material";
 import ConfirmDeleteDialog from "./ConfirmDeleteDialog";
 import ConfirmEditDialog from "./ConfirmEditDialog";
-import ServiceStepModal from "./ServiceStepModal";
-import { updateServiceSteps } from "./serviceApi";
 
 const ServiceItem = ({
   service,
@@ -24,11 +15,6 @@ const ServiceItem = ({
   const [editedName, setEditedName] = useState(service.name);
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [editConfirmDialogOpen, setEditConfirmDialogOpen] = useState(false);
-  const [stepModalOpen, setStepModalOpen] = useState(false);
-  const [serviceSteps, setServiceSteps] = useState(service.steps || []);
-  const [stepsAdded, setStepsAdded] = useState(
-    service.steps && service.steps.length > 0
-  );
 
   const isEditing = editingId === service._id;
 
@@ -55,13 +41,6 @@ const ServiceItem = ({
     setEditConfirmDialogOpen(false);
   };
 
-  const handleStepSave = async (steps) => {
-    setServiceSteps(steps);
-    await updateServiceSteps(service._id, steps);
-    setStepsAdded(true);
-    setStepModalOpen(false);
-  };
-
   return (
     <>
       <ListItem
@@ -70,87 +49,87 @@ const ServiceItem = ({
           alignItems: "center",
           justifyContent: "space-between",
           gap: 2,
+          p: 2,
+          borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
+          backgroundColor: "background.paper",
         }}
       >
-        <Checkbox
-          checked={service.selected}
-          onChange={() => onToggle(service._id, service.selected)}
-          disabled={isActionInProgress || isEditing}
-        />
+        <Box sx={{ display: "flex", flex: 1, gap: 2, alignItems: "center" }}>
+          {isEditing ? (
+            <TextField
+              value={editedName}
+              onChange={(e) => setEditedName(e.target.value)}
+              size="small"
+              fullWidth
+              variant="outlined"
+              sx={{ flex: 1 }}
+              autoFocus
+            />
+          ) : (
+            <Typography
+              variant="body1"
+              sx={{
+                color: service.selected ? "success.main" : "text.primary",
+                fontWeight: service.selected ? "bold" : "normal",
+                flex: 1,
+              }}
+            >
+              {service.name}
+            </Typography>
+          )}
+        </Box>
 
-        {isEditing ? (
-          <TextField
-            value={editedName}
-            onChange={(e) => setEditedName(e.target.value)}
-            size="small"
-            sx={{ flex: 1, marginRight: 2 }}
-          />
-        ) : (
-          <ListItemText
-            primary={service.name}
-            sx={{
-              color: service.selected ? "green" : "black",
-              flex: 1,
-              marginRight: 2,
-            }}
-          />
-        )}
+        <Box display="flex" gap={1} justifyContent="flex-end">
+          <Button
+            variant={service.selected ? "contained" : "outlined"}
+            color={service.selected ? "success" : "primary"}
+            onClick={() => onToggle(service._id, service.selected)}
+            disabled={isActionInProgress || isEditing}
+            sx={{ minWidth: "100px" }}
+          >
+            {service.selected ? "Remove" : "add"}
+          </Button>
 
-        <Box display="flex" gap={1}>
           {isEditing ? (
             <>
               <Button
-                variant="outlined"
-                color="success"
-                size="small"
+                variant="contained"
+                color="primary"
                 onClick={handleSave}
-                disabled={isActionInProgress}
+                disabled={isActionInProgress || !editedName.trim()}
                 sx={{ minWidth: "100px" }}
               >
-                Save
+                save
               </Button>
               <Button
                 variant="outlined"
-                color="error"
-                size="small"
+                color="secondary"
                 onClick={handleCancelEditing}
                 disabled={isActionInProgress}
                 sx={{ minWidth: "100px" }}
               >
-                Cancel
+                cancel
               </Button>
             </>
           ) : (
             <>
               <Button
                 variant="outlined"
-                color="primary"
-                size="small"
+                color="info"
                 onClick={handleStartEditing}
                 disabled={isActionInProgress || editingId !== null}
                 sx={{ minWidth: "100px" }}
               >
-                Edit
-              </Button>
-              <Button
-                variant="outlined"
-                color="secondary"
-                size="small"
-                onClick={() => setStepModalOpen(true)}
-                disabled={isActionInProgress || editingId !== null}
-                sx={{ minWidth: "100px" }}
-              >
-                {stepsAdded ? "Edit Steps" : "Add Step"}
+                edit
               </Button>
               <Button
                 variant="outlined"
                 color="error"
-                size="small"
                 onClick={() => setConfirmDialogOpen(true)}
                 disabled={isActionInProgress || editingId !== null}
                 sx={{ minWidth: "100px" }}
               >
-                Delete
+                delete
               </Button>
             </>
           )}
@@ -173,14 +152,6 @@ const ServiceItem = ({
         onConfirm={handleEditConfirmed}
         itemName={service.name}
         editedName={editedName}
-      />
-
-      <ServiceStepModal
-        open={stepModalOpen}
-        onClose={() => setStepModalOpen(false)}
-        onSave={handleStepSave}
-        initialSteps={serviceSteps}
-        disabled={isActionInProgress}
       />
     </>
   );

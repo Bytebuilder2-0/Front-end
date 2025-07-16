@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import WhatsAppButton from "../sub/WhatsAppButton";
 import DeatailsViewer from "../ManagerDashboard/viewDeatails";
+import InvoiceView from "../sub/InvoiceView";
 import { jwtDecode } from "jwt-decode";
 
 const API_URL = "http://localhost:5000/api/appointments";
@@ -147,9 +148,7 @@ const ApointmentHistory = () => {
                       </Typography>
                     </TableCell>
                     <TableCell align="center">
-                      <Typography variant="body2" color="textSecondary">
-                        {appointment.invoiceId || "No invoice"}
-                      </Typography>
+                      <InvoiceView appointment={appointment} />
                     </TableCell>
                   </TableRow>
                 ))

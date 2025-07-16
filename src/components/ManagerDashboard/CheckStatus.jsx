@@ -26,7 +26,7 @@ const token = localStorage.getItem("token");
 
 // Status configuration object for better maintainability
 const STATUS_CONFIG = {
-  Pending: { color: "orange", label: "Pending" },
+  //Pending: { color: "orange", label: "Pending" },
   Confirmed: { color: "#736953ff", label: "Confirmed" },
   //Reject1: { color: "#28c930ff", label: "Rejected" },
   Reject2: { color: "#d08b09ff", label: "Tech Rejected" },
