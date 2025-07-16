@@ -37,10 +37,17 @@ import FeedBackUser from "../pages/User/FeedBackUser";
 
 import VehicleRegister from "../pages/User/VehicleRegister";
 
+import PaymentSuccess from "../components/payment/PaymentSuccess";
+import PaymentCancel from "../components/payment/PaymentCancel";
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <HomePage />, // <-- Replace HomePage with your real Home component
+  },
+  {
+    path:"/payment-success",
+    element:<PaymentSuccess/>,
   },
   {
     element: <Layout />, //  All below routes will share the MiniDrawer layout
