@@ -8,7 +8,13 @@ import {
   Button,
 } from "@mui/material";
 
-const ConfirmEditDialog = ({ open, onClose, onConfirm, itemName, editedName }) => {
+const ConfirmEditDialog = ({
+  open,
+  onClose,
+  onConfirm,
+  itemName,
+  editedName,
+}) => {
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Confirm Edit</DialogTitle>
