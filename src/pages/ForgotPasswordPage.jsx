@@ -27,10 +27,25 @@ const ForgotPasswordPage = () => {
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
+
+  const validateEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return emailRegex.test(email)
+}
+
+const validatePassword = (password) => {
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/
+  return passwordRegex.test(password)
+}
+
   const handleEmailSubmit = async (e) => {
     e.preventDefault()
     setError("")
     setMessage("")
+    if (!validateEmail(email)) {
+    setError("Please enter a valid email address.")
+    return
+  }
     setIsLoading(true)
 
     try {
@@ -48,13 +63,23 @@ const ForgotPasswordPage = () => {
     e.preventDefault()
     setError("")
     setMessage("")
-    setIsLoading(true)
+     if (!otp.trim()) {
+    setError("OTP is required.")
+    return
+  }
+
+  if (!validatePassword(newPassword)) {
+    setError("Password must be at least 6 characters and include a letter, number, and symbol.")
+    return
+  }
+    
 
     if (newPassword !== confirmPassword) {
       setError("Passwords do not match.")
       setIsLoading(false)
       return
     }
+    setIsLoading(true)
 
     try {
       const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/reset-password`, {

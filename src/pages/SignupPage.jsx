@@ -185,7 +185,7 @@ const Signup = () => {
 
 
 			// Navigate to login page on success
-			//navigate("/Loginpage");
+			navigate("/Loginpage");
 
 			setFormData({
 				email: "",
