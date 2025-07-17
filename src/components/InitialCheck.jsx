@@ -12,7 +12,7 @@ import {
 	Box,
 	TextField,
 	IconButton,
-	Tooltip,
+	Tooltip,Typography
 } from "@mui/material";
 
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -106,7 +106,7 @@ const InitialCheck = () => {
 
 	return (
 		<Container>
-			<Box display="flex" justifyContent="right" alignItems="center" mb={2}>
+			<Box display="flex" justifyContent="right" alignItems="center" mb={2} mt={2}>
 				<TextField
 					label="Search by Vehicle ID"
 					variant="outlined"
@@ -118,35 +118,35 @@ const InitialCheck = () => {
 
 			<TableContainer
 				component={Paper}
-				sx={{ marginTop: 2, overflow: "auto", maxHeight: 400 }}
+				sx={{
+					marginTop: 2,
+					overflow: "auto",
+					maxHeight: 400,
+					borderRadius: 2,
+					boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
+				}}
 			>
 				<Table stickyHeader>
 					<TableHead>
-						<TableRow>
-							<TableCell>
-								<strong>Vehicle ID</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Model</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Issue</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Exp.Delivery</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Status</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Action</strong>
-							</TableCell>
+						<TableRow sx={{ "& th": { fontWeight: "bold", backgroundColor: "#f5f5f5" } }}>
+							<TableCell>Vehicle ID</TableCell>
+							<TableCell>Model</TableCell>
+							<TableCell>Issue</TableCell>
+							<TableCell>Exp.Delivery</TableCell>
+							<TableCell>Status</TableCell>
+							<TableCell>Action</TableCell>
 						</TableRow>
 					</TableHead>
 					<TableBody>
 						{filteredAppointments.length > 0 ? (
 							filteredAppointments.map((appointment) => (
-								<TableRow key={appointment._id}>
+								<TableRow
+									key={appointment._id}
+									sx={{
+										"&:nth-of-type(odd)": { backgroundColor: "#fafafa" },
+										"&:hover": { backgroundColor: "#e0e0e0" },
+									}}
+								>
 									<TableCell>{appointment.vehicleId}</TableCell>
 									<TableCell>{appointment.model}</TableCell>
 									<TableCell>
@@ -196,8 +196,10 @@ const InitialCheck = () => {
 							))
 						) : (
 							<TableRow>
-								<TableCell colSpan={6} align="center">
-									No Appointments Found
+								<TableCell colSpan={6} align="center" sx={{ py: 4 }}>
+									<Typography variant="h6" color="text.secondary">
+										No Appointments Found
+									</Typography>
 								</TableCell>
 							</TableRow>
 						)}
