@@ -120,7 +120,7 @@ const SupDeclined = () => {
 							<TableCell>Issue</TableCell>
 							<TableCell>Reason</TableCell>
 							<TableCell>Workload</TableCell>
-							<TableCell>Assign Tech</TableCell>
+							<TableCell align="center">Re-Assign Technician</TableCell>
 							<TableCell>WhatsApp</TableCell>
 						</TableRow>
 					</TableHead>
