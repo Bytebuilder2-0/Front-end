@@ -35,6 +35,9 @@ import {
 } from "@mui/icons-material";
 import axios from "axios";
 import LoginSignupNavbar from "../components/LoginSignupNavbar";
+import { Snackbar, Alert } from "@mui/material";
+import {toast } from "react-hot-toast";
+
 
 const roles = ["customer", "technician", "manager", "supervisor"];
 
@@ -97,11 +100,21 @@ const Signup = () => {
 				role: formData.role,
 			};
 			const res = await axios.post("http://localhost:5000/api/auth/register", payload);
-			alert("Signup successful!");
+			//alert("Signup successful!");
+			toast.success("Registered Successfully!!"); 
 			console.log(res);
 
+
+			  //waiting page ekk daanna.......................................
+			  //navigate to email verification 
+			  //itapasse login ekata navigate krnn
+
+
+
+
+
 			// Navigate to login page on success
-			navigate("/Loginpage");
+			//navigate("/Loginpage");
 
 			setFormData({
 				email: "",

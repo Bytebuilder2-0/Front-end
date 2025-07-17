@@ -4,6 +4,9 @@ import { styled } from "@mui/material/styles";
 import axios from "axios";
 import { useAuth } from '../../context/AuthContext';
 
+
+
+
 import {
 	Box,
 	CssBaseline,
@@ -39,6 +42,7 @@ import {
 } from "@mui/icons-material";
 import Notify from "../Atoms/Notify";
 import Account from "../Atoms/Account";
+import ProfilePage from "../../pages/ProfilePage";
 
 const drawerWidth = 240;
 
@@ -117,6 +121,8 @@ export default function UserMiniDrawer({ userId }) {
 	const navigate = useNavigate();
 	const [expanded, setExpanded] = useState({ "My Appointments": false });
 	const [loading, setLoading] = useState(true);
+	const [profile, setProfile] = useState(null);
+
 
 	const handleDrawerOpen = () => setOpen(true);
 	const handleDrawerClose = () => setOpen(false);
@@ -137,8 +143,8 @@ export default function UserMiniDrawer({ userId }) {
 
 				let appointmentsData = response.data;
 				console.log("Filtered appointments:", 
-  appointments.filter((appt) => !["Cancelled", "All done", "Reject1"].includes(appt?.status))
-);
+                 appointments.filter((appt) => !["Cancelled", "All done", "Reject1"].includes(appt?.status))
+					);
 				if (appointmentsData && !Array.isArray(appointmentsData)) {
 					// If backend wraps array in an object (like { data: [...] })
 					if (
@@ -166,6 +172,21 @@ export default function UserMiniDrawer({ userId }) {
 		if (userId) {
 			fetchAppointments();
 		}
+		if (!token) return;
+
+	const fetchProfile = async () => {
+		try {
+			const response = await axios.get('http://localhost:5000/api/user/profile', form, {
+				headers: { Authorization: `Bearer ${token}` }
+			});
+			setProfile(response.data.user);
+		} catch (error) {
+			console.error("Failed to fetch profile photo:", error);
+		}
+	};
+
+	fetchProfile();
+		
 	}, [userId, token]);
 
 	
@@ -242,12 +263,26 @@ export default function UserMiniDrawer({ userId }) {
 							mb: 2,
 						}}
 					>
+
+													{/* <img
+							src={profile?.profilePhoto}
+							alt="preview"
+							style={{ width: 100, height: 100, objectFit: 'cover', borderRadius: '50%' }}
+							/> */}
+
+
 						<Avatar
-							src="https://randomuser.me/api/portraits/men/1.jpg"
-							sx={{ width: 100, height: 100 }}
-						/>
+	                       src={profile?.profilePhoto || ''}
+	                       sx={{ width: 100, height: 100 }}
+						   >
+ 
+                         {!profile?.profilePhoto && (profile?.name?.[0] || 'U')}
+                        </Avatar> 
+
 						<br />
-						<Typography>User 1</Typography>
+						<Typography>{profile?.name || 'User'}</Typography>
+
+
 					</Box>
 				)}
 				{open && <Divider sx={{ mx: 2, my: 1 }} />}
@@ -275,8 +310,9 @@ export default function UserMiniDrawer({ userId }) {
 									status: appt.status,
 								})),
 						},
+//---------------------this should be updated================================================================================================================
 						{ path: "", label: "History", icon: <HistoryIcon /> },
-						{ path: "", label: "Edit Profile", icon: <EditIcon /> },
+						{ path: "/ProfilePage", label: "Edit Profile", icon: <EditIcon /> },
 						{ path: "", label: "FeedBack", icon: <FeedbackIcon /> },
 					].map((item) => (
 						<React.Fragment key={item.path || item.label}>

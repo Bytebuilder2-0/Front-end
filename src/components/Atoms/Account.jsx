@@ -19,6 +19,7 @@ function Account() {
 	const handleProfileClick = () => {
 		console.log("Profile clicked");
 		handleMenuClose();
+		navigate("/ProfilePage");
 	};
 
 	const handleLogoutClick = () => {

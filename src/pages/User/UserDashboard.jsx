@@ -1,6 +1,7 @@
 import { Box,Toolbar } from "@mui/material";
 import UserMiniDrawer from "../../components/ui/UserMiniDrawer";
 import UserWelcome from "../../components/WelcomeUser/UserWelcome";
+import ProfilePage from "../ProfilePage";
 
 function UserDashboard() {
 
@@ -13,6 +14,7 @@ function UserDashboard() {
        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar/>
         <UserWelcome userId={userId}/>
+        <ProfilePage/>
        </Box>
      </Box>
      </>

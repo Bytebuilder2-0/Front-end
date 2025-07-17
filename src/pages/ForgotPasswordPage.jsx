@@ -12,29 +12,58 @@ import {
   Slide,
   Chip,
 } from "@mui/material"
-import { Email, LockReset } from "@mui/icons-material"
+import { Email, LockReset, Password, VpnKey } from "@mui/icons-material"
 import { Link } from "react-router-dom"
 import axios from "axios"
 import LoginSignupNavbar from "../components/LoginSignupNavbar"
 
 const ForgotPasswordPage = () => {
+  const [step, setStep] = useState(1)
   const [email, setEmail] = useState("")
+  const [otp, setOtp] = useState("")
+  const [newPassword, setNewPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
   const [message, setMessage] = useState("")
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = async (e) => {
+  const handleEmailSubmit = async (e) => {
     e.preventDefault()
-    setMessage("")
     setError("")
+    setMessage("")
     setIsLoading(true)
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/forgot-password`, {
-        email,
-      })
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/forgot-password`, { email })
+      setMessage(response.data.message)
+      setStep(2)
+    } catch (err) {
+      setError(err.response?.data?.message || "Something went wrong.")
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
-      setMessage(response.data.message || "Password reset link sent.")
+  const handleResetSubmit = async (e) => {
+    e.preventDefault()
+    setError("")
+    setMessage("")
+    setIsLoading(true)
+
+    if (newPassword !== confirmPassword) {
+      setError("Passwords do not match.")
+      setIsLoading(false)
+      return
+    }
+
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/reset-password`, {
+        email,
+        otp,
+        newPassword,
+        confirmPassword,
+      })
+      setMessage(response.data.message)
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong.")
     } finally {
@@ -86,7 +115,7 @@ const ForgotPasswordPage = () => {
               flexDirection: { xs: "column", md: "row" },
             }}
           >
-            {/* Left Side - Description */}
+            {/* Left Side */}
             <Fade in timeout={1000}>
               <Box
                 sx={{
@@ -112,7 +141,9 @@ const ForgotPasswordPage = () => {
                   Forgot Your Password?
                 </Typography>
                 <Typography variant="h6" sx={{ mb: 4, opacity: 0.9 }}>
-                  No worries! Just enter your email and we'll send you a reset link.
+                  {step === 1
+                    ? "No worries! Enter your email and we’ll send an OTP."
+                    : "Enter the OTP sent to your email and reset your password."}
                 </Typography>
 
                 <Chip
@@ -128,7 +159,7 @@ const ForgotPasswordPage = () => {
               </Box>
             </Fade>
 
-            {/* Right Side - Form */}
+            {/* Right Side */}
             <Slide direction="left" in timeout={800}>
               <Paper
                 elevation={24}
@@ -167,15 +198,12 @@ const ForgotPasswordPage = () => {
                         WebkitTextFillColor: "transparent",
                       }}
                     >
-                      Reset Password
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                      Enter your email to receive a password reset link
+                      {step === 1 ? "Send OTP" : "Reset Password"}
                     </Typography>
                   </Box>
 
-                  {/* Form */}
-                  <Box component="form" onSubmit={handleSubmit}>
+                  <Box component="form" onSubmit={step === 1 ? handleEmailSubmit : handleResetSubmit}>
+                    {/* Email Input */}
                     <TextField
                       label="Email Address"
                       type="email"
@@ -184,6 +212,7 @@ const ForgotPasswordPage = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
+                      disabled={step === 2}
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
@@ -191,25 +220,64 @@ const ForgotPasswordPage = () => {
                           </InputAdornment>
                         ),
                       }}
-                      sx={{
-                        mb: 2,
-                        "& .MuiOutlinedInput-root": {
-                          borderRadius: 2,
-                          "&:hover fieldset": {
-                            borderColor: "#82b1ff",
-                          },
-                          "&.Mui-focused fieldset": {
-                            borderColor: "#82b1ff",
-                          },
-                        },
-                        "& .MuiInputLabel-root.Mui-focused": {
-                          color: "#82b1ff",
-                        },
-                      }}
                     />
 
+                    {/* OTP & Password Section */}
+                    {step === 2 && (
+                      <>
+                        <TextField
+                          label="Enter OTP"
+                          type="text"
+                          fullWidth
+                          margin="normal"
+                          value={otp}
+                          onChange={(e) => setOtp(e.target.value)}
+                          required
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <VpnKey sx={{ color: "text.secondary" }} />
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                        <TextField
+                          label="New Password"
+                          type="password"
+                          fullWidth
+                          margin="normal"
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                          required
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <Password sx={{ color: "text.secondary" }} />
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                        <TextField
+                          label="Confirm Password"
+                          type="password"
+                          fullWidth
+                          margin="normal"
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          required
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <Password sx={{ color: "text.secondary" }} />
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      </>
+                    )}
+
                     {message && (
-                      <Typography color="primary" sx={{ mb: 2 }}>
+                      <Typography color="primary" sx={{ mb: 2, mt: 2 }}>
                         {message}
                       </Typography>
                     )}
@@ -234,6 +302,7 @@ const ForgotPasswordPage = () => {
                       variant="contained"
                       disabled={isLoading}
                       sx={{
+                        mt: 2,
                         py: 2,
                         fontSize: "1.1rem",
                         fontWeight: "bold",
@@ -245,13 +314,9 @@ const ForgotPasswordPage = () => {
                           transform: "translateY(-2px)",
                           boxShadow: "0 12px 35px rgba(102, 126, 234, 0.4)",
                         },
-                        "&:disabled": {
-                          background: "rgba(0,0,0,0.12)",
-                        },
-                        transition: "all 0.3s ease",
                       }}
                     >
-                      {isLoading ? "Sending..." : "Send Reset Link"}
+                      {isLoading ? "Processing..." : step === 1 ? "Send OTP" : "Reset Password"}
                     </Button>
 
                     <Box sx={{ textAlign: "center", mt: 3 }}>
@@ -270,4 +335,4 @@ const ForgotPasswordPage = () => {
   )
 }
 
-export default ForgotPasswordPage;
+export default ForgotPasswordPage

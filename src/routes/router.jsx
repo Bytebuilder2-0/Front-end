@@ -33,8 +33,10 @@ import CheckStatus from "../pages/Manager/CheckStatus";
 import Layout from "../pages/supervisor/Layout";
 import PrivateRoute from "../components/Atoms/PrivateRoute";
 import Reports from "../pages/Manager/Report";
-//import ForgotPasswordPage from "../pages/ForgotPasswordPage";
+import ForgotPasswordPage from "../pages/ForgotPasswordPage";
 import VehicleRegister from "../pages/User/VehicleRegister";
+import VerifyEmail from "../components/VerifyEmail";
+import ProfilePage from "../pages/ProfilePage";
 
 const router = createBrowserRouter([
   {
@@ -154,12 +156,23 @@ const router = createBrowserRouter([
     path: "/SignupVReg",
     element: <SignInVehicleContainer />,
   },
-  
+  {
+  path :"/verify-email",
+   element: <VerifyEmail />,
+  },
+  {
+    path : "/ProfilePage",
+    element: <ProfilePage />,
+  },
+  {
+    path : "/fetchProfile",
+    element: <ProfilePage />,
+  },
 
-//  {
-//   path: "/forgot-password",
-//   element: <ForgotPasswordPage />
-// }
+ {
+  path: "/forgot-password",
+  element: <ForgotPasswordPage />
+}
 ,
   {
     path: "/ManageServices",
