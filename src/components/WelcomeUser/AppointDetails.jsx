@@ -23,6 +23,8 @@ const AppointDetails = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
+
+		
 		const fetchAppointments = async () => {
 			if (!user || !user.id) return;
 
@@ -40,7 +42,7 @@ const AppointDetails = () => {
 				const appointmentsData = response.data.data;
 
 				const filteredAppointments = appointmentsData.filter(
-					(appt) => appt && !["Cancelled", "All Done"].includes(appt.status)
+					(appt) => appt && !["Cancelled", "All Done","Paid","Reject1"].includes(appt.status)
 				);
 
 				setAppointments(filteredAppointments);
