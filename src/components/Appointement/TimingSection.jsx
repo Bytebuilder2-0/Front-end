@@ -37,6 +37,7 @@ const TimingSection = ({
       <Grid item xs={12} md={6}>
         <TextField
           fullWidth
+          type='time'
           label="Preferred Time *"
           name="preferredTime"
           value={formData.preferredTime}
