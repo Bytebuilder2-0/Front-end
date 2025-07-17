@@ -108,7 +108,7 @@ const fetchData = async () => {
 
   // Separate pending and completed feedbacks
   const pendingFeedbacks = appointmentsWithFeedback.filter(
-    appt => appt.status === 'Task Done' && !appt.hasFeedback
+    appt => (appt.status === 'Task Done' || appt.status === 'Paid'|| appt.status === 'All Done') && !appt.hasFeedback
   );
   
 const completedFeedbacks = feedbacks;

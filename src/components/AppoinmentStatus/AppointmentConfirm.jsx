@@ -62,10 +62,24 @@ const AppointmentConfirm = ({ appointment, onCancel }) => {
 
   const handleConfirmCancel = () => {
     updateAppointmentStatus('Cancelled');
+    navigate(`/User`);
     setOpenConfirm(false);
   };
 
   return (
+
+    <Box>
+     <Typography  gutterBottom sx={{ 
+                  fontWeight: 600,
+                  fontSize : 35,
+                  marginBottom: '1px'
+                }}>
+                  Appoinment Details
+                </Typography>
+                <Typography varient="caption" sx = {{color:'green'}} > Appoinment - Confirmed</Typography>
+                
+                <Divider sx={{ mb: 4  }} />
+
     <Paper elevation={3} sx={{ 
       padding: '20px', 
       maxWidth: '400px', 
@@ -117,7 +131,7 @@ const AppointmentConfirm = ({ appointment, onCancel }) => {
   Your appointment has been confirmed. Thank you for choosing us!
 </Typography>
          <div>
-          <Typography variant="subtitle1" sx={{ fontWeight: '800',fontSize: '20px' }}>Appointment Id  : {appointment.appointmentId}</Typography>
+          <Typography variant="subtitle1" sx={{ fontWeight: '800',fontSize: '20px' }}>Vehicle Id  : {appointment.vehicleId}</Typography>
        
         </div>
         <Divider sx={{ my: 2, borderBottomWidth: 3 }} /> 
@@ -182,6 +196,7 @@ const AppointmentConfirm = ({ appointment, onCancel }) => {
         </Alert>
       </Snackbar>
     </Paper>
+    </Box>
   );
 };
 
