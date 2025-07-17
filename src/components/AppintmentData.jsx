@@ -10,7 +10,8 @@ import {
 	Paper,
 	Container,
 	TextField,
-	Box,Typography
+	Box,
+	Typography,
 } from "@mui/material";
 
 import WorkloadManager from "./sub/WorkloadManager";
@@ -127,7 +128,7 @@ function AppointmentData() {
 							<TableCell>Model</TableCell>
 							<TableCell>Issue</TableCell>
 							<TableCell>Workload</TableCell>
-							<TableCell>Assign Technician</TableCell>
+							<TableCell align="center">Assign Technician</TableCell>
 						</TableRow>
 					</TableHead>
 
