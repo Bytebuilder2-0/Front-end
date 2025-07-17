@@ -44,7 +44,7 @@ function Notify() {
 				onClick={handleMenuOpen}
 			>
 				<Badge badgeContent={0} color="error">  
-					<NotificationsIcon sx={{ color: "#33383E" }} fontSize="large" />
+					<NotificationsIcon sx={{ color: "#ffffffff" }} fontSize="large" />
 				</Badge>
 			</IconButton>
 

@@ -44,7 +44,7 @@ function Account() {
 				onClick={handleMenuOpen}
 				color="inherit"
 			>
-				<AccountCircle sx={{ color: "#33383E" }} fontSize="large" />
+				<AccountCircle sx={{ color: "#ffffffff" }} fontSize="large" />
 			</IconButton>
 
 			<Menu
