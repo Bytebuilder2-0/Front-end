@@ -57,28 +57,99 @@ const Signup = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
 
+
+	const validateField = (name, value) => {
+	let error = "";
+
+	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/;
+	const usernameRegex = /^[A-Za-z0-9]+$/;
+
+	switch (name) {
+		case "email":
+			if (!emailRegex.test(value)) error = "Invalid email format";
+			break;
+		case "fullName":
+			if (!value.trim()) error = "Full name required";
+			break;
+		case "userName":
+			if (!usernameRegex.test(value)) error = "Username can only contain letters and numbers";
+			break;
+		case "phone":
+			if (!/^\d{10}$/.test(value)) error = "Phone must be 10 digits";
+			break;
+		case "password":
+			if (!passwordRegex.test(value)) {
+				error = "Min 6 chars,  including letters, numbers & symbols";
+			}
+			break;
+		case "confirmPassword":
+			if (value !== formData.password) error = "Passwords do not match";
+			break;
+		default:
+			break;
+	}
+	return error;
+};
+
+
 	const handleChange = (e) => {
-		setFormData({ ...formData, [e.target.name]: e.target.value });
-	};
+	const { name, value } = e.target;
+	setFormData({ ...formData, [name]: value });
+
+	// Live validation 
+	const errorMsg = validateField(name, value);
+	setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMsg }));
+};
+
+
+
+
+	// const handleChange = (e) => {
+	// 	setFormData({ ...formData, [e.target.name]: e.target.value });
+	// };
 
 	const handleCheckboxChange = (e) => {
 		setFormData({ ...formData, termsAccepted: e.target.checked });
 	};
 
-	const validate = () => {
-		const newErrors = {};
-		if (!formData.email.includes("@")) newErrors.email = "Invalid email";
-		if (!formData.fullName.trim()) newErrors.fullName = "Full name required";
-		if (!formData.userName.trim()) newErrors.userName = "Username required";
-		if (!formData.phone.match(/^\d{10}$/)) newErrors.phone = "Phone must be 10 digits";
-		if (formData.password.length < 6)
-			newErrors.password = "Password must be at least 6 characters";
-		if (formData.password !== formData.confirmPassword)
-			newErrors.confirmPassword = "Passwords do not match";
-		if (!formData.termsAccepted)
-			newErrors.termsAccepted = "You must accept the terms and conditions";
-		return newErrors;
-	};
+	const validate = () => {        
+	const newErrors = {};
+
+	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{6,}$/;
+	const usernameRegex = /^[A-Za-z0-9]+$/;
+
+	if (!emailRegex.test(formData.email)) {
+		newErrors.email = "Invalid email format";
+	}
+
+	if (!formData.fullName.trim()) {
+		newErrors.fullName = "Full name required";
+	}
+
+	if (!usernameRegex.test(formData.userName)) {
+		newErrors.userName = "Username can only contain letters and numbers";
+	}
+
+	if (!formData.phone.match(/^\d{10}$/)) {
+		newErrors.phone = "Phone must be 10 digits";
+	}
+
+	if (!passwordRegex.test(formData.password)) {
+		newErrors.password = "Password must be 6+ chars, with letters, numbers & symbols";
+	}
+
+	if (formData.password !== formData.confirmPassword) {
+		newErrors.confirmPassword = "Passwords do not match";
+	}
+
+	if (!formData.termsAccepted) {
+		newErrors.termsAccepted = "You must accept the terms and conditions";
+	}
+
+	return newErrors;
+};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
