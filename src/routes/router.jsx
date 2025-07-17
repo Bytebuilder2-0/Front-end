@@ -33,12 +33,216 @@ import CheckStatus from "../pages/Manager/CheckStatus";
 import Layout from "../pages/supervisor/Layout";
 import PrivateRoute from "../components/Atoms/PrivateRoute";
 import Reports from "../pages/Manager/Report";
+import FeedBackUser from "../pages/User/FeedBackUser";
 import ForgotPasswordPage from "../pages/ForgotPasswordPage";
+
+
 import VehicleRegister from "../pages/User/VehicleRegister";
+
+import PaymentSuccess from "../components/payment/PaymentSuccess";
+import PaymentCancel from "../components/payment/PaymentCancel";
+import DisplayFeedBack from "../components/FeedbackDisplay";
+
 import VerifyEmail from "../components/VerifyEmail";
 import ProfilePage from "../pages/ProfilePage";
 
+
 const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <HomePage />, // <-- Replace HomePage with your real Home component
+  },
+  {
+    path: "/payment-success/:appointmentId",
+    element: <PaymentSuccess />,
+  },
+  {
+    element: <Layout />, //  All below routes will share the MiniDrawer layout
+    children: [
+      {
+        path: "/SInitial",
+        element: (
+          <PrivateRoute allowedRoles={["supervisor"]}>
+            <SupInitial />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/Super",
+        element: (
+          <PrivateRoute allowedRoles={["supervisor"]}>
+            <SupervisorDashboard />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/SInpro",
+        element: (
+          <PrivateRoute allowedRoles={["supervisor"]}>
+            <Inprogress />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/SCompleted",
+        element: <CompletedSuper />,
+      },
+      {
+        path: "/SDeclined",
+        element: <Decline />,
+      },
+      {
+        path: "/SHistory",
+        element: <History />,
+      },
+    ],
+  },
+  {
+    path: "/TDashboard",
+    element: (
+      <PrivateRoute allowedRoles={["technician"]}>
+        <TechnicianDashboard />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/TDeclined",
+    element: (
+      <PrivateRoute allowedRoles={["technician"]}>
+        <TechnicianDeclined />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/TCompleted",
+    element: (
+      <PrivateRoute allowedRoles={["technician"]}>
+        <TechnicianCompleted />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/TInprogress",
+    element: (
+      <PrivateRoute allowedRoles={["technician"]}>
+        <TechnicianInprogress />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/TAccepted",
+    element: (
+      <PrivateRoute allowedRoles={["technician"]}>
+        <TechnicianAccepted />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/appointments/new",
+    element: <AppointmentSubmit />,
+  },
+  {
+    path: "/appointments/:id",
+    element: <AppointmentView />,
+  },
+  {
+    path: "/User",
+    element: <UserDashboard />,
+  },
+  {
+    path: "/feedback",
+    element: <FeedbackPage />,
+  },
+  {
+    path: "/Loginpage",
+    element: <Loginpage />,
+  },
+  {
+    path: "/SignupPage",
+    element: <SignupPage />,
+  },
+  {
+    path: "/VehicleRegister",
+    element: <VehicleRegister />,
+  },
+  {
+    path: "/SignupVReg",
+    element: <SignInVehicleContainer />,
+  },
+  {
+    path: "/UserFeedback",
+    element: <FeedBackUser />,
+  },
+  {
+    path: "/ManageServices",
+    element: (
+      <PrivateRoute allowedRoles={["manager"]}>
+        <ManageServices />
+      </PrivateRoute>
+    ),
+  },
+   {
+  path :"/verify-email",
+   element: <VerifyEmail />,
+  },
+  {
+  path :"/verify-email",
+   element: <VerifyEmail />,
+  },
+  {
+    path : "/ProfilePage",
+    element: <ProfilePage />,
+  },
+  {
+    path : "/fetchProfile",
+    element: <ProfilePage />,
+  },
+
+ {
+  path: "/forgot-password",
+  element: <ForgotPasswordPage />
+}
+,
+  {
+    path: "/ManagerDashboard",
+    element: (
+      <PrivateRoute allowedRoles={["manager"]}>
+        <ManagerDashboardPage />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/ManagerHistory",
+    element: (
+      <PrivateRoute allowedRoles={["manager"]}>
+        <ManagerHistoryPage />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/CheckStatus",
+    element: (
+      <PrivateRoute allowedRoles={["manager"]}>
+        <CheckStatus />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/Reports",
+    element: (
+      <PrivateRoute allowedRoles={["manager"]}>
+        <Reports />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/feedback",
+    element: (
+      <PrivateRoute allowedRoles={["manager"]}>
+        <FeedbackPage />
+      </PrivateRoute>
+    ),
+  },
   {
     path: "/",
     element: <HomePage />, // <-- Replace HomePage with your real Home component
@@ -156,24 +360,10 @@ const router = createBrowserRouter([
     path: "/SignupVReg",
     element: <SignInVehicleContainer />,
   },
-  {
-  path :"/verify-email",
-   element: <VerifyEmail />,
+   {
+    path: "/UserFeedback",
+    element: <FeedBackUser />,
   },
-  {
-    path : "/ProfilePage",
-    element: <ProfilePage />,
-  },
-  {
-    path : "/fetchProfile",
-    element: <ProfilePage />,
-  },
-
- {
-  path: "/forgot-password",
-  element: <ForgotPasswordPage />
-}
-,
   {
     path: "/ManageServices",
     element: (
@@ -214,7 +404,6 @@ const router = createBrowserRouter([
       </PrivateRoute>
     ),
   },
-  ,
   {
     path: "/feedback",
     element: (
@@ -223,7 +412,10 @@ const router = createBrowserRouter([
       </PrivateRoute>
     ),
   },
-
+   {
+    path: "/DisplayFeedBack",
+    element: <DisplayFeedBack />,
+  },
 ]);
 
 export default router;

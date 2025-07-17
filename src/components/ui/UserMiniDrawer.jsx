@@ -290,14 +290,14 @@ export default function UserMiniDrawer({ userId }) {
 				{/* Navigation List */}
 				<List>
 					{[
-						{ path: "", label: "Home", icon: <HomeIcon /> },
+						{ path: "/", label: "Home", icon: <HomeIcon /> },
 						{ path: "/User", label: "Dashboard", icon: <DashboardIcon /> },
 						{
 							path: "/appointments/new",
 							label: "Make an Appointemnt",
 							icon: <TodayIcon />,
 						},
-						{ path: "", label: "Notifications", icon: <NotificationsIcon /> },
+						// { path: "", label: "Notifications", icon: <NotificationsIcon /> },
 						{
 							label: "My Appointments",
 							icon: <ListIcon />,
@@ -310,10 +310,9 @@ export default function UserMiniDrawer({ userId }) {
 									status: appt.status,
 								})),
 						},
-//---------------------this should be updated================================================================================================================
 						{ path: "", label: "History", icon: <HistoryIcon /> },
 						{ path: "/ProfilePage", label: "Edit Profile", icon: <EditIcon /> },
-						{ path: "", label: "FeedBack", icon: <FeedbackIcon /> },
+						{ path: "/UserFeedback", label: "FeedBack", icon: <FeedbackIcon /> },
 					].map((item) => (
 						<React.Fragment key={item.path || item.label}>
 							<ListItem disablePadding sx={{ display: "block" }}>

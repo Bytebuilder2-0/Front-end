@@ -17,10 +17,10 @@ const BudgetReview = ({ appointment, updateAppointment, btn_name, showSnackbar }
 		}
 
 		try {
-			const response = await axios.get(`${baseURL}/budget/${appointment._id}/view`,{
-				headers:{
-					Authorization: `Bearer ${localStorage.getItem('token')}`
-				}
+			const response = await axios.get(`${baseURL}/budget/${appointment._id}/view`, {
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
 			});
 			setBudgetAllocations(response.data.amountAllocations);
 			setOpenBudgetModal(true);
@@ -42,7 +42,8 @@ const BudgetReview = ({ appointment, updateAppointment, btn_name, showSnackbar }
 		const parsedValue = parseFloat(value);
 
 		// Only update if the value is valid and positive
-		updatedAllocations[index].amount = !isNaN(parsedValue) && parsedValue > 0 ? parsedValue : 0;
+		updatedAllocations[index].amount =
+			!isNaN(parsedValue) && parsedValue > 0 ? parsedValue : 0;
 
 		// Update state correctly to trigger re-render
 		setBudgetAllocations(updatedAllocations);
@@ -55,15 +56,19 @@ const BudgetReview = ({ appointment, updateAppointment, btn_name, showSnackbar }
 		try {
 			// Send the entire budget allocation array in one request
 			for (const allocation of budgetAllocations) {
-				await axios.put(`${baseURL}/budget/${appointment._id}/update`, {
-					step: allocation.step,
-					amount: allocation.amount,
-          des:allocation.des,
-				},{
-					headers:{
-						Authorization: `Bearer ${localStorage.getItem('token')}`
+				await axios.put(
+					`${baseURL}/budget/${appointment._id}/update`,
+					{
+						step: allocation.step,
+						amount: allocation.amount,
+						des: allocation.des,
+					},
+					{
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem("token")}`,
+						},
 					}
-				});
+				);
 			}
 
 			// Update the parent component with the latest appointment data
@@ -83,7 +88,11 @@ const BudgetReview = ({ appointment, updateAppointment, btn_name, showSnackbar }
 
 	return (
 		<>
-			<Button variant="contained" sx={{ backgroundColor: "#333834" }} onClick={handleOpenBudget}>
+			<Button
+				variant="contained"
+				sx={{ backgroundColor: "#333834" }}
+				onClick={handleOpenBudget}
+			>
 				{btn_name}
 			</Button>
 
@@ -106,7 +115,10 @@ const BudgetReview = ({ appointment, updateAppointment, btn_name, showSnackbar }
 					</Typography>
 
 					{budgetAllocations.map((item, index) => (
-						<Box key={index} sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+						<Box
+							key={index}
+							sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}
+						>
 							<Typography variant="body1">{item.step}</Typography>
 							<TextField
 								label="Description"

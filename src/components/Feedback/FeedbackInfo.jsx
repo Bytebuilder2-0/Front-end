@@ -5,21 +5,25 @@ import { Typography, Box, Grid } from "@mui/material";
 
 const FeedbackInfo = ({ feedback }) => {
   const infoData = [
-    { label: "Feedback ID", value: feedback.feedbackId },
+    {
+      label: "Username",
+      value: feedback.username || "Unknown", // Show username instead of feedbackId
+    },
     {
       label: "Date",
       value: new Date(feedback.feedbackDate).toLocaleDateString(),
     },
     { label: "Comment", value: feedback.comment },
     { label: "Reply", value: feedback.reply || "No reply yet" },
-    { label: "Action Status", value: feedback.actionStatus },
+    {
+      label: "Added",
+      value: feedback.actionStatus === "yes" ? "Add" : "No", // More user-friendly
+    },
   ];
 
   return (
     <Box sx={{ width: "100%" }}>
       <Grid container spacing={0.5}>
-        {" "}
-        {/* smaller spacing */}
         {infoData.map((item, index) => (
           <Grid
             key={index}
@@ -27,9 +31,8 @@ const FeedbackInfo = ({ feedback }) => {
             item
             xs={12}
             alignItems="center"
-            sx={{ mb: 0.5 }} //  reduced bottom margin
+            sx={{ mb: 0.5 }}
           >
-            {/* Label */}
             <Grid item xs={4}>
               <Typography
                 variant="subtitle2"
@@ -42,8 +45,6 @@ const FeedbackInfo = ({ feedback }) => {
                 {item.label}:
               </Typography>
             </Grid>
-
-            {/* Value */}
             <Grid item xs={8}>
               <Typography
                 variant="body2"

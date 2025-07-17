@@ -215,14 +215,14 @@ const Signup = () => {
 		"& .MuiOutlinedInput-root": {
 			borderRadius: 2,
 			"&:hover fieldset": {
-				borderColor: "#667eea",
+				borderColor: "#82b1ff",
 			},
 			"&.Mui-focused fieldset": {
-				borderColor: "#667eea",
+				borderColor: "#82b1ff",
 			},
 		},
 		"& .MuiInputLabel-root.Mui-focused": {
-			color: "#667eea",
+			color: "#82b1ff",
 		},
 	};
 
@@ -232,7 +232,7 @@ const Signup = () => {
 			<Box
 				sx={{
 					minHeight: "100vh",
-					background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+					background: "linear-gradient(135deg, #82b1ff 0%, #1a237e 100%)",
 					position: "relative",
 					overflow: "hidden",
 					"&::before": {
@@ -369,7 +369,7 @@ const Signup = () => {
 										left: 0,
 										right: 0,
 										height: "4px",
-										background: "linear-gradient(90deg, #667eea, #764ba2)",
+										background: "linear-gradient(90deg, #82b1ff, #1a237e)",
 									},
 								}}
 							>
@@ -382,7 +382,7 @@ const Signup = () => {
 												height: 80,
 												mx: "auto",
 												mb: 2,
-												background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+												background: "linear-gradient(135deg, #82b1ff 0%, #1a237e 100%)",
 												boxShadow: "0 8px 25px rgba(102, 126, 234, 0.3)",
 											}}
 										>
@@ -393,7 +393,7 @@ const Signup = () => {
 											sx={{
 												fontWeight: 700,
 												mb: 1,
-												background: "linear-gradient(45deg, #667eea, #764ba2)",
+												background: "linear-gradient(45deg, #82b1ff, #1a237e)",
 												backgroundClip: "text",
 												WebkitBackgroundClip: "text",
 												WebkitTextFillColor: "transparent",
@@ -588,9 +588,9 @@ const Signup = () => {
 															checked={formData.termsAccepted}
 															onChange={handleCheckboxChange}
 															sx={{
-																color: "#667eea",
+																color: "#82b1ff",
 																"&.Mui-checked": {
-																	color: "#667eea",
+																	color: "#82b1ff",
 																},
 															}}
 														/>
@@ -600,14 +600,14 @@ const Signup = () => {
 															I agree to the{" "}
 															<Link
 																to="#"
-																style={{ color: "#667eea", textDecoration: "none" }}
+																style={{ color: "#82b1ff", textDecoration: "none" }}
 															>
 																Terms of Service
 															</Link>{" "}
 															and{" "}
 															<Link
 																to="#"
-																style={{ color: "#667eea", textDecoration: "none" }}
+																style={{ color: "#82b1ff", textDecoration: "none" }}
 															>
 																Privacy Policy
 															</Link>
@@ -633,11 +633,11 @@ const Signup = () => {
 														fontWeight: "bold",
 														borderRadius: 2,
 														background:
-															"linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+															"linear-gradient(135deg, #82b1ff 0%, #1a237e 100%)",
 														boxShadow: "0 8px 25px rgba(102, 126, 234, 0.3)",
 														"&:hover": {
 															background:
-																"linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%)",
+																"linear-gradient(135deg, #82b1ff 0%, #1a237e 100%)",
 															transform: "translateY(-2px)",
 															boxShadow: "0 12px 35px rgba(102, 126, 234, 0.4)",
 														},
