@@ -195,6 +195,7 @@ function TInprogress() {
 	return (
 		<Container>
 			<h2>Inprogress Works</h2>
+
 			<Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
 				<Typography variant="h5" gutterBottom>
 					Appointments
@@ -208,38 +209,43 @@ function TInprogress() {
 				/>
 			</Box>
 
-			<TableContainer component={Paper} elevation={3}>
-				<Table>
+			<TableContainer
+				component={Paper}
+				sx={{
+					marginTop: 2,
+					overflow: "auto",
+					maxHeight: 400,
+					borderRadius: 2,
+					boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
+				}}
+			>
+				<Table stickyHeader>
 					<TableHead>
-						<TableRow>
-							<TableCell>
-								<strong>Vehicle ID</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Vehicle Number</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Description</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Suggestions</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Workload</strong>
-							</TableCell>
+						<TableRow sx={{ "& th": { fontWeight: "bold", backgroundColor: "#f5f5f5" } }}>
+							<TableCell>Vehicle ID</TableCell>
+							<TableCell>Vehicle Number</TableCell>
+							<TableCell>Description</TableCell>
+							<TableCell>Suggestions</TableCell>
+							<TableCell>Workload</TableCell>
 						</TableRow>
 					</TableHead>
+
 					<TableBody>
 						{loading ? (
 							<TableRow>
-								<TableCell colSpan={6} align="center">
+								<TableCell colSpan={6} align="center" sx={{ py: 4 }}>
 									Loading...
 								</TableCell>
 							</TableRow>
 						) : filteredAppointments.length > 0 ? (
 							filteredAppointments.map((appointment) => (
 								<React.Fragment key={appointment._id}>
-									<TableRow>
+									<TableRow
+										sx={{
+											"&:nth-of-type(odd)": { backgroundColor: "#fafafa" },
+											"&:hover": { backgroundColor: "#e0e0e0" },
+										}}
+									>
 										<TableCell>{appointment.vehicleId}</TableCell>
 										<TableCell>{appointment.vehicleNumber}</TableCell>
 										<TableCell>{appointment.issue}</TableCell>
@@ -255,30 +261,46 @@ function TInprogress() {
 										</TableCell>
 									</TableRow>
 
+									{/* Expanded Workload Table */}
 									{expandedWorkload[appointment._id] && (
 										<TableRow>
-											<TableCell colSpan={6} align="center">
+											<TableCell colSpan={6} sx={{ backgroundColor: "#f0f8ff" }}>
 												<Table
 													size="small"
 													sx={{
 														width: "80%",
 														margin: "0 auto",
-														backgroundColor: lightBlue[50],
+														backgroundColor: "#f5faff",
+														borderRadius: 1,
+														boxShadow: "0 2px 5px rgba(0,0,0,0.05)",
 													}}
 												>
 													<TableHead>
 														<TableRow>
-															<TableCell>Step</TableCell>
-															<TableCell>Description</TableCell>
-															<TableCell>Mark Complete</TableCell>
+															<TableCell align="center">
+																<strong>Step</strong>
+															</TableCell>
+															<TableCell align="center">
+																<strong>Description</strong>
+															</TableCell>
+															<TableCell align="center">
+																<strong>Mark Complete</strong>
+															</TableCell>
 														</TableRow>
 													</TableHead>
 													<TableBody>
 														{appointment.workload.map((task, index) => (
-															<TableRow key={task._id || index}>
-																<TableCell>{task.step}</TableCell>
-																<TableCell>{task.description}</TableCell>
-																<TableCell>
+															<TableRow
+																key={task._id || index}
+																sx={{
+																	"&:nth-of-type(odd)": {
+																		backgroundColor: "#fafafa",
+																	},
+																}}
+															>
+																<TableCell align="center">{task.step}</TableCell>
+																<TableCell align="center">{task.description}</TableCell>
+																<TableCell align="center">
 																	{task.status === "Completed" ? (
 																		<Typography color="success.main">
 																			Completed
@@ -302,6 +324,7 @@ function TInprogress() {
 																</TableCell>
 															</TableRow>
 														))}
+
 														{appointment.workload.length > 0 && (
 															<TableRow>
 																<TableCell colSpan={3} align="center">
@@ -331,12 +354,13 @@ function TInprogress() {
 							))
 						) : (
 							<TableRow>
-								<TableCell colSpan={6} align="center">
+								<TableCell colSpan={6} align="center" sx={{ py: 4 }}>
 									No in-progress appointments found.
 								</TableCell>
 							</TableRow>
 						)}
 
+						{/* Suggestion Dialog */}
 						<Dialog open={openDialog} onClose={handleCloseDialog}>
 							<DialogTitle>Suggestion to Supervisor</DialogTitle>
 							<DialogContent>

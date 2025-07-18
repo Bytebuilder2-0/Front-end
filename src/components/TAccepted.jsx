@@ -149,6 +149,7 @@ function TAcceptedWork() {
 	return (
 		<Container>
 			<h2>Assigned Works</h2>
+
 			<Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
 				<Typography variant="h5" gutterBottom>
 					Appointments
@@ -162,44 +163,45 @@ function TAcceptedWork() {
 				/>
 			</Box>
 
-			<TableContainer component={Paper} elevation={3}>
-				<Table>
+			<TableContainer
+				component={Paper}
+				sx={{
+					marginTop: 2,
+					overflow: "auto",
+					maxHeight: 400,
+					borderRadius: 2,
+					boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
+				}}
+			>
+				<Table stickyHeader>
 					<TableHead>
-						<TableRow>
-							<TableCell>
-								<strong>Vehicle ID</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Vehicle Number</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Delivery Date</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Issue</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Workload</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Start</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Decline</strong>
-							</TableCell>
+						<TableRow sx={{ "& th": { fontWeight: "bold", backgroundColor: "#f5f5f5" } }}>
+							<TableCell>Vehicle ID</TableCell>
+							<TableCell>Vehicle Number</TableCell>
+							<TableCell>Delivery Date</TableCell>
+							<TableCell>Issue</TableCell>
+							<TableCell>Workload</TableCell>
+							<TableCell>Start</TableCell>
+							<TableCell>Decline</TableCell>
 						</TableRow>
 					</TableHead>
+
 					<TableBody>
 						{loading ? (
 							<TableRow>
-								<TableCell colSpan={7} align="center">
+								<TableCell colSpan={7} align="center" sx={{ py: 4 }}>
 									Loading...
 								</TableCell>
 							</TableRow>
 						) : filteredAppointments.length > 0 ? (
 							filteredAppointments.map((appointment) => (
 								<React.Fragment key={appointment._id}>
-									<TableRow>
+									<TableRow
+										sx={{
+											"&:nth-of-type(odd)": { backgroundColor: "#fafafa" },
+											"&:hover": { backgroundColor: "#e0e0e0" },
+										}}
+									>
 										<TableCell>{appointment.vehicleId}</TableCell>
 										<TableCell>{appointment.vehicleNumber}</TableCell>
 										<TableCell>
@@ -252,11 +254,16 @@ function TAcceptedWork() {
 
 									{expandedWorkload[appointment._id] && (
 										<TableRow>
-											<TableCell colSpan={7}>
+											<TableCell colSpan={7} sx={{ backgroundColor: "#f0f8ff" }}>
 												<Box display="flex" justifyContent="center">
 													<Table
 														size="small"
-														sx={{ width: "60%", backgroundColor: lightBlue[50] }}
+														sx={{
+															width: "60%",
+															backgroundColor: "#f5faff",
+															borderRadius: 1,
+															boxShadow: "0 2px 5px rgba(0,0,0,0.05)",
+														}}
 													>
 														<TableHead>
 															<TableRow>
@@ -270,7 +277,14 @@ function TAcceptedWork() {
 														</TableHead>
 														<TableBody>
 															{appointment.workload.map((task, index) => (
-																<TableRow key={task._id || index}>
+																<TableRow
+																	key={task._id || index}
+																	sx={{
+																		"&:nth-of-type(odd)": {
+																			backgroundColor: "#fafafa",
+																		},
+																	}}
+																>
 																	<TableCell align="center">{task.step}</TableCell>
 																	<TableCell align="center">{task.description}</TableCell>
 																</TableRow>
@@ -285,7 +299,7 @@ function TAcceptedWork() {
 							))
 						) : (
 							<TableRow>
-								<TableCell colSpan={7} align="center">
+								<TableCell colSpan={7} align="center" sx={{ py: 4 }}>
 									No appointments found
 								</TableCell>
 							</TableRow>
