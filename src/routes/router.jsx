@@ -145,10 +145,11 @@ const router = createBrowserRouter([
     path: "/appointments/:id",
     element: <AppointmentView />,
   },
-  {
-    path: "/User",
-    element: <UserDashboard />,
-  },
+  // {
+  //   path: "/User",
+  //   element: <UserDashboard />,
+  // },
+  
   {
     path: "/feedback",
     element: <FeedbackPage />,
@@ -334,7 +335,12 @@ const router = createBrowserRouter([
   },
   {
     path: "/User",
-    element: <UserDashboard />,
+    element: (
+      <PrivateRoute allowedRoles={["user"]}>
+        <UserDashboard />
+      </PrivateRoute>
+    )
+  
   },
   {
     path: "/feedback",

@@ -166,6 +166,9 @@ const ResponsiveCarousel = () => {
                       <Button
                         variant="outlined"
                         size="large"
+                        component={Link}
+                        to=""
+                        startIcon={<PlayArrowIcon />}
                         sx={{
                           px: 4,
                           py: 2,
@@ -212,6 +215,9 @@ const ResponsiveCarousel = () => {
                     <Button
                       variant="contained"
                       size="large"
+                      component={Link}
+                        to="/User"
+                        startIcon={<PlayArrowIcon />}
                       sx={{
                         px: 4,
                         py: 2,
