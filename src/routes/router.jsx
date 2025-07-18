@@ -44,7 +44,6 @@ import PaymentCancel from "../components/payment/PaymentCancel";
 import DisplayFeedBack from "../components/FeedbackDisplay";
 
 import VerifyEmail from "../components/VerifyEmail";
-import ProfilePage from "../pages/ProfilePage";
 import UserProfile from "../components/UserProfile";
 
 
@@ -194,15 +193,7 @@ const router = createBrowserRouter([
   path :"/verify-email",
    element: <VerifyEmail />,
   },
-  {
-    path : "/ProfilePage",
-    element: <ProfilePage />,
-  },
-  {
-    path : "/fetchProfile",
-    element: <ProfilePage />,
-  },
-
+  
  {
   path: "/forgot-password",
   element: <ForgotPasswordPage />

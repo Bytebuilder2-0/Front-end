@@ -1,7 +1,6 @@
 import { Box,Toolbar } from "@mui/material";
 import UserMiniDrawer from "../../components/ui/UserMiniDrawer";
 import UserWelcome from "../../components/WelcomeUser/UserWelcome";
-import ProfilePage from "../ProfilePage";
 
 function UserDashboard() {
 

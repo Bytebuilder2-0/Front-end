@@ -42,7 +42,8 @@ import {
 } from "@mui/icons-material";
 import Notify from "../Atoms/Notify";
 import Account from "../Atoms/Account";
-import ProfilePage from "../../pages/ProfilePage";
+
+
 
 const drawerWidth = 240;
 
