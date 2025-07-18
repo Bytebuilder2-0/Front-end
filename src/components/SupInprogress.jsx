@@ -10,7 +10,7 @@ import {
 	Paper,
 	Container,
 	Box,
-	TextField,
+	TextField,Typography
 } from "@mui/material";
 
 import IssueViewer from "./sub/IssueView";
@@ -95,6 +95,7 @@ const SupInprogress = () => {
 
 	return (
 		<Container>
+			{/* Search Bar */}
 			<Box display="flex" justifyContent="right" alignItems="center" mb={2} mt={2}>
 				<TextField
 					label="Search by Vehicle ID"
@@ -105,38 +106,40 @@ const SupInprogress = () => {
 				/>
 			</Box>
 
-			<TableContainer component={Paper} sx={{ marginTop: 2 }}>
-				<Table>
+			{/* Table */}
+			<TableContainer
+				component={Paper}
+				sx={{
+					marginTop: 2,
+					overflow: "auto",
+					maxHeight: 400,
+					borderRadius: 2,
+					boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
+				}}
+			>
+				<Table stickyHeader>
 					<TableHead>
-						<TableRow>
-							<TableCell>
-								<strong>Vehicle ID</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Vehicle Number</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Description</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Tech.Messages</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Suggestions</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Update Workload</strong>
-							</TableCell>
-							<TableCell>
-								<strong>WhatsApp</strong>
-							</TableCell>
+						<TableRow sx={{ "& th": { fontWeight: "bold", backgroundColor: "#f5f5f5" } }}>
+							<TableCell>Vehicle ID</TableCell>
+							<TableCell>Vehicle Number</TableCell>
+							<TableCell>Description</TableCell>
+							<TableCell>Tech. Messages</TableCell>
+							<TableCell>Suggestions</TableCell>
+							<TableCell>Update Workload</TableCell>
+							<TableCell>WhatsApp</TableCell>
 						</TableRow>
 					</TableHead>
 
 					<TableBody>
 						{filteredAppointments.length > 0 ? (
 							filteredAppointments.map((appointment) => (
-								<TableRow key={appointment._id}>
+								<TableRow
+									key={appointment._id}
+									sx={{
+										"&:nth-of-type(odd)": { backgroundColor: "#fafafa" },
+										"&:hover": { backgroundColor: "#e0e0e0" },
+									}}
+								>
 									<TableCell>{appointment.vehicleId}</TableCell>
 									<TableCell>{appointment.vehicleNumber}</TableCell>
 									<TableCell>
@@ -166,8 +169,10 @@ const SupInprogress = () => {
 							))
 						) : (
 							<TableRow>
-								<TableCell colSpan={7} align="center">
-									No Appointments Found
+								<TableCell colSpan={7} align="center" sx={{ py: 4 }}>
+									<Typography variant="h6" color="text.secondary">
+										No Appointments Found
+									</Typography>
 								</TableCell>
 							</TableRow>
 						)}

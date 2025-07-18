@@ -10,7 +10,7 @@ import {
 	Paper,
 	Container,
 	Box,
-	TextField,
+	TextField,Typography
 } from "@mui/material";
 
 import IssueViewer from "./sub/IssueView";
@@ -34,8 +34,7 @@ const fetchDeclinedAppointments = async (supervisorId, token) => {
 		return response.data
 			.reverse()
 			.filter(
-				(app) =>
-					app.status === "Reject2"  && app.sconfirmedBy?.toString() === supervisorId
+				(app) => app.status === "Reject2" && app.sconfirmedBy?.toString() === supervisorId
 			);
 	} catch (error) {
 		console.error("Error fetching declined appointments:", error);
@@ -91,6 +90,7 @@ const SupDeclined = () => {
 
 	return (
 		<Container>
+			{/* Search Bar */}
 			<Box display="flex" justifyContent="right" alignItems="center" mt={2} mb={2}>
 				<TextField
 					label="Search by Vehicle ID"
@@ -101,38 +101,40 @@ const SupDeclined = () => {
 				/>
 			</Box>
 
-			<TableContainer component={Paper} sx={{ marginTop: 2 }}>
-				<Table>
+			{/* Table */}
+			<TableContainer
+				component={Paper}
+				sx={{
+					marginTop: 2,
+					overflow: "auto",
+					maxHeight: 400,
+					borderRadius: 2,
+					boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
+				}}
+			>
+				<Table stickyHeader>
 					<TableHead>
-						<TableRow>
-							<TableCell>
-								<strong>Vehicle ID</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Model</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Issue</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Reason</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Workload</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Assign Tech</strong>
-							</TableCell>
-							<TableCell>
-								<strong>WhatsApp</strong>
-							</TableCell>
+						<TableRow sx={{ "& th": { fontWeight: "bold", backgroundColor: "#f5f5f5" } }}>
+							<TableCell>Vehicle ID</TableCell>
+							<TableCell>Model</TableCell>
+							<TableCell>Issue</TableCell>
+							<TableCell>Reason</TableCell>
+							<TableCell>Workload</TableCell>
+							<TableCell align="center">Re-Assign Technician</TableCell>
+							<TableCell>WhatsApp</TableCell>
 						</TableRow>
 					</TableHead>
 
 					<TableBody>
 						{filteredAppointments.length > 0 ? (
 							filteredAppointments.map((appointment) => (
-								<TableRow key={appointment._id}>
+								<TableRow
+									key={appointment._id}
+									sx={{
+										"&:nth-of-type(odd)": { backgroundColor: "#fafafa" },
+										"&:hover": { backgroundColor: "#e0e0e0" },
+									}}
+								>
 									<TableCell>{appointment.vehicleId}</TableCell>
 									<TableCell>{appointment.model}</TableCell>
 									<TableCell>
@@ -163,8 +165,10 @@ const SupDeclined = () => {
 							))
 						) : (
 							<TableRow>
-								<TableCell colSpan={7} align="center">
-									No matching declined appointments
+								<TableCell colSpan={7} align="center" sx={{ py: 4 }}>
+									<Typography variant="h6" color="text.secondary">
+										No matching declined appointments
+									</Typography>
 								</TableCell>
 							</TableRow>
 						)}

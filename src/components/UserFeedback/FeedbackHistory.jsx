@@ -2,108 +2,223 @@ import React from "react";
 import {
   Box,
   Typography,
-  List,
-  ListItem,
-  Divider,
+  Paper,
   Rating,
   Chip,
-  Skeleton
+  Skeleton,
+  Divider,
+  Stack,
+  Grid,
+  Avatar,
+  useTheme
 } from "@mui/material";
 import {
   CarRepair,
   DirectionsCar,
   CalendarToday,
   RateReview,
-  Reply
+  Reply,
+  Star
 } from "@mui/icons-material";
 
 const FeedbackHistory = ({ feedbacks, loading }) => {
+  const theme = useTheme();
+
   if (loading) {
     return (
-      <Box>
+      <Stack spacing={3}>
         {[...Array(3)].map((_, index) => (
-          <Skeleton key={index} variant="rectangular" height={180} sx={{ mb: 2 }} />
+          <Skeleton 
+            key={index} 
+            variant="rounded" 
+            height={220} 
+            sx={{ 
+              borderRadius: 3,
+              bgcolor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.11)' : 'rgba(0, 0, 0, 0.05)'
+            }} 
+          />
         ))}
-      </Box>
+      </Stack>
     );
   }
 
-  if (feedbacks.length === 0) {
+  if (!feedbacks || feedbacks.length === 0) {
     return (
-      <Typography variant="body1" color="textSecondary">
-        No feedback history available
-      </Typography>
+      <Paper
+        elevation={0}
+        sx={{
+          p: 4,
+          textAlign: 'center',
+          borderRadius: 3,
+          bgcolor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.02)'
+        }}
+      >
+        <RateReview sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
+        <Typography variant="h6" color="text.secondary" gutterBottom>
+          No feedback history yet
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          Your submitted feedback will appear here
+        </Typography>
+      </Paper>
     );
   }
 
   return (
-    <List>
-      {feedbacks.map((feedback, index) => (
-        <React.Fragment key={feedback.id}>
-          <ListItem sx={{ display: "block", p: 3, bgcolor: "background.paper", mb: 2 }}>
-            <Typography variant="h6" gutterBottom>
-              {feedback.service}
-            </Typography>
-            
-            <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-              <CalendarToday fontSize="small" sx={{ mr: 1 }} />
-              <Typography variant="body2">{feedback.date}</Typography>
-            </Box>
-            
-            <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-              <CarRepair fontSize="small" sx={{ mr: 1 }} />
-              <Typography variant="body2">Vehicle Model: {feedback.vehicleModel}</Typography>
-            </Box>
-            
-            <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-              <DirectionsCar fontSize="small" sx={{ mr: 1 }} />
-              <Typography variant="body2">Vehicle Number: {feedback.vehicleNumber}</Typography>
-            </Box>
-            
-            <Divider sx={{ my: 2 }} />
-            
-            <Box sx={{ mb: 2 }}>
-              <Typography variant="subtitle2" gutterBottom sx={{ display: "flex", alignItems: "center" }}>
-                <RateReview fontSize="small" sx={{ mr: 1 }} />
-                Your Feedback
+    <Stack spacing={3}>
+      {feedbacks.map((feedback) => (
+        <Paper
+          key={feedback.id}
+          elevation={3}
+          sx={{
+            p: 3,
+            borderRadius: 2,
+            border: `1px solid ${theme.palette.divider}`,
+            '&:hover': {
+              boxShadow: theme.shadows[4]
+            }
+          }}
+        >
+          {/* Header */}
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+            <Avatar sx={{ 
+              bgcolor: theme.palette.primary.main, 
+              mr: 2,
+              width: 40,
+              height: 40
+            }}>
+              <RateReview fontSize="small" />
+            </Avatar>
+            <Box>
+              <Typography variant="h6" fontWeight={600}>
+                Service Feedback
               </Typography>
-              
-              <Rating value={feedback.rating} precision={0.5} readOnly />
-              
-              <Typography variant="body1" sx={{ mt: 1 }}>
-                {feedback.comment}
+              <Typography variant="body2" color="text.secondary">
+                {feedback.model} • {feedback.vehicleNumber}
               </Typography>
-              
-              <Chip
-                label={`Submitted on ${feedback.feedbackDate}`}
-                size="small"
-                sx={{ mt: 1 }}
-              />
             </Box>
-            
-            {feedback.reply && (
-              <Box>
-                <Typography variant="subtitle2" gutterBottom sx={{ display: "flex", alignItems: "center" }}>
-                  <Reply fontSize="small" sx={{ mr: 1 }} />
-                  Manager's Response
-                </Typography>
-                
-                <Typography variant="body1" sx={{ mb: 1 }}>
-                  {feedback.reply}
-                </Typography>
-                
-                <Chip
-                  label={`Replied on ${feedback.replyDate}`}
-                  size="small"
-                />
+          </Box>
+
+          <Divider sx={{ my: 2 }} />
+
+          {/* Vehicle Details */}
+          <Grid container spacing={2} sx={{ mb: 3 }}>
+            <Grid item xs={12} sm={6}>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <CalendarToday fontSize="small" sx={{ mr: 1, color: 'text.secondary' }} />
+                <Box>
+                  <Typography variant="body2" fontWeight={500}>Service Date</Typography>
+                  <Typography variant="body2">
+                    {new Date(feedback.preferredDate).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </Typography>
+                </Box>
               </Box>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <CarRepair fontSize="small" sx={{ mr: 1, color: 'text.secondary' }} />
+                <Box>
+                  <Typography variant="body2" fontWeight={500}>Vehicle Model</Typography>
+                  <Typography variant="body2">{feedback.model}</Typography>
+                </Box>
+              </Box>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <DirectionsCar fontSize="small" sx={{ mr: 1, color: 'text.secondary' }} />
+                <Box>
+                  <Typography variant="body2" fontWeight={500}>Vehicle Number</Typography>
+                  <Typography variant="body2">{feedback.vehicleNumber}</Typography>
+                </Box>
+              </Box>
+            </Grid>
+          </Grid>
+
+          {/* Rating Section */}
+          <Box sx={{ mb: 3 }}>
+            <Typography variant="subtitle1" fontWeight={600} mb={1}>
+              Your Rating
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+              <Rating 
+                value={feedback.rating} 
+                precision={1} 
+                readOnly 
+                sx={{ mr: 2 }}
+                icon={<Star fontSize="inherit" />}
+                emptyIcon={<Star fontSize="inherit" />}
+              />
+
+              <Chip
+                  label={`${feedback.rating} out of 5`}
+                  size="small"
+                  variant="outlined"
+                  color="primary"
+                  sx={{ mt: 1 }}
+                />
+      
+            </Box>
+            {feedback.comment && (
+              <Paper elevation={0} sx={{ 
+                p: 2, 
+                mt: 1,
+                borderRadius: 1,
+                bgcolor: theme.palette.action.hover
+              }}>
+                <Typography variant="body1">
+                  {feedback.comment}
+                </Typography>
+              </Paper>
             )}
-          </ListItem>
-          
-          {index < feedbacks.length - 1 && <Divider />}
-        </React.Fragment>
+            <Chip
+              label={`Submitted on ${new Date(feedback.feedbackDate).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+              })}`}
+              size="small"
+              variant="outlined"
+              sx={{ mt: 2 }}
+            />
+          </Box>
+
+          {/* Manager's Response */}
+          {feedback.reply && (
+            <Paper elevation={0} sx={{ 
+              p: 2, 
+              mt: 2,
+              borderRadius: 1,
+              bgcolor: theme.palette.primary.lighter,
+              borderLeft: `4px solid ${theme.palette.primary.main}`
+            }}>
+              <Typography variant="subtitle1" fontWeight={600} mb={1} sx={{ 
+                display: 'flex', 
+                alignItems: 'center',
+                color: theme.palette.primary.dark
+              }}>
+                <Reply fontSize="small" sx={{ mr: 1 }} />
+                Manager's Response
+              </Typography>
+              <Typography variant="body1" mb={1}>
+                {feedback.reply}
+              </Typography>
+              {feedback.replyDate && (
+                <Chip
+                  label={`Replied on ${new Date(feedback.replyDate).toLocaleDateString()}`}
+                  size="small"
+                  variant="outlined"
+                  sx={{ mt: 1 }}
+                />
+              )}
+            </Paper>
+          )}
+        </Paper>
       ))}
-    </List>
+    </Stack>
   );
 };
 

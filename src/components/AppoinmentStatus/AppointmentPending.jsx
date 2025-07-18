@@ -71,11 +71,27 @@ const AppointmentPending = ({ appointment, onCancel }) => {
 
   const handleConfirmCancel = () => {
     updateAppointmentStatus('Cancelled');
+      navigate(`/User`);
     setOpenConfirm(false);
   };
 
   
   return (
+
+    <Box>
+
+    <Typography  gutterBottom sx={{ 
+              fontWeight: 600,
+              fontSize : 35,
+              marginBottom: '1px'
+            }}>
+              Appoinment Details
+            </Typography>
+            <Typography varient="caption" sx = {{color:'green'}} > Appoinment - Pending</Typography>
+            
+            <Divider sx={{ mb: 4  }} />
+
+    
     <Paper
       elevation={3}
       sx={{
@@ -100,7 +116,7 @@ const AppointmentPending = ({ appointment, onCancel }) => {
 
       {/* Title */}
       <Typography variant="h6" fontWeight="bold" gutterBottom>
-        Appointment ID : {appointment.appointmentId}
+        Vehicle ID : {appointment.vehicleId}
       </Typography>
 
       
@@ -163,6 +179,7 @@ const AppointmentPending = ({ appointment, onCancel }) => {
       </Snackbar>
 
     </Paper>
+  </Box>
   );
 };
 
