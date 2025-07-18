@@ -46,8 +46,7 @@ function TDeclined() {
 	const filteredAppointments = appointments
 		.filter(
 			(app) =>
-				app.status === "Reject2" &&
-				app.tech?._id?.toString() === user?.technicianId
+				app.status === "Reject2" && app.tech?._id?.toString() === user?.technicianId
 		)
 		.filter((appointment) =>
 			(appointment.vehicleId || "")
@@ -59,6 +58,7 @@ function TDeclined() {
 	return (
 		<Container>
 			<h2>Declined Works</h2>
+
 			<Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
 				<Typography variant="h5" gutterBottom>
 					Appointments
@@ -72,39 +72,59 @@ function TDeclined() {
 				/>
 			</Box>
 
-			<TableContainer component={Paper} elevation={3}>
-				<Table>
+			<TableContainer
+				component={Paper}
+				sx={{
+					marginTop: 2,
+					overflow: "auto",
+					maxHeight: 400,
+					borderRadius: 2,
+					boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
+				}}
+			>
+				<Table stickyHeader>
 					<TableHead>
-						<TableRow>
-							<TableCell><strong>Vehicle ID</strong></TableCell>
-							<TableCell><strong>Vehicle Number</strong></TableCell>
-							<TableCell><strong>Service Description</strong></TableCell>
-							<TableCell><strong>Decline Reason</strong></TableCell>
-							<TableCell><strong>Date</strong></TableCell>
+						<TableRow sx={{ "& th": { fontWeight: "bold", backgroundColor: "#f5f5f5" } }}>
+							<TableCell>Vehicle ID</TableCell>
+							<TableCell>Vehicle Number</TableCell>
+							<TableCell>Service Description</TableCell>
+							<TableCell>Decline Reason</TableCell>
+							<TableCell>Exp.Date</TableCell>
 						</TableRow>
 					</TableHead>
+
 					<TableBody>
 						{loading ? (
 							<TableRow>
-								<TableCell colSpan={6} align="center">
+								<TableCell colSpan={6} align="center" sx={{ py: 4 }}>
 									Loading...
 								</TableCell>
 							</TableRow>
 						) : filteredAppointments.length > 0 ? (
 							filteredAppointments.map((appointment) => (
-								<TableRow key={appointment._id}>
+								<TableRow
+									key={appointment._id}
+									sx={{
+										"&:nth-of-type(odd)": { backgroundColor: "#fafafa" },
+										"&:hover": { backgroundColor: "#e0e0e0" },
+									}}
+								>
 									<TableCell>{appointment.vehicleId}</TableCell>
 									<TableCell>{appointment.vehicleNumber}</TableCell>
 									<TableCell>{appointment.issue}</TableCell>
 									<TableCell>{appointment.reason}</TableCell>
 									<TableCell>
-										{new Date(appointment.appointmentDate).toLocaleDateString()}
+										{new Date(appointment.expectedDeliveryDate).toLocaleDateString("en-US", {
+											year: "numeric",
+											month: "short",
+											day: "numeric",
+										})}
 									</TableCell>
 								</TableRow>
 							))
 						) : (
 							<TableRow>
-								<TableCell colSpan={6} align="center">
+								<TableCell colSpan={6} align="center" sx={{ py: 4 }}>
 									No declined appointments found
 								</TableCell>
 							</TableRow>
