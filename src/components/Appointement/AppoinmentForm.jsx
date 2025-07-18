@@ -1,12 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { TextField, MenuItem, Select, FormControl, InputLabel, Button, Grid, Typography, FormHelperText,} from '@mui/material';
+import { 
+  TextField, 
+  MenuItem, 
+  FormControl, 
+  InputLabel, 
+  Select, 
+  Button, 
+  Grid, 
+  Typography, 
+  FormHelperText,
+  Paper,
+  Divider,
+  Box,
+  useTheme,
+
+} from '@mui/material';
 import { useNavigate } from 'react-router-dom'; 
 import HandleAppointmentForm from './HandleAppointmentForm';
 import AlertDialog from './AlertDialog';
 import VehicleSelection from './VehicleSelection';
+import TimingSection from './TimingSection';
+import ServiceDetailsSection from './ServiceSelection';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 
 const AppointmentSubmit = () => {
-
+  const theme = useTheme();
   const {
     vehicles,
     services,
@@ -22,191 +40,183 @@ const AppointmentSubmit = () => {
   
   const navigate = useNavigate(); 
   const [showAlert, setShowAlert] = useState(false);
-  const [createdAppointment, setCreatedAppointment] = useState(null); // Store created appointment data
+  const [createdAppointment, setCreatedAppointment] = useState(null);
+   const [loading, setLoading] = useState(false);
 
+  const isFormValid = () => {
+    return (
+      formData.vehicleObject &&
+      formData.services?.length > 0 &&
+      formData.preferredDate &&
+      formData.preferredTime &&
+      formData.expectedDeliveryDate &&
+      formData.contactNumber
+    );
+  };
 
-const handleFormSubmit = async (e) => {
+ const handleFormSubmit = async (e) => {
   e.preventDefault();
-  console.log('Form submitted', formData);
 
-  const object = await handleSubmit(e); // Call handleSubmit and get the created appointment
-  console.log('Created Appointment ID:', object.appointment._id);
+  if (loading) return;  // Prevent multiple submits immediately
 
-  if (object) {
-    setShowAlert(true); // Show success alert
-    setCreatedAppointment(object); // Store the created appointment data
-    
-  } else {
-    console.error('Appointment creation failed'); 
-};
-}
+  setLoading(true); // Start loading
 
-const handleAlertClose = () => {
-  if (createdAppointment.appointment && createdAppointment.appointment._id) {
-    setShowAlert(false);
-    navigate(`/User`); // Redirect to the appointment details page
-  } else {
-    console.error('Appointment ID is undefined'); 
+  try {
+    const object = await handleSubmit(e);
+    if (object) {
+      setShowAlert(true);
+      setCreatedAppointment(object);
+    } else {
+      console.error('Appointment creation failed');
+    }
+  } catch (error) {
+    console.error('Submission error:', error);
+  } finally {
+    setLoading(false);  // Reset loading state
   }
 };
 
 
+  const handleAlertClose = () => {
+    if (createdAppointment?.appointment?._id) {
+      setShowAlert(false);
+      navigate(`/User`);
+    } else {
+      console.error('Appointment ID is undefined'); 
+    }
+  };
+
   return (
-    <Grid container justifyContent="center" style={{ padding: 20 }}>
-      <Grid item xs={12} md={8}>
-        <Typography variant="h4" gutterBottom>
-          Appoinment Form
+    <Box sx={{ p: 3 }}>
+      <Paper elevation={3} sx={{ 
+        p: 4, 
+        borderRadius: 3,
+        maxWidth: 800,
+        mx: 'auto'
+      }}>
+        <Typography variant="h4" gutterBottom sx={{ 
+          fontWeight: 600,
+
+          mb: 3,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1
+        }}>
+          New Service Appointment
         </Typography>
         
+        <Divider sx={{ mb: 4 }} />
+
         <form onSubmit={handleFormSubmit}>
-          {/* Vehicle Selection */}
-          <FormControl fullWidth margin="normal" error={!!errors.vehicleId}>
-      
-            <VehicleSelection
-            vehicles={vehicles}
-            value={formData.vehicleObject}
-            onChange={handleVehicleChange}
-            error={errors.vehicleId}
-            disabledVehicles={disabledVehicles}
-          />
-
-          </FormControl>
-
-          {/* Auto-filled Vehicle Details */}
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Vehicle Number"
-            value={formData.vehicleNumber}
-            disabled
-          />
-          
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Vehicle Model"
-            value={formData.model}
-            disabled
-          />
-
-          {/* Service Selection */}
-          <FormControl fullWidth margin="normal" error={!!errors.services}>
-            <InputLabel>Select Services</InputLabel>
-            <Select
-              multiple
-              value={formData.services}
-              onChange={handleServiceChange}
-              label="Select Services"
-            >
-              {services.map((service) => (
-                <MenuItem key={service._id} value={service.name}
-                style={{
-                  backgroundColor: formData.services.includes(service.name) ? '#9cd1f8' : 'white', // Light blue for selected, white for unselected 
-                }}>  
-                {service.name}
-                </MenuItem>
-              ))}
-            </Select>
-            {errors.services && <FormHelperText>{errors.services}</FormHelperText>}
-          </FormControl>
-
-      
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Issue Description"
-            name="issue"
-            value={formData.issue}
-            onChange={handleInputChange}
-            multiline
-            rows={4}
-          />
-                <TextField
-            fullWidth
-            margin="normal"
-            label="Preferred Date"
-            name="preferredDate"
-            type="date"
-            value={formData.preferredDate}
-            onChange={handleInputChange}
-            InputLabelProps={{ shrink: true }}
-            error={!!errors.preferredDate}
-            helperText={errors.preferredDate}
-            />
-    
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Preferred Time (HH:MM AM/PM)"
-            name="preferredTime"
-            value={formData.preferredTime}
-            onChange={handleInputChange}
-            error={!!errors.preferredTime}
-            helperText={errors.preferredTime || 'Example: 09:30 AM'}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Expected Delivery Date"
-            name="expectedDeliveryDate"
-            type="date"
-            value={formData.expectedDeliveryDate}
-            onChange={handleInputChange}
-            InputLabelProps={{ shrink: true }}
-            error={!!errors.expectedDeliveryDate}
-            helperText={errors.expectedDeliveryDate}
+          <Grid container spacing={3}>
+            {/* Vehicle Selection Section */}
+            <Grid item xs={12}>
+              <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1,color:'#302e2eff' }}>
             
-            />          
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Contact Number"
-            name="contactNumber"
-            value={formData.contactNumber}
-            onChange={handleInputChange}
-            error={!!errors.contactNumber}
-            helperText={errors.contactNumber || 'Example : 9412345678'}
-          />
-          <Grid container spacing={2} justifyContent="flex-end" style={{ marginTop: 20 }}>
-            <Grid item>
-              <Button variant="outlined"
-               onClick={handleReset}
-              sx={{
-                backgroundColor: '', 
-                '&:hover': {
-                  backgroundColor: 'red', 
-                  color: 'white'
-                },
-              }}>
-                Reset
-              </Button>
+            <DirectionsCarIcon color= "primary" />
+                Vehicle Information
+              </Typography>
+              <FormControl fullWidth error={!!errors.vehicleId}>
+                <VehicleSelection
+                  vehicles={vehicles}
+                  value={formData.vehicleObject}
+                  onChange={handleVehicleChange}
+                  error={errors.vehicleId}
+                  disabledVehicles={disabledVehicles}
+                />
+              </FormControl>
             </Grid>
 
             
-            <Grid item>
-              <Button type="submit" variant="contained" 
-               sx={{
-                backgroundColor: 'green', 
-                '&:hover': {
-                  backgroundColor: 'darkgreen', 
-                },
-              }}>
-                Submit Appointment
-              </Button>
+
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Vehicle Number"
+                value={formData.vehicleNumber}
+                disabled
+                InputProps={{
+                  startAdornment: (
+                    <Typography color="text.secondary" sx={{ mr: 1 }}>#</Typography>
+                  ),
+                }}
+              />
+            </Grid>
+            
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                label="Vehicle Model"
+                value={formData.model}
+                disabled
+              />
+            </Grid>
+
+            <ServiceDetailsSection
+              services={services}
+              formData={formData}
+              errors={errors}
+              handleServiceChange={handleServiceChange}
+              handleInputChange={handleInputChange}
+            />
+
+            <TimingSection
+              formData={formData}
+              errors={errors}
+              handleInputChange={handleInputChange}
+            />
+
+            {/* Form Actions */}
+            <Grid item xs={12} sx={{ mt: 2 }}>
+              <Divider sx={{ mb: 3 }} />
+              <Box sx={{ display: 'flex', justifyContent:'flex-end', gap: 2 }}>
+                <Button 
+                  variant="outlined"
+                  onClick={handleReset}
+                  sx={{
+                    px: 4,
+                    py: 1,
+                    fontWeight: 600,
+                    '&:hover': {
+                      backgroundColor: theme.palette.error.light,
+                      color: theme.palette.error.contrastText
+                    }
+                  }}
+                >
+                  Reset Form
+                </Button>
+                <Button 
+                  type="submit" 
+                  variant="contained" 
+                  disabled={!isFormValid() || loading}  // Disable if invalid or loading
+                  sx={{
+                    px: 4,
+                    py: 1,
+                    fontWeight: 600,
+                    backgroundColor: theme.palette.success.main,
+                    '&:hover': {
+                      backgroundColor: theme.palette.success.dark
+                    }
+                  }}
+                >
+                  {loading ? 'Submitting...' : 'Submit Appointment'}
+                </Button>
+
+              </Box>
             </Grid>
           </Grid>
         </form>
 
-               <AlertDialog
-                open={showAlert} 
-                onClose={handleAlertClose}
-                type="success"
-                title="Appointment Submitted Successfully"
-                message=" Your appointment has been submitted successfully! Our supervisor will contact you shortly."
-                confirmText="Great!" /> 
-
-      </Grid>
-    </Grid>
+        <AlertDialog
+          open={showAlert} 
+          onClose={handleAlertClose}
+          type="success"
+          title="Appointment Submitted Successfully"
+          message="Your appointment has been submitted successfully! Our supervisor will contact you shortly."
+          confirmText="Great!"
+        /> 
+      </Paper>
+    </Box>
   );
 };
 

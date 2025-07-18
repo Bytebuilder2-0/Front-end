@@ -10,7 +10,6 @@ import {
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
-import NoCrashIcon from '@mui/icons-material/NoCrash';
 
 const AlertDialog = ({ 
   open,

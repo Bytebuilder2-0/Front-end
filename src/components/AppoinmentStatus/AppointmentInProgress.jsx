@@ -35,6 +35,8 @@ const AppointmentInProgress = ({ appointment }) => {
         Appointment Details
       </Typography>
       
+        <Divider sx={{ my: 3 }} />
+
       <Grid container spacing={2} sx={{ mb: 3 }}>
         {/* Customer Column */}
         <Grid item xs={12} md={4}>

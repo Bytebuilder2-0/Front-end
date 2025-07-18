@@ -4,16 +4,17 @@ import UserWelcome from "../../components/WelcomeUser/UserWelcome";
 
 function UserDashboard() {
 
-  const userId = "67d873693913311df6a32a25"; 
-  
+
   return (
      <>
     <Box sx={{ display: 'flex' }}>
-       <UserMiniDrawer userId={userId} />
+       <UserMiniDrawer  />
        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar/>
+
         <UserWelcome userId={userId}/>
         
+
        </Box>
      </Box>
      </>

@@ -31,6 +31,7 @@ import {
 
 import Notify from "../Atoms/Notify";
 import Account from "../Atoms/Account";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -108,7 +109,10 @@ function MiniDrawer() {
 	return (
 		<Box sx={{ display: "flex" }}>
 			{/* App Bar */}
-			<AppBar position="fixed" sx={{ backgroundColor: "#33383E23", zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+			<AppBar
+				position="fixed"
+				sx={{ backgroundColor: "#428bca", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+			>
 				<Toolbar disableGutters>
 					{/* Left-aligned image, same width as the drawer */}
 					<Box
@@ -120,15 +124,25 @@ function MiniDrawer() {
 							backgroundColor: "#fff", // match the logo background
 						}}
 					>
-						<img
-							src="/assets/resized-garage24.png"
-							alt="Frame"
+						<Link
+							to="/"
 							style={{
-								height: "64px",
-								width: drawerWidth,
-								objectFit: "contain",
+								display: "inline-block", // ensures no extra line spacing
+								lineHeight: 0, // removes any extra vertical spacing
+								margin: 0,
+								padding: 0,
 							}}
-						/>
+						>
+							<img
+								src="/assets/resized-garage24.png"
+								alt="Frame"
+								style={{
+									height: "64px",
+									width: drawerWidth,
+									objectFit: "contain",
+								}}
+							/>
+						</Link>
 					</Box>
 
 					{/* Toggle Drawer Icon */}
@@ -138,7 +152,11 @@ function MiniDrawer() {
 						edge="end"
 						sx={{ marginRight: 2 }}
 					>
-						{open ? <ChevronLeftIcon sx={{ color: "#459328" }} /> : <MenuIcon sx={{ color: "#459328" }} />}
+						{open ? (
+							<ChevronLeftIcon sx={{ color: "#ffffffff" }} />
+						) : (
+							<MenuIcon sx={{ color: "#ffffffff" }} />
+						)}
 					</IconButton>
 					<Box sx={{ flexGrow: 1 }} />
 					<Box
@@ -149,9 +167,8 @@ function MiniDrawer() {
 							pr: 5, // padding-right
 						}}
 					>
-						
-						<Notify/>
-						<Account/>
+						{/*<Notify />*/}
+						<Account />
 					</Box>
 				</Toolbar>
 			</AppBar>
@@ -162,7 +179,7 @@ function MiniDrawer() {
 				open={open}
 				sx={{
 					"& .MuiDrawer-paper": {
-						backgroundColor: "#33383E", 
+						backgroundColor: "#33383E",
 						color: "white", // text/icon color
 					},
 				}}
@@ -181,7 +198,10 @@ function MiniDrawer() {
 							mb: 2,
 						}}
 					>
-						<Avatar src="https://randomuser.me/api/portraits/men/1.jpg" sx={{ width: 100, height: 100 }} />
+						<Avatar
+							src="https://randomuser.me/api/portraits/men/1.jpg"
+							sx={{ width: 100, height: 100 }}
+						/>
 						<br />
 						<Typography>Supervisor 1</Typography>
 					</Box>
@@ -191,18 +211,43 @@ function MiniDrawer() {
 				{/* Navigation List */}
 				<List>
 					{[
-						{ path: "/SInitial", label: "Home", icon: <HomeIcon sx={{ color: "#ffffff" }} /> },
-						{ path: "/Super", label: "Dashboard", icon: <DashboardIcon sx={{ color: "#ffffff" }} /> },
-						{ path: "/SInpro", label: "In Progress", icon: <AutoGraphIcon sx={{ color: "#ffffff" }} /> },
+						{
+							path: "/SInitial",
+							label: "Home",
+							icon: <HomeIcon sx={{ color: "#ffffff" }} />,
+						},
+						{
+							path: "/Super",
+							label: "Dashboard",
+							icon: <DashboardIcon sx={{ color: "#ffffff" }} />,
+						},
+						{
+							path: "/SInpro",
+							label: "In Progress",
+							icon: <AutoGraphIcon sx={{ color: "#ffffff" }} />,
+						},
 						{
 							path: "/SCompleted",
 							label: "Completed",
 							icon: <DoneOutlineIcon sx={{ color: "#ffffff" }} />,
 						},
-						{ path: "/SDeclined", label: "Decline", icon: <ErrorIcon sx={{ color: "#ffffff" }} /> },
-						{ path: "/SHistory", label: "History", icon: <HistoryIcon sx={{ color: "#ffffff" }} /> },
+						{
+							path: "/SDeclined",
+							label: "Decline",
+							icon: <ErrorIcon sx={{ color: "#ffffff" }} />,
+						},
+						{
+							path: "/SHistory",
+							label: "History",
+							icon: <HistoryIcon sx={{ color: "#ffffff" }} />,
+						},
 					].map(({ path, label, icon }) => (
-						<ListItem key={path} disablePadding sx={{ display: "block" }} onClick={() => handleNavItemClick(path)}>
+						<ListItem
+							key={path}
+							disablePadding
+							sx={{ display: "block" }}
+							onClick={() => handleNavItemClick(path)}
+						>
 							<ListItemButton
 								selected={window.location.pathname === path}
 								sx={{
@@ -212,7 +257,11 @@ function MiniDrawer() {
 									},
 								}}
 							>
-								<ListItemIcon sx={{ minWidth: 0, justifyContent: "center", marginRight: 2 }}>{icon}</ListItemIcon>
+								<ListItemIcon
+									sx={{ minWidth: 0, justifyContent: "center", marginRight: 2 }}
+								>
+									{icon}
+								</ListItemIcon>
 								<ListItemText primary={label} sx={{ opacity: open ? 1 : 0 }} />
 							</ListItemButton>
 						</ListItem>

@@ -5,15 +5,14 @@ import { Box, Toolbar } from '@mui/material';
 
 function VehicleRegister() {
  
-  //Hardcode UserId
-  const userId = "67d873693913311df6a32a25"; 
+
   return (
     <>
      <Box sx={{ display: 'flex' }}>
-    <UserMiniDrawer userId={userId}/>
+    <UserMiniDrawer />
     <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
      <Toolbar/>
-     <FormVehicle userId={userId} />
+     <FormVehicle  />
      </Box>
      </Box>
 

@@ -1,10 +1,9 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { styled } from "@mui/material/styles";
 import axios from "axios";
+
 import { useAuth } from '../../context/AuthContext';
-
-
 
 
 import {
@@ -24,30 +23,27 @@ import {
 	AppBar as MuiAppBar,
 	Drawer as MuiDrawer,
 } from "@mui/material";
-
 import { useNavigate } from "react-router-dom";
 import {
 	Menu as MenuIcon,
 	ChevronLeft as ChevronLeftIcon,
 	Home as HomeIcon,
-	History as HistoryIcon,
-	Notifications as NotificationsIcon,
 	Feedback as FeedbackIcon,
-	Edit as EditIcon,
 	Schedule as TodayIcon,
 	List as ListIcon,
 	ExpandLess,
 	Dashboard as DashboardIcon,
 	ExpandMore,
 } from "@mui/icons-material";
+import { useAuth } from "../../context/AuthContext";
 import Notify from "../Atoms/Notify";
 import Account from "../Atoms/Account";
+import { Link } from "react-router-dom";
 
 
 
 const drawerWidth = 240;
 
-// Drawer Opened Styling
 const openedMixin = (theme) => ({
 	width: drawerWidth,
 	transition: theme.transitions.create("width", {
@@ -57,7 +53,6 @@ const openedMixin = (theme) => ({
 	overflowX: "hidden",
 });
 
-// Drawer Closed Styling
 const closedMixin = (theme) => ({
 	transition: theme.transitions.create("width", {
 		easing: theme.transitions.easing.sharp,
@@ -70,26 +65,15 @@ const closedMixin = (theme) => ({
 	},
 });
 
-// Custom AppBar
-const AppBar = styled(MuiAppBar, {
-	shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-	zIndex: theme.zIndex.drawer + 1,
-	transition: theme.transitions.create(["width", "margin"], {
+const AppBar = styled(MuiAppBar)(({ theme }) => ({
+	zIndex: theme.zIndex.drawer + 1, // ensures it's above the drawer
+	width: "100%", // always full width
+	transition: theme.transitions.create(["background-color"], {
 		easing: theme.transitions.easing.sharp,
 		duration: theme.transitions.duration.leavingScreen,
 	}),
-	...(open && {
-		marginLeft: drawerWidth,
-		width: `calc(100% - ${drawerWidth}px)`,
-		transition: theme.transitions.create(["width", "margin"], {
-			easing: theme.transitions.easing.sharp,
-			duration: theme.transitions.duration.enteringScreen,
-		}),
-	}),
 }));
 
-// Custom Drawer
 const Drawer = styled(MuiDrawer, {
 	shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
@@ -107,40 +91,44 @@ const Drawer = styled(MuiDrawer, {
 	}),
 }));
 
-// Drawer Header
 const DrawerHeader = styled("div")(({ theme }) => ({
-	display: "flex",
-	alignItems: "center",
-	justifyContent: "flex-end",
-
-	...theme.mixins.toolbar,
+	...theme.mixins.toolbar, //this div is same height as the appbar height
 }));
 
-export default function UserMiniDrawer({ userId }) {
+export default function UserMiniDrawer() {
 	const { user, token } = useAuth();
 	const [open, setOpen] = React.useState(true);
 	const navigate = useNavigate();
 	const [expanded, setExpanded] = useState({ "My Appointments": false });
 	const [loading, setLoading] = useState(true);
+
 	const [profile, setProfile] = useState(null);
+
 
 
 	const handleDrawerOpen = () => setOpen(true);
 	const handleDrawerClose = () => setOpen(false);
 
-	// const { id } = useParams(); // Get appointment ID from the URL
-	const [appointments, setAppointments] = useState([]);
+	const handleExpandClick = (menuItem) => {
+		console.log("Toggling menu:", menuItem);
+		setExpanded((prev) => ({ ...prev, [menuItem]: !prev[menuItem] }));
+	};
 
 	useEffect(() => {
 		const fetchAppointments = async () => {
-			try {
-				setLoading(true);
-				const API_URL = `http://localhost:5000/api/appointments/user/${userId}`
-				const response = await axios.get(API_URL, {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-				});
+		try {
+			console.log("Auth context:", { user, token });
+		if (!user?.id) {
+			console.error("No valid user ID available - user:", user);
+			return;
+}
+
+		setLoading(true);
+		console.log("Fetching appointments for user:", user);
+
+		const API_URL = `http://localhost:5000/api/appointments/user/${user.id}`;
+		console.log("Request URL:", API_URL);
+
 
 				let appointmentsData = response.data;
 				console.log("Filtered appointments:", 
@@ -193,64 +181,133 @@ export default function UserMiniDrawer({ userId }) {
 	
 	
 
-	const handleExpandClick = (menuItem) => {
-		setExpanded((prev) => ({ ...prev, [menuItem]: !prev[menuItem] }));
+
+		const filtered = appointmentsData.filter(
+		(appt) => appt && !["Cancelled", "All done", "Reject1","Paid"].includes(appt.status)
+		);
+
+		console.log("Filtered appointments:", filtered);
+		setAppointments(filtered);
+	} catch (err) {
+		console.error("Error detailsssss:", {
+		message: err.message,
+		response: err.response?.data,
+		status: err.response?.status,
+		});
+		setAppointments([]);
+	} finally {
+		setLoading(false);
+	}
 	};
+
+		
+	fetchAppointments();
+		
+	}, [user, token]);
+
+	const menuItems = useMemo(
+		() => [
+			{ path: "/", label: "Home", icon: <HomeIcon sx={{ color: "#ffffff" }} /> },
+			{ path: "/User", label: "Dashboard", icon: <DashboardIcon sx={{ color: "#ffffff" }}/> },
+			{
+				path: "/appointments/new",
+				label: "Make an Appointment",
+				icon: <TodayIcon sx={{ color: "#ffffff" }} />,
+			},
+			{
+				label: "My Appointments",
+				icon: <ListIcon sx={{ color: "#ffffff" }}/>,
+				hasChildren: true,
+				children: appointments.map((appt) => ({
+					path: `/appointments/${appt._id}`,
+					label: appt.model || `Vehicle ${appt._id?.substring(0, 4)}`,
+					status: appt.status,
+				})),
+			},
+			{ path: "/UserFeedback", label: "FeedBack", icon: <FeedbackIcon sx={{ color: "#ffffff" }}/> },
+		],
+		[appointments]
+	);
 
 	return (
 		<Box sx={{ display: "flex" }}>
 			<CssBaseline />
-			{/* App Bar */}
-			<AppBar position="fixed" sx={{ backgroundColor: "#9CE178" }}>
-				<Toolbar>
-					{/* Flex container to separate left and right items */}
+		<AppBar
+				position="fixed"
+				sx={{ backgroundColor: "#428bca", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+			>
+				<Toolbar disableGutters>
+					{/* Left-aligned image, same width as the drawer */}
 					<Box
 						sx={{
+							width: drawerWidth,
 							display: "flex",
-							justifyContent: "space-between",
 							alignItems: "center",
-							width: "100%",
+							justifyContent: "center",
+							backgroundColor: "#fff", // match the logo background
 						}}
 					>
-						{/* Left section: Menu icon + image */}
-						<Box sx={{ display: "flex", alignItems: "center" }}>
-							<IconButton
-								color="inherit"
-								onClick={open ? handleDrawerClose : handleDrawerOpen}
-								edge="start"
-								sx={{ marginRight: 2 }}
-							>
-								{open ? <ChevronLeftIcon /> : <MenuIcon />}
-							</IconButton>
-
+						<Link
+							to="/"
+							style={{
+								display: "inline-block", // ensures no extra line spacing
+								lineHeight: 0, // removes any extra vertical spacing
+								margin: 0,
+								padding: 0,
+							}}
+						>
 							<img
-								src="/assets/image.png"
+								src="/assets/resized-garage24.png"
 								alt="Frame"
 								style={{
 									height: "64px",
-									width: "auto",
+									width: drawerWidth,
+									objectFit: "contain",
 								}}
 							/>
-						</Box>
+						</Link>
+					</Box>
 
-						{/* Right section: Notify + Account */}
-						<Box
-							sx={{
-								display: { xs: "none", md: "flex" },
-								alignItems: "center",
-								gap: 2,
-							}}
-						>
-							<Notify />
-							<Account />
-						</Box>
+					{/* Toggle Drawer Icon */}
+					<IconButton
+						color="inherit"
+						onClick={open ? handleDrawerClose : handleDrawerOpen}
+						edge="end"
+						sx={{ marginRight: 2 }}
+					>
+						{open ? (
+							<ChevronLeftIcon sx={{ color: "#ffffffff" }} />
+						) : (
+							<MenuIcon sx={{ color: "#ffffffff" }} />
+						)}
+					</IconButton>
+					<Box sx={{ flexGrow: 1 }} />
+					<Box
+						sx={{
+							display: { xs: "none", md: "flex" },
+							alignItems: "center",
+							gap: 2, // spacing between icons
+							pr: 5, // padding-right
+						}}
+					>
+						<Notify />
+						<Account />
 					</Box>
 				</Toolbar>
 			</AppBar>
 
-			{/* Sidebar Drawer */}
-			<Drawer variant="permanent" open={open}>
-				<DrawerHeader></DrawerHeader>
+{/* Sidebar Drawer */}
+			<Drawer
+				variant="permanent"
+				open={open}
+				sx={{
+					"& .MuiDrawer-paper": {
+						backgroundColor: "#33383E",
+						color: "white", // text/icon color
+					},
+				}}
+			>
+				<DrawerHeader />
 				<Divider />
 
 				{/* User Avatar */}
@@ -272,6 +329,7 @@ export default function UserMiniDrawer({ userId }) {
 							/> */}
 
 						<Avatar
+
 						alt={profile?.name}
 						src={profile?.profilePhoto || ''}
 						sx={{ width: 100, height: 100 }}
@@ -284,10 +342,12 @@ export default function UserMiniDrawer({ userId }) {
 
 					</Box>
 				)}
-				{open && <Divider sx={{ mx: 2, my: 1 }} />}
+				{open && <Divider sx={{ borderColor: "#ffffff", mr: 3, ml: 3 }} />}
 
 				{/* Navigation List */}
+
 				<List>
+
 					{[
 						{ path: "/", label: "Home", icon: <HomeIcon /> },
 						{ path: "/User", label: "Dashboard", icon: <DashboardIcon /> },
@@ -313,11 +373,14 @@ export default function UserMiniDrawer({ userId }) {
 						{ path: "/UserProfile", label: "Edit Profile", icon: <EditIcon /> },
 						{ path: "/UserFeedback", label: "FeedBack", icon: <FeedbackIcon /> },
 					].map((item) => (
+
 						<React.Fragment key={item.path || item.label}>
 							<ListItem disablePadding sx={{ display: "block" }}>
 								<ListItemButton
 									onClick={() =>
-										item.path ? navigate(item.path) : handleExpandClick(item.label)
+										item.path
+											? navigate(item.path)
+											: handleExpandClick(item.label)
 									}
 									selected={window.location.pathname === item.path}
 								>
@@ -326,35 +389,42 @@ export default function UserMiniDrawer({ userId }) {
 									>
 										{item.icon}
 									</ListItemIcon>
-									<ListItemText primary={item.label} sx={{ opacity: open ? 1 : 0 }} />
+									<ListItemText
+										primary={item.label}
+										sx={{ opacity: open ? 1 : 0 }}
+									/>
 									{item.hasChildren &&
 										(expanded[item.label] ? <ExpandLess /> : <ExpandMore />)}
-										
 								</ListItemButton>
 							</ListItem>
-							
 
 							{item.hasChildren && expanded[item.label] && (
 								<List component="div" disablePadding>
 									{loading ? (
 										<ListItem>
-											<CircularProgress size={7} />
+											<CircularProgress size={24} />
 										</ListItem>
-									) : (
-										item.children.map((child) => (
+									) : item.children?.length > 0 ? (
+										item.children.map((child, index) => (
 											<ListItem
-												key={child.path}
+												key={child.path || `child-${index}`}
 												disablePadding
 												sx={{ pl: 4 }}
 												onClick={() => navigate(child.path)}
 											>
 												<ListItemButton
-													selected={window.location.pathname === child.path}
+													selected={
+														window.location.pathname === child.path
+													}
 												>
 													<ListItemText primary={child.label} />
 												</ListItemButton>
 											</ListItem>
 										))
+									) : (
+										<ListItem sx={{ pl: 4 }}>
+											<ListItemText primary="No Appointments" />
+										</ListItem>
 									)}
 								</List>
 							)}

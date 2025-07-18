@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Tabs, Tab, Alert, CircularProgress } from "@mui/material";
+import { Box, Typography, Tabs, Tab, Alert, CircularProgress, Divider } from "@mui/material";
 import { useParams } from "react-router-dom";
 import PendingFeedback from "./PendingFeedback";
 import FeedbackHistory from "./FeedbackHistory";
@@ -16,56 +16,70 @@ const FeedbackAll = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { user, token } = useAuth();
-  const { id } = useParams();
   const [feedbackState, setFeedbackState] = useState({
   open: false,
   appointmentId: null
 })
+const fetchData = async () => {
+  if (!user?.id || !token) {
+    setLoading(false);
+    return;
+  }
 
-  const fetchData = async () => {
-    if (!user?.id || !token) {
-      setLoading(false);
-      return;
+  try {
+    setLoading(true);
+    setError(null);
+
+    // Step 1: Fetch user's appointments
+    const appointmentsRes = await axios.get(`${API_URL}/appointments/user/${user.id}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    const appointmentsData = Array.isArray(appointmentsRes.data)
+      ? appointmentsRes.data
+      : appointmentsRes.data?.data || [];
+
+    setAppointments(appointmentsData);
+
+    const feedbacksList = [];
+
+    console.log("Appointments with feedbackStatus: true", appointmentsData.filter(appt => appt.feedbackStatus));
+
+    // Step 2: For appointments with feedbackStatus: true, fetch feedback
+    for (const appointment of appointmentsData) {
+      if (appointment.feedbackStatus && appointment._id) {
+        try {
+          const res = await axios.get(`${API_URL}/feedback/${appointment._id}`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+
+          const { data, appointmentDetails } = res.data;
+
+          feedbacksList.push({
+            ...data,
+            ...appointmentDetails,
+            appointmentId: appointment._id
+          });
+
+        } catch (err) {
+          console.error(`Failed to fetch feedback for appointment ${appointment._id}`, err.response?.data || err.message);
+        }
+      }
     }
-    
-    try {
-      setLoading(true);
-      setError(null);
-      
-      // Fetch all appointments for this user
-      const appointmentsRes = await axios.get(`${API_URL}/appointments/user/${user.id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      }).catch(err => {
-        console.error('Error fetching appointments:', err);
-        return { data: [] }; // Return empty array if request fails
-      });
-      
-      // Handle different response structures
-      const appointmentsData = Array.isArray(appointmentsRes.data) 
-        ? appointmentsRes.data 
-        : appointmentsRes.data?.data || [];
-      setAppointments(appointmentsData);
-      
-      // Fetch all feedbacks for this user
-      const feedbacksRes = await axios.get(`${API_URL}/feedback/user/${user.id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      }).catch(err => {
-        console.error('Error fetching feedbacks:', err);
-        return { data: [] }; // Return empty array if request fails
-      });
-      
-      const feedbacksData = Array.isArray(feedbacksRes.data)
-        ? feedbacksRes.data
-        : feedbacksRes.data?.data || [];
-      setFeedbacks(feedbacksData);
-      
-    } catch (error) {
-      console.error('Error in fetchData:', error);
-      setError(error.message || "Failed to load data");
-    } finally {
-      setLoading(false);
-    }
-  };
+
+    console.log("Feedbacks fetched from /feedback/:id", feedbacksList);
+    setFeedbacks(feedbacksList);
+
+  } catch (err) {
+    console.error("Error fetching data:", err);
+    setError("Failed to load data.");
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+
 
   useEffect(() => {
     fetchData();
@@ -94,12 +108,10 @@ const FeedbackAll = () => {
 
   // Separate pending and completed feedbacks
   const pendingFeedbacks = appointmentsWithFeedback.filter(
-    appt => appt.status === 'Task Done' && !appt.hasFeedback
+    appt => (appt.status === 'Task Done' || appt.status === 'Paid'|| appt.status === 'All Done') && !appt.hasFeedback
   );
   
-  const completedFeedbacks = appointmentsWithFeedback.filter(
-    appt => appt.status === 'All done' && appt.hasFeedback
-  );
+const completedFeedbacks = feedbacks;
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -133,6 +145,8 @@ const FeedbackAll = () => {
       <Typography variant="h4" gutterBottom>
         Feedback Center
       </Typography>
+
+      <Divider sx={{ my: 3, borderBottomWidth: 1 }} /> 
       
       <Tabs value={tabValue} onChange={handleTabChange} sx={{ mb: 3 }}>
         <Tab label={`Pending Feedback (${pendingFeedbacks.length})`} />
