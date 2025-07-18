@@ -167,7 +167,7 @@ function MiniDrawer() {
 							pr: 5, // padding-right
 						}}
 					>
-						<Notify />
+						{/*<Notify />*/}
 						<Account />
 					</Box>
 				</Toolbar>
