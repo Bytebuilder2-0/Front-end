@@ -41,6 +41,7 @@ const AppointmentSubmit = () => {
   const navigate = useNavigate(); 
   const [showAlert, setShowAlert] = useState(false);
   const [createdAppointment, setCreatedAppointment] = useState(null);
+   const [loading, setLoading] = useState(false);
 
   const isFormValid = () => {
     return (
@@ -53,8 +54,14 @@ const AppointmentSubmit = () => {
     );
   };
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
+ const handleFormSubmit = async (e) => {
+  e.preventDefault();
+
+  if (loading) return;  // Prevent multiple submits immediately
+
+  setLoading(true); // Start loading
+
+  try {
     const object = await handleSubmit(e);
     if (object) {
       setShowAlert(true);
@@ -62,9 +69,13 @@ const AppointmentSubmit = () => {
     } else {
       console.error('Appointment creation failed');
     }
-  };
+  } catch (error) {
+    console.error('Submission error:', error);
+  } finally {
+    setLoading(false);  // Reset loading state
+  }
+};
 
-   
 
   const handleAlertClose = () => {
     if (createdAppointment?.appointment?._id) {
@@ -177,7 +188,7 @@ const AppointmentSubmit = () => {
                 <Button 
                   type="submit" 
                   variant="contained" 
-                  disabled={!isFormValid()}
+                  disabled={!isFormValid() || loading}  // Disable if invalid or loading
                   sx={{
                     px: 4,
                     py: 1,
@@ -188,8 +199,9 @@ const AppointmentSubmit = () => {
                     }
                   }}
                 >
-                  Submit Appointment
+                  {loading ? 'Submitting...' : 'Submit Appointment'}
                 </Button>
+
               </Box>
             </Grid>
           </Grid>

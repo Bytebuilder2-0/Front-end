@@ -43,29 +43,29 @@ const NoVehicles = () => {
         You haven't registered any vehicles. Click below to add your first vehicle.
       </Typography>
       
-      <Button
-        variant="contained"
-        onClick={() => navigate('/VehicleRegister')}
-        sx={{
-          width: '200px',
-          fontSize: '0.9375rem', // 15px
-          fontWeight: 600,
-          py: 1.5,
-          px: 3,
-          borderRadius: '10px',
-          backgroundColor: '#51b672 ',
-          color: theme.palette.success.contrastText,
-          textTransform: 'none',
-          boxShadow: 'none',
-          '&:hover': {
-            backgroundColor: theme.palette.success.dark,
-            
-          },
-          transition: 'all 0.3s ease'
-        }}
-      >
-        Add Vehicle
-      </Button>
+   <Button
+  variant="contained"
+  onClick={() => navigate('/VehicleRegister')}
+  sx={{
+    width: '200px',
+    fontSize: '0.9375rem',
+    fontWeight: 600,
+    py: 1.5,
+    px: 3,
+    borderRadius: '10px',
+    backgroundColor: '#459328', // Dark green
+    color: 'white',
+    textTransform: 'none',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+    '&:hover': {
+      backgroundColor: '#3a7c21', // Darker green
+      boxShadow: '0 4px 8px rgba(0,0,0,0.15)'
+    },
+    transition: 'all 0.3s ease'
+  }}
+>
+  Add Vehicle
+</Button>
     </Box>
   );
 };

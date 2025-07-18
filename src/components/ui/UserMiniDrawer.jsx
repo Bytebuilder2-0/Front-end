@@ -34,6 +34,7 @@ import {
 import { useAuth } from "../../context/AuthContext";
 import Notify from "../Atoms/Notify";
 import Account from "../Atoms/Account";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -58,21 +59,12 @@ const closedMixin = (theme) => ({
 	},
 });
 
-const AppBar = styled(MuiAppBar, {
-	shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-	zIndex: theme.zIndex.drawer + 1,
-	transition: theme.transitions.create(["width", "margin"], {
+const AppBar = styled(MuiAppBar)(({ theme }) => ({
+	zIndex: theme.zIndex.drawer + 1, // ensures it's above the drawer
+	width: "100%", // always full width
+	transition: theme.transitions.create(["background-color"], {
 		easing: theme.transitions.easing.sharp,
 		duration: theme.transitions.duration.leavingScreen,
-	}),
-	...(open && {
-		marginLeft: drawerWidth,
-		width: `calc(100% - ${drawerWidth}px)`,
-		transition: theme.transitions.create(["width", "margin"], {
-			easing: theme.transitions.easing.sharp,
-			duration: theme.transitions.duration.enteringScreen,
-		}),
 	}),
 }));
 
@@ -94,10 +86,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 const DrawerHeader = styled("div")(({ theme }) => ({
-	display: "flex",
-	alignItems: "center",
-	justifyContent: "flex-end",
-	...theme.mixins.toolbar,
+	...theme.mixins.toolbar, //this div is same height as the appbar height
 }));
 
 export default function UserMiniDrawer() {
@@ -178,16 +167,16 @@ export default function UserMiniDrawer() {
 
 	const menuItems = useMemo(
 		() => [
-			{ path: "/", label: "Home", icon: <HomeIcon /> },
-			{ path: "/User", label: "Dashboard", icon: <DashboardIcon /> },
+			{ path: "/", label: "Home", icon: <HomeIcon sx={{ color: "#ffffff" }} /> },
+			{ path: "/User", label: "Dashboard", icon: <DashboardIcon sx={{ color: "#ffffff" }}/> },
 			{
 				path: "/appointments/new",
 				label: "Make an Appointment",
-				icon: <TodayIcon />,
+				icon: <TodayIcon sx={{ color: "#ffffff" }} />,
 			},
 			{
 				label: "My Appointments",
-				icon: <ListIcon />,
+				icon: <ListIcon sx={{ color: "#ffffff" }}/>,
 				hasChildren: true,
 				children: appointments.map((appt) => ({
 					path: `/appointments/${appt._id}`,
@@ -195,7 +184,7 @@ export default function UserMiniDrawer() {
 					status: appt.status,
 				})),
 			},
-			{ path: "/UserFeedback", label: "FeedBack", icon: <FeedbackIcon /> },
+			{ path: "/UserFeedback", label: "FeedBack", icon: <FeedbackIcon sx={{ color: "#ffffff" }}/> },
 		],
 		[appointments]
 	);
@@ -203,31 +192,85 @@ export default function UserMiniDrawer() {
 	return (
 		<Box sx={{ display: "flex" }}>
 			<CssBaseline />
-			<AppBar position="fixed" sx={{ backgroundColor: "#9CE178" }}>
-				<Toolbar>
-					<Box sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
-						<Box sx={{ display: "flex", alignItems: "center" }}>
-							<IconButton
-								color="inherit"
-								onClick={open ? handleDrawerClose : handleDrawerOpen}
-								edge="start"
-								sx={{ marginRight: 2 }}
-							>
-								{open ? <ChevronLeftIcon /> : <MenuIcon />}
-							</IconButton>
-							<img src="/assets/image.png" alt="Frame" style={{ height: "64px" }} />
-						</Box>
-						<Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", gap: 2 }}>
-							<Notify />
-							<Account />
-						</Box>
+		<AppBar
+				position="fixed"
+				sx={{ backgroundColor: "#428bca", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+			>
+				<Toolbar disableGutters>
+					{/* Left-aligned image, same width as the drawer */}
+					<Box
+						sx={{
+							width: drawerWidth,
+							display: "flex",
+							alignItems: "center",
+							justifyContent: "center",
+							backgroundColor: "#fff", // match the logo background
+						}}
+					>
+						<Link
+							to="/"
+							style={{
+								display: "inline-block", // ensures no extra line spacing
+								lineHeight: 0, // removes any extra vertical spacing
+								margin: 0,
+								padding: 0,
+							}}
+						>
+							<img
+								src="/assets/resized-garage24.png"
+								alt="Frame"
+								style={{
+									height: "64px",
+									width: drawerWidth,
+									objectFit: "contain",
+								}}
+							/>
+						</Link>
+					</Box>
+
+					{/* Toggle Drawer Icon */}
+					<IconButton
+						color="inherit"
+						onClick={open ? handleDrawerClose : handleDrawerOpen}
+						edge="end"
+						sx={{ marginRight: 2 }}
+					>
+						{open ? (
+							<ChevronLeftIcon sx={{ color: "#ffffffff" }} />
+						) : (
+							<MenuIcon sx={{ color: "#ffffffff" }} />
+						)}
+					</IconButton>
+					<Box sx={{ flexGrow: 1 }} />
+					<Box
+						sx={{
+							display: { xs: "none", md: "flex" },
+							alignItems: "center",
+							gap: 2, // spacing between icons
+							pr: 5, // padding-right
+						}}
+					>
+						<Notify />
+						<Account />
 					</Box>
 				</Toolbar>
 			</AppBar>
 
-			<Drawer variant="permanent" open={open}>
+{/* Sidebar Drawer */}
+			<Drawer
+				variant="permanent"
+				open={open}
+				sx={{
+					"& .MuiDrawer-paper": {
+						backgroundColor: "#33383E",
+						color: "white", // text/icon color
+					},
+				}}
+			>
 				<DrawerHeader />
 				<Divider />
+
+				{/* User Avatar */}
 				{open && (
 					<Box
 						sx={{
@@ -243,10 +286,12 @@ export default function UserMiniDrawer() {
 							sx={{ width: 100, height: 100 }}
 						/>
 						<br />
-						<Typography>User 1</Typography>
+						<Typography>User</Typography>
 					</Box>
 				)}
-				{open && <Divider sx={{ mx: 2, my: 1 }} />}
+				{open && <Divider sx={{ borderColor: "#ffffff", mr: 3, ml: 3 }} />}
+
+				{/* Navigation List */}
 
 				<List>
 					{menuItems.map((item) => (

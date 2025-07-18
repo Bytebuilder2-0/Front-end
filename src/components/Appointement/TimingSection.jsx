@@ -1,20 +1,27 @@
 import React from 'react';
-import { 
-  Grid, 
-  Typography, 
-  TextField 
-} from '@mui/material';
+import { Grid, Typography, TextField } from '@mui/material';
 import { Schedule, Phone } from '@mui/icons-material';
+import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { parse, format } from 'date-fns';
 
-const TimingSection = ({ 
-  formData, 
-  errors, 
-  handleInputChange 
-}) => {
+const TimingSection = ({ formData, errors, handleInputChange }) => {
+  // Convert time string to Date object for the picker
+ const parseTimeString = (timeStr) => {
+  if (!timeStr) return null;
+  try {
+    return parse(timeStr, 'hh:mm a', new Date()); // ✅ Match 12-hour format
+  } catch {
+    return null;
+  }
+};
+
+
   return (
     <>
       <Grid item xs={12}>
-        <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 , color:'#302e2eff'}}>
+        <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1, color: '#302e2eff' }}>
           <Schedule color="primary" />
           Appointment Timing
         </Typography>
@@ -35,22 +42,31 @@ const TimingSection = ({
       </Grid>
 
       <Grid item xs={12} md={6}>
-        <TextField
-          fullWidth
-          label="Preferred Time *"
-          name="preferredTime"
-          value={formData.preferredTime}
-          onChange={handleInputChange}
-          error={!!errors.preferredTime}
-          helperText={errors.preferredTime || 'Format: 09:30 AM'}
-          InputProps={{
-            startAdornment: (
-              <Schedule color="action" sx={{ mr: 1 }} />
-            ),
-          }}
-        />
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <MobileTimePicker
+            label="Preferred Time *"
+            value={parseTimeString(formData.preferredTime)}
+            onChange={(newValue) => {
+             const timeString = newValue ? format(newValue, 'hh:mm a') : '';
+              handleInputChange({
+                target: {
+                  name: 'preferredTime',
+                  value: timeString,
+                },
+              });
+            }}
+            slotProps={{
+              textField: {
+                fullWidth: true, 
+                error: !!errors.preferredTime,
+                helperText: errors.preferredTime || 'Format: 07:30 PM',
+              },
+            }}
+          />
+        </LocalizationProvider>
       </Grid>
 
+      {/* Rest of your component remains the same */}
       <Grid item xs={12} md={6}>
         <TextField
           fullWidth
