@@ -93,18 +93,7 @@ const Services = () => {
       <Container maxWidth="xl">
         {/* Section Header */}
         <Box sx={{ textAlign: "center", mb: 8 }}>
-          <Chip
-            label="What We Offer"
-            sx={{
-              mb: 3,
-              bgcolor: "primary.main",
-              color: "white",
-              fontWeight: "bold",
-              fontSize: "0.9rem",
-              px: 3,
-              py: 1,
-            }}
-          />
+          
           <Typography
             variant="h3"
             sx={{

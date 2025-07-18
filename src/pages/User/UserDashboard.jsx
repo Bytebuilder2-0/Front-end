@@ -11,7 +11,10 @@ function UserDashboard() {
        <UserMiniDrawer  />
        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar/>
-        <UserWelcome />
+
+        <UserWelcome userId={userId}/>
+        
+
        </Box>
      </Box>
      </>

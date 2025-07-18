@@ -2,6 +2,10 @@ import * as React from "react";
 import { useEffect, useState, useMemo } from "react";
 import { styled } from "@mui/material/styles";
 import axios from "axios";
+
+import { useAuth } from '../../context/AuthContext';
+
+
 import {
 	Box,
 	CssBaseline,
@@ -35,6 +39,8 @@ import { useAuth } from "../../context/AuthContext";
 import Notify from "../Atoms/Notify";
 import Account from "../Atoms/Account";
 import { Link } from "react-router-dom";
+
+
 
 const drawerWidth = 240;
 
@@ -95,7 +101,10 @@ export default function UserMiniDrawer() {
 	const navigate = useNavigate();
 	const [expanded, setExpanded] = useState({ "My Appointments": false });
 	const [loading, setLoading] = useState(true);
-	const [appointments, setAppointments] = useState([]);
+
+	const [profile, setProfile] = useState(null);
+
+
 
 	const handleDrawerOpen = () => setOpen(true);
 	const handleDrawerClose = () => setOpen(false);
@@ -120,27 +129,58 @@ export default function UserMiniDrawer() {
 		const API_URL = `http://localhost:5000/api/appointments/user/${user.id}`;
 		console.log("Request URL:", API_URL);
 
-		const response = await axios.get(API_URL, {
-		headers: {
-			Authorization: `Bearer ${token}`,
-		},
-		});
 
-		console.log("Response data:", response.data);
+				let appointmentsData = response.data;
+				console.log("Filtered appointments:", 
+                 appointments.filter((appt) => !["Cancelled", "All done", "Reject1"].includes(appt?.status))
+					);
+				if (appointmentsData && !Array.isArray(appointmentsData)) {
+					// If backend wraps array in an object (like { data: [...] })
+					if (
+						appointmentsData.data &&
+						appointmentsData.data &&
+						Array.isArray(appointmentsData.data)
+					) {
+						appointmentsData = appointmentsData.data;
+					} else {
+						// Convert single appointment to array
+						appointmentsData = [];
+					}
+				}
 
-		let appointmentsData = response.data;
+				setAppointments(appointmentsData || []);
+			} catch (err) {
+				console.error("Full error:", err);
+				console.error("Error response:", err.response);
+				setAppointments([]);
+			} finally {
+				setLoading(false);
+			}
+		};
 		
-		// Handle different response structures
-		if (response.data?.appointments) {
-		appointmentsData = response.data.appointments;
-		} else if (response.data?.data) {
-		appointmentsData = response.data.data;
-		}
+	const fetchProfile = async () => {
+		try {
+			const response = await axios.get('http://localhost:5000/api/user/profile', {
+				headers: { Authorization: `Bearer ${token}` },
 
-		if (!Array.isArray(appointmentsData)) {
-		console.warn("Appointments data is not an array:", appointmentsData);
-		appointmentsData = [];
+			});
+			console.log("Fetched profile:", response.data);  //-----------------------------to identify whether user.name comes
+			setProfile(response.data.user);
+		} catch (error) {
+			console.error("Failed to fetch profile photo:", error);
 		}
+	};
+
+	if (userId) {
+		fetchAppointments();
+	}
+	if (token) {
+		fetchProfile();
+	}
+}, [userId, token]);
+	
+	
+
 
 		const filtered = appointmentsData.filter(
 		(appt) => appt && !["Cancelled", "All done", "Reject1","Paid"].includes(appt.status)
@@ -281,12 +321,25 @@ export default function UserMiniDrawer() {
 							mb: 2,
 						}}
 					>
+
+													{/* <img
+							src={profile?.profilePhoto}
+							alt="preview"
+							style={{ width: 100, height: 100, objectFit: 'cover', borderRadius: '50%' }}
+							/> */}
+
 						<Avatar
-							src="https://randomuser.me/api/portraits/men/1.jpg"
-							sx={{ width: 100, height: 100 }}
-						/>
-						<br />
-						<Typography>User</Typography>
+
+						alt={profile?.name}
+						src={profile?.profilePhoto || ''}
+						sx={{ width: 100, height: 100 }}
+						>
+						{(!profile?.profilePhoto && profile?.name) ? profile.name[0].toUpperCase() : 'U'}
+						</Avatar>
+						<Typography sx={{ mt: 1 }}>{profile?.name || 'User'}</Typography>
+
+
+
 					</Box>
 				)}
 				{open && <Divider sx={{ borderColor: "#ffffff", mr: 3, ml: 3 }} />}
@@ -294,7 +347,33 @@ export default function UserMiniDrawer() {
 				{/* Navigation List */}
 
 				<List>
-					{menuItems.map((item) => (
+
+					{[
+						{ path: "/", label: "Home", icon: <HomeIcon /> },
+						{ path: "/User", label: "Dashboard", icon: <DashboardIcon /> },
+						{
+							path: "/appointments/new",
+							label: "Make an Appointemnt",
+							icon: <TodayIcon />,
+						},
+						// { path: "", label: "Notifications", icon: <NotificationsIcon /> },
+						{
+							label: "My Appointments",
+							icon: <ListIcon />,
+							hasChildren: true,
+							children: appointments
+								.filter((appt) => !["Cancelled", "All done","Reject1"].includes(appt?.status))
+								.map((appt) => ({
+									path: `/appointments/${appt._id}`,
+									label: appt.model || `Vehicle ${appt._id.substring(0, 4)}`, // Fallback to partial ID if no model
+									status: appt.status,
+								})),
+						},
+						{ path: "", label: "History", icon: <HistoryIcon /> },
+						{ path: "/UserProfile", label: "Edit Profile", icon: <EditIcon /> },
+						{ path: "/UserFeedback", label: "FeedBack", icon: <FeedbackIcon /> },
+					].map((item) => (
+
 						<React.Fragment key={item.path || item.label}>
 							<ListItem disablePadding sx={{ display: "block" }}>
 								<ListItemButton

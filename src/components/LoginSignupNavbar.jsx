@@ -89,7 +89,7 @@ const LoginSignupNavbar = () => {
               startIcon={<PersonAddIcon />}
               variant="contained"
               sx={{
-                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                background: "linear-gradient(135deg, #82b1ff 0%, #1a237e 100%)",
                 color: "white",
                 fontWeight: "600",
                 px: 3,
@@ -97,7 +97,7 @@ const LoginSignupNavbar = () => {
                 borderRadius: 2,
                 boxShadow: "0 4px 15px rgba(102, 126, 234, 0.3)",
                 "&:hover": {
-                  background: "linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%)",
+                  background: "linear-gradient(135deg, #0e1a5bff 0%, #180e86ff 100%)",
                   transform: "translateY(-1px)",
                   boxShadow: "0 6px 20px rgba(102, 126, 234, 0.4)",
                 },

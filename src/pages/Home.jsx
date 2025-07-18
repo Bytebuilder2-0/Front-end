@@ -12,6 +12,12 @@ import HowItWorks from "../components/HowItWorks";
 import Footer from "../components/Footer";
 import Services from "../components/Services";
 import { GlobalStyles } from "@mui/material";
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
+import { Feed } from "@mui/icons-material";
+import FeedbackDisplay from "../components/FeedbackDisplay";
+
+
 
 const aboutItems = [
 	{
@@ -231,6 +237,7 @@ const HomePage = () => {
 
 			<HowItWorks />
 			{/* <FeedbackSlider/> */}
+			<FeedbackDisplay />
 
 			<div id="contact">
 				<Footer />

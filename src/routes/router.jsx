@@ -34,12 +34,18 @@ import Layout from "../pages/supervisor/Layout";
 import PrivateRoute from "../components/Atoms/PrivateRoute";
 import Reports from "../pages/Manager/Report";
 import FeedBackUser from "../pages/User/FeedBackUser";
+import ForgotPasswordPage from "../pages/ForgotPasswordPage";
+
 
 import VehicleRegister from "../pages/User/VehicleRegister";
 
 import PaymentSuccess from "../components/payment/PaymentSuccess";
 import PaymentCancel from "../components/payment/PaymentCancel";
 import DisplayFeedBack from "../components/FeedbackDisplay";
+
+import VerifyEmail from "../components/VerifyEmail";
+import UserProfile from "../components/UserProfile";
+
 
 const router = createBrowserRouter([
   {
@@ -155,6 +161,10 @@ const router = createBrowserRouter([
     path: "/SignupPage",
     element: <SignupPage />,
   },
+   {
+    path: "/UserProfile",
+    element: <UserProfile />,
+  },
   {
     path: "/VehicleRegister",
     element: <VehicleRegister />,
@@ -175,6 +185,20 @@ const router = createBrowserRouter([
       </PrivateRoute>
     ),
   },
+   {
+  path :"/verify-email",
+   element: <VerifyEmail />,
+  },
+  {
+  path :"/verify-email",
+   element: <VerifyEmail />,
+  },
+  
+ {
+  path: "/forgot-password",
+  element: <ForgotPasswordPage />
+}
+,
   {
     path: "/ManagerDashboard",
     element: (
@@ -332,7 +356,7 @@ const router = createBrowserRouter([
     path: "/SignupVReg",
     element: <SignInVehicleContainer />,
   },
-  {
+   {
     path: "/UserFeedback",
     element: <FeedBackUser />,
   },
@@ -384,7 +408,7 @@ const router = createBrowserRouter([
       </PrivateRoute>
     ),
   },
-  {
+   {
     path: "/DisplayFeedBack",
     element: <DisplayFeedBack />,
   },
