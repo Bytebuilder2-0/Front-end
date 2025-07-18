@@ -582,7 +582,7 @@ const Signup = () => {
 									}}
 								>
 									<Typography variant="caption" color="text.secondary" fontWeight="600">
-										Secure Registration • SSL Protected
+										Secure Registration
 									</Typography>
 								</Box>
 							</Paper>
