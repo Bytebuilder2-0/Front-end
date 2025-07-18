@@ -162,6 +162,7 @@ function TAssignedWork() {
 	return (
 		<Container>
 			<h2>Assigned Works</h2>
+
 			<Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
 				<Typography variant="h5" gutterBottom>
 					Appointments
@@ -175,39 +176,36 @@ function TAssignedWork() {
 				/>
 			</Box>
 
-			<TableContainer component={Paper} elevation={3}>
-				<Table>
+			<TableContainer
+				component={Paper}
+				sx={{
+					marginTop: 2,
+					overflow: "auto",
+					maxHeight: 400,
+					borderRadius: 2,
+					boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
+				}}
+			>
+				<Table stickyHeader>
 					<TableHead>
-						<TableRow>
-							<TableCell>
-								<strong>Vehicle ID</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Vehicle Number</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Appointment Date</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Work Load</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Status</strong>
-							</TableCell>
-							<TableCell>
-								<strong>Actions</strong>
-							</TableCell>
+						<TableRow sx={{ "& th": { fontWeight: "bold", backgroundColor: "#f5f5f5" } }}>
+							<TableCell>Vehicle ID</TableCell>
+							<TableCell>Vehicle Number</TableCell>
+							<TableCell>Appointment Date</TableCell>
+							<TableCell>Work Load</TableCell>
+							<TableCell>Status</TableCell>
+							<TableCell>Actions</TableCell>
 						</TableRow>
 					</TableHead>
+
 					<TableBody>
 						{loading ? (
 							<TableRow>
-								<TableCell colSpan={6} align="center">
+								<TableCell colSpan={6} align="center" sx={{ py: 4 }}>
 									Loading...
 								</TableCell>
 							</TableRow>
 						) : filteredAppointments.length > 0 ? (
-							// Filter appointments to show only "Pending", "Reject1", or "Confirmed"
 							filteredAppointments
 								.filter(
 									(x) =>
@@ -216,7 +214,12 @@ function TAssignedWork() {
 								)
 								.map((appointment) => (
 									<React.Fragment key={appointment._id}>
-										<TableRow>
+										<TableRow
+											sx={{
+												"&:nth-of-type(odd)": { backgroundColor: "#fafafa" },
+												"&:hover": { backgroundColor: "#e0e0e0" },
+											}}
+										>
 											<TableCell>{appointment.vehicleId}</TableCell>
 											<TableCell>{appointment.vehicleNumber}</TableCell>
 											<TableCell>
@@ -234,7 +237,6 @@ function TAssignedWork() {
 													<AssignmentIcon />
 												</IconButton>
 											</TableCell>
-
 											<TableCell>
 												{appointment.status === "Accepted" ? (
 													<span style={{ color: "green", fontWeight: "bold" }}>
@@ -260,13 +262,11 @@ function TAssignedWork() {
 														variant="contained"
 														color="primary"
 														onClick={() => handleConfirm(appointment._id)}
-														style={{ marginRight: "10px" }}
+														sx={{ mr: 1 }}
 													>
 														Accept
 													</Button>
 												)}
-											</TableCell>
-											<TableCell>
 												{appointment.status === "Reject2" ? (
 													<Button variant="contained" disabled>
 														Declined
@@ -276,22 +276,23 @@ function TAssignedWork() {
 														variant="contained"
 														color="secondary"
 														onClick={() => handleOpenDialog(appointment._id)}
-														style={{ marginRight: "10px" }}
 													>
 														Decline
 													</Button>
 												)}
 											</TableCell>
 										</TableRow>
+
 										{expandedWorkload[appointment._id] && (
 											<TableRow>
-												<TableCell colSpan={7} sx={{ textAlign: "center" }}>
+												<TableCell colSpan={6} sx={{ textAlign: "center" }}>
 													<Box display="flex" justifyContent="center">
 														<Table
 															size="small"
 															sx={{
 																width: "50%",
 																backgroundColor: lightBlue[50],
+																borderRadius: 1,
 															}}
 														>
 															<TableHead>
@@ -306,9 +307,18 @@ function TAssignedWork() {
 															</TableHead>
 															<TableBody>
 																{appointment.workload.map((task, index) => (
-																	<TableRow key={task._id || index}>
-																		<TableCell>{task.step}</TableCell>
-																		<TableCell>{task.description}</TableCell>
+																	<TableRow
+																		key={task._id || index}
+																		sx={{
+																			"&:nth-of-type(odd)": {
+																				backgroundColor: "#f0f8ff",
+																			},
+																		}}
+																	>
+																		<TableCell align="center">{task.step}</TableCell>
+																		<TableCell align="center">
+																			{task.description}
+																		</TableCell>
 																	</TableRow>
 																))}
 															</TableBody>
@@ -321,13 +331,13 @@ function TAssignedWork() {
 								))
 						) : (
 							<TableRow>
-								<TableCell colSpan={6} align="center">
+								<TableCell colSpan={6} align="center" sx={{ py: 4 }}>
 									No appointments found
 								</TableCell>
 							</TableRow>
 						)}
-						{/* Decline Reason Dialog */}
 
+						{/* Decline Reason Dialog */}
 						<Dialog open={openDialog} onClose={handleCloseDialog}>
 							<DialogTitle>Decline Appointment</DialogTitle>
 							<DialogContent>
@@ -343,7 +353,7 @@ function TAssignedWork() {
 									onChange={(e) => setDeclineReason(e.target.value)}
 									sx={{
 										"& .MuiInputBase-root": {
-											alignItems: "flex-start", // aligns text at the top
+											alignItems: "flex-start",
 											width: 500,
 										},
 									}}
