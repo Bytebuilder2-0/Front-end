@@ -50,8 +50,23 @@ const ServiceItem = ({
           justifyContent: "space-between",
           gap: 2,
           p: 2,
-          borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
+          borderBottom: "1px solid rgba(0, 0, 0, 0.08)",
           backgroundColor: "background.paper",
+          position: "relative",
+          pl: 4, // Add padding to accommodate bullet point
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            left: "16px",
+            top: "50%",
+            transform: "translateY(-50%)",
+            width: "8px",
+            height: "8px",
+            borderRadius: "50%",
+            backgroundColor: service.selected
+              ? "primary.main"
+              : "text.secondary",
+          },
         }}
       >
         <Box sx={{ display: "flex", flex: 1, gap: 2, alignItems: "center" }}>
@@ -69,7 +84,7 @@ const ServiceItem = ({
             <Typography
               variant="body1"
               sx={{
-                color: service.selected ? "success.main" : "text.primary",
+                color: service.selected ? "primary.main" : "text.primary",
                 fontWeight: service.selected ? "bold" : "normal",
                 flex: 1,
               }}
@@ -82,54 +97,74 @@ const ServiceItem = ({
         <Box display="flex" gap={1} justifyContent="flex-end">
           <Button
             variant={service.selected ? "contained" : "outlined"}
-            color={service.selected ? "success" : "primary"}
+            color="primary"
             onClick={() => onToggle(service._id, service.selected)}
             disabled={isActionInProgress || isEditing}
-            sx={{ minWidth: "100px" }}
+            sx={{
+              minWidth: "100px",
+              textTransform: "none",
+              fontWeight: "medium",
+            }}
           >
-            {service.selected ? "Remove" : "add"}
+            {service.selected ? "Remove" : "Add"}
           </Button>
 
           {isEditing ? (
             <>
               <Button
                 variant="contained"
-                color="primary"
+                color="success"
                 onClick={handleSave}
                 disabled={isActionInProgress || !editedName.trim()}
-                sx={{ minWidth: "100px" }}
+                sx={{
+                  minWidth: "100px",
+                  textTransform: "none",
+                  fontWeight: "medium",
+                }}
               >
-                save
+                Save
               </Button>
               <Button
                 variant="outlined"
-                color="secondary"
+                color="primary"
                 onClick={handleCancelEditing}
                 disabled={isActionInProgress}
-                sx={{ minWidth: "100px" }}
+                sx={{
+                  minWidth: "100px",
+                  textTransform: "none",
+                  fontWeight: "medium",
+                }}
               >
-                cancel
+                Cancel
               </Button>
             </>
           ) : (
             <>
               <Button
                 variant="outlined"
-                color="info"
+                color="success"
                 onClick={handleStartEditing}
                 disabled={isActionInProgress || editingId !== null}
-                sx={{ minWidth: "100px" }}
+                sx={{
+                  minWidth: "100px",
+                  textTransform: "none",
+                  fontWeight: "medium",
+                }}
               >
-                edit
+                Edit
               </Button>
               <Button
                 variant="outlined"
                 color="error"
                 onClick={() => setConfirmDialogOpen(true)}
                 disabled={isActionInProgress || editingId !== null}
-                sx={{ minWidth: "100px" }}
+                sx={{
+                  minWidth: "100px",
+                  textTransform: "none",
+                  fontWeight: "medium",
+                }}
               >
-                delete
+                Delete
               </Button>
             </>
           )}

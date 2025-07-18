@@ -254,7 +254,7 @@ const ApointmentChecking = () => {
                             appointment.status === "Checking"
                               ? "#3c4caaff"
                               : appointment.status === "Pending"
-                              ? "orange"
+                              ? "green"
                               : ["Cancelled", "Reject1"].includes(
                                   appointment.status
                                 )

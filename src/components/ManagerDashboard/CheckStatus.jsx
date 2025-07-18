@@ -21,7 +21,7 @@ import DeatailsViewer from "./viewDeatails";
 import WhatsAppButton from "../sub/WhatsAppButton";
 import { jwtDecode } from "jwt-decode";
 
-const API_BASE_URL = "http://localhost:5000/api/appointments";
+const API_BASE_URL = "http://localhost:5000/api/appointments/";
 const token = localStorage.getItem("token");
 
 // Status configuration object for better maintainability
