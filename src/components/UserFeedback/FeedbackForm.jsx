@@ -212,9 +212,10 @@ const FeedbackForm = ({ open, onClose, appointmentId }) => {
               borderRadius: 2,
               fontWeight: 'bold',
               boxShadow: 'none',
+              backgroundColor:  '#2e7d32',
               '&:hover': {
                 boxShadow: 'none',
-                backgroundColor: theme.palette.primary.dark
+                backgroundColor:  '#1b5e20',
               }
             }}
           >
