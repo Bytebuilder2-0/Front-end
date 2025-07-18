@@ -19,7 +19,7 @@ function Account() {
 	const handleProfileClick = () => {
 		console.log("Profile clicked");
 		handleMenuClose();
-		navigate("/ProfilePage");
+		navigate("/UserProfile"); // Update with your actual profile route
 	};
 
 	const handleLogoutClick = () => {

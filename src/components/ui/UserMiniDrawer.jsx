@@ -2,9 +2,7 @@ import * as React from "react";
 import { useEffect, useState, useMemo } from "react";
 import { styled } from "@mui/material/styles";
 import axios from "axios";
-
 import { useAuth } from '../../context/AuthContext';
-
 
 import {
 	Box,
@@ -35,12 +33,9 @@ import {
 	Dashboard as DashboardIcon,
 	ExpandMore,
 } from "@mui/icons-material";
-import { useAuth } from "../../context/AuthContext";
 import Notify from "../Atoms/Notify";
 import Account from "../Atoms/Account";
 import { Link } from "react-router-dom";
-
-
 
 const drawerWidth = 240;
 
@@ -101,10 +96,8 @@ export default function UserMiniDrawer() {
 	const navigate = useNavigate();
 	const [expanded, setExpanded] = useState({ "My Appointments": false });
 	const [loading, setLoading] = useState(true);
-
+	const [appointments, setAppointments] = useState([]);
 	const [profile, setProfile] = useState(null);
-
-
 
 	const handleDrawerOpen = () => setOpen(true);
 	const handleDrawerClose = () => setOpen(false);
@@ -116,93 +109,64 @@ export default function UserMiniDrawer() {
 
 	useEffect(() => {
 		const fetchAppointments = async () => {
-		try {
-			console.log("Auth context:", { user, token });
-		if (!user?.id) {
-			console.error("No valid user ID available - user:", user);
-			return;
-}
+			try {
+				console.log("Auth context:", { user, token });
+				if (!user?.id) {
+					console.error("No valid user ID available - user:", user);
+					return;
+				}
 
-		setLoading(true);
-		console.log("Fetching appointments for user:", user);
+				setLoading(true);
+				console.log("Fetching appointments for user:", user);
 
-		const API_URL = `http://localhost:5000/api/appointments/user/${user.id}`;
-		console.log("Request URL:", API_URL);
+				const API_URL = `http://localhost:5000/api/appointments/user/${user.id}`;
+				console.log("Request URL:", API_URL);
 
-
+				const response = await axios.get(API_URL);
 				let appointmentsData = response.data;
-				console.log("Filtered appointments:", 
-                 appointments.filter((appt) => !["Cancelled", "All done", "Reject1"].includes(appt?.status))
-					);
+
+				// Ensure the response is an array
 				if (appointmentsData && !Array.isArray(appointmentsData)) {
-					// If backend wraps array in an object (like { data: [...] })
-					if (
-						appointmentsData.data &&
-						appointmentsData.data &&
-						Array.isArray(appointmentsData.data)
-					) {
+					if (appointmentsData.data && Array.isArray(appointmentsData.data)) {
 						appointmentsData = appointmentsData.data;
 					} else {
-						// Convert single appointment to array
 						appointmentsData = [];
 					}
 				}
 
-				setAppointments(appointmentsData || []);
+				const filtered = appointmentsData.filter(
+					(appt) => appt && !["Cancelled", "All done", "Reject1", "Paid"].includes(appt.status)
+				);
+
+				setAppointments(filtered);
 			} catch (err) {
-				console.error("Full error:", err);
-				console.error("Error response:", err.response);
+				console.error("Error details:", {
+					message: err.message,
+					response: err.response?.data,
+					status: err.response?.status,
+				});
 				setAppointments([]);
 			} finally {
 				setLoading(false);
 			}
 		};
-		
-	const fetchProfile = async () => {
-		try {
-			const response = await axios.get('http://localhost:5000/api/user/profile', {
-				headers: { Authorization: `Bearer ${token}` },
 
-			});
-			console.log("Fetched profile:", response.data);  //-----------------------------to identify whether user.name comes
-			setProfile(response.data.user);
-		} catch (error) {
-			console.error("Failed to fetch profile photo:", error);
+		const fetchProfile = async () => {
+			try {
+				const response = await axios.get('http://localhost:5000/api/user/profile', {
+					headers: { Authorization: `Bearer ${token}` },
+				});
+				console.log("Fetched profile:", response.data);
+				setProfile(response.data.user);
+			} catch (error) {
+				console.error("Failed to fetch profile photo:", error);
+			}
+		};
+
+		if (user?.id && token) {
+			fetchAppointments();
+			fetchProfile();
 		}
-	};
-
-	if (userId) {
-		fetchAppointments();
-	}
-	if (token) {
-		fetchProfile();
-	}
-}, [userId, token]);
-	
-	
-
-
-		const filtered = appointmentsData.filter(
-		(appt) => appt && !["Cancelled", "All done", "Reject1","Paid"].includes(appt.status)
-		);
-
-		console.log("Filtered appointments:", filtered);
-		setAppointments(filtered);
-	} catch (err) {
-		console.error("Error detailsssss:", {
-		message: err.message,
-		response: err.response?.data,
-		status: err.response?.status,
-		});
-		setAppointments([]);
-	} finally {
-		setLoading(false);
-	}
-	};
-
-		
-	fetchAppointments();
-		
 	}, [user, token]);
 
 	const menuItems = useMemo(
@@ -216,7 +180,7 @@ export default function UserMiniDrawer() {
 			},
 			{
 				label: "My Appointments",
-				icon: <ListIcon sx={{ color: "#ffffff" }}/>,
+				icon: <ListIcon sx={{ color: "#ffffff" }}/> ,
 				hasChildren: true,
 				children: appointments.map((appt) => ({
 					path: `/appointments/${appt._id}`,
@@ -232,172 +196,50 @@ export default function UserMiniDrawer() {
 	return (
 		<Box sx={{ display: "flex" }}>
 			<CssBaseline />
-		<AppBar
-				position="fixed"
-				sx={{ backgroundColor: "#428bca", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-			>
+			<AppBar position="fixed" sx={{ backgroundColor: "#428bca", zIndex: (theme) => theme.zIndex.drawer + 1 }}>
 				<Toolbar disableGutters>
-					{/* Left-aligned image, same width as the drawer */}
-					<Box
-						sx={{
-							width: drawerWidth,
-							display: "flex",
-							alignItems: "center",
-							justifyContent: "center",
-							backgroundColor: "#fff", // match the logo background
-						}}
-					>
-						<Link
-							to="/"
-							style={{
-								display: "inline-block", // ensures no extra line spacing
-								lineHeight: 0, // removes any extra vertical spacing
-								margin: 0,
-								padding: 0,
-							}}
-						>
-							<img
-								src="/assets/resized-garage24.png"
-								alt="Frame"
-								style={{
-									height: "64px",
-									width: drawerWidth,
-									objectFit: "contain",
-								}}
-							/>
+					<Box sx={{ width: drawerWidth, display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "#fff" }}>
+						<Link to="/" style={{ display: "inline-block", lineHeight: 0, margin: 0, padding: 0 }}>
+							<img src="/assets/resized-garage24.png" alt="Frame" style={{ height: "64px", width: drawerWidth, objectFit: "contain" }} />
 						</Link>
 					</Box>
 
-					{/* Toggle Drawer Icon */}
-					<IconButton
-						color="inherit"
-						onClick={open ? handleDrawerClose : handleDrawerOpen}
-						edge="end"
-						sx={{ marginRight: 2 }}
-					>
-						{open ? (
-							<ChevronLeftIcon sx={{ color: "#ffffffff" }} />
-						) : (
-							<MenuIcon sx={{ color: "#ffffffff" }} />
-						)}
+					<IconButton color="inherit" onClick={open ? handleDrawerClose : handleDrawerOpen} edge="end" sx={{ marginRight: 2 }}>
+						{open ? <ChevronLeftIcon sx={{ color: "#ffffffff" }} /> : <MenuIcon sx={{ color: "#ffffffff" }} />}
 					</IconButton>
 					<Box sx={{ flexGrow: 1 }} />
-					<Box
-						sx={{
-							display: { xs: "none", md: "flex" },
-							alignItems: "center",
-							gap: 2, // spacing between icons
-							pr: 5, // padding-right
-						}}
-					>
+					<Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", gap: 2, pr: 5 }}>
 						<Notify />
 						<Account />
 					</Box>
 				</Toolbar>
 			</AppBar>
 
-{/* Sidebar Drawer */}
-			<Drawer
-				variant="permanent"
-				open={open}
-				sx={{
-					"& .MuiDrawer-paper": {
-						backgroundColor: "#33383E",
-						color: "white", // text/icon color
-					},
-				}}
-			>
+			{/* Sidebar Drawer */}
+			<Drawer variant="permanent" open={open} sx={{ "& .MuiDrawer-paper": { backgroundColor: "#33383E", color: "white" } }}>
 				<DrawerHeader />
 				<Divider />
-
 				{/* User Avatar */}
 				{open && (
-					<Box
-						sx={{
-							display: "flex",
-							flexDirection: "column",
-							alignItems: "center",
-							mt: 2,
-							mb: 2,
-						}}
-					>
-
-													{/* <img
-							src={profile?.profilePhoto}
-							alt="preview"
-							style={{ width: 100, height: 100, objectFit: 'cover', borderRadius: '50%' }}
-							/> */}
-
-						<Avatar
-
-						alt={profile?.name}
-						src={profile?.profilePhoto || ''}
-						sx={{ width: 100, height: 100 }}
-						>
-						{(!profile?.profilePhoto && profile?.name) ? profile.name[0].toUpperCase() : 'U'}
+					<Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mt: 2, mb: 2 }}>
+						<Avatar alt={profile?.name} src={profile?.profilePhoto || ''} sx={{ width: 100, height: 100 }}>
+							{(!profile?.profilePhoto && profile?.name) ? profile.name[0].toUpperCase() : 'U'}
 						</Avatar>
 						<Typography sx={{ mt: 1 }}>{profile?.name || 'User'}</Typography>
-
-
-
 					</Box>
 				)}
 				{open && <Divider sx={{ borderColor: "#ffffff", mr: 3, ml: 3 }} />}
-
 				{/* Navigation List */}
-
 				<List>
-
-					{[
-						{ path: "/", label: "Home", icon: <HomeIcon /> },
-						{ path: "/User", label: "Dashboard", icon: <DashboardIcon /> },
-						{
-							path: "/appointments/new",
-							label: "Make an Appointemnt",
-							icon: <TodayIcon />,
-						},
-						// { path: "", label: "Notifications", icon: <NotificationsIcon /> },
-						{
-							label: "My Appointments",
-							icon: <ListIcon />,
-							hasChildren: true,
-							children: appointments
-								.filter((appt) => !["Cancelled", "All done","Reject1"].includes(appt?.status))
-								.map((appt) => ({
-									path: `/appointments/${appt._id}`,
-									label: appt.model || `Vehicle ${appt._id.substring(0, 4)}`, // Fallback to partial ID if no model
-									status: appt.status,
-								})),
-						},
-						{ path: "", label: "History", icon: <HistoryIcon /> },
-						{ path: "/UserProfile", label: "Edit Profile", icon: <EditIcon /> },
-						{ path: "/UserFeedback", label: "FeedBack", icon: <FeedbackIcon /> },
-					].map((item) => (
-
+					{menuItems.map((item) => (
 						<React.Fragment key={item.path || item.label}>
 							<ListItem disablePadding sx={{ display: "block" }}>
-								<ListItemButton
-									onClick={() =>
-										item.path
-											? navigate(item.path)
-											: handleExpandClick(item.label)
-									}
-									selected={window.location.pathname === item.path}
-								>
-									<ListItemIcon
-										sx={{ minWidth: 0, justifyContent: "center", marginRight: 2 }}
-									>
-										{item.icon}
-									</ListItemIcon>
-									<ListItemText
-										primary={item.label}
-										sx={{ opacity: open ? 1 : 0 }}
-									/>
-									{item.hasChildren &&
-										(expanded[item.label] ? <ExpandLess /> : <ExpandMore />)}
+								<ListItemButton onClick={() => item.path ? navigate(item.path) : handleExpandClick(item.label)} selected={window.location.pathname === item.path}>
+									<ListItemIcon sx={{ minWidth: 0, justifyContent: "center", marginRight: 2 }}>{item.icon}</ListItemIcon>
+									<ListItemText primary={item.label} sx={{ opacity: open ? 1 : 0 }} />
+									{item.hasChildren && (expanded[item.label] ? <ExpandLess /> : <ExpandMore />)}
 								</ListItemButton>
 							</ListItem>
-
 							{item.hasChildren && expanded[item.label] && (
 								<List component="div" disablePadding>
 									{loading ? (
@@ -406,17 +248,8 @@ export default function UserMiniDrawer() {
 										</ListItem>
 									) : item.children?.length > 0 ? (
 										item.children.map((child, index) => (
-											<ListItem
-												key={child.path || `child-${index}`}
-												disablePadding
-												sx={{ pl: 4 }}
-												onClick={() => navigate(child.path)}
-											>
-												<ListItemButton
-													selected={
-														window.location.pathname === child.path
-													}
-												>
+											<ListItem key={child.path || `child-${index}`} disablePadding sx={{ pl: 4 }} onClick={() => navigate(child.path)}>
+												<ListItemButton selected={window.location.pathname === child.path}>
 													<ListItemText primary={child.label} />
 												</ListItemButton>
 											</ListItem>
