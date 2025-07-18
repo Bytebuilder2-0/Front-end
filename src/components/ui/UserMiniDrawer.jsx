@@ -168,27 +168,27 @@ export default function UserMiniDrawer({ userId }) {
 				setLoading(false);
 			}
 		};
-
-		if (userId) {
-			fetchAppointments();
-		}
-		if (!token) return;
-
+		
 	const fetchProfile = async () => {
 		try {
-			const response = await axios.get('http://localhost:5000/api/user/profile', form, {
-				headers: { Authorization: `Bearer ${token}` }
+			const response = await axios.get('http://localhost:5000/api/user/profile', {
+				headers: { Authorization: `Bearer ${token}` },
+
 			});
+			console.log("Fetched profile:", response.data);  //-----------------------------to identify whether user.name comes
 			setProfile(response.data.user);
 		} catch (error) {
 			console.error("Failed to fetch profile photo:", error);
 		}
 	};
 
-	fetchProfile();
-		
-	}, [userId, token]);
-
+	if (userId) {
+		fetchAppointments();
+	}
+	if (token) {
+		fetchProfile();
+	}
+}, [userId, token]);
 	
 	
 
@@ -270,17 +270,15 @@ export default function UserMiniDrawer({ userId }) {
 							style={{ width: 100, height: 100, objectFit: 'cover', borderRadius: '50%' }}
 							/> */}
 
-
 						<Avatar
-	                       src={profile?.profilePhoto || ''}
-	                       sx={{ width: 100, height: 100 }}
-						   >
- 
-                         {!profile?.profilePhoto && (profile?.name?.[0] || 'U')}
-                        </Avatar> 
+						alt={profile?.name}
+						src={profile?.profilePhoto || ''}
+						sx={{ width: 100, height: 100 }}
+						>
+						{(!profile?.profilePhoto && profile?.name) ? profile.name[0].toUpperCase() : 'U'}
+						</Avatar>
+						<Typography sx={{ mt: 1 }}>{profile?.name || 'User'}</Typography>
 
-						<br />
-						<Typography>{profile?.name || 'User'}</Typography>
 
 
 					</Box>
@@ -311,7 +309,7 @@ export default function UserMiniDrawer({ userId }) {
 								})),
 						},
 						{ path: "", label: "History", icon: <HistoryIcon /> },
-						{ path: "/ProfilePage", label: "Edit Profile", icon: <EditIcon /> },
+						{ path: "/UserProfile", label: "Edit Profile", icon: <EditIcon /> },
 						{ path: "/UserFeedback", label: "FeedBack", icon: <FeedbackIcon /> },
 					].map((item) => (
 						<React.Fragment key={item.path || item.label}>

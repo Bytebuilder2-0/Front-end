@@ -45,6 +45,7 @@ import DisplayFeedBack from "../components/FeedbackDisplay";
 
 import VerifyEmail from "../components/VerifyEmail";
 import ProfilePage from "../pages/ProfilePage";
+import UserProfile from "../components/UserProfile";
 
 
 const router = createBrowserRouter([
@@ -160,6 +161,10 @@ const router = createBrowserRouter([
   {
     path: "/SignupPage",
     element: <SignupPage />,
+  },
+   {
+    path: "/UserProfile",
+    element: <UserProfile />,
   },
   {
     path: "/VehicleRegister",
