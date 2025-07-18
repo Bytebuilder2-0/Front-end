@@ -87,7 +87,7 @@ const Loginpage = () => {
             left: 0,
             right: 0,
             bottom: 0,
-            background: `url('/assets/man2.webp')`,
+            background: `url('/assets/garagebg.jpeg')`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             opacity: 0.1,

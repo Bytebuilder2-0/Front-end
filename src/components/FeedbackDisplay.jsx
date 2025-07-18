@@ -12,9 +12,10 @@ import {
   Alert,
   Paper,
   Rating,
-  Grid, // Import Grid for layout
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import Slider from "react-slick"; // Import react-slick for carousel
+import FeedbackIcon from "@mui/icons-material/Feedback"; // For feedback icon
 
 // FeedbackDisplay component
 const FeedbackDisplay = () => {
@@ -46,16 +47,22 @@ const FeedbackDisplay = () => {
 
   const StyledCard = styled(Card)(({ theme }) => ({
     marginBottom: theme.spacing(2),
-    boxShadow: theme.shadows[1],
+    boxShadow: theme.shadows[5],
     borderRadius: theme.shape.borderRadius * 2,
     height: "auto",
-    maxHeight: "250px",
-    padding: theme.spacing(1),
+    padding: theme.spacing(2),
     overflow: "hidden",
+    background: "rgba(255, 255, 255, 0.9)",
+    backdropFilter: "blur(20px)",
+    transition: "all 0.3s ease",
+    "&:hover": {
+      transform: "translateY(-10px)",
+      boxShadow: "0 25px 50px rgba(0,0,0,0.1)"
+    }
   }));
 
   const AdminReplyBox = styled(Box)(({ theme }) => ({
-    backgroundColor: theme.palette.grey[100],
+    backgroundColor: theme.palette.grey[200],
     padding: theme.spacing(1),
     borderRadius: theme.shape.borderRadius,
     borderLeft: `4px solid ${theme.palette.primary.main}`,
@@ -65,7 +72,6 @@ const FeedbackDisplay = () => {
   }));
 
   const FeedbackCard = ({ feedback }) => {
-    // Generate fallback avatar using UI Avatars service (based on username)
     const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(
       feedback.username || "User"
     )}&background=random&color=fff&font-size=0.3`;
@@ -75,9 +81,9 @@ const FeedbackDisplay = () => {
         <CardHeader
           avatar={
             <Avatar
-              src={fallbackAvatar} // Use UI Avatars for human-like avatars
+              src={fallbackAvatar}
               alt={feedback.username || "User"}
-              sx={{ width: 40, height: 40 }}
+              sx={{ width: 50, height: 50 }}
               imgProps={{
                 onError: (e) => {
                   e.target.src = fallbackAvatar;
@@ -86,20 +92,12 @@ const FeedbackDisplay = () => {
             />
           }
           title={
-            <Typography
-              variant="h6"
-              component="div"
-              sx={{ fontSize: "0.875rem" }}
-            >
+            <Typography variant="h6" component="div">
               {feedback.username || "Anonymous User"}
             </Typography>
           }
           subheader={
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              sx={{ fontSize: "0.75rem" }}
-            >
+            <Typography variant="body2" color="text.secondary">
               {feedback.feedbackDate
                 ? new Date(feedback.feedbackDate).toLocaleDateString("en-GB", {
                     year: "numeric",
@@ -111,7 +109,7 @@ const FeedbackDisplay = () => {
           }
         />
         <CardContent sx={{ paddingBottom: "4px" }}>
-          <Typography variant="body2" paragraph sx={{ fontSize: "0.875rem" }}>
+          <Typography variant="body2" paragraph>
             <Box component="span" fontWeight="bold">
               Comment:
             </Box>{" "}
@@ -119,26 +117,15 @@ const FeedbackDisplay = () => {
           </Typography>
 
           <Box display="flex" alignItems="center" mb={1}>
-            <Rating
-              value={feedback.rating || 0}
-              readOnly
-              sx={{ fontSize: "1rem" }}
-            />
+            <Rating value={feedback.rating || 0} readOnly />
           </Box>
 
           {feedback.adminReply && (
             <AdminReplyBox>
-              <Typography
-                variant="subtitle2"
-                color="text.secondary"
-                gutterBottom
-                sx={{ fontSize: "0.75rem" }}
-              >
-                Reply
+              <Typography variant="subtitle2" color="text.secondary">
+                Admin Reply:
               </Typography>
-              <Typography variant="body2" sx={{ fontSize: "0.75rem" }}>
-                {feedback.adminReply}
-              </Typography>
+              <Typography variant="body2">{feedback.adminReply}</Typography>
             </AdminReplyBox>
           )}
         </CardContent>
@@ -146,9 +133,35 @@ const FeedbackDisplay = () => {
     );
   };
 
+  const carouselSettings = {
+    dots: true, // Enable dots for navigation
+    infinite: true, // Loop the slides
+    speed: 500,
+    slidesToShow: 3, // Show three slides at a time
+    slidesToScroll: 1,
+    autoplay: true, // Enable auto play
+    autoplaySpeed: 5000, // Interval between slides
+    centerMode: true, // Center the active slide
+    focusOnSelect: true, // Allow selecting the slide by clicking
+    responsive: [
+      {
+        breakpoint: 1024, // For tablet and larger screens
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 600, // For smaller screens like phones
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
+  };
+
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Typography
+      {/* <Typography
         variant="h4"
         component="h2"
         gutterBottom
@@ -156,7 +169,22 @@ const FeedbackDisplay = () => {
         sx={{ mb: 4 }}
       >
         Customer Feedback
-      </Typography>
+      </Typography> */}
+      <Typography
+            variant="h4"
+            sx={{
+              fontWeight: 800,
+              mb: 8,
+              textAlign: "center",
+              fontSize: { xs: "2.5rem", md: "3.5rem" },
+              background: "linear-gradient(45deg, #1976d2, #42a5f5)",
+              backgroundClip: "text",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            Customer Reviews
+          </Typography>
 
       {loading ? (
         <Box display="flex" justifyContent="center" my={4}>
@@ -171,23 +199,13 @@ const FeedbackDisplay = () => {
           <Typography variant="body1">No feedback available</Typography>
         </Paper>
       ) : (
-        <Grid container spacing={2}>
+        <Slider {...carouselSettings}>
           {feedbacks.map((feedback) => (
-            <Grid
-              item
-              xs={12}
-              sm={6}
-              md={6}
-              key={
-                feedback.id ||
-                feedback.feedbackId ||
-                Math.random().toString(36).substr(2, 9)
-              }
-            >
+            <div key={feedback.id || Math.random().toString(36).substr(2, 9)}>
               <FeedbackCard feedback={feedback} />
-            </Grid>
+            </div>
           ))}
-        </Grid>
+        </Slider>
       )}
     </Container>
   );
