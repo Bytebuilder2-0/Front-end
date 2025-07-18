@@ -37,6 +37,7 @@ import {
 import ApprovalIcon from "@mui/icons-material/Approval";
 import Account from "../Atoms/Account";
 import Notify from "../Atoms/Notify";
+import { Link } from "react-router-dom";
 
 // Define the width of the drawer
 const drawerWidth = 240;
@@ -157,16 +158,18 @@ export default function TechnicianMiniDrawer({ children }) {
 		<>
 			<DrawerHeader>
 				{/* Company Logo inside Drawer */}
-				<img
-					src="/assets/frame.png"
-					alt="Logo"
-					style={{
-						height: "64px",
-						width: "auto",
-						opacity: "100%",
-						backgroundColor: "#fff",
-					}}
-				/>
+				<Link to="/">
+					<img
+						src="/assets/frame.png"
+						alt="Logo"
+						style={{
+							height: "64px",
+							width: "auto",
+							opacity: "100%",
+							backgroundColor: "#fff",
+						}}
+					/>
+				</Link>
 			</DrawerHeader>
 			<Divider />
 			<Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mt: 2 }}>
@@ -207,7 +210,7 @@ export default function TechnicianMiniDrawer({ children }) {
 				position="fixed"
 				open={open}
 				issmallscreen={isSmallScreen}
-				sx={{ backgroundColor: "#33383E23" }}
+				sx={{ backgroundColor: "#428bca" }}
 			>
 				<Toolbar>
 					{/* Toggle Drawer Button */}
@@ -217,7 +220,11 @@ export default function TechnicianMiniDrawer({ children }) {
 						edge="start"
 						sx={{ marginRight: 2 }}
 					>
-						{!isSmallScreen && open ? <ChevronLeftIcon /> : <MenuIcon />}
+						{!isSmallScreen && open ? (
+							<ChevronLeftIcon sx={{ color: "#ffffffff" }} />
+						) : (
+							<MenuIcon sx={{ color: "#ffffffff" }} />
+						)}
 					</IconButton>
 
 					{/* Manager Panel Title */}
@@ -227,14 +234,14 @@ export default function TechnicianMiniDrawer({ children }) {
 						component="div"
 						sx={{ flexGrow: 1 }}
 						color="black"
-					>
-						Hello Technician...
-					</Typography>
+					></Typography>
 
 					{/* Notification and Account Icons */}
 					<Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", gap: 2 }}>
 						{/* Notifications Icon with badge */}
-						<Notify />
+
+						{/*<Notify />*/}
+						
 						{/* Account Profile Icon */}
 
 						<Account />
