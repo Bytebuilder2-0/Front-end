@@ -175,7 +175,7 @@ function CompletedS() {
 										{/*  PAYMENT BUTTON with Confirmation */}
 										<Button
 											variant="contained"
-											sx={{ backgroundColor: "#333834" }}
+											color="success"
 											size="small"
 											onClick={() => {
 												setSelectedAppointmentId(appointment._id);
