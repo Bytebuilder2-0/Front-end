@@ -249,7 +249,9 @@ export default function UserMiniDrawer() {
 							pr: 5, // padding-right
 						}}
 					>
-			
+
+						{/*<Notify />*/}
+
 						<Account />
 					</Box>
 				</Toolbar>
