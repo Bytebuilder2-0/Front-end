@@ -30,11 +30,12 @@ import {
   Dashboard as DashboardIcon,
   Notifications as NotificationsIcon,
   History as HistoryIcon,
-  Report as ReportIcon,
+  Description as DescriptionIcon, // Updated the icon to DescriptionIcon
   AccountCircle,
 } from "@mui/icons-material";
 import Notify from "../Atoms/Notify";
 import Account from "../Atoms/Account";
+import { Link } from "react-router-dom";
 
 // Define the width of the drawer
 const drawerWidth = 240;
@@ -123,12 +124,37 @@ export default function ManagerSidebar({ children }) {
 
   // Sidebar navigation items with their icons and labels
   const navItems = [
-    { path: "/ManagerDashboard", label: "Dashboard", icon: <DashboardIcon /> },
-    { path: "/Reports", label: "Reports", icon: <ReportIcon /> },
-    { path: "/CheckStatus", label: "Check status", icon: <CheckIcon /> },
-    { path: "/ManagerHistory", label: "History", icon: <HistoryIcon /> }, // Added History
-    { path: "/ManageServices", label: "Manage Services", icon: <BuildIcon /> },
-    { path: "/feedback", label: "Manage Feedback", icon: <FeedbackIcon /> },
+    {
+      path: "/ManagerDashboard",
+      label: "Dashboard",
+      icon: <DashboardIcon sx={{ color: "#ffffff" }} />,
+    },
+
+    {
+      path: "/CheckStatus",
+      label: "Check status",
+      icon: <CheckIcon sx={{ color: "#ffffff" }} />,
+    },
+    {
+      path: "/Reports",
+      label: "Reports",
+      icon: <DescriptionIcon sx={{ color: "#ffffff" }} />,
+    },
+    {
+      path: "/ManagerHistory",
+      label: "History",
+      icon: <HistoryIcon sx={{ color: "#ffffff" }} />,
+    }, // Added History
+    {
+      path: "/ManageServices",
+      label: "Manage Services",
+      icon: <BuildIcon sx={{ color: "#ffffff" }} />,
+    },
+    {
+      path: "/feedback",
+      label: "Manage Feedback",
+      icon: <FeedbackIcon sx={{ color: "#ffffff" }} />,
+    },
   ];
 
   // JSX for sidebar drawer content
@@ -136,11 +162,35 @@ export default function ManagerSidebar({ children }) {
     <>
       <DrawerHeader>
         {/* Company Logo inside Drawer */}
-        <img
-          src="/assets/frame.png"
-          alt="Logo"
-          style={{ height: "64px", width: "auto" }}
-        />
+        <Box
+          sx={{
+            width: drawerWidth,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "#fff", // match the logo background
+          }}
+        >
+          <Link
+            to="/"
+            style={{
+              display: "inline-block", // ensures no extra line spacing
+              lineHeight: 0, // removes any extra vertical spacing
+              margin: 0,
+              padding: 0,
+            }}
+          >
+            <img
+              src="/assets/resized-garage24.png"
+              alt="Frame"
+              style={{
+                height: "64px",
+                width: drawerWidth,
+                objectFit: "contain",
+              }}
+            />
+          </Link>
+        </Box>
       </DrawerHeader>
       <Divider />
       <Box
@@ -158,7 +208,7 @@ export default function ManagerSidebar({ children }) {
         />
         <Typography sx={{ mt: 1 }}>Manager</Typography>
       </Box>
-      <Divider sx={{ mx: 2, my: 1 }} />
+      <Divider sx={{ borderColor: "#ffffff", mr: 3, ml: 3 }} />
       {/* Sidebar Menu Items */}
       <List>
         {navItems.map(({ path, label, icon }) => (
@@ -218,9 +268,9 @@ export default function ManagerSidebar({ children }) {
             }}
           >
             {/* Notifications Icon with badge */}
-           <Notify/>
+            {/*<Notify/>*/}
             {/* Account Profile Icon */}
-           <Account/>
+            <Account />
           </Box>
         </Toolbar>
       </AppBar>
@@ -249,6 +299,8 @@ export default function ManagerSidebar({ children }) {
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: drawerWidth,
+              backgroundColor: "#33383E",
+              color: "white", // text/icon color
             },
           }}
         >

@@ -66,105 +66,122 @@ const ApointmentHistory = () => {
   );
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Paper elevation={6} sx={{ p: 3, borderRadius: "16px" }}>
-        {/* Header */}
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={2}
-        >
-          <Typography variant="h5" fontWeight="bold" color="#1976d2">
-            Appointment History
-          </Typography>
-          <TextField
-            label="Search by Vehicle ID"
-            variant="outlined"
-            size="small"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </Box>
+    <Container maxWidth="lg" sx={{ mt: 1, mb: 4 }}>
+      {/* Header */}
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={2}
+      >
+        <Typography variant="h5" fontWeight="bold" color="#1976d2"></Typography>
+        <TextField
+          label="Search by Vehicle ID"
+          variant="outlined"
+          size="small"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </Box>
 
-        {/* Table */}
-        <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell align="center">
-                  <strong>Vehicle ID</strong>
-                </TableCell>
-                <TableCell align="center">
-                  <strong>Model</strong>
-                </TableCell>
-                <TableCell align="center">
-                  <strong>Details</strong>
-                </TableCell>
-                <TableCell align="center">
-                  <strong>Contact</strong>
-                </TableCell>
-                <TableCell align="center">
-                  <strong>Status</strong>
-                </TableCell>
-                <TableCell align="center">
-                  <strong>Invoice Details</strong>
-                </TableCell>
-              </TableRow>
-            </TableHead>
+      {/* Table */}
+      <TableContainer
+        component={Paper}
+        sx={{
+          marginTop: 2,
+          overflow: "auto",
+          maxHeight: 600,
+          borderRadius: 2,
+          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
+        }}
+      >
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow
+              sx={{
+                "& th": {
+                  fontWeight: "bold",
+                  backgroundColor: "#f5f5f5",
+                  textAlign: "center", // Center header text
+                },
+              }}
+            >
+              <TableCell align="center">
+                <strong>Vehicle ID</strong>
+              </TableCell>
+              <TableCell align="center">
+                <strong>Model</strong>
+              </TableCell>
+              <TableCell align="center">
+                <strong>Details</strong>
+              </TableCell>
+              <TableCell align="center">
+                <strong>Contact</strong>
+              </TableCell>
+              <TableCell align="center">
+                <strong>Status</strong>
+              </TableCell>
+              <TableCell align="center">
+                <strong>Invoice Details</strong>
+              </TableCell>
+            </TableRow>
+          </TableHead>
 
-            <TableBody>
-              {filteredAppointments.length > 0 ? (
-                filteredAppointments.map((appointment) => (
-                  <TableRow key={appointment._id}>
-                    <TableCell align="center">
-                      {appointment.vehicleId}
-                    </TableCell>
-                    <TableCell align="center">{appointment.model}</TableCell>
-                    <TableCell align="center">
-                      <DeatailsViewer appointment={appointment} />
-                    </TableCell>
-                    <TableCell align="center">
-                      <WhatsAppButton phone={appointment.contactNumber} />
-                    </TableCell>
-                    <TableCell align="center">
-                      <Typography
-                        sx={{
-                          color:
-                            appointment.status === "Paid" ||
-                            appointment.status === "Completed"
-                              ? "green"
-                              : ["Cancelled", "Rejected"].includes(
-                                  appointment.status
-                                )
-                              ? "red"
-                              : "gray",
-                          fontWeight: 600,
-                          textTransform: "capitalize",
-                          fontSize: "0.9rem",
-                        }}
-                      >
-                        {appointment.status}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      <InvoiceView appointment={appointment} />
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
-                    <Typography variant="h6" color="textSecondary">
-                      No appointments found
+          <TableBody>
+            {filteredAppointments.length > 0 ? (
+              filteredAppointments.map((appointment) => (
+                <TableRow
+                  key={appointment._id}
+                  sx={{
+                    "&:nth-of-type(odd)": { backgroundColor: "#fafafa" }, // Alternate row colors
+                    "&:hover": { backgroundColor: "#e0e0e0" }, // Hover effect
+                  }}
+                >
+                  <TableCell align="center">{appointment.vehicleId}</TableCell>
+                  <TableCell align="center">{appointment.model}</TableCell>
+                  <TableCell align="center">
+                    <DeatailsViewer appointment={appointment} />
+                  </TableCell>
+                  <TableCell align="center">
+                    <WhatsAppButton phone={appointment.contactNumber} />
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography
+                      sx={{
+                        color:
+                          appointment.status === "Paid" ||
+                          appointment.status === "Completed"
+                            ? "green"
+                            : ["Cancelled", "Rejected"].includes(
+                                appointment.status
+                              )
+                            ? "red"
+                            : "gray",
+                        fontWeight: 600,
+                        textTransform: "capitalize",
+                        fontSize: "0.9rem",
+                      }}
+                    >
+                      {appointment.status}
                     </Typography>
                   </TableCell>
+                  <TableCell align="center">
+                    <InvoiceView appointment={appointment} />
+                  </TableCell>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
+                  <Typography variant="h6" color="text.secondary">
+                    No appointments found
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Container>
   );
 };
