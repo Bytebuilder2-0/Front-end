@@ -68,7 +68,7 @@ const AppointmentConfirm = ({ appointment, onCancel }) => {
 
   return (
 
-    <Box>
+      <Box sx={{ padding: "20px" }}>
      <Typography  gutterBottom sx={{ 
                   fontWeight: 600,
                   fontSize : 35,
@@ -80,13 +80,13 @@ const AppointmentConfirm = ({ appointment, onCancel }) => {
                 
                 <Divider sx={{ mb: 4  }} />
 
-    <Paper elevation={3} sx={{ 
-      padding: '20px', 
-      maxWidth: '400px', 
-      margin: '20px auto',
-      borderRadius: '12px'
-    }}>
-      
+          <Paper elevation={3} sx={{ 
+            padding: '20px', 
+            maxWidth: '400px', 
+            margin: '20px auto',
+            borderRadius: '12px'
+          }}>
+            
 
       <Typography variant="h5" sx={{ 
         fontWeight: 'bold', 

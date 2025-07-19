@@ -13,13 +13,12 @@ import {
   useTheme
 } from "@mui/material";
 import {
-  CarRepair,
-  DirectionsCar,
-  CalendarToday,
   RateReview,
   Reply,
   Star
 } from "@mui/icons-material";
+import AppHistory from "./AppHistory";
+import MarkChatReadIcon from '@mui/icons-material/MarkChatRead';
 
 const FeedbackHistory = ({ feedbacks, loading }) => {
   const theme = useTheme();
@@ -87,56 +86,25 @@ const FeedbackHistory = ({ feedbacks, loading }) => {
               width: 40,
               height: 40
             }}>
-              <RateReview fontSize="small" />
+              <MarkChatReadIcon fontSize="small" />
             </Avatar>
             <Box>
               <Typography variant="h6" fontWeight={600}>
                 Service Feedback
               </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {feedback.model} • {feedback.vehicleNumber}
+              <Typography  color="text.secondary">
+                {feedback.model}
               </Typography>
             </Box>
           </Box>
 
-          <Divider sx={{ my: 2 }} />
 
           {/* Vehicle Details */}
-          <Grid container spacing={2} sx={{ mb: 3 }}>
-            <Grid item xs={12} sm={6}>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <CalendarToday fontSize="small" sx={{ mr: 1, color: 'text.secondary' }} />
-                <Box>
-                  <Typography variant="body2" fontWeight={500}>Service Date</Typography>
-                  <Typography variant="body2">
-                    {new Date(feedback.preferredDate).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </Typography>
-                </Box>
-              </Box>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <CarRepair fontSize="small" sx={{ mr: 1, color: 'text.secondary' }} />
-                <Box>
-                  <Typography variant="body2" fontWeight={500}>Vehicle Model</Typography>
-                  <Typography variant="body2">{feedback.model}</Typography>
-                </Box>
-              </Box>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <DirectionsCar fontSize="small" sx={{ mr: 1, color: 'text.secondary' }} />
-                <Box>
-                  <Typography variant="body2" fontWeight={500}>Vehicle Number</Typography>
-                  <Typography variant="body2">{feedback.vehicleNumber}</Typography>
-                </Box>
-              </Box>
-            </Grid>
-          </Grid>
+
+          <AppHistory appointment={feedback} />
+
+           <Divider sx={{ my: 3 }} />
+          
 
           {/* Rating Section */}
           <Box sx={{ mb: 3 }}>

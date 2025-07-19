@@ -32,7 +32,6 @@ import {
 	ExpandMore,
 } from "@mui/icons-material";
 import { useAuth } from "../../context/AuthContext";
-import Notify from "../Atoms/Notify";
 import Account from "../Atoms/Account";
 import { Link } from "react-router-dom";
 
@@ -250,7 +249,9 @@ export default function UserMiniDrawer() {
 							pr: 5, // padding-right
 						}}
 					>
+
 						{/*<Notify />*/}
+
 						<Account />
 					</Box>
 				</Toolbar>
