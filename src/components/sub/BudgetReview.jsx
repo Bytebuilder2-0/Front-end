@@ -54,9 +54,9 @@ const BudgetReview = ({ appointment, updateAppointment, btn_name, showSnackbar }
 		if (!appointment) return;
 		setOpenBudgetModal(false);
 		try {
-			// Send the entire budget allocation array in one request
+			const updatedSteps = [];
 			for (const allocation of budgetAllocations) {
-				await axios.put(
+				const response = await axios.put(
 					`${baseURL}/budget/${appointment._id}/update`,
 					{
 						step: allocation.step,
@@ -69,13 +69,12 @@ const BudgetReview = ({ appointment, updateAppointment, btn_name, showSnackbar }
 						},
 					}
 				);
+				updatedSteps.push(...response.data.budget.amountAllocations);
 			}
 
-			// Update the parent component with the latest appointment data
-			updateAppointment(response.data);
-
-			// Update local state with the latest budget
-			setBudgetAllocations(response.data.amountAllocations);
+			// Update the parent component and local state
+			updateAppointment({ ...appointment, amountAllocations: updatedSteps });
+			setBudgetAllocations(updatedSteps);
 		} catch (error) {
 			console.error("Error updating budget:", error);
 		}
