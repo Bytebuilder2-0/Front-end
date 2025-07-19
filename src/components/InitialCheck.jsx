@@ -12,7 +12,8 @@ import {
 	Box,
 	TextField,
 	IconButton,
-	Tooltip,Typography
+	Tooltip,
+	Typography,
 } from "@mui/material";
 
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -21,6 +22,7 @@ import IssueViewer from "./sub/IssueView";
 import ConfirmationDialog from "./sub/Confirmation";
 import CustomSnackbar from "./sub/CustomSnackbar";
 import { useAuth } from "../context/AuthContext"; //  use the Auth context
+import DeatailsViewer from "./ManagerDashboard/viewDeatails";
 
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 
@@ -150,7 +152,7 @@ const InitialCheck = () => {
 									<TableCell>{appointment.vehicleId}</TableCell>
 									<TableCell>{appointment.model}</TableCell>
 									<TableCell>
-										<IssueViewer issue={appointment.issue} />
+										<IssueViewer appointment={appointment} />
 									</TableCell>
 									<TableCell>
 										{new Date(appointment.expectedDeliveryDate).toLocaleDateString(

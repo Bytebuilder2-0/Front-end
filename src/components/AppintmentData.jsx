@@ -146,7 +146,7 @@ function AppointmentData() {
 									<TableCell>{appointment.vehicleNumber}</TableCell>
 									<TableCell>{appointment.model}</TableCell>
 									<TableCell>
-										<IssueViewer issue={appointment.issue} />
+										<IssueViewer appointment={appointment} />
 									</TableCell>
 									<TableCell>
 										<WorkloadManager

@@ -155,7 +155,7 @@ function CompletedS() {
 									<TableCell>{appointment.vehicleId}</TableCell>
 									<TableCell>{appointment.model}</TableCell>
 									<TableCell>
-										<IssueViewer issue={appointment.issue} />
+										<IssueViewer appointment={appointment}  />
 									</TableCell>
 									<TableCell>
 										<BudgetReview
