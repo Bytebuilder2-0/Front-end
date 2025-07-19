@@ -182,7 +182,7 @@ function CompletedS() {
 												setConfirmDialogOpen(true);
 											}}
 										>
-											Settle Bill
+											Settled
 										</Button>
 									</TableCell>
 								</TableRow>
