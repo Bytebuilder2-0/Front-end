@@ -310,7 +310,7 @@ const UserProfile = ({ userId, onBack }) => {
                 <CardContent sx={{ textAlign: "center", p: 4 }}>
                   <Box sx={{ position: "relative", display: "inline-block", mb: 3 }}>
                     <Avatar
-                      src={previewImage || user.profilePhoto || "/default-profile.png"}
+                      src={previewImage || user.profilePhoto || ""}
                       sx={{
                         width: 140,
                         height: 140,

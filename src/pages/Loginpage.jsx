@@ -33,33 +33,54 @@ const Loginpage = () => {
   const navigate = useNavigate()
   const { login } = useContext(AuthContext)
 
+  const [otp, setOtp] = useState("")
+const [isOtpLogin, setIsOtpLogin] = useState(false)
+const [mustChangePassword, setMustChangePassword] = useState(false)
+
+
   const handleLogin = async (e) => {
-    e.preventDefault()
-    setError("")
-    setIsLoading(true)
+  e.preventDefault()
+  setError("")
+  setIsLoading(true)
 
-    try {
-      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/login`, {
-        email,
-        password,
-      })
-
-      const { token } = response.data
-      login(token)
-      const decoded = jwtDecode(token)
-      const userRole = decoded.role?.toLowerCase()
-
-      if (userRole === "manager") navigate("/ManagerDashboard")
-      else if (userRole === "technician") navigate("/TDashboard")
-      else if (userRole === "customer") navigate("/User")
-      else if (userRole === "supervisor") navigate("/SInitial")
-      else navigate("/unauthorized")
-    } catch (err) {
-      setError(err.response?.data?.message || "Login failed")
-    } finally {
-      setIsLoading(false)
+  try {
+    const payload = { email }
+    if (isOtpLogin) {
+      payload.otp = otp
+    } else {
+      payload.password = password
     }
+
+    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/login`, payload)
+    const { token, user } = response.data
+
+    login(token)
+
+    if (user.mustChangePassword) {
+      setMustChangePassword(true)
+      navigate("/change-password") // Create this route
+      return
+    }
+
+    const role = user.role?.toLowerCase()
+    if (role === "manager") navigate("/ManagerDashboard")
+    else if (role === "technician") navigate("/TDashboard")
+    else if (role === "customer") navigate("/User")
+    else if (role === "supervisor") navigate("/SInitial")
+    else navigate("/unauthorized")
+
+  } catch (err) {
+    const message = err.response?.data?.message || "Login failed"
+    setError(message)
+
+    if (message.toLowerCase().includes("locked")) {
+      setIsOtpLogin(true)  // Show OTP field now
+    }
+  } finally {
+    setIsLoading(false)
   }
+}
+
 
   const handleTogglePasswordVisibility = () => {
     setShowPassword(!showPassword)
@@ -348,6 +369,27 @@ const Loginpage = () => {
                           border: "1px solid rgba(244, 67, 54, 0.2)",
                         }}
                       >
+
+      )
+    }}
+    sx={{
+      mb: 3,
+      "& .MuiOutlinedInput-root": {
+        borderRadius: 2,
+        "&:hover fieldset": {
+          borderColor: "#82b1ff",
+        },
+        "&.Mui-focused fieldset": {
+          borderColor: "#82b1ff",
+        },
+      },
+      "& .MuiInputLabel-root.Mui-focused": {
+        color: "#82b1ff",
+      },
+    }}
+  />
+)}
+
                         {error}
                       </Typography>
                     )}
