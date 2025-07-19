@@ -21,12 +21,12 @@ import DeatailsViewer from "./viewDeatails";
 import WhatsAppButton from "../sub/WhatsAppButton";
 import { jwtDecode } from "jwt-decode";
 
-const API_BASE_URL = "http://localhost:5000/api/appointments";
+const API_BASE_URL = "http://localhost:5000/api/appointments/";
 const token = localStorage.getItem("token");
 
 // Status configuration object for better maintainability
 const STATUS_CONFIG = {
-  Pending: { color: "orange", label: "Pending" },
+  //Pending: { color: "orange", label: "Pending" },
   Confirmed: { color: "#736953ff", label: "Confirmed" },
   //Reject1: { color: "#28c930ff", label: "Rejected" },
   Reject2: { color: "#d08b09ff", label: "Tech Rejected" },
@@ -117,103 +117,114 @@ const CheckStatus = () => {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Paper elevation={6} sx={{ p: 3, borderRadius: "16px" }}>
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={2}
-        >
-          <Typography variant="h5" fontWeight="bold" color="#1976d2">
-            Check Appointment Status
-          </Typography>
+    <Container maxWidth="lg" sx={{ mt: 1, mb: 1 }}>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={2}
+      >
+        <Typography variant="h5" fontWeight="bold" color="#1976d2"></Typography>
 
-          <Box display="flex" alignItems="center">
-            <TextField
-              label="Search by Vehicle ID"
-              variant="outlined"
-              size="small"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              sx={{ mr: 2 }}
-            />
+        <Box display="flex" alignItems="center">
+          <TextField
+            label="Search by Vehicle ID"
+            variant="outlined"
+            size="small"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            sx={{ mr: 2 }}
+          />
 
-            <FormControl size="small">
-              <InputLabel>Status</InputLabel>
-              <Select
-                label="Status"
-                value={selectedStatus}
-                onChange={(e) => setSelectedStatus(e.target.value)}
-                sx={{ minWidth: 120 }}
-              >
-                <MenuItem value="">All</MenuItem>
-                {allowedStatuses.map((status) => (
-                  <MenuItem key={status} value={status}>
-                    {STATUS_CONFIG[status].label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
+          <FormControl size="small">
+            <InputLabel>Status</InputLabel>
+            <Select
+              label="Status"
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value)}
+              sx={{ minWidth: 120 }}
+            >
+              <MenuItem value="">All</MenuItem>
+              {allowedStatuses.map((status) => (
+                <MenuItem key={status} value={status}>
+                  {STATUS_CONFIG[status].label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Box>
+      </Box>
 
-        <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                {[
-                  "Vehicle ID",
-                  "Expected Delivery Date",
-                  "Details",
-                  "Contact",
-                  "Status",
-                ].map((head) => (
-                  <TableCell align="center" key={head}>
-                    <strong>{head}</strong>
+      <TableContainer
+        component={Paper}
+        sx={{
+          marginTop: 2,
+          overflow: "auto",
+          maxHeight: 600,
+          borderRadius: 2,
+          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
+        }}
+      >
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow
+              sx={{
+                "& th": {
+                  fontWeight: "bold",
+                  backgroundColor: "#f5f5f5",
+                  textAlign: "center", // Center header text
+                },
+              }}
+            >
+              <TableCell align="center">Vehicle ID</TableCell>
+              <TableCell align="center">Expected Delivery Date</TableCell>
+              <TableCell align="center">Details</TableCell>
+              <TableCell align="center">Contact</TableCell>
+              <TableCell align="center">Status</TableCell>
+            </TableRow>
+          </TableHead>
+
+          <TableBody>
+            {filteredAppointments.length > 0 ? (
+              filteredAppointments.map((appointment) => (
+                <TableRow
+                  key={appointment._id}
+                  sx={{
+                    "&:nth-of-type(odd)": { backgroundColor: "#fafafa" },
+                    "&:hover": { backgroundColor: "#e0e0e0" }, // Row hover effect
+                  }}
+                >
+                  <TableCell align="center">{appointment.vehicleId}</TableCell>
+                  <TableCell align="center">
+                    {new Date(
+                      appointment.expectedDeliveryDate
+                    ).toLocaleDateString()}
                   </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-
-            <TableBody>
-              {filteredAppointments.length > 0 ? (
-                filteredAppointments.map((appointment) => (
-                  <TableRow key={appointment._id}>
-                    <TableCell align="center">
-                      {appointment.vehicleId}
-                    </TableCell>
-                    <TableCell align="center">
-                      {new Date(
-                        appointment.expectedDeliveryDate
-                      ).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell align="center">
-                      <DeatailsViewer appointment={appointment} />
-                    </TableCell>
-                    <TableCell align="center">
-                      <WhatsAppButton phone={appointment.contactNumber} />
-                    </TableCell>
-                    <TableCell align="center">
-                      {getStatusDisplay(appointment.status)}
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={5} align="center" sx={{ py: 5 }}>
-                    <Typography variant="h6" color="textSecondary">
-                      {searchTerm || selectedStatus
-                        ? "No matching appointments found"
-                        : "No appointments available"}
-                    </Typography>
+                  <TableCell align="center">
+                    <DeatailsViewer appointment={appointment} />
+                  </TableCell>
+                  <TableCell align="center">
+                    <WhatsAppButton phone={appointment.contactNumber} />
+                  </TableCell>
+                  <TableCell align="center">
+                    {getStatusDisplay(appointment.status)}
                   </TableCell>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={5} align="center" sx={{ py: 5 }}>
+                  <Typography variant="h6" color="textSecondary">
+                    {searchTerm || selectedStatus
+                      ? "No matching appointments found"
+                      : "No appointments available"}
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Container>
   );
 };

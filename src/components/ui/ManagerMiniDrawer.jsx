@@ -21,17 +21,19 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import {
-	Menu as MenuIcon,
-	ChevronLeft as ChevronLeftIcon,
-	Home as HomeIcon,
-	Feedback as FeedbackIcon,
-	AssignmentTurnedIn as CheckIcon,
-	Build as BuildIcon,
-	Dashboard as DashboardIcon,
-	Notifications as NotificationsIcon,
-	History as HistoryIcon,
-	Report as ReportIcon,
-	AccountCircle,
+
+  Menu as MenuIcon,
+  ChevronLeft as ChevronLeftIcon,
+  Home as HomeIcon,
+  Feedback as FeedbackIcon,
+  AssignmentTurnedIn as CheckIcon,
+  Build as BuildIcon,
+  Dashboard as DashboardIcon,
+  Notifications as NotificationsIcon,
+  History as HistoryIcon,
+  Description as DescriptionIcon, // Updated the icon to DescriptionIcon
+  AccountCircle,
+
 } from "@mui/icons-material";
 import Notify from "../Atoms/Notify";
 import Account from "../Atoms/Account";
@@ -122,110 +124,113 @@ export default function ManagerSidebar({ children }) {
 		}
 	};
 
-	// Sidebar navigation items with their icons and labels
-	const navItems = [
-		{
-			path: "/ManagerDashboard",
-			label: "Dashboard",
-			icon: <DashboardIcon sx={{ color: "#ffffff" }} />,
-		},
-		{
-			path: "/Reports",
-			label: "Reports",
-			icon: <ReportIcon sx={{ color: "#ffffff" }} />,
-		},
-		{
-			path: "/CheckStatus",
-			label: "Check status",
-			icon: <CheckIcon sx={{ color: "#ffffff" }} />,
-		},
-		{
-			path: "/ManagerHistory",
-			label: "History",
-			icon: <HistoryIcon sx={{ color: "#ffffff" }} />,
-		}, // Added History
-		{
-			path: "/ManageServices",
-			label: "Manage Services",
-			icon: <BuildIcon sx={{ color: "#ffffff" }} />,
-		},
-		{
-			path: "/feedback",
-			label: "Manage Feedback",
-			icon: <FeedbackIcon sx={{ color: "#ffffff" }} />,
-		},
-	];
 
-	// JSX for sidebar drawer content
-	const drawerContent = (
-		<>
-			<DrawerHeader>
-				{/* Company Logo inside Drawer */}
-				<Box
-					sx={{
-						width: drawerWidth,
-						display: "flex",
-						alignItems: "center",
-						justifyContent: "center",
-						backgroundColor: "#fff", // match the logo background
-					}}
-				>
-					<Link
-						to="/"
-						style={{
-							display: "inline-block", // ensures no extra line spacing
-							lineHeight: 0, // removes any extra vertical spacing
-							margin: 0,
-							padding: 0,
-						}}
-					>
-						<img
-							src="/assets/resized-garage24.png"
-							alt="Frame"
-							style={{
-								height: "64px",
-								width: drawerWidth,
-								objectFit: "contain",
-							}}
-						/>
-					</Link>
-				</Box>
-			</DrawerHeader>
-			<Divider />
-			<Box
-				sx={{
-					display: "flex",
-					flexDirection: "column",
-					alignItems: "center",
-					mt: 2,
-				}}
-			>
-				{/* User Avatar */}
-				<Avatar
-					src="https://randomuser.me/api/portraits/men/7.jpg"
-					sx={{ width: 80, height: 80 }}
-				/>
-				<Typography sx={{ mt: 1 }}>Manager</Typography>
-			</Box>
-			<Divider sx={{ borderColor: "#ffffff", mr: 3, ml: 3 }} />
-			{/* Sidebar Menu Items */}
-			<List>
-				{navItems.map(({ path, label, icon }) => (
-					<ListItem
-						key={path}
-						disablePadding
-						sx={{ display: "block" }}
-						onClick={() => navigate(path)}
-					>
-						<ListItemButton selected={window.location.pathname === path}>
-							<ListItemIcon sx={{ minWidth: 0, mr: 2 }}>{icon}</ListItemIcon>
-							<ListItemText primary={label} />
-						</ListItemButton>
-					</ListItem>
-				))}
-			</List>
-		</>
-	);
+  // Sidebar navigation items with their icons and labels
+  const navItems = [
+    {
+      path: "/ManagerDashboard",
+      label: "Dashboard",
+      icon: <DashboardIcon sx={{ color: "#ffffff" }} />,
+    },
+
+    {
+      path: "/CheckStatus",
+      label: "Check status",
+      icon: <CheckIcon sx={{ color: "#ffffff" }} />,
+    },
+    {
+      path: "/Reports",
+      label: "Reports",
+      icon: <DescriptionIcon sx={{ color: "#ffffff" }} />,
+    },
+    {
+      path: "/ManagerHistory",
+      label: "History",
+      icon: <HistoryIcon sx={{ color: "#ffffff" }} />,
+    }, // Added History
+    {
+      path: "/ManageServices",
+      label: "Manage Services",
+      icon: <BuildIcon sx={{ color: "#ffffff" }} />,
+    },
+    {
+      path: "/feedback",
+      label: "Manage Feedback",
+      icon: <FeedbackIcon sx={{ color: "#ffffff" }} />,
+    },
+  ];
+
+  // JSX for sidebar drawer content
+  const drawerContent = (
+    <>
+      <DrawerHeader>
+        {/* Company Logo inside Drawer */}
+        <Box
+          sx={{
+            width: drawerWidth,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "#fff", // match the logo background
+          }}
+        >
+          <Link
+            to="/"
+            style={{
+              display: "inline-block", // ensures no extra line spacing
+              lineHeight: 0, // removes any extra vertical spacing
+              margin: 0,
+              padding: 0,
+            }}
+          >
+            <img
+              src="/assets/resized-garage24.png"
+              alt="Frame"
+              style={{
+                height: "64px",
+                width: drawerWidth,
+                objectFit: "contain",
+              }}
+            />
+          </Link>
+        </Box>
+      </DrawerHeader>
+      <Divider />
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          mt: 2,
+        }}
+      >
+        {/* User Avatar */}
+        <Avatar
+          src="https://randomuser.me/api/portraits/men/7.jpg"
+          sx={{ width: 80, height: 80 }}
+        />
+        <Typography sx={{ mt: 1 }}>Manager</Typography>
+      </Box>
+      <Divider sx={{ borderColor: "#ffffff", mr: 3, ml: 3 }} />
+      {/* Sidebar Menu Items */}
+      <List>
+        {navItems.map(({ path, label, icon }) => (
+          <ListItem
+            key={path}
+            disablePadding
+            sx={{ display: "block" }}
+            onClick={() => navigate(path)}
+          >
+            <ListItemButton selected={window.location.pathname === path}>
+              <ListItemIcon sx={{ minWidth: 0, mr: 2 }}>{icon}</ListItemIcon>
+              <ListItemText primary={label} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </>
+  );
+
 
 	return (
 		<Box sx={{ display: "flex" }}>
@@ -258,54 +263,55 @@ export default function ManagerSidebar({ children }) {
 						sx={{ flexGrow: 1 }}
 					></Typography>
 
-					{/* Notification and Account Icons */}
-					<Box
-						sx={{
-							display: { xs: "none", md: "flex" },
-							alignItems: "center",
-							gap: 2,
-						}}
-					>
-						{/* Notifications Icon with badge */}
-						{/*<Notify/>*/}
-						{/* Account Profile Icon */}
-						<Account />
-					</Box>
-				</Toolbar>
-			</AppBar>
+          {/* Notification and Account Icons */}
+          <Box
+            sx={{
+              display: { xs: "none", md: "flex" },
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
+            {/* Notifications Icon with badge */}
+            {/*<Notify/>*/}
+            {/* Account Profile Icon */}
+            <Account />
+          </Box>
+        </Toolbar>
+      </AppBar>
 
-			{/* Sidebar Drawer for mobile and desktop */}
-			{isSmallScreen ? (
-				<MuiDrawer
-					variant="temporary"
-					open={mobileOpen}
-					onClose={handleDrawerToggle}
-					ModalProps={{ keepMounted: true }}
-					sx={{
-						"& .MuiDrawer-paper": {
-							boxSizing: "border-box",
-							width: drawerWidth,
-						},
-					}}
-				>
-					{drawerContent}
-				</MuiDrawer>
-			) : (
-				<MuiDrawer
-					variant="persistent"
-					open={open}
-					sx={{
-						"& .MuiDrawer-paper": {
-							boxSizing: "border-box",
-							width: drawerWidth,
-							backgroundColor: "#33383E",
-							color: "white", // text/icon color
-						},
-					}}
-				>
-					{drawerContent}
-				</MuiDrawer>
-			)}
+      {/* Sidebar Drawer for mobile and desktop */}
+      {isSmallScreen ? (
+        <MuiDrawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{ keepMounted: true }}
+          sx={{
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth,
+            },
+          }}
+        >
+          {drawerContent}
+        </MuiDrawer>
+      ) : (
+        <MuiDrawer
+          variant="persistent"
+          open={open}
+          sx={{
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
+              width: drawerWidth,
+              backgroundColor: "#33383E",
+              color: "white", // text/icon color
+            },
+          }}
+        >
+          {drawerContent}
+        </MuiDrawer>
+      )}
+
 
 			{/* Main Content Area beside Drawer */}
 			<Box

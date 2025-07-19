@@ -1,6 +1,5 @@
 import { Button, Box, Grid } from "@mui/material";
 import axios from "axios";
-import ButtonLink from "./ButtonLink";
 import { useState } from "react";
 import SuccessSnackbar from "../ServiceManage/SuccessSnackbar";
 import ConfirmDeleteDialog from "../ServiceManage/ConfirmDeleteDialog";
@@ -143,26 +142,22 @@ const FeedbackActions = ({ feedback, onUpdate }) => {
             {loadingDetails ? "Loading..." : "Relevant Details"}
           </Button>
         </Grid>
-
-        <Grid item xs={6}>
-          <ButtonLink to={`/invoice/${feedback.feedbackId}`}>
-            Invoice
-          </ButtonLink>
-        </Grid>
-
-        <Grid item xs={6}>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={handleDeleteClick}
-            fullWidth
-            size="small"
-            disabled={loadingDetails}
-          >
-            Delete
-          </Button>
-        </Grid>
       </Grid>
+
+      {/* Move the delete button to the right side with same size */}
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 1 }}>
+        <Button
+          variant="contained"
+          color="error"
+          onClick={handleDeleteClick}
+          fullWidth
+          size="small"
+          disabled={loadingDetails}
+          sx={{ minWidth: "100px" }} // Ensure button size is consistent with others
+        >
+          Delete
+        </Button>
+      </Box>
 
       <AppointmentDetailsModal
         appointment={appointmentDetails}

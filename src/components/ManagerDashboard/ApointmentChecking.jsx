@@ -60,11 +60,17 @@ const ApointmentChecking = () => {
   useEffect(() => {
     axios
       .get(API_BASE_URL, authConfig)
-      .then((res) =>
-        setAppointments(
-          res.data.reverse().filter((appt) => appt.status === "Checking")
-        )
-      )
+      .then((res) => {
+        // Sort appointments: Checking first, then Pending
+        const sortedAppointments = res.data
+          .filter((appt) => ["Checking", "Pending"].includes(appt.status))
+          .sort((a, b) => {
+            if (a.status === "Checking" && b.status !== "Checking") return -1;
+            if (a.status !== "Checking" && b.status === "Checking") return 1;
+            return 0;
+          });
+        setAppointments(sortedAppointments);
+      })
       .catch((err) => console.error("Error fetching appointments:", err));
   }, []);
 
@@ -150,21 +156,18 @@ const ApointmentChecking = () => {
     let matchesPreferredDate = true;
 
     if (dateFilterType === "full") {
-      // Full date format (YYYY-MM-DD)
       matchesPreferredDate =
         new Date(appointment.preferredDate).toISOString().split("T")[0] ===
         preferredDate;
     } else if (dateFilterType === "month") {
-      // Month format (MM)
       const appointmentMonth = new Date(appointment.preferredDate)
         .toISOString()
-        .slice(5, 7); // Extract MM
+        .slice(5, 7);
       matchesPreferredDate = appointmentMonth === preferredDate;
     } else if (dateFilterType === "day") {
-      // Day format (DD)
       const appointmentDay = new Date(appointment.preferredDate)
         .toISOString()
-        .slice(8, 10); // Extract DD
+        .slice(8, 10);
       matchesPreferredDate = appointmentDay === preferredDate;
     }
 
@@ -172,110 +175,139 @@ const ApointmentChecking = () => {
   });
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Paper elevation={6} sx={{ p: 3, borderRadius: "16px" }}>
-        {/* Header */}
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={2}
-        >
-          <Typography variant="h5" fontWeight="bold" color="#1976d2">
-            Manage Appointment Checking
-          </Typography>
+    <Container maxWidth="lg" sx={{ mt: 0, mb: 1 }}>
+      {/* Header */}
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={2}
+      >
+        <Typography variant="h5" fontWeight="bold" color="#1976d2"></Typography>
 
-          <Box display="flex" alignItems="center">
-            <TextField
-              label="Search by Vehicle ID"
-              variant="outlined"
-              size="small"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              sx={{ mr: 2 }}
-            />
+        <Box display="flex" alignItems="center">
+          <TextField
+            label="Search by Vehicle ID"
+            variant="outlined"
+            size="small"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            sx={{ mr: 2 }}
+          />
 
-            <TextField
-              label="Filter by Preferred Date"
-              type="date"
-              variant="outlined"
-              size="small"
-              value={preferredDate}
-              onChange={(e) => setPreferredDate(e.target.value)}
-              InputLabelProps={{ shrink: true }}
-              sx={{ width: 200 }}
-            />
-          </Box>
+          <TextField
+            label="Filter by Preferred Date"
+            type="date"
+            variant="outlined"
+            size="small"
+            value={preferredDate}
+            onChange={(e) => setPreferredDate(e.target.value)}
+            InputLabelProps={{ shrink: true }}
+            sx={{ width: 200 }}
+          />
         </Box>
+      </Box>
 
-        {/* Table */}
-        <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                {[
-                  "Vehicle ID",
-                  "Preferred Date",
-                  "Appointment Details",
-                  "Contact",
-                  "Status",
-                  "Actions",
-                ].map((head) => (
-                  <TableCell align="center" key={head}>
-                    <strong>{head}</strong>
+      {/* Table */}
+      <TableContainer
+        component={Paper}
+        sx={{
+          marginTop: 2,
+          overflow: "auto",
+          maxHeight: 600,
+          borderRadius: 2,
+          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
+        }}
+      >
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow
+              sx={{
+                "& th": {
+                  fontWeight: "bold",
+                  backgroundColor: "#f5f5f5",
+                  textAlign: "center",
+                }, // Center header text
+              }}
+            >
+              <TableCell align="center">Vehicle ID</TableCell>
+              <TableCell align="center">Preferred Date</TableCell>
+              <TableCell align="center">Appointment Details</TableCell>
+              <TableCell align="center">Contact</TableCell>
+              <TableCell align="center">Status</TableCell>
+              <TableCell align="center">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {filteredAppointments.length > 0 ? (
+              filteredAppointments.map((appointment) => (
+                <TableRow
+                  key={appointment._id}
+                  sx={{
+                    "&:nth-of-type(odd)": { backgroundColor: "#fafafa" },
+                    "&:hover": { backgroundColor: "#e0e0e0" },
+                  }}
+                >
+                  <TableCell align="center">{appointment.vehicleId}</TableCell>
+                  <TableCell align="center">
+                    {new Date(appointment.preferredDate).toLocaleDateString()}
                   </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-
-            <TableBody>
-              {filteredAppointments.length > 0 ? (
-                filteredAppointments.map((appointment) => (
-                  <TableRow key={appointment._id}>
-                    <TableCell align="center">
-                      {appointment.vehicleId}
-                    </TableCell>
-                    <TableCell align="center">
-                      {new Date(appointment.preferredDate).toLocaleDateString()}
-                    </TableCell>
-                    <TableCell align="center">
-                      <DeatailsViewer appointment={appointment} />
-                    </TableCell>
-                    <TableCell align="center">
-                      <WhatsAppButton phone={appointment.contactNumber} />
-                    </TableCell>
-                    <TableCell align="center">
-                      <Typography
-                        sx={{
-                          color:
-                            appointment.status === "Checking"
-                              ? "#3c4caaff"
-                              : appointment.status === "Pending"
-                              ? "green"
-                              : ["Cancelled", "Reject1"].includes(
-                                  appointment.status
-                                )
-                              ? "red"
-                              : "gray",
-                          fontWeight: 600,
-                          textTransform: "capitalize",
-                          fontSize: "0.9rem",
-                        }}
-                      >
-                        {appointment.status}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Tooltip title="Accept">
+                  <TableCell align="center">
+                    <DeatailsViewer appointment={appointment} />
+                  </TableCell>
+                  <TableCell align="center">
+                    <WhatsAppButton phone={appointment.contactNumber} />
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography
+                      sx={{
+                        color:
+                          appointment.status === "Checking"
+                            ? "#3c4caaff"
+                            : appointment.status === "Pending"
+                            ? "green"
+                            : ["Cancelled", "Reject1"].includes(
+                                appointment.status
+                              )
+                            ? "red"
+                            : "gray",
+                        fontWeight: 600,
+                        textTransform: "capitalize",
+                        fontSize: "0.9rem",
+                      }}
+                    >
+                      {appointment.status}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Box
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                      gap={1}
+                    >
+                      <Tooltip title="Edit Appointment Details">
                         <IconButton
-                          color="success"
-                          onClick={() =>
-                            handleClickAction(appointment, "Accept")
-                          }
+                          color="primary"
+                          onClick={() => handleOpenUpdateDialog(appointment)}
                         >
-                          <CheckCircleIcon sx={{ fontSize: 26 }} />
+                          <VisibilityIcon sx={{ fontSize: 22 }} />
                         </IconButton>
                       </Tooltip>
+
+                      {appointment.status !== "Pending" && (
+                        <Tooltip title="Accept">
+                          <IconButton
+                            color="success"
+                            onClick={() =>
+                              handleClickAction(appointment, "Accept")
+                            }
+                          >
+                            <CheckCircleIcon sx={{ fontSize: 26 }} />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+
                       <Tooltip title="Reject">
                         <IconButton
                           color="error"
@@ -286,32 +318,22 @@ const ApointmentChecking = () => {
                           <CancelIcon sx={{ fontSize: 26 }} />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Edit Appointment Details">
-                        <IconButton
-                          color="primary"
-                          onClick={() => handleOpenUpdateDialog(appointment)}
-                        >
-                          <VisibilityIcon sx={{ fontSize: 22 }} />
-                        </IconButton>
-                      </Tooltip>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
-                    <Typography variant="h6" color="textSecondary">
-                      {searchTerm || preferredDate
-                        ? "No matching appointments found"
-                        : "No appointments available"}
-                    </Typography>
+                    </Box>
                   </TableCell>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
+                  <Typography variant="h6" color="text.secondary">
+                    No Appointments Found
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
 
       {/* Confirm Dialog */}
       <ConfirmDeleteDialog
