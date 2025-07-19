@@ -24,6 +24,7 @@ import LoginSignupNavbar from "../components/LoginSignupNavbar"
 import { LockOpen, Email, Visibility, VisibilityOff, DirectionsCar, Security, Speed } from "@mui/icons-material"
 import { jwtDecode } from "jwt-decode"
 
+
 const Loginpage = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -338,19 +339,24 @@ const Loginpage = () => {
                     />
 
                     {error && (
-                      <Typography
-                        color="error"
-                        sx={{
-                          mb: 2,
-                          p: 2,
-                          bgcolor: "rgba(244, 67, 54, 0.1)",
-                          borderRadius: 2,
-                          border: "1px solid rgba(244, 67, 54, 0.2)",
-                        }}
-                      >
-                        {error}
-                      </Typography>
-                    )}
+  <Typography
+    color={error.includes("pending approval") ? "orange" : "error"}
+    sx={{
+      mb: 2,
+      p: 2,
+      bgcolor: error.includes("pending approval")
+        ? "rgba(255, 152, 0, 0.1)"
+        : "rgba(244, 67, 54, 0.1)",
+      borderRadius: 2,
+      border: error.includes("pending approval")
+        ? "1px solid rgba(255, 152, 0, 0.3)"
+        : "1px solid rgba(244, 67, 54, 0.2)",
+    }}
+  >
+    {error}
+  </Typography>
+)}
+
 
                     <Button
                       type="submit"
@@ -384,6 +390,9 @@ const Loginpage = () => {
                         to="/forgot-password"
                         style={{
                           textDecoration: "none",
+                          hover: {
+                            color: "#0b1e3dff",
+                          },
                           color: "#82b1ff",
                           fontWeight: "600",
                           fontSize: "0.9rem",

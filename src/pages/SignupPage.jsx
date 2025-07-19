@@ -577,7 +577,14 @@ const Signup = () => {
 																{role}
 															</Typography>
 														</MenuItem>
+														
 													))}
+													{["technician", "supervisor"].includes(formData.role) && (
+	<Typography variant="body2" sx={{ color: "orange", mt: 1 }}>
+		Your account will require manager approval before you can log in.
+	</Typography>
+)}
+
 												</TextField>
 											</Grid>
 

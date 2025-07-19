@@ -45,6 +45,7 @@ import DisplayFeedBack from "../components/FeedbackDisplay";
 
 import VerifyEmail from "../components/VerifyEmail";
 import UserProfile from "../components/UserProfile";
+import AccountRequest from "../components/ManagerDashboard/AccountRequest";
 
 
 const router = createBrowserRouter([
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
   {
     path: "/payment-success/:appointmentId",
     element: <PaymentSuccess />,
+  },
+   {
+    path: "/pending-users",
+    element: <AccountRequest />,
   },
   {
     element: <Layout />, //  All below routes will share the MiniDrawer layout
@@ -340,8 +345,8 @@ const router = createBrowserRouter([
         <UserDashboard />
       </PrivateRoute>
     )
-  
   },
+ 
   {
     path: "/feedback",
     element: <FeedbackPage />,
