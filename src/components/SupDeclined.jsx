@@ -10,7 +10,8 @@ import {
 	Paper,
 	Container,
 	Box,
-	TextField,Typography
+	TextField,
+	Typography,
 } from "@mui/material";
 
 import IssueViewer from "./sub/IssueView";
@@ -138,7 +139,7 @@ const SupDeclined = () => {
 									<TableCell>{appointment.vehicleId}</TableCell>
 									<TableCell>{appointment.model}</TableCell>
 									<TableCell>
-										<IssueViewer issue={appointment.issue} />
+										<IssueViewer appointment={appointment} />
 									</TableCell>
 									<TableCell>
 										<Reason reason={appointment.reason} />

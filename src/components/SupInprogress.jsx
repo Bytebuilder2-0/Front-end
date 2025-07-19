@@ -10,7 +10,8 @@ import {
 	Paper,
 	Container,
 	Box,
-	TextField,Typography
+	TextField,
+	Typography,
 } from "@mui/material";
 
 import IssueViewer from "./sub/IssueView";
@@ -143,7 +144,7 @@ const SupInprogress = () => {
 									<TableCell>{appointment.vehicleId}</TableCell>
 									<TableCell>{appointment.vehicleNumber}</TableCell>
 									<TableCell>
-										<IssueViewer issue={appointment.issue} />
+										<IssueViewer appointment={appointment} />
 									</TableCell>
 									<TableCell>
 										<TechMessageView x={appointment.techMessage} />
