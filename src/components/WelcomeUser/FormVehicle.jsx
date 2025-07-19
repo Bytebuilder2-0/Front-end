@@ -68,9 +68,7 @@ const FormVehicle = () => {
 
   return (
     <Box sx={{ maxWidth: 600, mx: 'auto', p: 3 }}>
-      <Typography variant="h5" gutterBottom>
-        Add New Vehicle
-      </Typography>
+     
       <HandleVehicleForm 
         formData={formData}
         onChange={handleChange}

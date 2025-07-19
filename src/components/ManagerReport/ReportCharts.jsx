@@ -45,43 +45,43 @@ const ReportCharts = ({
 
   const chartData = {
     labels: [
+      "Checking",
       "Pending",
       "Confirmed",
-      "Checking",
-      "Cancelled",
-      "Rejected",
+      "Waiting for Tech",
+      //  "Cancelled",
+      "Tech rejected",
       "Accepted",
       "In Progress",
       "Task Done",
       "Paid",
-      "Waiting",
     ],
     datasets: [
       {
         label: "Appointment Status Counts",
         data: [
+          counts.checking,
           counts.pending,
           counts.confirmed,
-          counts.checking,
-          counts.cancelled,
+          counts.waiting,
+          // counts.cancelled,
           counts.rejected,
           counts.accepted,
           counts.inProgress,
           counts.taskDone,
           counts.paid,
-          counts.waiting,
         ],
         backgroundColor: [
+          statusColors.checking,
           statusColors.pending,
           statusColors.confirmed,
-          statusColors.checking,
-          statusColors.cancelled,
+          statusColors.waiting,
+          //statusColors.cancelled,
           statusColors.rejected,
           statusColors.accepted,
           statusColors.inProgress,
           statusColors.taskDone,
           statusColors.paid,
-          statusColors.waiting,
         ],
         borderColor: [
           theme.palette.warning.dark,
@@ -237,32 +237,35 @@ const ReportCharts = ({
 
   const departmentStatusTableData = departmentStatusData.map((data) => ({
     department: data.department,
-    confirmed: data.statusCounts.confirmed || 0,
-    reject1: data.statusCounts.reject1 || 0,
-    waiting: data.statusCounts.waiting || 0,
-    accepted: data.statusCounts.accepted || 0,
-    reject2: data.statusCounts.reject2 || 0,
-    inProgress: data.statusCounts.inprogress || 0,
-    taskDone: data.statusCounts["task done"] || 0,
-    cancelled: data.statusCounts.cancelled || 0,
-    paid: data.statusCounts.paid || 0,
+    // confirmed: data.statusCounts.confirmed || 0,
+    // reject1: data.statusCounts.reject1 || 0,
+    // waiting: data.statusCounts.waiting || 0,
     "waiting for technician confirmation":
       data.statusCounts["waiting for technician confirmation"] || 0,
-    "all done": data.statusCounts["all done"] || 0,
+    "Tech reject": data.statusCounts.reject2 || 0,
+    accepted: data.statusCounts.accepted || 0,
+    taskDone: data.statusCounts["task done"] || 0,
+    inProgress: data.statusCounts.inprogress || 0,
+
+    //  cancelled: data.statusCounts.cancelled || 0,
+    paid: data.statusCounts.paid || 0,
+
+    // "all done": data.statusCounts["all done"] || 0,
   }));
 
   const statusKeys = [
-    "confirmed",
-    "reject1",
-    "waiting",
+    // "confirmed",
+    // "reject1",
+    // "waiting for Tech",
+    "waiting for technician confirmation",
+    "rejecte2",
     "accepted",
-    "reject2",
     "inProgress",
     "taskDone",
-    "cancelled",
+    // "cancelled",
     "paid",
-    "waiting for technician confirmation",
-    "all done",
+
+    // "all done",
   ];
 
   const departmentStatusChartDataForStatus = {

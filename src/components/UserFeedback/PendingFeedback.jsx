@@ -5,21 +5,14 @@ import {
   Button,
   Paper,
   Stack,
-
-  Divider,
   Avatar,
   Chip,
   useTheme,
   Grid,
- 
 } from "@mui/material";
-import { 
-  RateReview, 
-  CalendarToday, 
-  DirectionsCar,
-  CarRepair,
-
-} from "@mui/icons-material";
+import { RateReview, } from "@mui/icons-material";
+import CommentIcon from '@mui/icons-material/Comment';
+import AppHistory from "./AppHistory";
 import { format } from 'date-fns';
 
 const PendingFeedback = ({ feedbacks = [], loading, onOpenFeedback }) => {
@@ -70,13 +63,13 @@ const PendingFeedback = ({ feedbacks = [], loading, onOpenFeedback }) => {
                     width: 44,
                     height: 44
                   }}>
-                    <CarRepair fontSize="small" />
+                    <CommentIcon fontSize="small" />
                   </Avatar>
                   <Box>
-                    <Typography variant="subtitle1" fontWeight={600}>
+                    <Typography variant="h6" fontWeight={600}>
                       {appointment.model || 'Vehicle Service'}
                     </Typography>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography color="text.secondary">
                       {format(new Date(appointment.preferredDate), 'PPp')}
                     </Typography>
                   </Box>
@@ -86,78 +79,13 @@ const PendingFeedback = ({ feedbacks = [], loading, onOpenFeedback }) => {
                   label="Feedback Pending"
                   color="warning"
                   size="small"
+                  variant="outlined"
+                  fontWeigh='600'
                 />
               </Box>
 
-              <Divider sx={{ my: 1 }} />
-
-              {/* Details */}
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={6} md={3}>
-                  <Stack direction="row" alignItems="center" spacing={1.5}>
-                    <CalendarToday 
-                      fontSize="small" 
-                      sx={{ 
-                        color: "text.secondary",
-                        width: 20
-                      }} 
-                    />
-                    <Box>
-                      <Typography variant="caption" color="text.secondary">
-                        Service Date
-                      </Typography>
-                      <Typography variant="body2" fontWeight={500}>
-                        {format(new Date(appointment.preferredDate), 'PP')}
-                      </Typography>
-                    </Box>
-                  </Stack>
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={3}>
-                  <Stack direction="row" alignItems="center" spacing={1.5}>
-                    <DirectionsCar 
-                      fontSize="small" 
-                      sx={{ 
-                        color: "text.secondary",
-                        width: 20
-                      }} 
-                    />
-                    <Box>
-                      <Typography variant="caption" color="text.secondary">
-                        Vehicle Number
-                      </Typography>
-                      <Typography variant="body2" fontWeight={500}>
-                        {appointment.vehicleNumber || 'Not specified'}
-                      </Typography>
-                    </Box>
-                  </Stack>
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={3}>
-                  <Stack direction="row" alignItems="center" spacing={1.5}>
-                    <CarRepair 
-                      fontSize="small" 
-                      sx={{ 
-                        color: "text.secondary",
-                        width: 20
-                      }} 
-                    />
-                    <Box>
-                      <Typography variant="caption" color="text.secondary">
-                        Services
-                      </Typography>
-                      <Typography variant="body2" fontWeight={500}>
-                        {appointment.services?.slice(0, 2).join(', ') || 'General Service'}
-                        {appointment.services?.length > 2 && ' + more'}
-                      </Typography>
-                    </Box>
-                  </Stack>
-                </Grid>
-
-            
-              </Grid>
-
-              {/* Action Button */}
+              <AppHistory appointment={appointment} />
+      
               <Box display="flex"  sx={{ pt: 1 }}>
 
                   <Button
@@ -167,6 +95,7 @@ const PendingFeedback = ({ feedbacks = [], loading, onOpenFeedback }) => {
                     onClick={() => onOpenFeedback(appointment._id)}
                     sx={{
                       borderRadius: 2,
+                      backgroundColor: '#2e7d32',
                       px: 3,
                     }}
                   >

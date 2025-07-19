@@ -26,9 +26,7 @@ const token = localStorage.getItem("token");
 
 // Status configuration object for better maintainability
 const STATUS_CONFIG = {
-  //Pending: { color: "orange", label: "Pending" },
   Confirmed: { color: "#736953ff", label: "Confirmed" },
-  //Reject1: { color: "#28c930ff", label: "Rejected" },
   Reject2: { color: "#d08b09ff", label: "Tech Rejected" },
   "Waiting for Technician Confirmation": {
     color: "#765834ff",
@@ -36,7 +34,7 @@ const STATUS_CONFIG = {
   },
   Accepted: { color: "#1976d2", label: "Accepted" },
   InProgress: { color: "#6e0bccff", label: "In Progress" },
-  "Task Done": { color: "#129b02ff", label: "Completed" },
+  "Task Done": { color: "#129b02ff", label: "Task Done" },
 };
 
 const allowedStatuses = Object.keys(STATUS_CONFIG);
@@ -50,7 +48,9 @@ const authConfig = {
 const CheckStatus = () => {
   const [appointments, setAppointments] = useState([]);
   const [searchTerm, setSearchTerm] = useState(""); // For vehicle ID search
+  const [vehicleNumberSearch, setVehicleNumberSearch] = useState(""); // For vehicle number search
   const [selectedStatus, setSelectedStatus] = useState(""); // For filtering by status
+  const [expectedDateFilter, setExpectedDateFilter] = useState(""); // For expected delivery date filter
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -73,16 +73,66 @@ const CheckStatus = () => {
     fetchAppointments();
   }, []);
 
-  // Filter appointments based on search term (vehicle ID) and selected status
+  // Function to handle date input format and apply filtering
+  const getDateFilterType = (dateInput) => {
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/; // Full Date (YYYY-MM-DD)
+    const monthRegex = /^\d{2}$/; // Month (MM)
+    const dayRegex = /^\d{2}$/; // Day (DD)
+
+    if (dateRegex.test(dateInput)) {
+      return "full";
+    } else if (monthRegex.test(dateInput)) {
+      return "month";
+    } else if (dayRegex.test(dateInput)) {
+      return "day";
+    } else {
+      return "none";
+    }
+  };
+
+  // Filter appointments based on all filters
   const filteredAppointments = appointments.filter((appointment) => {
-    const matchesVehicle = String(appointment.vehicleId || "")
+    // Vehicle ID filter
+    const matchesVehicleId = String(appointment.vehicleId || "")
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
 
+    // Vehicle Number filter
+    const matchesVehicleNumber = String(appointment.vehicleNumber || "")
+      .toLowerCase()
+      .includes(vehicleNumberSearch.toLowerCase());
+
+    // Status filter
     const matchesStatus =
       selectedStatus === "" || appointment.status === selectedStatus;
 
-    return matchesVehicle && matchesStatus;
+    // Expected Date filter
+    const dateFilterType = getDateFilterType(expectedDateFilter);
+    let matchesExpectedDate = true;
+
+    if (dateFilterType === "full") {
+      matchesExpectedDate =
+        new Date(appointment.expectedDeliveryDate)
+          .toISOString()
+          .split("T")[0] === expectedDateFilter;
+    } else if (dateFilterType === "month") {
+      const appointmentMonth = new Date(appointment.expectedDeliveryDate)
+        .toISOString()
+        .slice(5, 7);
+      matchesExpectedDate = appointmentMonth === expectedDateFilter;
+    } else if (dateFilterType === "day") {
+      const appointmentDay = new Date(appointment.expectedDeliveryDate)
+        .toISOString()
+        .slice(8, 10);
+      matchesExpectedDate = appointmentDay === expectedDateFilter;
+    }
+
+    return (
+      matchesVehicleId &&
+      matchesVehicleNumber &&
+      matchesStatus &&
+      matchesExpectedDate
+    );
   });
 
   const getStatusDisplay = (status) => {
@@ -101,11 +151,7 @@ const CheckStatus = () => {
   };
 
   if (isLoading) {
-    return (
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-        <Typography>Loading appointments...</Typography>
-      </Container>
-    );
+    return <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}></Container>;
   }
 
   if (error) {
@@ -124,27 +170,37 @@ const CheckStatus = () => {
         alignItems="center"
         mb={2}
       >
-        <Typography variant="h5" fontWeight="bold" color="#1976d2"></Typography>
+        <Typography variant="h5" fontWeight="bold" color="#1976d2">
+          Appointment Status
+        </Typography>
 
-        <Box display="flex" alignItems="center">
+        <Box display="flex" alignItems="center" gap={2}>
           <TextField
             label="Search by Vehicle ID"
             variant="outlined"
             size="small"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            sx={{ mr: 2 }}
+            sx={{ width: 180 }}
           />
 
-          <FormControl size="small">
-            <InputLabel>Status</InputLabel>
+          <TextField
+            label="Search by Vehicle Number"
+            variant="outlined"
+            size="small"
+            value={vehicleNumberSearch}
+            onChange={(e) => setVehicleNumberSearch(e.target.value)}
+            sx={{ width: 180 }}
+          />
+
+          <FormControl size="small" sx={{ width: 180 }}>
+            <InputLabel>Filter by Status</InputLabel>
             <Select
-              label="Status"
+              label="Filter by Status"
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              sx={{ minWidth: 120 }}
             >
-              <MenuItem value="">All</MenuItem>
+              <MenuItem value="">All Statuses</MenuItem>
               {allowedStatuses.map((status) => (
                 <MenuItem key={status} value={status}>
                   {STATUS_CONFIG[status].label}
@@ -152,6 +208,17 @@ const CheckStatus = () => {
               ))}
             </Select>
           </FormControl>
+
+          <TextField
+            label="Filter by Expected Date"
+            type="date"
+            variant="outlined"
+            size="small"
+            value={expectedDateFilter}
+            onChange={(e) => setExpectedDateFilter(e.target.value)}
+            InputLabelProps={{ shrink: true }}
+            sx={{ width: 180 }}
+          />
         </Box>
       </Box>
 
@@ -172,11 +239,12 @@ const CheckStatus = () => {
                 "& th": {
                   fontWeight: "bold",
                   backgroundColor: "#f5f5f5",
-                  textAlign: "center", // Center header text
+                  textAlign: "center",
                 },
               }}
             >
               <TableCell align="center">Vehicle ID</TableCell>
+              <TableCell align="center">Vehicle Number</TableCell>
               <TableCell align="center">Expected Delivery Date</TableCell>
               <TableCell align="center">Details</TableCell>
               <TableCell align="center">Contact</TableCell>
@@ -191,10 +259,13 @@ const CheckStatus = () => {
                   key={appointment._id}
                   sx={{
                     "&:nth-of-type(odd)": { backgroundColor: "#fafafa" },
-                    "&:hover": { backgroundColor: "#e0e0e0" }, // Row hover effect
+                    "&:hover": { backgroundColor: "#e0e0e0" },
                   }}
                 >
                   <TableCell align="center">{appointment.vehicleId}</TableCell>
+                  <TableCell align="center">
+                    {appointment.vehicleNumber}
+                  </TableCell>
                   <TableCell align="center">
                     {new Date(
                       appointment.expectedDeliveryDate
@@ -213,9 +284,9 @@ const CheckStatus = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={5} align="center" sx={{ py: 5 }}>
+                <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
                   <Typography variant="h6" color="textSecondary">
-                    {searchTerm || selectedStatus
+                    {searchTerm || selectedStatus || expectedDateFilter
                       ? "No matching appointments found"
                       : "No appointments available"}
                   </Typography>

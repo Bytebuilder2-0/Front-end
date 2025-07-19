@@ -30,7 +30,8 @@ import {
   Dashboard as DashboardIcon,
   Notifications as NotificationsIcon,
   History as HistoryIcon,
-  Description as DescriptionIcon, // Updated the icon to DescriptionIcon
+  Report as ReportIcon,
+  Description as DescriptionIcon,
   AccountCircle,
 } from "@mui/icons-material";
 import Notify from "../Atoms/Notify";

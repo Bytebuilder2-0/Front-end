@@ -40,12 +40,12 @@ const authConfig = {
 const ApointmentHistory = () => {
   const [appointments, setAppointments] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [vehicleNumberSearch, setVehicleNumberSearch] = useState("");
 
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
         const res = await axios.get(API_URL, authConfig);
-        // Filter for completed appointments (adjust statuses as needed)
         const completedAppointments = res.data
           .reverse()
           .filter((appt) =>
@@ -59,29 +59,50 @@ const ApointmentHistory = () => {
     fetchAppointments();
   }, []);
 
-  const filteredAppointments = appointments.filter((appt) =>
-    String(appt.vehicleId || "")
+  const filteredAppointments = appointments.filter((appointment) => {
+    const matchesVehicleId = String(appointment.vehicleId || "")
       .toLowerCase()
-      .includes(searchTerm.toLowerCase())
-  );
+      .includes(searchTerm.toLowerCase());
+
+    const matchesVehicleNumber = String(appointment.vehicleNumber || "")
+      .toLowerCase()
+      .includes(vehicleNumberSearch.toLowerCase());
+
+    return matchesVehicleId && matchesVehicleNumber;
+  });
 
   return (
     <Container maxWidth="lg" sx={{ mt: 1, mb: 4 }}>
-      {/* Header */}
+      {/* Header with filters */}
       <Box
         display="flex"
         justifyContent="space-between"
         alignItems="center"
         mb={2}
       >
-        <Typography variant="h5" fontWeight="bold" color="#1976d2"></Typography>
-        <TextField
-          label="Search by Vehicle ID"
-          variant="outlined"
-          size="small"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+        <Typography variant="h5" fontWeight="bold" color="#1976d2">
+          Appointment History
+        </Typography>
+
+        <Box display="flex" alignItems="center" gap={2}>
+          <TextField
+            label="Search by Vehicle ID"
+            variant="outlined"
+            size="small"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            sx={{ width: 180 }}
+          />
+
+          <TextField
+            label="Search by Vehicle Number"
+            variant="outlined"
+            size="small"
+            value={vehicleNumberSearch}
+            onChange={(e) => setVehicleNumberSearch(e.target.value)}
+            sx={{ width: 180 }}
+          />
+        </Box>
       </Box>
 
       {/* Table */}
@@ -102,28 +123,17 @@ const ApointmentHistory = () => {
                 "& th": {
                   fontWeight: "bold",
                   backgroundColor: "#f5f5f5",
-                  textAlign: "center", // Center header text
+                  textAlign: "center",
                 },
               }}
             >
-              <TableCell align="center">
-                <strong>Vehicle ID</strong>
-              </TableCell>
-              <TableCell align="center">
-                <strong>Model</strong>
-              </TableCell>
-              <TableCell align="center">
-                <strong>Details</strong>
-              </TableCell>
-              <TableCell align="center">
-                <strong>Contact</strong>
-              </TableCell>
-              <TableCell align="center">
-                <strong>Status</strong>
-              </TableCell>
-              <TableCell align="center">
-                <strong>Invoice Details</strong>
-              </TableCell>
+              <TableCell align="center">Vehicle ID</TableCell>
+              <TableCell align="center">Vehicle Number</TableCell>
+              <TableCell align="center">Model</TableCell>
+              <TableCell align="center">Details</TableCell>
+              <TableCell align="center">Contact</TableCell>
+              <TableCell align="center">Status</TableCell>
+              <TableCell align="center">Invoice</TableCell>
             </TableRow>
           </TableHead>
 
@@ -133,11 +143,14 @@ const ApointmentHistory = () => {
                 <TableRow
                   key={appointment._id}
                   sx={{
-                    "&:nth-of-type(odd)": { backgroundColor: "#fafafa" }, // Alternate row colors
-                    "&:hover": { backgroundColor: "#e0e0e0" }, // Hover effect
+                    "&:nth-of-type(odd)": { backgroundColor: "#fafafa" },
+                    "&:hover": { backgroundColor: "#e0e0e0" },
                   }}
                 >
                   <TableCell align="center">{appointment.vehicleId}</TableCell>
+                  <TableCell align="center">
+                    {appointment.vehicleNumber}
+                  </TableCell>
                   <TableCell align="center">{appointment.model}</TableCell>
                   <TableCell align="center">
                     <DeatailsViewer appointment={appointment} />
@@ -172,9 +185,11 @@ const ApointmentHistory = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
+                <TableCell colSpan={7} align="center" sx={{ py: 5 }}>
                   <Typography variant="h6" color="text.secondary">
-                    No appointments found
+                    {searchTerm || vehicleNumberSearch
+                      ? "No matching appointments found"
+                      : "No appointments available"}
                   </Typography>
                 </TableCell>
               </TableRow>

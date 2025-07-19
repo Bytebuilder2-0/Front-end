@@ -31,7 +31,8 @@ const StatusSummary = () => {
     total: 0,
     pending: 0,
     confirmed: 0,
-    checking: 0, //  added new count
+    checking: 0,
+    cancelled: 0, //  added new count
   });
 
   useEffect(() => {
@@ -58,7 +59,7 @@ const StatusSummary = () => {
     {
       title: "Total",
       subheader: "Total Appointment Count",
-      count: counts.total,
+      count: counts.total - counts.cancelled,
       image: "/assets/purchase.png.png",
     },
     {

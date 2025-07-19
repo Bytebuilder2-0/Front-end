@@ -103,7 +103,7 @@ const ReportMain = () => {
     counts.accepted +
     counts.rejected;
   const completedCount = counts.taskDone + counts.paid;
-  const cancelledRejectedCount = counts.cancelled;
+  const NewJOB = counts.pending + counts.checking;
 
   return (
     <Box
@@ -192,7 +192,7 @@ const ReportMain = () => {
                             fontWeight="bold"
                             fontSize={isSmallScreen ? "1.5rem" : "2.4rem"}
                           >
-                            {counts.total}
+                            {counts.total - counts.cancelled}
                           </Typography>
                         </CardContent>
                       </Card>
@@ -306,14 +306,14 @@ const ReportMain = () => {
                             gutterBottom
                             fontSize={isSmallScreen ? "0.75rem" : "1rem"}
                           >
-                            Cancelled
+                            New job
                           </Typography>
                           <Typography
                             variant="h3"
                             fontWeight="bold"
                             fontSize={isSmallScreen ? "1.5rem" : "2.4rem"}
                           >
-                            {cancelledRejectedCount}
+                            {NewJOB}
                           </Typography>
                           <Typography
                             variant="caption"
@@ -324,7 +324,8 @@ const ReportMain = () => {
                               fontSize: isSmallScreen ? "0.6rem" : "0.8rem",
                             }}
                           >
-                            (Cancelled: {counts.cancelled})
+                            (Checking: {counts.checking}, Pending:
+                            {counts.pending})
                           </Typography>
                         </CardContent>
                       </Card>

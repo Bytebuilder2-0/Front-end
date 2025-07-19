@@ -23,9 +23,9 @@ const ReportTables = ({
 }) => {
   const statusColors = {
     pending: `rgb(255, 213, 79)`, // lighten(warning.light, 0.2)
-    confirmed: `rgb(144, 202, 249)`, // lighten(info.light, 0.1)
+    // confirmed: `rgb(144, 202, 249)`, // lighten(info.light, 0.1)
     checking: `rgb(206, 147, 216)`, // lighten(secondary.light, 0.1)
-    cancelled: `rgb(239, 154, 154)`, // lighten(error.light, 0.2)
+    //cancelled: `rgb(239, 154, 154)`, // lighten(error.light, 0.2)
     rejected: `rgb(198, 40, 40)`, // lighten(error.dark, 0.1)
     accepted: `rgb(165, 214, 167)`, // lighten(success.light, 0.1)
     inProgress: `rgb(91, 124, 151)`, // lighten(primary.light, 0.1)
@@ -33,8 +33,8 @@ const ReportTables = ({
     paid: `rgb(56, 142, 60)`, // lighten(success.dark, 0.1)
     reject1: `rgb(239, 83, 80)`, // lighten(error.main, 0.1)
     reject2: `rgb(198, 40, 40)`, // lighten(error.dark, 0.1)
-    waiting: `rgb(255, 167, 38)`, // lighten(warning.main, 0.1)
-    "all done": `rgb(56, 142, 60)`, // lighten(success.dark, 0.1)
+    // waiting: `rgb(255, 167, 38)`, // lighten(warning.main, 0.1)
+    //  "all done": `rgb(56, 142, 60)`, // lighten(success.dark, 0.1)
   };
 
   const getStatusCellStyle = (status, value) => {
@@ -66,32 +66,35 @@ const ReportTables = ({
 
   const departmentStatusTableData = departmentStatusData.map((data) => ({
     department: data.department,
-    confirmed: data.statusCounts.confirmed || 0,
-    reject1: data.statusCounts.reject1 || 0,
-    waiting: data.statusCounts.waiting || 0,
+
+    // confirmed: data.statusCounts.confirmed || 0,
+    // reject1: data.statusCounts.reject1 || 0,
+    //waiting: data.statusCounts.waiting || 0,
+    "waiting for technician confirmation":
+      data.statusCounts["waiting for technician confirmation"] || 0,
     accepted: data.statusCounts.accepted || 0,
     reject2: data.statusCounts.reject2 || 0,
     inProgress: data.statusCounts.inprogress || 0,
     taskDone: data.statusCounts["task done"] || 0,
-    cancelled: data.statusCounts.cancelled || 0,
+    // cancelled: data.statusCounts.cancelled || 0,
     paid: data.statusCounts.paid || 0,
-    "waiting for technician confirmation":
-      data.statusCounts["waiting for technician confirmation"] || 0,
-    "all done": data.statusCounts["all done"] || 0,
+
+    // "all done": data.statusCounts["all done"] || 0,
   }));
 
   const statusKeys = [
-    "confirmed",
-    "reject1",
-    "waiting",
+    //"confirmed",
+    // "reject1",
+    // "waiting",
+
     "accepted",
     "reject2",
     "inProgress",
     "taskDone",
-    "cancelled",
+    // "cancelled",
     "paid",
     "waiting for technician confirmation",
-    "all done",
+    //"all done",
   ];
 
   const sortedDepartmentData = [...technicianData]
