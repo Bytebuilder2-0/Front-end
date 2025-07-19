@@ -61,6 +61,15 @@ function InvoiceView({ appointment }) {
 											<TableCell>LKR {item.amount}</TableCell>
 										</TableRow>
 									))}
+
+									<TableRow>
+										<TableCell colSpan={2} style={{ fontWeight: "bold" }}>
+											Total
+										</TableCell>
+										<TableCell style={{ fontWeight: "bold" }}>
+											LKR {budget.totalAmount || 0}
+										</TableCell>
+									</TableRow>
 								</TableBody>
 							</Table>
 						</TableContainer>
