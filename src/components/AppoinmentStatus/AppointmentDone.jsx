@@ -52,9 +52,16 @@ const AppointmentDone = ({ appointment }) => {
 	return (
 		<Box sx={{ padding: "20px" }}>
 			{/* Appointment Header */}
-			<Typography variant="h5" gutterBottom sx={{ fontWeight: "bold" }}>
-				Appointment Details
-			</Typography>
+				 <Typography  gutterBottom sx={{ 
+							  fontWeight: 600,
+							  fontSize : 35,
+							  marginBottom: '1px'
+							}}>
+							  Appoinment Details
+							</Typography>
+							<Typography varient="caption" sx = {{color:'green'}} > Appoinment - Completed</Typography>
+							
+							<Divider sx={{ mb: 6  }} />
 
 			<Grid container spacing={2} sx={{ mb: 3 }}>
 				{/* Customer Column */}
