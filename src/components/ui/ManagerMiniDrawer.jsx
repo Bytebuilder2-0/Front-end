@@ -2,25 +2,26 @@ import * as React from "react";
 // Importing necessary components and hooks from Material UI
 import { styled, useTheme } from "@mui/material/styles";
 import {
-  Box,
-  CssBaseline,
-  Toolbar,
-  Typography,
-  IconButton,
-  Avatar,
-  Divider,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  AppBar as MuiAppBar,
-  Drawer as MuiDrawer,
-  useMediaQuery,
-  Badge,
+	Box,
+	CssBaseline,
+	Toolbar,
+	Typography,
+	IconButton,
+	Avatar,
+	Divider,
+	List,
+	ListItem,
+	ListItemButton,
+	ListItemIcon,
+	ListItemText,
+	AppBar as MuiAppBar,
+	Drawer as MuiDrawer,
+	useMediaQuery,
+	Badge,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import {
+
   Menu as MenuIcon,
   ChevronLeft as ChevronLeftIcon,
   Home as HomeIcon,
@@ -32,6 +33,7 @@ import {
   History as HistoryIcon,
   Description as DescriptionIcon, // Updated the icon to DescriptionIcon
   AccountCircle,
+
 } from "@mui/icons-material";
 import Notify from "../Atoms/Notify";
 import Account from "../Atoms/Account";
@@ -42,85 +44,86 @@ const drawerWidth = 240;
 
 // Styling function for an opened Drawer
 const openedMixin = (theme) => ({
-  width: drawerWidth,
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  overflowX: "hidden", // Hide overflow content
+	width: drawerWidth,
+	transition: theme.transitions.create("width", {
+		easing: theme.transitions.easing.sharp,
+		duration: theme.transitions.duration.enteringScreen,
+	}),
+	overflowX: "hidden", // Hide overflow content
 });
 
 // Styling function for a closed Drawer
 const closedMixin = (theme) => ({
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  overflowX: "hidden",
-  width: `calc(${theme.spacing(7)} + 1px)`, // Compact width when closed
-  [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(8)} + 1px)`, // Slightly bigger on larger screens
-  },
+	transition: theme.transitions.create("width", {
+		easing: theme.transitions.easing.sharp,
+		duration: theme.transitions.duration.leavingScreen,
+	}),
+	overflowX: "hidden",
+	width: `calc(${theme.spacing(7)} + 1px)`, // Compact width when closed
+	[theme.breakpoints.up("sm")]: {
+		width: `calc(${theme.spacing(8)} + 1px)`, // Slightly bigger on larger screens
+	},
 });
 
 // Custom AppBar component styling
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open" && prop !== "issmallscreen",
+	shouldForwardProp: (prop) => prop !== "open" && prop !== "issmallscreen",
 })(({ theme, open, issmallscreen }) => ({
-  zIndex: theme.zIndex.drawer + 1, // Keep AppBar above Drawer
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open &&
-    !issmallscreen && {
-      marginLeft: drawerWidth, // Push AppBar right when Drawer is open
-      width: `calc(100% - ${drawerWidth}px)`, // Adjust width
-    }),
+	zIndex: theme.zIndex.drawer + 1, // Keep AppBar above Drawer
+	transition: theme.transitions.create(["width", "margin"], {
+		easing: theme.transitions.easing.sharp,
+		duration: theme.transitions.duration.leavingScreen,
+	}),
+	...(open &&
+		!issmallscreen && {
+			marginLeft: drawerWidth, // Push AppBar right when Drawer is open
+			width: `calc(100% - ${drawerWidth}px)`, // Adjust width
+		}),
 }));
 
 // Custom Drawer component styling
 const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
+	shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
-  width: drawerWidth,
-  flexShrink: 0,
-  whiteSpace: "nowrap",
-  boxSizing: "border-box",
-  ...(open && {
-    ...openedMixin(theme),
-    "& .MuiDrawer-paper": openedMixin(theme),
-  }),
-  ...(!open && {
-    ...closedMixin(theme),
-    "& .MuiDrawer-paper": closedMixin(theme),
-  }),
+	width: drawerWidth,
+	flexShrink: 0,
+	whiteSpace: "nowrap",
+	boxSizing: "border-box",
+	...(open && {
+		...openedMixin(theme),
+		"& .MuiDrawer-paper": openedMixin(theme),
+	}),
+	...(!open && {
+		...closedMixin(theme),
+		"& .MuiDrawer-paper": closedMixin(theme),
+	}),
 }));
 
 // DrawerHeader for maintaining consistent AppBar height
 const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-  ...theme.mixins.toolbar, // MUI built-in toolbar height
+	display: "flex",
+	alignItems: "center",
+	justifyContent: "flex-end",
+	...theme.mixins.toolbar, // MUI built-in toolbar height
 }));
 
 // Main ManagerSidebar component
 export default function ManagerSidebar({ children }) {
-  const theme = useTheme(); // Using MUI theme
-  const navigate = useNavigate(); // Hook for navigation
-  const [open, setOpen] = React.useState(true); // State to handle desktop drawer open/close
-  const [mobileOpen, setMobileOpen] = React.useState(false); // State to handle mobile drawer open/close
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md")); // Check if current screen size is small
+	const theme = useTheme(); // Using MUI theme
+	const navigate = useNavigate(); // Hook for navigation
+	const [open, setOpen] = React.useState(true); // State to handle desktop drawer open/close
+	const [mobileOpen, setMobileOpen] = React.useState(false); // State to handle mobile drawer open/close
+	const isSmallScreen = useMediaQuery(theme.breakpoints.down("md")); // Check if current screen size is small
 
-  // Function to toggle drawer open and close based on screen size
-  const handleDrawerToggle = () => {
-    if (isSmallScreen) {
-      setMobileOpen(!mobileOpen); // Toggle temporary drawer
-    } else {
-      setOpen((prevOpen) => !prevOpen); // Toggle persistent drawer
-    }
-  };
+	// Function to toggle drawer open and close based on screen size
+	const handleDrawerToggle = () => {
+		if (isSmallScreen) {
+			setMobileOpen(!mobileOpen); // Toggle temporary drawer
+		} else {
+			setOpen((prevOpen) => !prevOpen); // Toggle persistent drawer
+		}
+	};
+
 
   // Sidebar navigation items with their icons and labels
   const navItems = [
@@ -228,36 +231,37 @@ export default function ManagerSidebar({ children }) {
     </>
   );
 
-  return (
-    <Box sx={{ display: "flex" }}>
-      {/* Reset baseline CSS */}
-      <CssBaseline />
 
-      {/* Top AppBar */}
-      <AppBar
-        position="fixed"
-        open={open}
-        issmallscreen={isSmallScreen}
-        sx={{ backgroundColor: "#1976d2" }}
-      >
-        <Toolbar>
-          {/* Toggle Drawer Button */}
-          <IconButton
-            color="inherit"
-            onClick={handleDrawerToggle}
-            edge="start"
-            sx={{ marginRight: 2 }}
-          >
-            {!isSmallScreen && open ? <ChevronLeftIcon /> : <MenuIcon />}
-          </IconButton>
+	return (
+		<Box sx={{ display: "flex" }}>
+			{/* Reset baseline CSS */}
+			<CssBaseline />
 
-          {/* Manager Panel Title */}
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1 }}
-          ></Typography>
+			{/* Top AppBar */}
+			<AppBar
+				position="fixed"
+				open={open}
+				issmallscreen={isSmallScreen}
+				sx={{ backgroundColor: "#1976d2" }}
+			>
+				<Toolbar>
+					{/* Toggle Drawer Button */}
+					<IconButton
+						color="inherit"
+						onClick={handleDrawerToggle}
+						edge="start"
+						sx={{ marginRight: 2 }}
+					>
+						{!isSmallScreen && open ? <ChevronLeftIcon /> : <MenuIcon />}
+					</IconButton>
+
+					{/* Manager Panel Title */}
+					<Typography
+						variant="h6"
+						noWrap
+						component="div"
+						sx={{ flexGrow: 1 }}
+					></Typography>
 
           {/* Notification and Account Icons */}
           <Box
@@ -308,24 +312,25 @@ export default function ManagerSidebar({ children }) {
         </MuiDrawer>
       )}
 
-      {/* Main Content Area beside Drawer */}
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: { xs: 2, md: 3 },
-          transition: theme.transitions.create("margin", {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-          }),
-          marginLeft: !isSmallScreen && open ? `${drawerWidth}px` : 0,
-        }}
-      >
-        {/* Spacer for AppBar */}
-        <DrawerHeader />
-        {/* Children components will be rendered here */}
-        {children}
-      </Box>
-    </Box>
-  );
+
+			{/* Main Content Area beside Drawer */}
+			<Box
+				component="main"
+				sx={{
+					flexGrow: 1,
+					p: { xs: 2, md: 3 },
+					transition: theme.transitions.create("margin", {
+						easing: theme.transitions.easing.sharp,
+						duration: theme.transitions.duration.leavingScreen,
+					}),
+					marginLeft: !isSmallScreen && open ? `${drawerWidth}px` : 0,
+				}}
+			>
+				{/* Spacer for AppBar */}
+				<DrawerHeader />
+				{/* Children components will be rendered here */}
+				{children}
+			</Box>
+		</Box>
+	);
 }

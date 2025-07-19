@@ -193,7 +193,7 @@ function TAssignedWork() {
 							<TableCell>Vehicle Number</TableCell>
 							<TableCell>Appointment Date</TableCell>
 							<TableCell>Work Load</TableCell>
-							<TableCell>Status</TableCell>
+							{/*<TableCell>Status</TableCell>*/}
 							<TableCell>Actions</TableCell>
 						</TableRow>
 					</TableHead>
@@ -237,7 +237,7 @@ function TAssignedWork() {
 													<AssignmentIcon />
 												</IconButton>
 											</TableCell>
-											<TableCell>
+											{/*<TableCell>
 												{appointment.status === "Accepted" ? (
 													<span style={{ color: "green", fontWeight: "bold" }}>
 														Accepted
@@ -251,7 +251,7 @@ function TAssignedWork() {
 														Waiting
 													</span>
 												)}
-											</TableCell>
+											</TableCell>*/}
 											<TableCell>
 												{appointment.status === "Accepted" ? (
 													<Button variant="contained" disabled>
@@ -274,7 +274,7 @@ function TAssignedWork() {
 												) : (
 													<Button
 														variant="contained"
-														color="secondary"
+														color="error"
 														onClick={() => handleOpenDialog(appointment._id)}
 													>
 														Decline

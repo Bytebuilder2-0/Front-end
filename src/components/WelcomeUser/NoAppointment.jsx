@@ -55,31 +55,32 @@ const NoAppointemnt = () => {
         />
         
    
-     <Button
-        variant="contained"
-        onClick={() => navigate('/appointments/new')}
-        sx={{
-            width: '400px',
-            fontSize: '17px',
-            fontWeight: 'bold',
-            textAlign: 'center',
-            padding: '10px',
-            borderRadius : '10px',
-            borderBottom: '4px solid #179e43',
-            height:'50px',
-            transition: '0.3s',        
-	          backgroundColor:'#7acc95',
-            color: 'black',
-          '&:hover': {
-            color:'text.secondary',
-            borderBottomWidth: '2px',
-            transform: 'translateY(2px)',
-            backgroundColor: '#90EE90'        
-          }
-        }}>
-
-          Make a Booking
-        </Button>
+<Button
+  variant="contained"
+  onClick={() => navigate('/appointments/new')}
+  sx={{
+    width: '400px',
+    fontSize: '17px',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    padding: '12px',
+    borderRadius: '10px',
+    borderBottom: '4px solid #459328', // Dark green border
+    height: '50px',
+    backgroundColor: '#9CE178', // Light green
+    color: '#1a1a1a', // Dark text
+    '&:hover': {
+      backgroundColor: '#8bd16d',
+      borderBottomWidth: '3px',
+      transform: 'translateY(2px)',
+      boxShadow: '0 2px 4px rgba(0,0,0,0.4)'
+    },
+    transition: 'all 0.3s ease',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
+  }}
+>
+  Make a Booking
+</Button>
     </Box>
     
     );

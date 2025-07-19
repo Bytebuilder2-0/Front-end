@@ -148,33 +148,33 @@ function MiniDrawer() {
             </Link>
           </Box>
 
-          {/* Toggle Drawer Icon */}
-          <IconButton
-            color="inherit"
-            onClick={open ? handleDrawerClose : handleDrawerOpen}
-            edge="end"
-            sx={{ marginRight: 2 }}
-          >
-            {open ? (
-              <ChevronLeftIcon sx={{ color: "#ffffffff" }} />
-            ) : (
-              <MenuIcon sx={{ color: "#ffffffff" }} />
-            )}
-          </IconButton>
-          <Box sx={{ flexGrow: 1 }} />
-          <Box
-            sx={{
-              display: { xs: "none", md: "flex" },
-              alignItems: "center",
-              gap: 2, // spacing between icons
-              pr: 5, // padding-right
-            }}
-          >
-            <Notify />
-            <Account />
-          </Box>
-        </Toolbar>
-      </AppBar>
+					{/* Toggle Drawer Icon */}
+					<IconButton
+						color="inherit"
+						onClick={open ? handleDrawerClose : handleDrawerOpen}
+						edge="end"
+						sx={{ marginRight: 2 }}
+					>
+						{open ? (
+							<ChevronLeftIcon sx={{ color: "#ffffffff" }} />
+						) : (
+							<MenuIcon sx={{ color: "#ffffffff" }} />
+						)}
+					</IconButton>
+					<Box sx={{ flexGrow: 1 }} />
+					<Box
+						sx={{
+							display: { xs: "none", md: "flex" },
+							alignItems: "center",
+							gap: 2, // spacing between icons
+							pr: 5, // padding-right
+						}}
+					>
+						{/*<Notify />*/}
+						<Account />
+					</Box>
+				</Toolbar>
+			</AppBar>
 
       {/* Sidebar Drawer */}
       <Drawer

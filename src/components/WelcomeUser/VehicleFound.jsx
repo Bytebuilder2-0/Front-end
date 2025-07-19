@@ -48,28 +48,30 @@ const VehicleFound = ({ vehicles }) => {
       
       <Box sx={{  mt: 4 }}>
         <Button
-        variant="contained"
-        onClick={() => navigate('/VehicleRegister')}
-        sx={{
-          width: '200px',
-          fontSize: '0.9375rem', // 15px
-          fontWeight: 600,
-          py: 1.5,
-          px: 3,
-          borderRadius: '10px',
-          backgroundColor: '#51b672 ',
-          color: theme.palette.success.contrastText,
-          textTransform: 'none',
-          boxShadow: 'none',
-          '&:hover': {
-            backgroundColor: theme.palette.success.dark,
-            
-          },
-          transition: 'all 0.3s ease'
-        }}
-      >
-        Add Vehicle
-      </Button>
+  variant="contained"
+  onClick={() => navigate('/VehicleRegister')}
+  sx={{
+    width: '200px',
+    fontSize: '0.9375rem',
+    fontWeight: 600,
+    py: 1.5,
+    px: 3,
+    borderRadius: '10px',
+    backgroundColor: '#9CE178', // Light green
+    color: '#1a1a1a', // Dark text
+    textTransform: 'none',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
+    '&:hover': {
+      backgroundColor: '#8bd16d', // Slightly darker green
+      boxShadow: '0 4px 8px rgba(0,0,0,0.4)',
+      transform: 'translateY(-1px)'
+    },
+    transition: 'all 0.3s ease'
+  }}
+>
+  Add Vehicle
+</Button>
+
       </Box>
     </>
   );

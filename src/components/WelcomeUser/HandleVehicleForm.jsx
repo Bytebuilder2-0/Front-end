@@ -6,85 +6,182 @@ import {
   Grid,
   FormControl,
   InputLabel,
-  Select
+  Select,
+  Paper,
+  Typography,
+  Divider,
+  Box,
+  useTheme
 } from '@mui/material';
+import { DirectionsCar, CalendarToday, Build } from '@mui/icons-material';
 
 const vehicleTypes = ['Sedan', 'SUV', 'Truck', 'Van', 'Motorcycle', 'Other'];
 
 const HandleVehicleForm = ({ formData, onChange, onSubmit, onReset }) => {
+  const theme = useTheme();
+
+  // Check if all required fields are filled
+  const isFormValid = () => {
+    return (
+      formData.vehicleNumber &&
+      formData.vehicleYear &&
+      formData.model &&
+      formData.vehicleType
+    );
+  };
+
   return (
-    <form onSubmit={onSubmit}>
-      <Grid container spacing={3}>
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            label="Vehicle Number"
-            name="vehicleNumber"
-            value={formData.vehicleNumber}
-            onChange={onChange}
-            required
-          />
-        </Grid>
+    <Box sx={{ p: 3 }}>
+      <Paper elevation={3} sx={{ 
+        p: 4, 
+        borderRadius: 3,
+        maxWidth: 800,
+        mx: 'auto'
+      }}>
+        <Typography variant="h4" gutterBottom sx={{ 
+          fontWeight: 600,
+          mb: 3,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1
+        }}>
+          Vehicle Registration
+        </Typography>
+        
+        <Divider sx={{ mb: 4 }} />
 
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label="Year"
-            name="vehicleYear"
-            value={formData.vehicleYear}
-            onChange={onChange}
-            required
-          />
-        </Grid>
+        <form onSubmit={onSubmit}>
+          <Grid container spacing={3}>
+            {/* Vehicle Identification Section */}
+            <Grid item xs={12}>
+              <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                <DirectionsCar color="primary" />
+                Vehicle Identification
+              </Typography>
+            </Grid>
 
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label="Model"
-            name="model"
-            value={formData.model}
-            onChange={onChange}
-            required
-          />
-        </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Vehicle Number *"
+                name="vehicleNumber"
+                value={formData.vehicleNumber}
+                onChange={onChange}
+                required
+                InputProps={{
+                  startAdornment: (
+                    <Typography color="text.secondary" sx={{ mr: 1 }}>#</Typography>
+                  ),
+                }}
+              />
+            </Grid>
 
-        <Grid item xs={12}>
-          <FormControl fullWidth>
-            <InputLabel>Vehicle Type</InputLabel>
-            <Select
-              name="vehicleType"
-              value={formData.vehicleType}
-              onChange={onChange}
-              required
-            >
-              {vehicleTypes.map(type => (
-                <MenuItem key={type} value={type}>
-                  {type}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
+            {/* Vehicle Details Section */}
+            <Grid item xs={12}>
+              <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Build color="primary" />
+                Vehicle Details
+              </Typography>
+            </Grid>
 
-        <Grid item xs={12}>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            sx={{ mr: 2 }}
-          >
-            Submit
-          </Button>
-          <Button
-            type="button"
-            variant="outlined"
-            onClick={onReset}
-          >
-            Reset
-          </Button>
-        </Grid>
-      </Grid>
-    </form>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Year *"
+                name="vehicleYear"
+                value={formData.vehicleYear}
+                onChange={onChange}
+                required
+                InputProps={{
+                  startAdornment: (
+                    <CalendarToday color="action" sx={{ mr: 1 }} />
+                  ),
+                }}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Model *"
+                name="model"
+                value={formData.model}
+                onChange={onChange}
+                required
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel>Vehicle Type *</InputLabel>
+                <Select
+                  name="vehicleType"
+                  value={formData.vehicleType}
+                  onChange={onChange}
+                  required
+                  label="Vehicle Type *"
+                >
+                  {vehicleTypes.map(type => (
+                    <MenuItem 
+                      key={type} 
+                      value={type}
+                      sx={{
+                        '&:hover': {
+                          backgroundColor: theme.palette.primary.lighter,
+                        }
+                      }}
+                    >
+                      {type}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            {/* Form Actions */}
+            <Grid item xs={12} sx={{ mt: 2 }}>
+              <Divider sx={{ mb: 3 }} />
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+                <Button 
+                  variant="outlined"
+                  onClick={onReset}
+                  sx={{
+                    px: 4,
+                    py: 1,
+                    fontWeight: 600,
+                    '&:hover': {
+                      backgroundColor: theme.palette.error.light,
+                      color: theme.palette.error.contrastText
+                    }
+                  }}
+                >
+                  Reset Form
+                </Button>
+                <Button 
+                  type="submit" 
+                  variant="contained" 
+                  disabled={!isFormValid()}
+                  sx={{
+                    px: 4,
+                    py: 1,
+                    fontWeight: 600,
+                    backgroundColor: theme.palette.success.main,
+                    '&:hover': {
+                      backgroundColor: theme.palette.success.dark
+                    },
+                    '&:disabled': {
+                      backgroundColor: theme.palette.action.disabledBackground
+                    }
+                  }}
+                >
+                  Register Vehicle
+                </Button>
+              </Box>
+            </Grid>
+          </Grid>
+        </form>
+      </Paper>
+    </Box>
   );
 };
 
