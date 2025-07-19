@@ -10,6 +10,8 @@ import SignInVehicleContainer from "../container/container1";
 import AppointmentSubmit from "../pages/User/AppoinmentSubmit";
 import AppointmentView from "../pages/User/AppointmentView";
 import UserDashboard from "../pages/User/UserDashboard";
+import PaidHistory from "../pages/User/PaidHistory";
+import Vehicles from "../pages/User/Vehicles";
 
 import TechnicianAccepted from "../pages/Technician/TechnicianAccepted";
 import TechnicianDashboard from "../pages/Technician/TechnicianDashboard";
@@ -140,6 +142,10 @@ const router = createBrowserRouter([
     element: <AppointmentView />,
   },
   {
+    path: "/UserHistory",
+    element: <PaidHistory />,
+  },
+  {
     path: "/User",
     element: <UserDashboard />,
   },
@@ -158,6 +164,11 @@ const router = createBrowserRouter([
   {
     path: "/VehicleRegister",
     element: <VehicleRegister />,
+  },
+
+  {
+    path: "/Vehicles",
+    element: <Vehicles />
   },
   {
     path: "/SignupVReg",

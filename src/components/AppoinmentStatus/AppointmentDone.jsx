@@ -39,7 +39,7 @@ const AppointmentDone = ({ appointment }) => {
 		try {
 			const { data } = await axios.post(
 				"http://localhost:5000/api/payment/create-checkout-session",
-				{ appointmentId: appointment._id } // ✅ Only send appointment ID
+				{ appointmentId: appointment._id } 
 			);
 
 			const stripe = await stripePromise;
@@ -129,6 +129,10 @@ const AppointmentDone = ({ appointment }) => {
 				<Button variant="contained" onClick={handlePayment} sx={{ ml: 2 }}>
 					Make The Payment
 				</Button>
+{/* 
+				<Button variant="contained" onClick={handlePayment} sx={{ ml: 2 }}>
+					Submit Feedback
+				</Button> */}
 			</Box>
 
 			{/* Completed Tasks */}

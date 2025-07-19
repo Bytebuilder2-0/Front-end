@@ -69,7 +69,6 @@ const AppHistory = ({ appointment }) => {
               </Typography>
               <Typography variant="body2" fontWeight={500}>
                 {appointment.services?.slice(0, 2).join(', ') || 'General Service'}
-                {appointment.services?.length > 2 && ' + more'}
               </Typography>
             </Box>
           </Stack>
