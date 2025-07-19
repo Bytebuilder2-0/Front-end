@@ -32,6 +32,18 @@ const ServiceForm = ({ onAdd, disabled }) => {
         sx={{
           backgroundColor: "white",
           borderRadius: 2,
+          boxShadow: 1,
+          "& .MuiOutlinedInput-root": {
+            "& fieldset": {
+              borderColor: "#e0e0e0", // Static border color
+            },
+            "&:hover fieldset": {
+              borderColor: "#5da3e8ff", // Same as normal state to prevent hover effect
+            },
+            "&.Mui-focused fieldset": {
+              borderColor: "#1976d2", // Keep focus color (optional)
+            },
+          },
         }}
       />
       <Button
@@ -44,12 +56,14 @@ const ServiceForm = ({ onAdd, disabled }) => {
           fontWeight: "bold",
           textTransform: "none",
           px: 3,
+          boxShadow: 1,
           "&:hover": {
             backgroundColor: "#1565c0",
+            boxShadow: 2,
           },
         }}
       >
-        Add
+        ADD
       </Button>
     </Box>
   );

@@ -1,27 +1,23 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Select, MenuItem, Button, TableCell, Box } from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import ConfirmationDialog from "./Confirmation"; // Import your confirmation dialog
 
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 
 const TechnicianAssignmentAndStatusUpdater = ({
 	appointment,
 	updateAppointment,
-	showSnackbar,
+	showSnackbar, // already passed from parent
 }) => {
-	//All technicians
 	const [technicians, setTechnicians] = useState([]);
-
-	//Technician mongoDb Id
 	const [selectedTechnician, setSelectedTechnician] = useState(
 		appointment?.tech?._id || ""
 	);
-
 	const [status, setStatus] = useState(appointment.status);
 	const [techAssigned, setTechAssigned] = useState(Boolean(appointment.tech));
+	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 
-	//Fetch technician list when the component mounts
 	useEffect(() => {
 		async function fetchTechnicians() {
 			try {
@@ -38,8 +34,6 @@ const TechnicianAssignmentAndStatusUpdater = ({
 		fetchTechnicians();
 	}, []);
 
-	// Fetch the appointment status when the component mounts
-
 	const handleTechnicianChange = async (event) => {
 		const technicianId = event.target.value;
 		setSelectedTechnician(technicianId);
@@ -47,20 +41,14 @@ const TechnicianAssignmentAndStatusUpdater = ({
 		try {
 			await axios.put(
 				`${baseURL}/appointments/${appointment._id}/assign2`,
-				{
-					technicianId,
-				},
-				{
-					headers: {
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
-				}
+				{ technicianId },
+				{ headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
 			);
 
 			setTechAssigned(Boolean(technicianId));
 			updateAppointment({
 				...appointment,
-				tech: technicians.find((tech) => tech._id === technicianId), // full object
+				tech: technicians.find((tech) => tech._id === technicianId),
 			});
 
 			showSnackbar("Technician Added", "success");
@@ -69,21 +57,12 @@ const TechnicianAssignmentAndStatusUpdater = ({
 		}
 	};
 
-	// Update status to "Waiting for Technician Confirmation"
 	const handleStatusUpdate = async () => {
-		if (!techAssigned || status === "Waiting for Technician Confirmation") return;
-
 		try {
 			await axios.put(
 				`${baseURL}/appointments/${appointment._id}/statusUpdate`,
-				{
-					status: "Waiting for Technician Confirmation",
-				},
-				{
-					headers: {
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
-				}
+				{ status: "Waiting for Technician Confirmation" },
+				{ headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
 			);
 
 			setStatus("Waiting for Technician Confirmation");
@@ -110,11 +89,10 @@ const TechnicianAssignmentAndStatusUpdater = ({
 				sx={{
 					display: "flex",
 					alignItems: "center",
-					gap: 1, // space between select & button
+					gap: 1,
 					width: "100%",
 				}}
 			>
-				{/* Technician Selection */}
 				<Select
 					value={selectedTechnician}
 					onChange={handleTechnicianChange}
@@ -122,15 +100,20 @@ const TechnicianAssignmentAndStatusUpdater = ({
 					variant="outlined"
 					disabled={status === "Waiting for Technician Confirmation"}
 					sx={{
-						height: 36, // ✅ compact height
-						minWidth: 160, // ✅ slightly wider horizontally
-						"& .MuiOutlinedInput-notchedOutline": { borderColor: "rgba(0,0,0,0.23)" },
-						"&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#459328" },
-						"&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "#459328" },
+						height: 36,
+						minWidth: 160,
+						"& .MuiOutlinedInput-notchedOutline": {
+							borderColor: "rgba(0,0,0,0.23)",
+						},
+						"&:hover .MuiOutlinedInput-notchedOutline": {
+							borderColor: "#459328",
+						},
+						"&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+							borderColor: "#459328",
+						},
 					}}
 				>
 					<MenuItem value="">Sel.Technician</MenuItem>
-
 					{!technicians.length &&
 						techAssigned &&
 						appointment.tech &&
@@ -139,7 +122,6 @@ const TechnicianAssignmentAndStatusUpdater = ({
 								{appointment.tech.employee_id}
 							</MenuItem>
 						)}
-
 					{technicians.length > 0 ? (
 						technicians.map((tech) => (
 							<MenuItem key={tech._id} value={tech._id}>
@@ -151,23 +133,36 @@ const TechnicianAssignmentAndStatusUpdater = ({
 					)}
 				</Select>
 
-				{/* Status Update Button */}
 				<Button
 					variant="contained"
 					color="success"
-					onClick={handleStatusUpdate}
+					onClick={() => setConfirmDialogOpen(true)}
 					disabled={!techAssigned || status === "Waiting for Technician Confirmation"}
 					sx={{
-						height: 36, // ✅ match select height
-						minWidth: 110, // ✅ slightly wider
+						height: 36,
+						minWidth: 110,
 						whiteSpace: "nowrap",
-						px: 1.5, // ✅ compact padding
+						px: 1.5,
 						textTransform: "none",
 					}}
 				>
 					{status === "Waiting for Technician Confirmation" ? "Pending" : "Confirm"}
 				</Button>
 			</Box>
+
+			<ConfirmationDialog
+				open={confirmDialogOpen}
+				title="Send to Technician"
+				message="Are you sure you want to send this appointment to the technician for confirmation?"
+				onConfirm={async () => {
+					await handleStatusUpdate();
+					setConfirmDialogOpen(false);
+				}}
+				onCancel={() => {
+					setConfirmDialogOpen(false);
+					showSnackbar("Appointment not Assigned", "error"); //FIXED
+				}}
+			/>
 		</TableCell>
 	);
 };

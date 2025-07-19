@@ -107,7 +107,7 @@ const SupHistory = () => {
 									<TableCell>{appointment.vehicleId}</TableCell>
 									<TableCell>{appointment.model}</TableCell>
 									<TableCell>
-										<IssueViewer issue={appointment.issue} />
+										<IssueViewer appointment={appointment}  />
 									</TableCell>
 									<TableCell>
 										{new Date(appointment.expectedDeliveryDate).toLocaleDateString(

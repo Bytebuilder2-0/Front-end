@@ -1,13 +1,11 @@
-// src/components/Feedback/FeedbackInfo.jsx
-
 import React from "react";
-import { Typography, Box, Grid } from "@mui/material";
+import { Typography, Box, Grid, Rating } from "@mui/material";
 
 const FeedbackInfo = ({ feedback }) => {
   const infoData = [
     {
       label: "Username",
-      value: feedback.username || "Unknown", // Show username instead of feedbackId
+      value: feedback.username || "Unknown",
     },
     {
       label: "Date",
@@ -17,7 +15,7 @@ const FeedbackInfo = ({ feedback }) => {
     { label: "Reply", value: feedback.reply || "No reply yet" },
     {
       label: "Added",
-      value: feedback.actionStatus === "yes" ? "Add" : "No", // More user-friendly
+      value: feedback.actionStatus === "yes" ? "Add" : "No",
     },
   ];
 
@@ -48,13 +46,47 @@ const FeedbackInfo = ({ feedback }) => {
             <Grid item xs={8}>
               <Typography
                 variant="body2"
-                sx={{ fontSize: "0.85rem", wordBreak: "break-word" }}
+                sx={{
+                  fontSize: "0.85rem",
+                  wordBreak: "break-word",
+                  display: "inline-block",
+                }}
               >
                 {item.value}
               </Typography>
             </Grid>
           </Grid>
         ))}
+
+        {/* Adjust Rating: Slightly shift the rating stars to the left */}
+        <Grid item xs={12}>
+          <Grid container alignItems="center">
+            <Grid item xs={4}>
+              <Typography
+                variant="subtitle2"
+                sx={{
+                  fontWeight: "bold",
+                  color: "text.secondary",
+                  fontSize: "0.85rem",
+                }}
+              >
+                Rating:
+              </Typography>
+            </Grid>
+            <Grid item xs={8}>
+              <Box sx={{ marginLeft: "-8px" }}>
+                {" "}
+                {/* Shift stars left */}
+                <Rating
+                  name="feedback-rating"
+                  value={feedback.rating || 0} // Default to 0 if no rating exists
+                  precision={0.5} // For half-star precision
+                  readOnly // Make it read-only if feedback has already been rated
+                />
+              </Box>
+            </Grid>
+          </Grid>
+        </Grid>
       </Grid>
     </Box>
   );

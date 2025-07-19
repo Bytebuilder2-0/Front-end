@@ -38,7 +38,7 @@ const FeedbackItem = ({ feedback, onUpdate }) => {
   };
 
   return (
-    <Paper elevation={2} sx={{ padding: 2, marginBottom: 2 }}>
+    <Paper elevation={3} sx={{ padding: 2, marginBottom: 2 }}>
       <Grid container spacing={2}>
         <Grid item xs={12} md={8}>
           <FeedbackInfo feedback={feedback} />
