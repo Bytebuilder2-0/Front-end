@@ -60,7 +60,7 @@ const NoAppointment = ({ userId }) => {
       
       <Button
         variant="contained"
-        onClick={() => navigate('/appointments')}
+        onClick={() => navigate('/appointments/new')}
         startIcon={<Plus size={18} />}
         sx={{
           backgroundColor: '#459328',
