@@ -29,13 +29,19 @@ const AppointmentInProgress = ({ appointment }) => {
     : 0;
 
   return (
-    <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
+    <Box>
       {/* Appointment Header */}
-      <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold' }}>
-        Appointment Details
-      </Typography>
-      
-        <Divider sx={{ my: 3 }} />
+          <Typography  gutterBottom sx={{ 
+                       fontWeight: 600,
+                       fontSize : 35,
+                       marginBottom: '1px'
+                     }}>
+                       Appoinment Details
+                     </Typography>
+                     <Typography varient="caption" sx = {{color:'green'}} > Appoinment - Inprogess</Typography>
+                     
+                     <Divider sx={{ mb: 4  }} />
+        {/* <Divider sx={{ my: 3 }} /> */}
 
       <Grid container spacing={2} sx={{ mb: 3 }}>
         {/* Customer Column */}
@@ -81,7 +87,7 @@ const AppointmentInProgress = ({ appointment }) => {
       <Divider sx={{ my: 3 }} />
 
       {/* Progress Section */}
-      <Typography variant="h6" gutterBottom>
+      <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
         Work Progress
       </Typography>
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -94,9 +100,10 @@ const AppointmentInProgress = ({ appointment }) => {
           sx={{ flexGrow: 1, height: 10, borderRadius: 5 }}
         />
       </Box>
+            <Divider sx={{ my: 2 }} />
 
       {/* Completed Tasks */}
-      <Typography variant="subtitle1" sx={{ mt: 2, mb: 1, color: 'success.main' }}>
+      <Typography variant="subtitle1" sx={{ mt: 2, mb: 1, color: 'success.main', fontWeight:600 }}>
         <CheckCircleIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
         Completed Tasks ({completedTasks.length})
       </Typography>
@@ -124,7 +131,7 @@ const AppointmentInProgress = ({ appointment }) => {
       <Divider sx={{ my: 2 }} />
 
       {/* Pending Tasks */}
-      <Typography variant="subtitle1" sx={{ mt: 2, mb: 1, color: 'warning.main' }}>
+      <Typography variant="subtitle1" sx={{ mt: 2, mb: 1, color: 'warning.main',fontWeight:600 }}>
         <PendingIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
         Pending Tasks ({pendingTasks.length})
       </Typography>
@@ -153,7 +160,30 @@ const AppointmentInProgress = ({ appointment }) => {
           </Typography>
         )}
       </List>
-    </Paper>
+
+
+ <Divider sx={{ my: 2 }} />
+
+<Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', marginBottom:'20px' }}>
+  Suggestions
+</Typography>
+
+{appointment.suggestion ? (
+  <Typography variant="body1" sx={{ whiteSpace: 'pre-line' }}>
+  
+   ➤  {appointment.suggestion}
+  </Typography>
+) : (
+  <Typography variant="body2" color="text.secondary">
+    No suggestions provided.
+  </Typography>
+)}
+
+
+
+
+
+    </Box>
   );
 };
 

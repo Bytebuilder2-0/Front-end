@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import WhatsAppButton from "../sub/WhatsAppButton";
 import DeatailsViewer from "../ManagerDashboard/viewDeatails";
+import InvoiceView from "../sub/InvoiceView";
 import { jwtDecode } from "jwt-decode";
 
 const API_URL = "http://localhost:5000/api/appointments";
@@ -39,12 +40,12 @@ const authConfig = {
 const ApointmentHistory = () => {
   const [appointments, setAppointments] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [vehicleNumberSearch, setVehicleNumberSearch] = useState("");
 
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
         const res = await axios.get(API_URL, authConfig);
-        // Filter for completed appointments (adjust statuses as needed)
         const completedAppointments = res.data
           .reverse()
           .filter((appt) =>
@@ -58,114 +59,142 @@ const ApointmentHistory = () => {
     fetchAppointments();
   }, []);
 
-  const filteredAppointments = appointments.filter((appt) =>
-    String(appt.vehicleId || "")
+  const filteredAppointments = appointments.filter((appointment) => {
+    const matchesVehicleId = String(appointment.vehicleId || "")
       .toLowerCase()
-      .includes(searchTerm.toLowerCase())
-  );
+      .includes(searchTerm.toLowerCase());
+
+    const matchesVehicleNumber = String(appointment.vehicleNumber || "")
+      .toLowerCase()
+      .includes(vehicleNumberSearch.toLowerCase());
+
+    return matchesVehicleId && matchesVehicleNumber;
+  });
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Paper elevation={6} sx={{ p: 3, borderRadius: "16px" }}>
-        {/* Header */}
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={2}
-        >
-          <Typography variant="h5" fontWeight="bold" color="#1976d2">
-            Appointment History
-          </Typography>
+    <Container maxWidth="lg" sx={{ mt: 1, mb: 4 }}>
+      {/* Header with filters */}
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={2}
+      >
+        <Typography variant="h5" fontWeight="bold" color="#1976d2"></Typography>
+
+        <Box display="flex" alignItems="center" gap={2}>
           <TextField
             label="Search by Vehicle ID"
             variant="outlined"
             size="small"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            sx={{ width: 180 }}
+          />
+
+          <TextField
+            label="Search by Vehicle Number"
+            variant="outlined"
+            size="small"
+            value={vehicleNumberSearch}
+            onChange={(e) => setVehicleNumberSearch(e.target.value)}
+            sx={{ width: 180 }}
           />
         </Box>
+      </Box>
 
-        {/* Table */}
-        <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell align="center">
-                  <strong>Vehicle ID</strong>
-                </TableCell>
-                <TableCell align="center">
-                  <strong>Model</strong>
-                </TableCell>
-                <TableCell align="center">
-                  <strong>Details</strong>
-                </TableCell>
-                <TableCell align="center">
-                  <strong>Contact</strong>
-                </TableCell>
-                <TableCell align="center">
-                  <strong>Status</strong>
-                </TableCell>
-                <TableCell align="center">
-                  <strong>Invoice Details</strong>
-                </TableCell>
-              </TableRow>
-            </TableHead>
+      {/* Table */}
+      <TableContainer
+        component={Paper}
+        sx={{
+          marginTop: 2,
+          overflow: "auto",
+          maxHeight: 600,
+          borderRadius: 2,
+          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
+        }}
+      >
+        <Table stickyHeader>
+          <TableHead>
+            <TableRow
+              sx={{
+                "& th": {
+                  fontWeight: "bold",
+                  backgroundColor: "#f5f5f5",
+                  textAlign: "center",
+                },
+              }}
+            >
+              <TableCell align="center">Vehicle ID</TableCell>
+              <TableCell align="center">Vehicle Number</TableCell>
+              <TableCell align="center">Model</TableCell>
+              <TableCell align="center">Details</TableCell>
+              <TableCell align="center">Contact</TableCell>
+              <TableCell align="center">Status</TableCell>
+              <TableCell align="center">Invoice</TableCell>
+            </TableRow>
+          </TableHead>
 
-            <TableBody>
-              {filteredAppointments.length > 0 ? (
-                filteredAppointments.map((appointment) => (
-                  <TableRow key={appointment._id}>
-                    <TableCell align="center">
-                      {appointment.vehicleId}
-                    </TableCell>
-                    <TableCell align="center">{appointment.model}</TableCell>
-                    <TableCell align="center">
-                      <DeatailsViewer appointment={appointment} />
-                    </TableCell>
-                    <TableCell align="center">
-                      <WhatsAppButton phone={appointment.contactNumber} />
-                    </TableCell>
-                    <TableCell align="center">
-                      <Typography
-                        sx={{
-                          color:
-                            appointment.status === "Paid" ||
-                            appointment.status === "Completed"
-                              ? "green"
-                              : ["Cancelled", "Rejected"].includes(
-                                  appointment.status
-                                )
-                              ? "red"
-                              : "gray",
-                          fontWeight: 600,
-                          textTransform: "capitalize",
-                          fontSize: "0.9rem",
-                        }}
-                      >
-                        {appointment.status}
-                      </Typography>
-                    </TableCell>
-                    <TableCell align="center">
-                      <Typography variant="body2" color="textSecondary">
-                        {appointment.invoiceId || "No invoice"}
-                      </Typography>
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
-                    <Typography variant="h6" color="textSecondary">
-                      No appointments found
+          <TableBody>
+            {filteredAppointments.length > 0 ? (
+              filteredAppointments.map((appointment) => (
+                <TableRow
+                  key={appointment._id}
+                  sx={{
+                    "&:nth-of-type(odd)": { backgroundColor: "#fafafa" },
+                    "&:hover": { backgroundColor: "#e0e0e0" },
+                  }}
+                >
+                  <TableCell align="center">{appointment.vehicleId}</TableCell>
+                  <TableCell align="center">
+                    {appointment.vehicleNumber}
+                  </TableCell>
+                  <TableCell align="center">{appointment.model}</TableCell>
+                  <TableCell align="center">
+                    <DeatailsViewer appointment={appointment} />
+                  </TableCell>
+                  <TableCell align="center">
+                    <WhatsAppButton phone={appointment.contactNumber} />
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography
+                      sx={{
+                        color:
+                          appointment.status === "Paid" ||
+                          appointment.status === "Completed"
+                            ? "green"
+                            : ["Cancelled", "Rejected"].includes(
+                                appointment.status
+                              )
+                            ? "red"
+                            : "gray",
+                        fontWeight: 600,
+                        textTransform: "capitalize",
+                        fontSize: "0.9rem",
+                      }}
+                    >
+                      {appointment.status}
                     </Typography>
                   </TableCell>
+                  <TableCell align="center">
+                    <InvoiceView appointment={appointment} />
+                  </TableCell>
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={7} align="center" sx={{ py: 5 }}>
+                  <Typography variant="h6" color="text.secondary">
+                    {searchTerm || vehicleNumberSearch
+                      ? "No matching appointments found"
+                      : "No appointments available"}
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Container>
   );
 };

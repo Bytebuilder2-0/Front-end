@@ -39,7 +39,7 @@ const AppointmentDone = ({ appointment }) => {
 		try {
 			const { data } = await axios.post(
 				"http://localhost:5000/api/payment/create-checkout-session",
-				{ appointmentId: appointment._id } // ✅ Only send appointment ID
+				{ appointmentId: appointment._id } 
 			);
 
 			const stripe = await stripePromise;
@@ -52,9 +52,16 @@ const AppointmentDone = ({ appointment }) => {
 	return (
 		<Box sx={{ padding: "20px" }}>
 			{/* Appointment Header */}
-			<Typography variant="h5" gutterBottom sx={{ fontWeight: "bold" }}>
-				Appointment Details
-			</Typography>
+				 <Typography  gutterBottom sx={{ 
+							  fontWeight: 600,
+							  fontSize : 35,
+							  marginBottom: '1px'
+							}}>
+							  Appoinment Details
+							</Typography>
+							<Typography varient="caption" sx = {{color:'green'}} > Appoinment - Completed</Typography>
+							
+							<Divider sx={{ mb: 6  }} />
 
 			<Grid container spacing={2} sx={{ mb: 3 }}>
 				{/* Customer Column */}
@@ -122,6 +129,10 @@ const AppointmentDone = ({ appointment }) => {
 				<Button variant="contained" onClick={handlePayment} sx={{ ml: 2 }}>
 					Make The Payment
 				</Button>
+{/* 
+				<Button variant="contained" onClick={handlePayment} sx={{ ml: 2 }}>
+					Submit Feedback
+				</Button> */}
 			</Box>
 
 			{/* Completed Tasks */}

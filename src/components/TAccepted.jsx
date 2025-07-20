@@ -243,7 +243,7 @@ function TAcceptedWork() {
 											) : (
 												<Button
 													variant="contained"
-													color="secondary"
+													color="error"
 													onClick={() => handleOpenDialog(appointment._id)}
 												>
 													Decline

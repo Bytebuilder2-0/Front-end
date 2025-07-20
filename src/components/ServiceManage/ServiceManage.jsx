@@ -40,7 +40,7 @@ const ServiceManager = () => {
 
   const handleAdd = async (name) => {
     setIsActionInProgress(true);
-    const tempId = Date.now(); // Temporary ID
+    const tempId = Date.now();
     setServices((prev) => [...prev, { _id: tempId, name, selected: false }]);
     try {
       const newService = await addService(name);
@@ -102,6 +102,7 @@ const ServiceManager = () => {
           p: 4,
           backgroundColor: "#f9fafb",
           borderRadius: "12px",
+          border: "1px solid #e0e0e0",
         }}
       >
         <Box mb={3}>
@@ -112,6 +113,7 @@ const ServiceManager = () => {
               fontWeight: "bold",
               color: "#3f51b5",
               letterSpacing: 1,
+              mb: 1,
             }}
           >
             Manage Services
@@ -119,7 +121,7 @@ const ServiceManager = () => {
           <Typography
             variant="subtitle1"
             align="center"
-            sx={{ color: "gray", mt: 1 }}
+            sx={{ color: "text.secondary" }}
           >
             Add, Edit, and Organize Your Services Easily
           </Typography>
@@ -138,6 +140,7 @@ const ServiceManager = () => {
               py: 5,
               backgroundColor: "#f5f5f5",
               borderRadius: "12px",
+              border: "1px dashed #e0e0e0",
             }}
           >
             <Typography variant="h6" color="textSecondary">

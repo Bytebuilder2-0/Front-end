@@ -10,6 +10,8 @@ import SignInVehicleContainer from "../container/container1";
 import AppointmentSubmit from "../pages/User/AppoinmentSubmit";
 import AppointmentView from "../pages/User/AppointmentView";
 import UserDashboard from "../pages/User/UserDashboard";
+import PaidHistory from "../pages/User/PaidHistory";
+import Vehicles from "../pages/User/Vehicles";
 
 import TechnicianAccepted from "../pages/Technician/TechnicianAccepted";
 import TechnicianDashboard from "../pages/Technician/TechnicianDashboard";
@@ -29,6 +31,7 @@ import ManageServices from "../pages/Manager/ManageServices";
 import ManagerHistoryPage from "../pages/Manager/HistoryPage";
 import ManagerDashboardPage from "../pages/Manager/ManagerDashboardPage";
 import CheckStatus from "../pages/Manager/CheckStatus";
+import AccountPendingRequest from "../pages/Manager/AccountPendingRequest";
 
 import Layout from "../pages/supervisor/Layout";
 import PrivateRoute from "../components/Atoms/PrivateRoute";
@@ -48,6 +51,7 @@ import UserProfile from "../components/UserProfile";
 import AccountRequest from "../components/ManagerDashboard/AccountRequest";
 
 
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -60,6 +64,14 @@ const router = createBrowserRouter([
    {
     path: "/pending-users",
     element: <AccountRequest />,
+  },
+  {
+    path: "/AccountPendingRequest",
+    element: (
+      <PrivateRoute allowedRoles={["manager"]}>
+        <AccountPendingRequest />
+      </PrivateRoute>
+    ),
   },
   {
     element: <Layout />, //  All below routes will share the MiniDrawer layout
@@ -150,11 +162,14 @@ const router = createBrowserRouter([
     path: "/appointments/:id",
     element: <AppointmentView />,
   },
-  // {
-  //   path: "/User",
-  //   element: <UserDashboard />,
-  // },
-  
+  {
+    path: "/UserHistory",
+    element: <PaidHistory />,
+  },
+  {
+    path: "/User",
+    element: <UserDashboard />,
+  },
   {
     path: "/feedback",
     element: <FeedbackPage />,
@@ -174,6 +189,11 @@ const router = createBrowserRouter([
   {
     path: "/VehicleRegister",
     element: <VehicleRegister />,
+  },
+
+  {
+    path: "/Vehicles",
+    element: <Vehicles />
   },
   {
     path: "/SignupVReg",

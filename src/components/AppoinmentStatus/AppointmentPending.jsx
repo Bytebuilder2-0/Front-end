@@ -78,7 +78,7 @@ const AppointmentPending = ({ appointment, onCancel }) => {
   
   return (
 
-    <Box>
+     <Box sx={{ padding: "20px" }}>
 
     <Typography  gutterBottom sx={{ 
               fontWeight: 600,
@@ -89,7 +89,7 @@ const AppointmentPending = ({ appointment, onCancel }) => {
             </Typography>
             <Typography varient="caption" sx = {{color:'green'}} > Appoinment - Pending</Typography>
             
-            <Divider sx={{ mb: 4  }} />
+            <Divider sx={{ mb: 6  }} />
 
     
     <Paper

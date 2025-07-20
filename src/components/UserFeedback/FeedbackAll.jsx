@@ -71,7 +71,7 @@ const fetchData = async () => {
     setFeedbacks(feedbacksList);
 
   } catch (err) {
-    console.error("Error fetching data:", err);
+    console.error("Error fetching dataaaaa:", err);
     setError("Failed to load data.");
   } finally {
     setLoading(false);
@@ -106,11 +106,18 @@ const fetchData = async () => {
 
   const appointmentsWithFeedback = getAppointmentsWithFeedback();
 
+  console.log("Appointments with feedback statussss", appointmentsWithFeedback);
+
+
   // Separate pending and completed feedbacks
   const pendingFeedbacks = appointmentsWithFeedback.filter(
-    appt => (appt.status === 'Task Done' || appt.status === 'Paid'|| appt.status === 'All Done') && !appt.hasFeedback
-  );
+    appt => ((appt.status === "Task Done" || appt.status === 'Paid'|| appt.status === 'All done') && appt.feedbackStatus === false ));
+    
+
+    console.log("Appointments with pending feedbackss", pendingFeedbacks);
   
+
+
 const completedFeedbacks = feedbacks;
 
   const handleTabChange = (event, newValue) => {

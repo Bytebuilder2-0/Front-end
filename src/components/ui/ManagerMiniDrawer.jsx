@@ -24,17 +24,19 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import {
-  Menu as MenuIcon,
-  ChevronLeft as ChevronLeftIcon,
-  Home as HomeIcon,
-  Feedback as FeedbackIcon,
-  AssignmentTurnedIn as CheckIcon,
-  Build as BuildIcon,
-  Dashboard as DashboardIcon,
-  Notifications as NotificationsIcon,
-  History as HistoryIcon,
-  Report as ReportIcon,
-  HourglassBottom as HourglassBottomIcon,
+	Menu as MenuIcon,
+	ChevronLeft as ChevronLeftIcon,
+	Home as HomeIcon,
+	Feedback as FeedbackIcon,
+	AssignmentTurnedIn as CheckIcon,
+	Build as BuildIcon,
+	Dashboard as DashboardIcon,
+	Notifications as NotificationsIcon,
+	History as HistoryIcon,
+	Report as ReportIcon,
+  Description as DescriptionIcon,
+   HourglassBottom as HourglassBottomIcon,
+	AccountCircle,
 } from "@mui/icons-material";
 import Notify from "../Atoms/Notify";
 import Account from "../Atoms/Account";
@@ -110,11 +112,11 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 // Main ManagerSidebar component
 export default function ManagerSidebar({ children }) {
-  const theme = useTheme(); // Using MUI theme
-  const navigate = useNavigate(); // Hook for navigation
-  const [open, setOpen] = React.useState(true); // State to handle desktop drawer open/close
-  const [mobileOpen, setMobileOpen] = React.useState(false); // State to handle mobile drawer open/close
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md")); // Check if current screen size is small
+	const theme = useTheme(); // Using MUI theme
+	const navigate = useNavigate(); // Hook for navigation
+	const [open, setOpen] = React.useState(true); // State to handle desktop drawer open/close
+	const [mobileOpen, setMobileOpen] = React.useState(false); // State to handle mobile drawer open/close
+	const isSmallScreen = useMediaQuery(theme.breakpoints.down("md")); // Check if current screen size is small
   const [pendingCount, setPendingCount] = useState(0); // State to hold pending account requests count
 
   // Function to toggle drawer open and close based on screen size
@@ -126,38 +128,38 @@ export default function ManagerSidebar({ children }) {
     }
   };
 
-  // Sidebar navigation items with their icons and labels
-  const navItems = [
-    {
-      path: "/ManagerDashboard",
-      label: "Dashboard",
-      icon: <DashboardIcon sx={{ color: "#ffffff" }} />,
-    },
-    {
-      path: "/Reports",
-      label: "Reports",
-      icon: <ReportIcon sx={{ color: "#ffffff" }} />,
-    },
-    {
-      path: "/CheckStatus",
-      label: "Check status",
-      icon: <CheckIcon sx={{ color: "#ffffff" }} />,
-    },
-    {
-      path: "/ManagerHistory",
-      label: "History",
-      icon: <HistoryIcon sx={{ color: "#ffffff" }} />,
-    }, // Added History
-    {
-      path: "/ManageServices",
-      label: "Manage Services",
-      icon: <BuildIcon sx={{ color: "#ffffff" }} />,
-    },
-    {
-      path: "/feedback",
-      label: "Manage Feedback",
-      icon: <FeedbackIcon sx={{ color: "#ffffff" }} />,
-    },
+	// Sidebar navigation items with their icons and labels
+	const navItems = [
+		{
+			path: "/ManagerDashboard",
+			label: "Dashboard",
+			icon: <DashboardIcon sx={{ color: "#ffffff" }} />,
+		},
+		{
+			path: "/Reports",
+			label: "Reports",
+			icon: <ReportIcon sx={{ color: "#ffffff" }} />,
+		},
+		{
+			path: "/CheckStatus",
+			label: "Check status",
+			icon: <CheckIcon sx={{ color: "#ffffff" }} />,
+		},
+		{
+			path: "/ManagerHistory",
+			label: "History",
+			icon: <HistoryIcon sx={{ color: "#ffffff" }} />,
+		}, // Added History
+		{
+			path: "/ManageServices",
+			label: "Manage Services",
+			icon: <BuildIcon sx={{ color: "#ffffff" }} />,
+		},
+		{
+			path: "/feedback",
+			label: "Manage Feedback",
+			icon: <FeedbackIcon sx={{ color: "#ffffff" }} />,
+		},
     {
       path: "/pending-users",
       label: "Pending Accounts",
@@ -171,7 +173,7 @@ export default function ManagerSidebar({ children }) {
         </Badge>
       ),
     },
-  ];
+	];
 
   // JSX for sidebar drawer content
   const drawerContent = (

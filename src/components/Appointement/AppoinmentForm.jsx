@@ -193,9 +193,9 @@ const AppointmentSubmit = () => {
                     px: 4,
                     py: 1,
                     fontWeight: 600,
-                    backgroundColor: theme.palette.success.main,
+                    backgroundColor: '#2e7d32',
                     '&:hover': {
-                      backgroundColor: theme.palette.success.dark
+                      backgroundColor: '#1b5e20'
                     }
                   }}
                 >
