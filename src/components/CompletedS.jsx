@@ -169,7 +169,7 @@ function CompletedS() {
 										<InvoiceView appointment={appointment} />
 									</TableCell>
 									<TableCell>
-										<WhatsAppButton phone={appointment.contactNumber} />
+										<WhatsAppButton phone={appointment.contactNumber} VNumber={ appointment.vehicleNumber} />
 									</TableCell>
 									<TableCell>
 										{/*  PAYMENT BUTTON with Confirmation */}

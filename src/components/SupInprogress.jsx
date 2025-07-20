@@ -164,7 +164,7 @@ const SupInprogress = () => {
 										/>
 									</TableCell>
 									<TableCell>
-										<WhatsAppButton phone={appointment.contactNumber} />
+										<WhatsAppButton phone={appointment.contactNumber} VNumber={ appointment.vehicleNumber} />
 									</TableCell>
 								</TableRow>
 							))
