@@ -22,6 +22,7 @@ import {
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import { lightBlue } from "@mui/material/colors";
 import { useAuth } from "../context/AuthContext";
+import ConfirmationDialog from "./sub/Confirmation"; //Import your reusable confirmation dialog
 
 const API_BASE_URL = "http://localhost:5000/api/appointments";
 
@@ -31,9 +32,14 @@ function TAssignedWork() {
 	const [searchTerm, setSearchTerm] = useState("");
 	const [loading, setLoading] = useState(true);
 
+	// Decline Dialog
 	const [openDialog, setOpenDialog] = useState(false);
 	const [declineReason, setDeclineReason] = useState("");
 	const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
+
+	// Accept Confirmation
+	const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+	const [confirmAppointmentId, setConfirmAppointmentId] = useState(null);
 
 	const [expandedWorkload, setExpandedWorkload] = useState({});
 
@@ -41,9 +47,7 @@ function TAssignedWork() {
 	useEffect(() => {
 		axios
 			.get(API_BASE_URL, {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
+				headers: { Authorization: `Bearer ${token}` },
 			})
 			.then((response) => {
 				setAppointments(response.data);
@@ -55,40 +59,42 @@ function TAssignedWork() {
 			});
 	}, []);
 
-	// Function to confirm appointment
-	const handleConfirm = async (appointmentId) => {
-		const isConfirmed = window.confirm(
-			"Are you sure you want to confirm this appointment?"
-		);
-		if (!isConfirmed) return; // If user cancels, do nothing
+	// Open Confirmation for Accepting Appointment
+	const handleOpenConfirmDialog = (appointmentId) => {
+		setConfirmAppointmentId(appointmentId);
+		setOpenConfirmDialog(true);
+	};
 
+	const handleCloseConfirmDialog = () => {
+		setOpenConfirmDialog(false);
+		setConfirmAppointmentId(null);
+	};
+
+	// Confirm Accept
+	const handleConfirm = async () => {
+		if (!confirmAppointmentId) return;
 		try {
 			await axios.put(
-				`${API_BASE_URL}/${appointmentId}/tStatusUpdate`,
+				`${API_BASE_URL}/${confirmAppointmentId}/tStatusUpdate`,
 				{ status: "Accepted" },
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
+				{ headers: { Authorization: `Bearer ${token}` } }
 			);
 
-			// Update UI instantly
 			setAppointments((prevAppointments) =>
 				prevAppointments.map((appointment) =>
-					appointment._id === appointmentId
+					appointment._id === confirmAppointmentId
 						? { ...appointment, status: "Accepted" }
 						: appointment
 				)
 			);
-
-			alert(" Appointment Confirmed!");
 		} catch (error) {
 			console.error("Error confirming appointment:", error);
-			alert(" Failed to confirm appointment.");
+		} finally {
+			handleCloseConfirmDialog();
 		}
 	};
 
+	// Decline Dialog Logic
 	const handleOpenDialog = (appointmentId) => {
 		setSelectedAppointmentId(appointmentId);
 		setDeclineReason("");
@@ -104,18 +110,10 @@ function TAssignedWork() {
 		try {
 			await axios.put(
 				`${API_BASE_URL}/${selectedAppointmentId}/tStatusUpdate`,
-				{
-					status: "Reject2",
-					reason: declineReason,
-				},
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
+				{ status: "Reject2", reason: declineReason },
+				{ headers: { Authorization: `Bearer ${token}` } }
 			);
 
-			// Update frontend UI
 			setAppointments((prevAppointments) =>
 				prevAppointments.map((appointment) =>
 					appointment._id === selectedAppointmentId
@@ -123,11 +121,8 @@ function TAssignedWork() {
 						: appointment
 				)
 			);
-
-			alert(" Appointment Declined!");
 		} catch (error) {
 			console.error("Error declining appointment:", error);
-			alert(" Failed to decline appointment.");
 		} finally {
 			handleCloseDialog();
 		}
@@ -140,24 +135,12 @@ function TAssignedWork() {
 		}));
 	};
 
-	const filteredAppointments = appointments
-		// .filter((appointment) => {
-		// 	console.log("🔍 Checking appointment:");
-		// 	console.log("• appointment.tech:", appointment.tech?.toString());
-		// 	console.log("• user.technicianId:", user?.technicianId);
-		// 	console.log("• appointment.status:", appointment.status);
-		// 	const match =
-		// 		appointment.tech?.toString() === user?.technicianId &&
-		// 		appointment.status === "Waiting for Technician Confirmation";
-		// 	console.log("→ match:", match);
-		// 	return match;
-		// })
-		.filter((appointment) =>
-			(appointment.vehicleId || "")
-				.toString()
-				.toLowerCase()
-				.includes(searchTerm.toLowerCase())
-		);
+	const filteredAppointments = appointments.filter((appointment) =>
+		(appointment.vehicleId || "")
+			.toString()
+			.toLowerCase()
+			.includes(searchTerm.toLowerCase())
+	);
 
 	return (
 		<Container>
@@ -193,7 +176,6 @@ function TAssignedWork() {
 							<TableCell>Vehicle Number</TableCell>
 							<TableCell>Appointment Date</TableCell>
 							<TableCell>Work Load</TableCell>
-							{/*<TableCell>Status</TableCell>*/}
 							<TableCell>Actions</TableCell>
 						</TableRow>
 					</TableHead>
@@ -225,11 +207,7 @@ function TAssignedWork() {
 											<TableCell>
 												{new Date(appointment.expectedDeliveryDate).toLocaleDateString(
 													"en-US",
-													{
-														year: "numeric",
-														month: "short",
-														day: "numeric",
-													}
+													{ year: "numeric", month: "short", day: "numeric" }
 												)}
 											</TableCell>
 											<TableCell>
@@ -237,21 +215,6 @@ function TAssignedWork() {
 													<AssignmentIcon />
 												</IconButton>
 											</TableCell>
-											{/*<TableCell>
-												{appointment.status === "Accepted" ? (
-													<span style={{ color: "green", fontWeight: "bold" }}>
-														Accepted
-													</span>
-												) : appointment.status === "Reject2" ? (
-													<span style={{ color: "red", fontWeight: "bold" }}>
-														Declined
-													</span>
-												) : (
-													<span style={{ color: "orange", fontWeight: "bold" }}>
-														Waiting
-													</span>
-												)}
-											</TableCell>*/}
 											<TableCell>
 												{appointment.status === "Accepted" ? (
 													<Button variant="contained" disabled>
@@ -261,7 +224,7 @@ function TAssignedWork() {
 													<Button
 														variant="contained"
 														color="primary"
-														onClick={() => handleConfirm(appointment._id)}
+														onClick={() => handleOpenConfirmDialog(appointment._id)}
 														sx={{ mr: 1 }}
 													>
 														Accept
@@ -336,43 +299,52 @@ function TAssignedWork() {
 								</TableCell>
 							</TableRow>
 						)}
-
-						{/* Decline Reason Dialog */}
-						<Dialog open={openDialog} onClose={handleCloseDialog}>
-							<DialogTitle>Decline Appointment</DialogTitle>
-							<DialogContent>
-								<TextField
-									autoFocus
-									margin="dense"
-									label="Reason for Decline"
-									type="text"
-									fullWidth
-									multiline
-									rows={3}
-									value={declineReason}
-									onChange={(e) => setDeclineReason(e.target.value)}
-									sx={{
-										"& .MuiInputBase-root": {
-											alignItems: "flex-start",
-											width: 500,
-										},
-									}}
-								/>
-							</DialogContent>
-							<DialogActions>
-								<Button onClick={handleCloseDialog}>Cancel</Button>
-								<Button
-									onClick={handleConfirmDecline}
-									color="error"
-									disabled={declineReason.trim() === ""}
-								>
-									Confirm Decline
-								</Button>
-							</DialogActions>
-						</Dialog>
 					</TableBody>
 				</Table>
 			</TableContainer>
+
+			{/* Confirmation Dialog for Accept */}
+			<ConfirmationDialog
+				open={openConfirmDialog}
+				title="Confirm Appointment"
+				message="Are you sure you want to accept this appointment?"
+				onConfirm={handleConfirm}
+				onCancel={handleCloseConfirmDialog}
+			/>
+
+			{/*Decline Reason Dialog */}
+			<Dialog open={openDialog} onClose={handleCloseDialog}>
+				<DialogTitle>Decline Appointment</DialogTitle>
+				<DialogContent>
+					<TextField
+						autoFocus
+						margin="dense"
+						label="Reason for Decline"
+						type="text"
+						fullWidth
+						multiline
+						rows={3}
+						value={declineReason}
+						onChange={(e) => setDeclineReason(e.target.value)}
+						sx={{
+							"& .MuiInputBase-root": {
+								alignItems: "flex-start",
+								width: 500,
+							},
+						}}
+					/>
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={handleCloseDialog}>Cancel</Button>
+					<Button
+						onClick={handleConfirmDecline}
+						color="error"
+						disabled={declineReason.trim() === ""}
+					>
+						Confirm Decline
+					</Button>
+				</DialogActions>
+			</Dialog>
 		</Container>
 	);
 }
