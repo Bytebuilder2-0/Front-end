@@ -3,7 +3,7 @@ import { TextField, Button, Typography, Container, Paper, Box, Avatar, Grid } fr
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
-
+import { toast } from 'react-hot-toast'; // ✅ import toast
 
 const VehicleForm = () => {
   const { user, token } = useAuth();
@@ -12,8 +12,6 @@ const VehicleForm = () => {
     model: '',
     registrationNumber: ''
   });
-
-  const [responseMsg, setResponseMsg] = useState('');
 
   const handleChange = (e) => {
     setFormData({ 
@@ -24,23 +22,38 @@ const VehicleForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setResponseMsg('');
 
     try {
       const res = await axios.post('http://localhost:5000/api/vehicles/register', formData);
-      setResponseMsg(res.data.message);
+
+      // ✅ Show success toast
+      toast.success("🚗 Vehicle added successfully!", {
+        style: {
+          borderRadius: '10px',
+          background: '#1a237e',
+          color: '#fff',
+        },
+        iconTheme: {
+          primary: '#82b1ff',
+          secondary: '#fff',
+        },
+      });
+
       setFormData({ type: '', model: '', registrationNumber: '' });
     } catch (err) {
-      setResponseMsg(err.response?.data?.error || 'Registration failed.');
+      // ✅ Show error toast
+      toast.error(err.response?.data?.error || "❌ Vehicle registration failed.");
     }
   };
 
   return (
     <Container maxWidth="sm">
-      <Paper  sx={{ p: 1, mt: 3}} style={{ height: '50vh', width: 405, margin: "0px auto" }}>
+      <Paper sx={{ p: 1, mt: 3 }} style={{ height: '50vh', width: 405, margin: "0px auto" }}>
         <Grid align="center" mb={2}>
-        <Avatar sx={{ width: 50, height: 50 }}>r`</Avatar>
-        <Typography variant="h5" gutterBottom>Vehicle Details</Typography>
+          <Avatar sx={{ width: 50, height: 50 }}>
+            <AddCircleOutlineIcon />
+          </Avatar>
+          <Typography variant="h5" gutterBottom>Vehicle Details</Typography>
         </Grid>
         <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           <TextField
@@ -67,12 +80,7 @@ const VehicleForm = () => {
             onChange={handleChange}
             required
           />
-          
-          <Button variant="contained"  type="submit">Add Vehicle</Button>
-          {responseMsg && (
-            <Typography variant="body1" color="secondary">{responseMsg}</Typography>
-          )}
-        
+          <Button variant="contained" type="submit">Add Vehicle</Button>
         </Box>
       </Paper>
     </Container>

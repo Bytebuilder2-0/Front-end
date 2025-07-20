@@ -179,13 +179,20 @@ const Signup = () => {
 			  //waiting page ekk daanna.......................................
 			  //navigate to email verification 
 			  //itapasse login ekata navigate krnn
-
-
-
-
-
-			// Navigate to login page on success
+				toast.success("🎉 Account created successfully! Welcome aboard!", {
+			style: {
+				borderRadius: "10px",
+				background: "#1a237e",
+				color: "#fff",
+			},
+			iconTheme: {
+				primary: "#82b1ff",
+				secondary: "#fff",
+			},
+		});
+        setTimeout(() => {
 			navigate("/Loginpage");
+		}, 2000);
 
 			setFormData({
 				email: "",

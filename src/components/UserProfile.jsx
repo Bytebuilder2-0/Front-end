@@ -233,7 +233,7 @@ const UserProfile = ({ userId, onBack }) => {
         minHeight: "100vh",
         background: "linear-gradient(135deg, #82b1ff 0%, #1a237e 100%)",
         position: "relative",
-        overflow: "hidden",
+        zIndex: 1,  //------------------------------------------
         "&::before": {
           content: '""',
           position: "absolute",
