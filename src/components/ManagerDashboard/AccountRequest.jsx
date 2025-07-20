@@ -10,7 +10,6 @@ import {
   Paper,
   Button,
   CircularProgress,
-  Container,
   Stack,
 } from "@mui/material";
 import axios from "axios";
@@ -48,7 +47,7 @@ const AccountRequest = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      setPendingUsers(pendingUsers.filter((user) => user._id !== userId));
+      setPendingUsers((prev) => prev.filter((user) => user._id !== userId));
     } catch (err) {
       console.error(err);
       alert("Approval failed. Please try again.");
@@ -66,7 +65,7 @@ const AccountRequest = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      setPendingUsers(pendingUsers.filter((user) => user._id !== userId));
+      setPendingUsers((prev) => prev.filter((user) => user._id !== userId));
     } catch (err) {
       console.error(err);
       alert("Rejection failed. Please try again.");
@@ -80,8 +79,8 @@ const AccountRequest = () => {
   }, []);
 
   return (
-    <Container maxWidth="md" sx={{ mt: 5 }}>
-      <Typography variant="h4" gutterBottom>
+    <Box sx={{ mt: 4, px: { xs: 2, md: 4 } }}>
+      <Typography variant="h5" gutterBottom fontWeight="bold">
         Pending Technician & Supervisor Requests ({pendingUsers.length})
       </Typography>
 
@@ -94,7 +93,15 @@ const AccountRequest = () => {
       ) : pendingUsers.length === 0 ? (
         <Typography>No pending requests.</Typography>
       ) : (
-        <Paper sx={{ mt: 3 }}>
+        <Paper
+          sx={{
+            mt: 3,
+            p: 2,
+            overflowX: "auto",
+            borderRadius: 2,
+            boxShadow: 2,
+          }}
+        >
           <Table>
             <TableHead>
               <TableRow>
@@ -140,7 +147,7 @@ const AccountRequest = () => {
           </Table>
         </Paper>
       )}
-    </Container>
+    </Box>
   );
 };
 

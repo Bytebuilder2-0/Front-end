@@ -10,25 +10,22 @@ import {
   Container,
   CircularProgress,
   Alert,
-  Paper,
   Rating,
+  useTheme,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import Slider from "react-slick"; // Import react-slick for carousel
-import FeedbackIcon from "@mui/icons-material/Feedback"; // For feedback icon
+import Slider from "react-slick";
 
-// FeedbackDisplay component
 const FeedbackDisplay = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const theme = useTheme();
 
   useEffect(() => {
     const fetchFeedbacks = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/api/feedbackDisplay"
-        );
+        const response = await axios.get("http://localhost:5000/api/feedbackDisplay");
         if (response.data.success && Array.isArray(response.data.data)) {
           setFeedbacks(response.data.data);
         } else {
@@ -46,27 +43,25 @@ const FeedbackDisplay = () => {
   }, []);
 
   const StyledCard = styled(Card)(({ theme }) => ({
-    marginBottom: theme.spacing(2),
-    boxShadow: theme.shadows[5],
-    borderRadius: theme.shape.borderRadius * 2,
-    height: "auto",
-    padding: theme.spacing(2),
-    overflow: "hidden",
-    background: "rgba(255, 255, 255, 0.9)",
-    backdropFilter: "blur(20px)",
-    transition: "all 0.3s ease",
+    p: theme.spacing(2),
+    borderRadius: 20,
+    background: "rgba(255, 255, 255, 0.95)",
+    backdropFilter: "blur(10px)",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
+    maxWidth: 500,
+    margin: "0 auto",
+    transition: "transform 0.3s ease",
     "&:hover": {
-      transform: "translateY(-10px)",
-      boxShadow: "0 25px 50px rgba(0,0,0,0.1)"
-    }
+      transform: "translateY(-6px)",
+    },
   }));
 
   const AdminReplyBox = styled(Box)(({ theme }) => ({
-    backgroundColor: theme.palette.grey[200],
+    backgroundColor: theme.palette.grey[100],
     padding: theme.spacing(1),
     borderRadius: theme.shape.borderRadius,
     borderLeft: `4px solid ${theme.palette.primary.main}`,
-    marginTop: theme.spacing(0.5),
+    marginTop: theme.spacing(1),
     maxHeight: "80px",
     overflow: "hidden",
   }));
@@ -83,7 +78,7 @@ const FeedbackDisplay = () => {
             <Avatar
               src={fallbackAvatar}
               alt={feedback.username || "User"}
-              sx={{ width: 50, height: 50 }}
+              sx={{ width: 48, height: 48 }}
               imgProps={{
                 onError: (e) => {
                   e.target.src = fallbackAvatar;
@@ -92,38 +87,27 @@ const FeedbackDisplay = () => {
             />
           }
           title={
-            <Typography variant="h6" component="div">
-              {feedback.username || "Anonymous User"}
+            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+              {feedback.username || "Anonymous"}
             </Typography>
           }
           subheader={
             <Typography variant="body2" color="text.secondary">
               {feedback.feedbackDate
-                ? new Date(feedback.feedbackDate).toLocaleDateString("en-GB", {
-                    year: "numeric",
-                    month: "numeric",
-                    day: "numeric",
-                  })
-                : "No date available"}
+                ? new Date(feedback.feedbackDate).toLocaleDateString("en-GB")
+                : "No date"}
             </Typography>
           }
         />
-        <CardContent sx={{ paddingBottom: "4px" }}>
-          <Typography variant="body2" paragraph>
-            <Box component="span" fontWeight="bold">
-              Comment:
-            </Box>{" "}
-            {feedback.userComment || "No comment provided"}
+        <CardContent sx={{ pt: 0 }}>
+          <Rating value={feedback.rating || 0} precision={0.5} readOnly sx={{ fontSize: 20 }} />
+          <Typography variant="body2" sx={{ mt: 1 }}>
+            <strong>Comment:</strong> {feedback.userComment || "No comment provided"}
           </Typography>
-
-          <Box display="flex" alignItems="center" mb={1}>
-            <Rating value={feedback.rating || 0} readOnly />
-          </Box>
-
           {feedback.adminReply && (
             <AdminReplyBox>
-              <Typography variant="subtitle2" color="text.secondary">
-                Admin Reply:
+              <Typography variant="caption" color="text.secondary">
+                Garage Response
               </Typography>
               <Typography variant="body2">{feedback.adminReply}</Typography>
             </AdminReplyBox>
@@ -133,81 +117,69 @@ const FeedbackDisplay = () => {
     );
   };
 
-  const carouselSettings = {
-    dots: true, // Enable dots for navigation
-    infinite: true, // Loop the slides
-    speed: 500,
-    slidesToShow: 3, // Show three slides at a time
+  const settings = {
+    dots: true,
+    infinite: true,
+    autoplay: true,
+    autoplaySpeed: 6000,
+    speed: 700,
+    slidesToShow: 1,
     slidesToScroll: 1,
-    autoplay: true, // Enable auto play
-    autoplaySpeed: 5000, // Interval between slides
-    centerMode: true, // Center the active slide
-    focusOnSelect: true, // Allow selecting the slide by clicking
-    responsive: [
-      {
-        breakpoint: 1024, // For tablet and larger screens
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-      {
-        breakpoint: 600, // For smaller screens like phones
-        settings: {
-          slidesToShow: 1,
-        },
-      },
-    ],
+    arrows: false,
   };
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      {/* <Typography
-        variant="h4"
-        component="h2"
-        gutterBottom
-        align="center"
-        sx={{ mb: 4 }}
-      >
-        Customer Feedback
-      </Typography> */}
-      <Typography
-            variant="h4"
+    <Box
+      sx={{
+        py: { xs: 8, md: 12 },
+        background: "linear-gradient(135deg, #cddcfd 0%, #1a237e 100%)",
+        position: "relative",
+        overflow: "hidden",
+      }}
+    >
+      <Container>
+        <Box sx={{ textAlign: "center", mb: 4 }}>
+          <Typography
+            variant="h3"
             sx={{
+              color: "#fff",
               fontWeight: 800,
-              mb: 8,
-              textAlign: "center",
-              fontSize: { xs: "2.5rem", md: "3.5rem" },
-              background: "linear-gradient(45deg, #1976d2, #42a5f5)",
-              backgroundClip: "text",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
+              textShadow: "0 2px 10px rgba(0,0,0,0.2)",
             }}
           >
-            Customer Reviews
+            What Our Customers Say
           </Typography>
-
-      {loading ? (
-        <Box display="flex" justifyContent="center" my={4}>
-          <CircularProgress />
+          <Typography
+            variant="subtitle1"
+            sx={{ color: "rgba(255,255,255,0.8)", mt: 1 }}
+          >
+            Genuine feedback shared by customers after their service
+          </Typography>
         </Box>
-      ) : error ? (
-        <Alert severity="error" sx={{ mb: 3 }}>
-          {error}
-        </Alert>
-      ) : feedbacks.length === 0 ? (
-        <Paper elevation={0} sx={{ p: 3, textAlign: "center" }}>
-          <Typography variant="body1">No feedback available</Typography>
-        </Paper>
-      ) : (
-        <Slider {...carouselSettings}>
-          {feedbacks.map((feedback) => (
-            <div key={feedback.id || Math.random().toString(36).substr(2, 9)}>
-              <FeedbackCard feedback={feedback} />
-            </div>
-          ))}
-        </Slider>
-      )}
-    </Container>
+
+        {loading ? (
+          <Box display="flex" justifyContent="center" my={6}>
+            <CircularProgress color="inherit" />
+          </Box>
+        ) : error ? (
+          <Alert severity="error" sx={{ mt: 3 }}>
+            {error}
+          </Alert>
+        ) : feedbacks.length === 0 ? (
+          <Typography align="center" sx={{ color: "white", fontSize: "1rem" }}>
+            No feedback available
+          </Typography>
+        ) : (
+          <Slider {...settings}>
+            {feedbacks.map((feedback) => (
+              <Box key={feedback.id || feedback.feedbackId}>
+                <FeedbackCard feedback={feedback} />
+              </Box>
+            ))}
+          </Slider>
+        )}
+      </Container>
+    </Box>
   );
 };
 
