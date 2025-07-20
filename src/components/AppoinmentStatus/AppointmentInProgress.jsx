@@ -29,7 +29,9 @@ const AppointmentInProgress = ({ appointment }) => {
     : 0;
 
   return (
+
     <Box sx={{ padding: "20px" }}>
+
       {/* Appointment Header */}
           <Typography  gutterBottom sx={{ 
                        fontWeight: 600,

@@ -14,6 +14,10 @@ import {
   Paper,
   IconButton,
   Tooltip,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
@@ -23,7 +27,7 @@ import WhatsAppButton from "../sub/WhatsAppButton";
 import ConfirmDeleteDialog from "../ServiceManage/ConfirmDeleteDialog";
 import SuccessSnackbar from "../ServiceManage/SuccessSnackbar";
 import { jwtDecode } from "jwt-decode";
-import UpdateAppointmentDetailsDialog from "./UpdateAppointmentDetailsDialog"; // Import the new component for updating appointment details
+import UpdateAppointmentDetailsDialog from "./UpdateAppointmentDetailsDialog";
 
 const API_BASE_URL = "http://localhost:5000/api/appointments";
 const token = localStorage.getItem("token");
@@ -37,7 +41,6 @@ if (token) {
   }
 }
 
-// config object you can reuse
 const authConfig = {
   headers: {
     Authorization: `Bearer ${token}`,
@@ -46,22 +49,23 @@ const authConfig = {
 
 const ApointmentChecking = () => {
   const [appointments, setAppointments] = useState([]);
-  const [searchTerm, setSearchTerm] = useState(""); // For Vehicle ID search
-  const [preferredDate, setPreferredDate] = useState(""); // For Preferred Date filter
+  const [searchTerm, setSearchTerm] = useState("");
+  const [vehicleNumberSearch, setVehicleNumberSearch] = useState("");
+  const [preferredDate, setPreferredDate] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [confirmDialog, setConfirmDialog] = useState({
     open: false,
     appointment: null,
     actionType: "",
   });
   const [snackbar, setSnackbar] = useState({ open: false, message: "" });
-  const [selectedAppointment, setSelectedAppointment] = useState(null); // To store selected appointment for editing
-  const [openUpdateDialog, setOpenUpdateDialog] = useState(false); // To control the open state of the update dialog
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
 
   useEffect(() => {
     axios
       .get(API_BASE_URL, authConfig)
       .then((res) => {
-        // Sort appointments: Checking first, then Pending
         const sortedAppointments = res.data
           .filter((appt) => ["Checking", "Pending"].includes(appt.status))
           .sort((a, b) => {
@@ -94,7 +98,6 @@ const ApointmentChecking = () => {
         } successfully!`,
       });
 
-      // Reload the page after status update
       window.location.reload();
     } catch (err) {
       console.error("Error updating status:", err);
@@ -119,40 +122,45 @@ const ApointmentChecking = () => {
   };
 
   const handleOpenUpdateDialog = (appointment) => {
-    setSelectedAppointment(appointment); // Set the selected appointment to edit
-    setOpenUpdateDialog(true); // Open the update dialog
+    setSelectedAppointment(appointment);
+    setOpenUpdateDialog(true);
   };
 
   const handleCloseUpdateDialog = () => {
-    setOpenUpdateDialog(false); // Close the update dialog
-    setSelectedAppointment(null); // Reset the selected appointment
+    setOpenUpdateDialog(false);
+    setSelectedAppointment(null);
   };
 
-  // Function to handle date input format and apply filtering based on full date, month, or day
   const getDateFilterType = (dateInput) => {
-    const dateRegex = /^\d{4}-\d{2}-\d{2}$/; // Full Date (YYYY-MM-DD)
-    const monthRegex = /^\d{2}$/; // Month (MM)
-    const dayRegex = /^\d{2}$/; // Day (DD)
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    const monthRegex = /^\d{2}$/;
+    const dayRegex = /^\d{2}$/;
 
     if (dateRegex.test(dateInput)) {
-      return "full"; // Full date format (YYYY-MM-DD)
+      return "full";
     } else if (monthRegex.test(dateInput)) {
-      return "month"; // Month format (MM)
+      return "month";
     } else if (dayRegex.test(dateInput)) {
-      return "day"; // Day format (DD)
+      return "day";
     } else {
-      return "none"; // Invalid input
+      return "none";
     }
   };
 
-  // Filter appointments based on Vehicle ID and Preferred Date (Date, Month, or Day)
   const filteredAppointments = appointments.filter((appointment) => {
     const matchesVehicleId = String(appointment.vehicleId || "")
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
 
-    const dateFilterType = getDateFilterType(preferredDate);
+    const matchesVehicleNumber = String(appointment.vehicleNumber || "")
+      .toLowerCase()
+      .includes(vehicleNumberSearch.toLowerCase());
 
+    const matchesStatus =
+      statusFilter === "all" ||
+      appointment.status.toLowerCase() === statusFilter.toLowerCase();
+
+    const dateFilterType = getDateFilterType(preferredDate);
     let matchesPreferredDate = true;
 
     if (dateFilterType === "full") {
@@ -171,12 +179,16 @@ const ApointmentChecking = () => {
       matchesPreferredDate = appointmentDay === preferredDate;
     }
 
-    return matchesVehicleId && matchesPreferredDate;
+    return (
+      matchesVehicleId &&
+      matchesVehicleNumber &&
+      matchesStatus &&
+      matchesPreferredDate
+    );
   });
 
   return (
     <Container maxWidth="lg" sx={{ mt: 0, mb: 1 }}>
-      {/* Header */}
       <Box
         display="flex"
         justifyContent="space-between"
@@ -185,30 +197,51 @@ const ApointmentChecking = () => {
       >
         <Typography variant="h5" fontWeight="bold" color="#1976d2"></Typography>
 
-        <Box display="flex" alignItems="center">
+        <Box display="flex" alignItems="center" gap={2}>
           <TextField
             label="Search by Vehicle ID"
             variant="outlined"
             size="small"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            sx={{ mr: 2 }}
+            sx={{ width: 180 }}
           />
 
           <TextField
-            label="Filter by Preferred Date"
+            label="Search by Vehicle Number"
+            variant="outlined"
+            size="small"
+            value={vehicleNumberSearch}
+            onChange={(e) => setVehicleNumberSearch(e.target.value)}
+            sx={{ width: 180 }}
+          />
+
+          <FormControl size="small" sx={{ width: 180 }}>
+            <InputLabel>Filter by Status</InputLabel>
+            <Select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              label="Filter by Status"
+            >
+              <MenuItem value="all">All Statuses</MenuItem>
+              <MenuItem value="Checking">Checking</MenuItem>
+              <MenuItem value="Pending">Pending</MenuItem>
+            </Select>
+          </FormControl>
+
+          <TextField
+            label="Filter by Date"
             type="date"
             variant="outlined"
             size="small"
             value={preferredDate}
             onChange={(e) => setPreferredDate(e.target.value)}
             InputLabelProps={{ shrink: true }}
-            sx={{ width: 200 }}
+            sx={{ width: 180 }}
           />
         </Box>
       </Box>
 
-      {/* Table */}
       <TableContainer
         component={Paper}
         sx={{
@@ -221,16 +254,9 @@ const ApointmentChecking = () => {
       >
         <Table stickyHeader>
           <TableHead>
-            <TableRow
-              sx={{
-                "& th": {
-                  fontWeight: "bold",
-                  backgroundColor: "#f5f5f5",
-                  textAlign: "center",
-                }, // Center header text
-              }}
-            >
+            <TableRow>
               <TableCell align="center">Vehicle ID</TableCell>
+              <TableCell align="center">Vehicle Number</TableCell>
               <TableCell align="center">Preferred Date</TableCell>
               <TableCell align="center">Appointment Details</TableCell>
               <TableCell align="center">Contact</TableCell>
@@ -241,14 +267,11 @@ const ApointmentChecking = () => {
           <TableBody>
             {filteredAppointments.length > 0 ? (
               filteredAppointments.map((appointment) => (
-                <TableRow
-                  key={appointment._id}
-                  sx={{
-                    "&:nth-of-type(odd)": { backgroundColor: "#fafafa" },
-                    "&:hover": { backgroundColor: "#e0e0e0" },
-                  }}
-                >
+                <TableRow key={appointment._id}>
                   <TableCell align="center">{appointment.vehicleId}</TableCell>
+                  <TableCell align="center">
+                    {appointment.vehicleNumber}
+                  </TableCell>
                   <TableCell align="center">
                     {new Date(appointment.preferredDate).toLocaleDateString()}
                   </TableCell>
@@ -324,7 +347,7 @@ const ApointmentChecking = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
+                <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
                   <Typography variant="h6" color="text.secondary">
                     No Appointments Found
                   </Typography>
@@ -335,7 +358,6 @@ const ApointmentChecking = () => {
         </Table>
       </TableContainer>
 
-      {/* Confirm Dialog */}
       <ConfirmDeleteDialog
         open={confirmDialog.open}
         onClose={() =>
@@ -348,14 +370,12 @@ const ApointmentChecking = () => {
         actionName={confirmDialog.actionType === "Accept" ? "Accept" : "Reject"}
       />
 
-      {/* Success Snackbar */}
       <SuccessSnackbar
         open={snackbar.open}
         message={snackbar.message}
         onClose={() => setSnackbar({ open: false, message: "" })}
       />
 
-      {/* Update Appointment Details Dialog */}
       <UpdateAppointmentDetailsDialog
         appointment={selectedAppointment}
         open={openUpdateDialog}

@@ -96,7 +96,9 @@ const AllVehicles = () => {
       >
         Your Vehicles
       </Typography>
+
       <Typography  sx={{ color: 'green' }}>
+
         All your registered vehicles
       </Typography>
       
@@ -109,7 +111,9 @@ const AllVehicles = () => {
               sx={{ 
                 p: 3, 
                 height: '100%',
+
                 borderRadius: 3
+
               }} 
               elevation={3}
             >
