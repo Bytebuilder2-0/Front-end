@@ -29,7 +29,9 @@ const AppointmentInProgress = ({ appointment }) => {
     : 0;
 
   return (
-    <Box>
+
+    <Box sx={{ padding: "20px" }}>
+
       {/* Appointment Header */}
           <Typography  gutterBottom sx={{ 
                        fontWeight: 600,
@@ -59,9 +61,18 @@ const AppointmentInProgress = ({ appointment }) => {
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
             <ServiceIcon color="primary" sx={{ mr: 1 }} />
             <Typography>
-              <strong>Service:</strong> {appointment.services  || 'N/A'}
+              <strong>Service:</strong> {appointment.services?.slice(0, 2).join(',') || 'General Service'}
             </Typography>
           </Box>
+
+           <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                          <ServiceIcon color="primary" sx={{ mr: 1 }} />
+                          <Typography>
+                            <strong>Delivary Date:</strong> {appointment.expectedDeliveryDate ? format(new Date(appointment.expectedDeliveryDate), 'MMM d, yyyy') : 'Not specified'}
+                </Typography>
+                        
+                    
+             </Box>
 
     
         </Grid>
