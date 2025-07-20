@@ -165,42 +165,60 @@ const validateForm = () => {
   }
 
   // --- Time validation ---
-  if (!preferredTime) {
-    newErrors.preferredTime = 'Preferred time is required';
-  } else {
-    const [hours, minutes] = preferredTime.split(':').map(Number);
-    if (hours < 6 || hours === 0) {
-      newErrors.preferredTime = 'Time slot between 12:00 AM and 6:00 AM is not allowed';
+ if (!preferredTime) {
+  newErrors.preferredTime = 'Preferred time is required';
+} else {
+  // Parse 12-hour format with AM/PM
+  const timeParts = preferredTime.split(' ');
+  const timeValue = timeParts[0];
+  const period = timeParts[1]; // AM or PM
+  const [hoursStr, minutesStr] = timeValue.split(':');
+  let hours = parseInt(hoursStr, 10);
+  const minutes = parseInt(minutesStr, 10);
+
+  if (period === 'PM' && hours !== 12) {
+    hours += 12;
+  } else if (period === 'AM' && hours === 12) {
+    hours = 0;
+  }
+  if ((period === 'AM' && hours < 6) || (period === 'AM' && hours === 12)) {
+    newErrors.preferredTime = 'Time slot between 12:00 AM and 6:00 AM is not allowed';
+  }
+    if (preferredDate) {
+    const preferredDateTime = new Date(preferredDate);
+    preferredDateTime.setHours(hours, minutes, 0, 0);
+    const now = new Date();
+
+    // Check if preferred date is today
+    if (preferredDateTime.toDateString() === now.toDateString()) {
+      // Check if time is in the past
+      if (preferredDateTime <= now) {
+        newErrors.preferredTime = 'Time slot has already passed for today';
+      }
+      // Check minimum buffer time (1 hour from now)
+      else {
+        const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000);
+        if (preferredDateTime <= oneHourFromNow) {
+          newErrors.preferredTime = 'Please select a time at least 1 hour from now';
+        }
+      }
     }
+    if (expectedDeliveryDate) {
+      const deliveryDate = new Date(expectedDeliveryDate);
+      if (preferredDateTime.toDateString() === deliveryDate.toDateString()) {
+        // Additional validation for same-day delivery
+        const deliveryDateTime = new Date(deliveryDate);
+        deliveryDateTime.setHours(17, 0, 0, 0); // Assuming 5PM closing time
 
-    // --- If preferredDate === expectedDeliveryDate and preferredDate === today ---
-    const pDateStr = new Date(preferredDate).toDateString();
-    const eDateStr = new Date(expectedDeliveryDate).toDateString();
-    const nowStr = now.toDateString();
-if (preferredDate && expectedDeliveryDate && preferredTime) {
-  const pDate = new Date(preferredDate);
-  const eDate = new Date(expectedDeliveryDate);
-  const [hours, minutes] = preferredTime.split(':').map(Number);
-
-  // Combine preferredDate and preferredTime into one datetime
-  const preferredDateTime = new Date(pDate);
-  preferredDateTime.setHours(hours);
-  preferredDateTime.setMinutes(minutes);
-  preferredDateTime.setSeconds(0);
-  preferredDateTime.setMilliseconds(0);
-
-  // If preferredDate === expectedDeliveryDate and it is today
-  if (
-    pDate.toDateString() === eDate.toDateString() &&
-    pDate.toDateString() === now.toDateString()
-  ) {
-    if (preferredDateTime <= now) {
-      newErrors.preferredTime = 'Invalid time. Must be later than current time';
+       
+      }
     }
   }
 }
 
-  }
+
+
+  
 
   setErrors(newErrors);
   return Object.keys(newErrors).length === 0;

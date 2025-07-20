@@ -1,4 +1,4 @@
-import {React,useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
 	Typography,
 	ListItemIcon,
@@ -6,7 +6,6 @@ import {
 	List,
 	ListItem,
 	ListItemText,
-	Chip,
 	Divider,
 	Stack,
 	Grid,
@@ -21,6 +20,7 @@ import {
 	Task,
 	CheckCircle,
 } from "@mui/icons-material";
+
 import { green } from "@mui/material/colors";
 import { format } from "date-fns";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -32,6 +32,8 @@ import FeedbackForm from "../UserFeedback/FeedbackForm";
 import axios from "axios";
 import { loadStripe } from "@stripe/stripe-js";
 
+const baseURL = import.meta.env.VITE_API_BASE_URL;
+
 const stripePromise = loadStripe(
 	"pk_test_51Rl8A92E8JZ0nXeqBkKSyzbSZnPa4fHYeEe8TF2ApdVDI8BDRoDDD5u4EIgPLuNkRMHyZvq47KqNf4fPbqMrGDwa004pUMyJfU"
 );
@@ -41,11 +43,36 @@ const AppointmentDone = ({ appointment }) => {
 	const tasks = appointment.workload || [];
 	const completedTasks = tasks.filter((task) => task.status === "Completed");
 
+	const [budget, setBudget] = useState(null);
+
+	//  Fetch budget exactly like in InvoiceView
+	useEffect(() => {
+		const fetchBudget = async () => {
+			try {
+				const response = await axios.get(`${baseURL}/budget/${appointment._id}/view`, {
+					headers: {
+						Authorization: `Bearer ${localStorage.getItem("token")}`,
+					},
+				});
+				setBudget(response.data || {});
+			} catch (error) {
+				console.error("Error fetching budget:", error);
+				setBudget({ totalAmount: 0 });
+			}
+		};
+
+		fetchBudget();
+	}, [appointment._id]);
+
+	// Use totalAmount like InvoiceView
+	const totalAmount = budget?.totalAmount || 0;
+	const isBudgetSet = totalAmount > 0;
+
 	const handlePayment = async () => {
 		try {
 			const { data } = await axios.post(
 				"http://localhost:5000/api/payment/create-checkout-session",
-				{ appointmentId: appointment._id } 
+				{ appointmentId: appointment._id }
 			);
 
 			const stripe = await stripePromise;
@@ -58,19 +85,24 @@ const AppointmentDone = ({ appointment }) => {
 	return (
 		<Box sx={{ padding: "20px" }}>
 			{/* Appointment Header */}
-				 <Typography  gutterBottom sx={{ 
-							  fontWeight: 600,
-							  fontSize : 35,
-							  marginBottom: '1px'
-							}}>
-							  Appoinment Details
-							</Typography>
-							<Typography varient="caption" sx = {{color:'green'}} > Appoinment - Completed</Typography>
-							
-							<Divider sx={{ mb: 6  }} />
+			<Typography
+				gutterBottom
+				sx={{
+					fontWeight: 600,
+					fontSize: 35,
+					marginBottom: "1px",
+				}}
+			>
+				Appointment Details
+			</Typography>
+			<Typography  sx={{ color: "green" }}>
+				Appointment - Completed
+			</Typography>
+
+			<Divider sx={{ mb: 6 }} />
 
 			<Grid container spacing={2} sx={{ mb: 3 }}>
-				{/* Customer Column */}
+				{/* Vehicle ID */}
 				<Grid item xs={12} md={4}>
 					<Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
 						<IdIcon color="primary" sx={{ mr: 1 }} />
@@ -80,7 +112,7 @@ const AppointmentDone = ({ appointment }) => {
 					</Box>
 				</Grid>
 
-				{/* Service Column */}
+				{/* Service */}
 				<Grid item xs={12} md={4}>
 					<Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
 						<ServiceIcon color="primary" sx={{ mr: 1 }} />
@@ -99,7 +131,7 @@ const AppointmentDone = ({ appointment }) => {
 				</Grid>
 
 
-				{/* Vehicle Column */}
+				{/* Model & Plate Number */}
 				<Grid item xs={12} md={4}>
 					<Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
 						<ModelIcon color="primary" sx={{ mr: 1 }} />
@@ -118,6 +150,7 @@ const AppointmentDone = ({ appointment }) => {
 
 			<Divider sx={{ my: 3 }} />
 
+			{/* Payment & Tasks Completed Box */}
 			<Box
 				sx={{
 					backgroundColor: green[50],
@@ -132,21 +165,26 @@ const AppointmentDone = ({ appointment }) => {
 					<Typography
 						variant="subtitle1"
 						sx={{ color: green[800], fontWeight: "bold", fontSize: "23px" }}
-						mr="9"
 					>
-						Tasks completed !
+						Tasks completed!
 					</Typography>
 				</Stack>
 				<Typography variant="body2" sx={{ mb: 2 }}>
 					Your vehicle is ready for pickup. Please complete the payment and leave
-					feedback..
+					feedback.
 				</Typography>
+
 			<Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mt: 2 }}>
   <Button
-    variant="contained"
+   
+					variant="contained"
     // startIcon={<PaymentIcon />}
-    onClick={handlePayment}
-    sx={{ minWidth: 180 }}
+   
+					onClick={handlePayment}
+   
+					sx={{ minWidth: 180 }}
+					disabled={!isBudgetSet} // Disabled if totalAmount = 0
+				
   >
     Make Payment
   </Button>
@@ -168,13 +206,18 @@ const AppointmentDone = ({ appointment }) => {
 </Stack>
 
 										
-{/* 
-				<Button variant="contained" onClick={handlePayment} sx={{ ml: 2 }}>
-					Submit Feedback
-				</Button> */}
+
+				{!isBudgetSet && (
+					<Typography
+						variant="body2"
+						sx={{ color: "red", mt: 1, ml: 2, fontStyle: "italic" }}
+					>
+						Budget has not been assigned by the supervisor yet.
+					</Typography>
+				)}
 			</Box>
 
-			{/* Completed Tasks */}
+			{/* Completed Tasks List */}
 			<Typography
 				variant="subtitle2"
 				gutterBottom
