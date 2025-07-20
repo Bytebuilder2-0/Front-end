@@ -12,6 +12,7 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Button,
 } from "@mui/material";
 import WhatsAppButton from "../sub/WhatsAppButton";
 import DeatailsViewer from "../ManagerDashboard/viewDeatails";
@@ -41,6 +42,7 @@ const ApointmentHistory = () => {
   const [appointments, setAppointments] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [vehicleNumberSearch, setVehicleNumberSearch] = useState("");
+  const [dateFilter, setDateFilter] = useState("");
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -59,6 +61,23 @@ const ApointmentHistory = () => {
     fetchAppointments();
   }, []);
 
+  const getFormattedDate = (dateString) => {
+    if (!dateString) return "Not specified";
+    try {
+      const date = new Date(dateString);
+      return isNaN(date.getTime())
+        ? "Invalid date"
+        : date.toLocaleDateString("en-LK", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          });
+    } catch (e) {
+      console.error("Error formatting date:", e);
+      return "Invalid date";
+    }
+  };
+
   const filteredAppointments = appointments.filter((appointment) => {
     const matchesVehicleId = String(appointment.vehicleId || "")
       .toLowerCase()
@@ -68,8 +87,21 @@ const ApointmentHistory = () => {
       .toLowerCase()
       .includes(vehicleNumberSearch.toLowerCase());
 
-    return matchesVehicleId && matchesVehicleNumber;
+    // Date filtering by comparing ISO date strings
+    const matchesDate = dateFilter
+      ? new Date(appointment.expectedDeliveryDate)
+          .toISOString()
+          .split("T")[0] === dateFilter
+      : true;
+
+    return matchesVehicleId && matchesVehicleNumber && matchesDate;
   });
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setVehicleNumberSearch("");
+    setDateFilter("");
+  };
 
   return (
     <Container maxWidth="lg" sx={{ mt: 1, mb: 4 }}>
@@ -80,7 +112,9 @@ const ApointmentHistory = () => {
         alignItems="center"
         mb={2}
       >
-        <Typography variant="h5" fontWeight="bold" color="#1976d2"></Typography>
+        <Typography variant="h5" fontWeight="bold" color="#1976d2">
+          Appointment History
+        </Typography>
 
         <Box display="flex" alignItems="center" gap={2}>
           <TextField
@@ -98,6 +132,17 @@ const ApointmentHistory = () => {
             size="small"
             value={vehicleNumberSearch}
             onChange={(e) => setVehicleNumberSearch(e.target.value)}
+            sx={{ width: 180 }}
+          />
+
+          <TextField
+            label="Filter by Delivery Date"
+            type="date"
+            variant="outlined"
+            size="small"
+            value={dateFilter}
+            onChange={(e) => setDateFilter(e.target.value)}
+            InputLabelProps={{ shrink: true }}
             sx={{ width: 180 }}
           />
         </Box>
@@ -128,6 +173,7 @@ const ApointmentHistory = () => {
               <TableCell align="center">Vehicle ID</TableCell>
               <TableCell align="center">Vehicle Number</TableCell>
               <TableCell align="center">Model</TableCell>
+              <TableCell align="center">Expected Delivery Date</TableCell>
               <TableCell align="center">Details</TableCell>
               <TableCell align="center">Contact</TableCell>
               <TableCell align="center">Status</TableCell>
@@ -150,6 +196,9 @@ const ApointmentHistory = () => {
                     {appointment.vehicleNumber}
                   </TableCell>
                   <TableCell align="center">{appointment.model}</TableCell>
+                  <TableCell align="center">
+                    {getFormattedDate(appointment.expectedDeliveryDate)}
+                  </TableCell>
                   <TableCell align="center">
                     <DeatailsViewer appointment={appointment} />
                   </TableCell>
@@ -183,9 +232,9 @@ const ApointmentHistory = () => {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={7} align="center" sx={{ py: 5 }}>
+                <TableCell colSpan={8} align="center" sx={{ py: 5 }}>
                   <Typography variant="h6" color="text.secondary">
-                    {searchTerm || vehicleNumberSearch
+                    {searchTerm || vehicleNumberSearch || dateFilter
                       ? "No matching appointments found"
                       : "No appointments available"}
                   </Typography>

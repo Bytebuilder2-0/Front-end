@@ -153,7 +153,7 @@ const FeedbackActions = ({ feedback, onUpdate }) => {
           fullWidth
           size="small"
           disabled={loadingDetails || actionStatus === "yes"} // Disable if actionStatus is "yes"
-          sx={{ minWidth: "100px" }}
+          sx={{ minWidth: "100px" }} // Ensure button size is consistent with others
         >
           Delete
         </Button>
@@ -169,7 +169,7 @@ const FeedbackActions = ({ feedback, onUpdate }) => {
         open={confirmDeleteOpen}
         onClose={handleCancelDelete}
         onConfirm={handleConfirmDelete}
-        itemName={`feedback ID: ${feedback.feedbackId}`}
+        itemName={`feedback delete`}
       />
 
       <SuccessSnackbar

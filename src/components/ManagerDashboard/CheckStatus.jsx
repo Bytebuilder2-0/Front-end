@@ -267,7 +267,11 @@ const CheckStatus = () => {
                   <TableCell align="center">
                     {new Date(
                       appointment.expectedDeliveryDate
-                    ).toLocaleDateString()}
+                    ).toLocaleDateString("en-LK", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}
                   </TableCell>
                   <TableCell align="center">
                     <DeatailsViewer appointment={appointment} />

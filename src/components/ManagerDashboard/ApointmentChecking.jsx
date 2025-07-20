@@ -94,7 +94,7 @@ const ApointmentChecking = () => {
       setSnackbar({
         open: true,
         message: `Appointment ${
-          newStatus === "Pending" ? "accepted" : "rejected"
+          newStatus === "Pending" ? "accepted" : "reject"
         } successfully!`,
       });
     } catch (err) {
@@ -275,7 +275,14 @@ const ApointmentChecking = () => {
                     {appointment.vehicleNumber}
                   </TableCell>
                   <TableCell align="center">
-                    {new Date(appointment.preferredDate).toLocaleDateString()}
+                    {new Date(appointment.preferredDate).toLocaleDateString(
+                      "en-LK",
+                      {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      }
+                    )}
                   </TableCell>
                   <TableCell align="center">
                     <DeatailsViewer appointment={appointment} />
@@ -384,6 +391,7 @@ const ApointmentChecking = () => {
         appointment={selectedAppointment}
         open={openUpdateDialog}
         onClose={handleCloseUpdateDialog}
+        onSuccess={(message) => setSnackbar({ open: true, message })}
       />
     </Container>
   );
