@@ -10,14 +10,19 @@ import {
 	Paper,
 	Box,
 	Container,
-	TextField,Typography
+	TextField,
+	Typography,
+	Button,
 } from "@mui/material";
+
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 import IssueViewer from "./sub/IssueView";
 import WhatsAppButton from "./sub/WhatsAppButton";
 import BudgetReview from "./sub/BudgetReview";
 import InvoiceView from "./sub/InvoiceView";
 import CustomSnackbar from "./sub/CustomSnackbar";
+import ConfirmationDialog from "./sub/Confirmation"; // Import confirmation dialog
 
 import { useAuth } from "../context/AuthContext";
 
@@ -40,6 +45,21 @@ const fetchAppointments = async (supervisorId, token) => {
 	}
 };
 
+//  Function to update status to Paid
+const updateAppointmentStatus = async (appointmentId, token) => {
+	try {
+		const res = await axios.put(
+			`${baseURL}/appointments/${appointmentId}/statusUpdate`,
+			{ status: "Paid" },
+			{ headers: { Authorization: `Bearer ${token}` } }
+		);
+		return res.data;
+	} catch (error) {
+		console.error("Error updating appointment status to Paid:", error);
+		throw error;
+	}
+};
+
 function CompletedS() {
 	const { user, token } = useAuth();
 	const [appointments, setAppointments] = useState([]);
@@ -50,6 +70,10 @@ function CompletedS() {
 		message: "",
 		severity: "success",
 	});
+
+	//  For confirmation dialog
+	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+	const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
 
 	useEffect(() => {
 		if (!user || !token) return;
@@ -65,10 +89,9 @@ function CompletedS() {
 	}, [user, token]);
 
 	const updateAppointmentInState = (updatedAppointment) => {
+		// Remove from list after marked as Paid
 		setAppointments((prevAppointments) =>
-			prevAppointments.map((appt) =>
-				appt._id === updatedAppointment._id ? updatedAppointment : appt
-			)
+			prevAppointments.filter((appt) => appt._id !== updatedAppointment._id)
 		);
 	};
 
@@ -76,7 +99,6 @@ function CompletedS() {
 		setSnackbarInfo({ open: true, message, severity });
 	};
 
-	// FIXED: Convert vehicleId to string before calling toLowerCase()
 	const filteredAppointments = appointments.filter((appointment) =>
 		String(appointment.vehicleId || "")
 			.toLowerCase()
@@ -115,8 +137,8 @@ function CompletedS() {
 							<TableCell>Description</TableCell>
 							<TableCell>Budget</TableCell>
 							<TableCell>Invoice</TableCell>
-							<TableCell>Payment</TableCell>
 							<TableCell>Contact</TableCell>
+							<TableCell>Billing</TableCell>
 						</TableRow>
 					</TableHead>
 
@@ -133,7 +155,7 @@ function CompletedS() {
 									<TableCell>{appointment.vehicleId}</TableCell>
 									<TableCell>{appointment.model}</TableCell>
 									<TableCell>
-										<IssueViewer issue={appointment.issue} />
+										<IssueViewer appointment={appointment}  />
 									</TableCell>
 									<TableCell>
 										<BudgetReview
@@ -146,9 +168,22 @@ function CompletedS() {
 									<TableCell>
 										<InvoiceView appointment={appointment} />
 									</TableCell>
-									<TableCell>{appointment.payment}</TableCell>
 									<TableCell>
 										<WhatsAppButton phone={appointment.contactNumber} />
+									</TableCell>
+									<TableCell>
+										{/*  PAYMENT BUTTON with Confirmation */}
+										<Button
+											variant="contained"
+											color="success"
+											size="small"
+											onClick={() => {
+												setSelectedAppointmentId(appointment._id);
+												setConfirmDialogOpen(true);
+											}}
+										>
+											Settled
+										</Button>
 									</TableCell>
 								</TableRow>
 							))
@@ -164,6 +199,31 @@ function CompletedS() {
 					</TableBody>
 				</Table>
 			</TableContainer>
+
+			{/*  Confirmation Dialog */}
+			<ConfirmationDialog
+				open={confirmDialogOpen}
+				title="Confirm Payment"
+				message="Are you sure you want to mark this appointment as Paid?"
+				onConfirm={async () => {
+					try {
+						const updated = await updateAppointmentStatus(selectedAppointmentId, token);
+						updateAppointmentInState(updated);
+						showSnackbar("Appointment marked as Paid!", "success");
+					} catch {
+						showSnackbar("Failed to update status", "error");
+					}
+					setConfirmDialogOpen(false);
+				}}
+				onCancel={() => {
+					setConfirmDialogOpen(false);
+					setSnackbarInfo({
+						open: true,
+						message: "Appointment not Paid",
+						severity: "error",
+					});
+				}}
+			/>
 
 			<CustomSnackbar
 				open={snackbarInfo.open}

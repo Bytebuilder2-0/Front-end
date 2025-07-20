@@ -31,6 +31,8 @@ import {
 	Dashboard as DashboardIcon,
 	ExpandMore,
 } from "@mui/icons-material";
+import HistoryIcon from '@mui/icons-material/History';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import { useAuth } from "../../context/AuthContext";
 import Account from "../Atoms/Account";
 import { Link } from "react-router-dom";
@@ -168,11 +170,14 @@ export default function UserMiniDrawer() {
 		() => [
 			{ path: "/", label: "Home", icon: <HomeIcon sx={{ color: "#ffffff" }} /> },
 			{ path: "/User", label: "Dashboard", icon: <DashboardIcon sx={{ color: "#ffffff" }}/> },
+			{ path: "/Vehicles", label: "Your Vehicles", icon: <DirectionsCarIcon sx={{ color: "#ffffff" }} /> },
+
 			{
 				path: "/appointments/new",
 				label: "Make an Appointment",
 				icon: <TodayIcon sx={{ color: "#ffffff" }} />,
 			},
+		
 			{
 				label: "My Appointments",
 				icon: <ListIcon sx={{ color: "#ffffff" }}/>,
@@ -183,6 +188,7 @@ export default function UserMiniDrawer() {
 					status: appt.status,
 				})),
 			},
+			{ path: "/UserHistory", label: "History", icon: <HistoryIcon sx={{ color: "#ffffff" }}/> },
 			{ path: "/UserFeedback", label: "FeedBack", icon: <FeedbackIcon sx={{ color: "#ffffff" }}/> },
 		],
 		[appointments]

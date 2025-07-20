@@ -195,9 +195,7 @@ const ApointmentChecking = () => {
         alignItems="center"
         mb={2}
       >
-        <Typography variant="h5" fontWeight="bold" color="#1976d2">
-          Appointment Management
-        </Typography>
+        <Typography variant="h5" fontWeight="bold" color="#1976d2"></Typography>
 
         <Box display="flex" alignItems="center" gap={2}>
           <TextField

@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import { DirectionsCar, CalendarToday, Build } from '@mui/icons-material';
 
-const vehicleTypes = ['Sedan', 'SUV', 'Truck', 'Van', 'Motorcycle', 'Other'];
+// const vehicleTypes = ['Sedan', 'SUV', 'Truck', 'Van', 'Motorcycle', 'Other'];
 
 const HandleVehicleForm = ({ formData, onChange, onSubmit, onReset }) => {
   const theme = useTheme();
@@ -24,7 +24,7 @@ const HandleVehicleForm = ({ formData, onChange, onSubmit, onReset }) => {
   const isFormValid = () => {
     return (
       formData.vehicleNumber &&
-      formData.vehicleYear &&
+      formData.vehicleYear && 
       formData.model &&
       formData.vehicleType
     );
@@ -103,6 +103,17 @@ const HandleVehicleForm = ({ formData, onChange, onSubmit, onReset }) => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
+                label="Type *"
+                name="vehicleType"
+                value={formData.vehicleType}
+                onChange={onChange}
+                required
+              />
+            </Grid>
+
+              <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
                 label="Model *"
                 name="model"
                 value={formData.model}
@@ -111,7 +122,7 @@ const HandleVehicleForm = ({ formData, onChange, onSubmit, onReset }) => {
               />
             </Grid>
 
-            <Grid item xs={12}>
+            {/* <Grid item xs={12}>
               <FormControl fullWidth>
                 <InputLabel>Vehicle Type *</InputLabel>
                 <Select
@@ -136,7 +147,7 @@ const HandleVehicleForm = ({ formData, onChange, onSubmit, onReset }) => {
                   ))}
                 </Select>
               </FormControl>
-            </Grid>
+            </Grid> */}
 
             {/* Form Actions */}
             <Grid item xs={12} sx={{ mt: 2 }}>

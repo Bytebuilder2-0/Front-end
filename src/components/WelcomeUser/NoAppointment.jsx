@@ -1,6 +1,7 @@
 import React  from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 //This component for when user hasn't any appointment
 
@@ -56,30 +57,35 @@ const NoAppointemnt = () => {
         
    
 <Button
-  variant="contained"
-  onClick={() => navigate('/appointments/new')}
-  sx={{
-    width: '400px',
-    fontSize: '17px',
-    fontWeight: 'bold',
-    textAlign: 'center',
-    padding: '12px',
-    borderRadius: '10px',
-    borderBottom: '4px solid #459328', // Dark green border
-    height: '50px',
-    backgroundColor: '#9CE178', // Light green
-    color: '#1a1a1a', // Dark text
-    '&:hover': {
-      backgroundColor: '#8bd16d',
-      borderBottomWidth: '3px',
-      transform: 'translateY(2px)',
-      boxShadow: '0 2px 4px rgba(0,0,0,0.4)'
-    },
-    transition: 'all 0.3s ease',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.3)'
-  }}
->
-  Make a Booking
+        variant="contained"
+        onClick={() => navigate('/appointments/new')}
+        sx={{
+          width: '400px',
+          fontSize: '17px',
+          fontWeight: 'bold',
+          textAlign: 'center',
+          padding: '12px',
+          borderRadius: '10px',
+          height: '50px',
+          backgroundColor: '#66BB6A', // Fresh green
+          color: '#1a1a1a', // Your specified dark text
+          textTransform: 'none',
+          // Depth effect with border
+          border: '2px solid #4CAF50',
+          boxShadow: '0 3px 0 #2E7D32',
+          '&:hover': {
+            backgroundColor: '#5CB860', // Slightly darker green
+            transform: 'translateY(2px)',
+            boxShadow: '0 1px 0 #2E7D32'
+          },
+          '&:active': {
+            transform: 'translateY(3px)',
+            boxShadow: 'none'
+          },
+          transition: 'all 0.15s ease',
+        }}
+      >
+  BOOK  APPOINMENT
 </Button>
     </Box>
     

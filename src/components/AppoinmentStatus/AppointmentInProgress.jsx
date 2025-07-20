@@ -29,7 +29,7 @@ const AppointmentInProgress = ({ appointment }) => {
     : 0;
 
   return (
-    <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
+    <Box>
       {/* Appointment Header */}
           <Typography  gutterBottom sx={{ 
                        fontWeight: 600,
@@ -183,7 +183,7 @@ const AppointmentInProgress = ({ appointment }) => {
 
 
 
-    </Paper>
+    </Box>
   );
 };
 
