@@ -19,12 +19,11 @@ import {
 	DialogContent,
 	DialogActions,
 } from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
 import EditIcon from "@mui/icons-material/Edit";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
-import { lightBlue } from "@mui/material/colors";
 import { useAuth } from "../context/AuthContext";
+import ConfirmationDialog from "./sub/Confirmation"; //Import your reusable confirmation dialog
 
 const API_BASE_URL = "http://localhost:5000/api/appointments";
 
@@ -33,10 +32,22 @@ function TInprogress() {
 	const [appointments, setAppointments] = useState([]);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [loading, setLoading] = useState(true);
+
 	const [openDialog, setOpenDialog] = useState(false);
 	const [technicianSuggestion, setTechnicianSuggestion] = useState("");
 	const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
 	const [expandedWorkload, setExpandedWorkload] = useState({});
+
+	// For Task Completion Confirmation
+	const [openTaskConfirm, setOpenTaskConfirm] = useState(false);
+	const [taskToComplete, setTaskToComplete] = useState({
+		appointmentId: null,
+		taskId: null,
+	});
+
+	// For Entire Appointment Completion Confirmation
+	const [openAllStepsConfirm, setOpenAllStepsConfirm] = useState(false);
+	const [appointmentToComplete, setAppointmentToComplete] = useState(null);
 
 	useEffect(() => {
 		const fetchAppointments = async () => {
@@ -113,17 +124,23 @@ function TInprogress() {
 						: appointment
 				)
 			);
-
-			alert("Suggestion message sent to the supervisor.");
 		} catch (error) {
 			console.error("Error sending suggestion:", error);
-			alert("Failed to send suggestion.");
 		} finally {
 			handleCloseDialog();
 		}
 	};
 
-	const handleCompleteStep = async (appointmentId, taskId) => {
+	//  Handle Task Completion Confirmation
+	const openTaskCompletionConfirm = (appointmentId, taskId) => {
+		setTaskToComplete({ appointmentId, taskId });
+		setOpenTaskConfirm(true);
+	};
+
+	const handleTaskCompletionConfirm = async () => {
+		const { appointmentId, taskId } = taskToComplete;
+		if (!appointmentId || !taskId) return;
+
 		try {
 			await axios.put(
 				`${API_BASE_URL}/${appointmentId}/workload/${taskId}`,
@@ -147,21 +164,26 @@ function TInprogress() {
 						: appointment
 				)
 			);
-
-			alert("Task marked as completed!");
 		} catch (error) {
 			console.error("Error completing task:", error);
-			alert("Failed to complete the task.");
+		} finally {
+			setOpenTaskConfirm(false);
+			setTaskToComplete({ appointmentId: null, taskId: null });
 		}
 	};
 
-	const handleAllStepsComplete = async (appointmentId) => {
-		const confirm = window.confirm("Mark entire appointment as completed?");
-		if (!confirm) return;
+	//  Handle Entire Appointment Completion Confirmation
+	const openAllStepsCompletionConfirm = (appointmentId) => {
+		setAppointmentToComplete(appointmentId);
+		setOpenAllStepsConfirm(true);
+	};
+
+	const handleAllStepsCompletionConfirm = async () => {
+		if (!appointmentToComplete) return;
 
 		try {
 			await axios.put(
-				`${API_BASE_URL}/${appointmentId}/tStatusUpdate`,
+				`${API_BASE_URL}/${appointmentToComplete}/tStatusUpdate`,
 				{ status: "Task Done" },
 				{
 					headers: {
@@ -172,16 +194,16 @@ function TInprogress() {
 
 			setAppointments((prev) =>
 				prev.map((appointment) =>
-					appointment._id === appointmentId
+					appointment._id === appointmentToComplete
 						? { ...appointment, status: "Task Done" }
 						: appointment
 				)
 			);
-
-			alert("Appointment marked as completed.");
 		} catch (error) {
 			console.error("Error completing appointment:", error);
-			alert("Failed to complete appointment.");
+		} finally {
+			setOpenAllStepsConfirm(false);
+			setAppointmentToComplete(null);
 		}
 	};
 
@@ -311,7 +333,7 @@ function TInprogress() {
 																			color="success"
 																			size="small"
 																			onClick={() =>
-																				handleCompleteStep(
+																				openTaskCompletionConfirm(
 																					appointment._id,
 																					task._id || index
 																				)
@@ -332,7 +354,7 @@ function TInprogress() {
 																		variant="contained"
 																		color="primary"
 																		onClick={() =>
-																			handleAllStepsComplete(appointment._id)
+																			openAllStepsCompletionConfirm(appointment._id)
 																		}
 																		disabled={
 																			!appointment.workload.every(
@@ -392,6 +414,24 @@ function TInprogress() {
 					</TableBody>
 				</Table>
 			</TableContainer>
+
+			{/* Confirmation Dialog for Task Completion */}
+			<ConfirmationDialog
+				open={openTaskConfirm}
+				title="Complete Task"
+				message="Are you sure you want to mark this task as completed?"
+				onConfirm={handleTaskCompletionConfirm}
+				onCancel={() => setOpenTaskConfirm(false)}
+			/>
+
+			{/* Confirmation Dialog for Entire Appointment Completion */}
+			<ConfirmationDialog
+				open={openAllStepsConfirm}
+				title="Complete Appointment"
+				message="Are you sure you want to mark the entire appointment as completed?"
+				onConfirm={handleAllStepsCompletionConfirm}
+				onCancel={() => setOpenAllStepsConfirm(false)}
+			/>
 		</Container>
 	);
 }
