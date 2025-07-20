@@ -1,6 +1,9 @@
 import * as React from "react";
 // Importing necessary components and hooks from Material UI
 import { styled, useTheme } from "@mui/material/styles";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
 import {
   Box,
   CssBaseline,
@@ -30,8 +33,9 @@ import {
   Dashboard as DashboardIcon,
   Notifications as NotificationsIcon,
   History as HistoryIcon,
-  Report as ReportIcon,
-  Description as DescriptionIcon,
+  Description as ReportIcon,
+  //Description as DescriptionIcon,
+  HourglassBottom as HourglassBottomIcon,
   AccountCircle,
 } from "@mui/icons-material";
 import Notify from "../Atoms/Notify";
@@ -113,6 +117,20 @@ export default function ManagerSidebar({ children }) {
   const [open, setOpen] = React.useState(true); // State to handle desktop drawer open/close
   const [mobileOpen, setMobileOpen] = React.useState(false); // State to handle mobile drawer open/close
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md")); // Check if current screen size is small
+  const [pendingCount, setPendingCount] = useState(0); // State to hold pending account requests count
+
+  useEffect(() => {
+    const fetchPendingCount = async () => {
+      try {
+        const response = await axios.get("/api/pending-accounts/count");
+        setPendingCount(response.data.count);
+      } catch (error) {
+        console.error("Error fetching pending accounts count:", error);
+      }
+    };
+
+    fetchPendingCount();
+  }, []);
 
   // Function to toggle drawer open and close based on screen size
   const handleDrawerToggle = () => {
@@ -138,14 +156,14 @@ export default function ManagerSidebar({ children }) {
     },
     {
       path: "/Reports",
-      label: "Reports",
-      icon: <DescriptionIcon sx={{ color: "#ffffff" }} />,
+      label: "Report",
+      icon: <ReportIcon sx={{ color: "#ffffff" }} />,
     },
     {
       path: "/ManagerHistory",
       label: "History",
       icon: <HistoryIcon sx={{ color: "#ffffff" }} />,
-    }, // Added History
+    },
     {
       path: "/ManageServices",
       label: "Manage Services",
@@ -155,6 +173,19 @@ export default function ManagerSidebar({ children }) {
       path: "/feedback",
       label: "Manage Feedback",
       icon: <FeedbackIcon sx={{ color: "#ffffff" }} />,
+    },
+    {
+      path: "/pending-users",
+      label: "Pending Accounts",
+      icon: (
+        <Badge
+          badgeContent={pendingCount}
+          color="error"
+          invisible={pendingCount === 0}
+        >
+          <HourglassBottomIcon sx={{ color: "#ffffff" }} />
+        </Badge>
+      ),
     },
   ];
 

@@ -63,6 +63,10 @@ const ApointmentChecking = () => {
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
 
   useEffect(() => {
+    fetchAppointments();
+  }, []);
+
+  const fetchAppointments = () => {
     axios
       .get(API_BASE_URL, authConfig)
       .then((res) => {
@@ -76,7 +80,7 @@ const ApointmentChecking = () => {
         setAppointments(sortedAppointments);
       })
       .catch((err) => console.error("Error fetching appointments:", err));
-  }, []);
+  };
 
   const handleStatusUpdate = async (appointmentId, newStatus) => {
     try {
@@ -94,7 +98,7 @@ const ApointmentChecking = () => {
       setSnackbar({
         open: true,
         message: `Appointment ${
-          newStatus === "Pending" ? "accepted" : "reject"
+          newStatus === "Pending" ? "accepted" : "rejected"
         } successfully!`,
       });
     } catch (err) {
@@ -131,6 +135,15 @@ const ApointmentChecking = () => {
   const handleCloseUpdateDialog = () => {
     setOpenUpdateDialog(false);
     setSelectedAppointment(null);
+  };
+
+  const handleUpdateSuccess = (message) => {
+    fetchAppointments(); // Refresh the appointments list
+    setSnackbar({
+      open: true,
+      message: message || "Appointment updated successfully!",
+    });
+    handleCloseUpdateDialog();
   };
 
   const getDateFilterType = (dateInput) => {
@@ -288,7 +301,10 @@ const ApointmentChecking = () => {
                     <DeatailsViewer appointment={appointment} />
                   </TableCell>
                   <TableCell align="center">
-                    <WhatsAppButton phone={appointment.contactNumber} VNumber={ appointment.vehicleNumber} />
+                    <WhatsAppButton
+                      phone={appointment.contactNumber}
+                      VNumber={appointment.vehicleNumber}
+                    />
                   </TableCell>
                   <TableCell align="center">
                     <Typography
@@ -379,19 +395,19 @@ const ApointmentChecking = () => {
         actionName={confirmDialog.actionType === "Accept" ? "Accept" : "Reject"}
       />
 
+      <UpdateAppointmentDetailsDialog
+        appointment={selectedAppointment}
+        open={openUpdateDialog}
+        onClose={handleCloseUpdateDialog}
+        onSuccess={handleUpdateSuccess}
+      />
+
       <SuccessSnackbar
         open={snackbar.open}
         message={snackbar.message}
         onClose={() => setSnackbar({ open: false, message: "" })}
         autoHideDuration={3000}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      />
-
-      <UpdateAppointmentDetailsDialog
-        appointment={selectedAppointment}
-        open={openUpdateDialog}
-        onClose={handleCloseUpdateDialog}
-        onSuccess={(message) => setSnackbar({ open: true, message })}
       />
     </Container>
   );

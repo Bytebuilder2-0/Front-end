@@ -213,7 +213,7 @@ const ReportMain = () => {
                             gutterBottom
                             fontSize={isSmallScreen ? "0.75rem" : "1rem"}
                           >
-                            Completed
+                            Completed Appointment
                           </Typography>
                           <Typography
                             variant="h3"
@@ -306,7 +306,7 @@ const ReportMain = () => {
                             gutterBottom
                             fontSize={isSmallScreen ? "0.75rem" : "1rem"}
                           >
-                            New job
+                            New Appointment
                           </Typography>
                           <Typography
                             variant="h3"

@@ -49,6 +49,9 @@ const DeatailsViewer = ({ appointment }) => {
                   <strong>Name:</strong> {appointment.userId.name}
                 </Typography>
                 <Typography>
+                  <strong>Contact Number:</strong> {appointment.contactNumber}
+                </Typography>
+                <Typography>
                   <strong>Email:</strong> {appointment.userId.email || "N/A"}
                 </Typography>
               </>
@@ -144,16 +147,7 @@ const DeatailsViewer = ({ appointment }) => {
           )}
 
           {/* Contact */}
-          {appointment.contactNumber && (
-            <Box mb={3}>
-              <Typography variant="h6" sx={{ color: "#1976d2", mb: 1 }}>
-                Contact Information
-              </Typography>
-              <Typography>
-                <strong>Contact Number:</strong> {appointment.contactNumber}
-              </Typography>
-            </Box>
-          )}
+
           {/* Supervisor Information */}
           {appointment.sconfirmedBy && (
             <Box mb={3}>

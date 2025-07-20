@@ -19,7 +19,15 @@ const ServiceManager = () => {
   const [isActionInProgress, setIsActionInProgress] = useState(false);
 
   useEffect(() => {
-    fetchServices().then(setServices);
+    fetchServices().then((data) => {
+      // Sort by createdAt (newest first) if data exists
+      const sorted = data
+        ? [...data].sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          )
+        : [];
+      setServices(sorted);
+    });
   }, []);
 
   const handleToggle = async (id, selected) => {
