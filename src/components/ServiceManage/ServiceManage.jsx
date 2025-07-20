@@ -164,6 +164,7 @@ const ServiceManager = () => {
         open={snackbarOpen}
         message={snackbarMessage}
         onClose={() => setSnackbarOpen(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
       />
     </Container>
   );

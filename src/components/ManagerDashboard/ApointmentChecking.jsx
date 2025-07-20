@@ -94,13 +94,15 @@ const ApointmentChecking = () => {
       setSnackbar({
         open: true,
         message: `Appointment ${
-          newStatus === "Pending" ? "accepted" : "rejected"
+          newStatus === "Pending" ? "accepted" : "reject"
         } successfully!`,
       });
-
-      window.location.reload();
     } catch (err) {
       console.error("Error updating status:", err);
+      setSnackbar({
+        open: true,
+        message: "Failed to update appointment status",
+      });
     }
   };
 
@@ -273,7 +275,14 @@ const ApointmentChecking = () => {
                     {appointment.vehicleNumber}
                   </TableCell>
                   <TableCell align="center">
-                    {new Date(appointment.preferredDate).toLocaleDateString()}
+                    {new Date(appointment.preferredDate).toLocaleDateString(
+                      "en-LK",
+                      {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      }
+                    )}
                   </TableCell>
                   <TableCell align="center">
                     <DeatailsViewer appointment={appointment} />
@@ -374,12 +383,15 @@ const ApointmentChecking = () => {
         open={snackbar.open}
         message={snackbar.message}
         onClose={() => setSnackbar({ open: false, message: "" })}
+        autoHideDuration={3000}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
       />
 
       <UpdateAppointmentDetailsDialog
         appointment={selectedAppointment}
         open={openUpdateDialog}
         onClose={handleCloseUpdateDialog}
+        onSuccess={(message) => setSnackbar({ open: true, message })}
       />
     </Container>
   );
