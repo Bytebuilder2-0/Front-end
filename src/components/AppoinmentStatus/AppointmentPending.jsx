@@ -104,9 +104,9 @@ const AppointmentPending = ({ appointment, onCancel }) => {
       {/* Status Chip */}
       <Chip
         label="Pending"
-        color="warning"
+        color="#ff7700ff"
         icon={<AccessTimeIcon />}
-        sx={{ fontWeight: 'bold', padding:'17px', fontSize:'15px' }}
+        sx={{ fontWeight: 'bold', padding:'17px', fontSize:'15px',backgroundColor: "#ff5500ff", color: '#fff' , mb: 2 }}
       />
       <Typography variant="body1" sx={{ my: 2, color: '#595959', fontSize: '14' }}>
         Your appointment is pending. Our team will confirm it shortly.
@@ -122,8 +122,12 @@ const AppointmentPending = ({ appointment, onCancel }) => {
       
 
       {/* Date Info */}
-      <Typography variant="body2" gutterBottom  sx={{ padding:'3px' }}>
+        <Typography variant="body2" gutterBottom  sx={{ padding:'3px' }}>
         Date  : {new Date(appointment.expectedDeliveryDate).toLocaleDateString('en-US', { year :'numeric',month: 'short', day: 'numeric' })}</Typography>
+
+         <Typography variant="body2" gutterBottom sx={{ padding: '3px' }}>
+            Time :   {appointment.preferredTime}   
+      </Typography>
       {/* Friendly Info Message */}
       <Typography variant="body2" gutterBottom  sx={{ padding:'3px' }}>
         Vehicle Number  : {appointment.vehicleNumber}</Typography>
@@ -179,6 +183,22 @@ const AppointmentPending = ({ appointment, onCancel }) => {
       </Snackbar>
 
     </Paper>
+
+    <Box 
+        sx={{
+          backgroundColor: '#fff8e1',
+          p: 2,
+          my: 4,
+          borderRadius: 2,
+          borderLeft: '4px solid #ffdb9eff'
+        }}
+      >
+       
+        <Typography variant="body2">
+          To book a new appointment for this vehicle, you must first cancel this pending appointment.
+          After cancellation, you can immediately submit a new booking request.
+        </Typography>
+      </Box>
   </Box>
   );
 };

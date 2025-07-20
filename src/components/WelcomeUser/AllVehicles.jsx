@@ -96,7 +96,7 @@ const AllVehicles = () => {
       >
         Your Vehicles
       </Typography>
-      <Typography variant="caption" sx={{ color: 'green' }}>
+      <Typography  sx={{ color: 'green' }}>
         All your registered vehicles
       </Typography>
       
@@ -109,11 +109,7 @@ const AllVehicles = () => {
               sx={{ 
                 p: 3, 
                 height: '100%',
-                transition: 'transform 0.3s, box-shadow 0.3s',
-                '&:hover': {
-                  transform: 'translateY(-5px)',
-                  boxShadow: theme.shadows[6]
-                }
+                borderRadius: 3
               }} 
               elevation={3}
             >
