@@ -1,32 +1,46 @@
-import { Box, Typography, Button, useTheme } from '@mui/material';
+import { Box, Typography, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { Plus, Car } from 'lucide-react';
 
 const NoVehicles = () => {
   const navigate = useNavigate();
-  const theme = useTheme();
 
   return (
     <Box
       sx={{
-        
+        display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         textAlign: 'center',
         p: 4,
         maxWidth: 500,
         mx: 'auto',
-        backgroundColor: theme.palette.background.paper,
-        borderRadius: 2,
-    
       }}
     >
+      <Box
+        sx={{
+          width: 80,
+          height: 80,
+          borderRadius: '50%',
+          backgroundColor: '#f8fafc',
+          border: '2px solid #e5e7eb',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          mb: 3
+        }}
+      >
+        <Car size={32} color="#428BCA" />
+      </Box>
+      
       <Typography 
-        variant="h6" 
+        variant="h5" 
         gutterBottom
         sx={{
           fontWeight: 600,
-          color: theme.palette.text.primary,
-          mb: 2
+          color: '#33383E',
+          mb: 1,
+          fontSize: { xs: '1.25rem', md: '1.5rem' }
         }}
       >
         No Vehicles Added Yet
@@ -35,37 +49,40 @@ const NoVehicles = () => {
       <Typography 
         variant="body1" 
         sx={{ 
-          mb: 3,
-          color: theme.palette.text.secondary,
-          fontSize: '1rem'
+          mb: 4,
+          color: '#6b7280',
+          fontSize: '16px',
+          lineHeight: 1.6,
+          maxWidth: '320px'
         }}
       >
-        You haven't registered any vehicles. Click below to add your first vehicle.
+        You haven't registered any vehicles. Add your first vehicle to get started with our services.
       </Typography>
       
-   <Button
-  variant="contained"
-  onClick={() => navigate('/VehicleRegister')}
-  sx={{
-    width: '200px',
-    fontSize: '0.9375rem',
-    fontWeight: 600,
-    py: 1.5,
-    px: 3,
-    borderRadius: '10px',
-    backgroundColor: '#459328', // Dark green
-    color: 'white',
-    textTransform: 'none',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-    '&:hover': {
-      backgroundColor: '#3a7c21', // Darker green
-      boxShadow: '0 4px 8px rgba(0,0,0,0.15)'
-    },
-    transition: 'all 0.3s ease'
-  }}
->
-  Add Vehicle
-</Button>
+      <Button
+        variant="contained"
+        onClick={() => navigate('/VehicleRegister')}
+        startIcon={<Plus size={18} />}
+        sx={{
+          backgroundColor: '#459328',
+          color: 'white',
+          fontSize: '14px',
+          fontWeight: 600,
+          py: 1.5,
+          px: 4,
+          borderRadius: '10px',
+          textTransform: 'none',
+          boxShadow: '0 2px 4px rgba(69, 147, 40, 0.2)',
+          '&:hover': {
+            backgroundColor: '#3a7c21',
+            boxShadow: '0 4px 8px rgba(69, 147, 40, 0.3)',
+            transform: 'translateY(-1px)'
+          },
+          transition: 'all 0.2s ease'
+        }}
+      >
+        Add Vehicle
+      </Button>
     </Box>
   );
 };

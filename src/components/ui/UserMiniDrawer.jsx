@@ -18,8 +18,10 @@ import {
 	CircularProgress,
 	AppBar as MuiAppBar,
 	Drawer as MuiDrawer,
+	Chip,
+	Fade,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
 	Menu as MenuIcon,
 	ChevronLeft as ChevronLeftIcon,
@@ -37,7 +39,7 @@ import { useAuth } from "../../context/AuthContext";
 import Account from "../Atoms/Account";
 import { Link } from "react-router-dom";
 
-const drawerWidth = 240;
+const drawerWidth = 260;
 
 const openedMixin = (theme) => ({
 	width: drawerWidth,
@@ -61,8 +63,10 @@ const closedMixin = (theme) => ({
 });
 
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
-	zIndex: theme.zIndex.drawer + 1, // ensures it's above the drawer
-	width: "100%", // always full width
+	zIndex: theme.zIndex.drawer + 1,
+	width: "100%",
+	background: "linear-gradient(135deg, #428BCA 0%, #33383E 100%)",
+	boxShadow: "0 4px 20px rgba(66, 139, 202, 0.3)",
 	transition: theme.transitions.create(["background-color"], {
 		easing: theme.transitions.easing.sharp,
 		duration: theme.transitions.duration.leavingScreen,
@@ -78,22 +82,64 @@ const Drawer = styled(MuiDrawer, {
 	boxSizing: "border-box",
 	...(open && {
 		...openedMixin(theme),
-		"& .MuiDrawer-paper": openedMixin(theme),
+		"& .MuiDrawer-paper": {
+			...openedMixin(theme),
+			background: "linear-gradient(180deg, #33383E 0%, #2c3136 100%)",
+			borderRight: "1px solid rgba(66, 139, 202, 0.2)",
+		},
 	}),
 	...(!open && {
 		...closedMixin(theme),
-		"& .MuiDrawer-paper": closedMixin(theme),
+		"& .MuiDrawer-paper": {
+			...closedMixin(theme),
+			background: "linear-gradient(180deg, #33383E 0%, #2c3136 100%)",
+			borderRight: "1px solid rgba(66, 139, 202, 0.2)",
+		},
 	}),
 }));
 
 const DrawerHeader = styled("div")(({ theme }) => ({
-	...theme.mixins.toolbar, //this div is same height as the appbar height
+	...theme.mixins.toolbar,
 }));
+
+const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
+	margin: "4px 12px",
+	borderRadius: "12px",
+	transition: "all 0.3s ease",
+	"&:hover": {
+		backgroundColor: "rgba(66, 139, 202, 0.15)",
+		transform: "translateX(4px)",
+	},
+	"&.Mui-selected": {
+		backgroundColor: "rgba(66, 139, 202, 0.25)",
+		borderLeft: "4px solid #428BCA",
+		"&:hover": {
+			backgroundColor: "rgba(66, 139, 202, 0.3)",
+		},
+	},
+}));
+
+const UserAvatar = styled(Avatar)(({ theme }) => ({
+	width: 80,
+	height: 80,
+	border: "3px solid #428BCA",
+	boxShadow: "0 4px 15px rgba(66, 139, 202, 0.3)",
+	transition: "all 0.3s ease",
+	"&:hover": {
+		transform: "scale(1.05)",
+		boxShadow: "0 6px 20px rgba(66, 139, 202, 0.4)",
+	},
+}));
+
+
+
+
 
 export default function UserMiniDrawer() {
 	const { user, token } = useAuth();
 	const [open, setOpen] = React.useState(true);
 	const navigate = useNavigate();
+	const location = useLocation();
 	const [expanded, setExpanded] = useState({ "My Appointments": false });
 	const [loading, setLoading] = useState(true);
 	const [appointments, setAppointments] = useState([]);
@@ -102,85 +148,67 @@ export default function UserMiniDrawer() {
 	const handleDrawerClose = () => setOpen(false);
 
 	const handleExpandClick = (menuItem) => {
-		console.log("Toggling menu:", menuItem);
 		setExpanded((prev) => ({ ...prev, [menuItem]: !prev[menuItem] }));
 	};
 
 	useEffect(() => {
 		const fetchAppointments = async () => {
-		try {
-			console.log("Auth context:", { user, token });
-		if (!user?.id) {
-			console.error("No valid user ID available - user:", user);
-			return;
-}
+			try {
+				if (!user?.id) {
+					console.error("No valid user ID available");
+					return;
+				}
 
-		setLoading(true);
-		console.log("Fetching appointments for user:", user);
+				setLoading(true);
+				const API_URL = `http://localhost:5000/api/appointments/user/${user.id}`;
 
-		const API_URL = `http://localhost:5000/api/appointments/user/${user.id}`;
-		console.log("Request URL:", API_URL);
+				const response = await axios.get(API_URL, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				});
 
-		const response = await axios.get(API_URL, {
-		headers: {
-			Authorization: `Bearer ${token}`,
-		},
-		});
+				let appointmentsData = response.data;
+				
+				if (response.data?.appointments) {
+					appointmentsData = response.data.appointments;
+				} else if (response.data?.data) {
+					appointmentsData = response.data.data;
+				}
 
-		console.log("Response data:", response.data);
+				if (!Array.isArray(appointmentsData)) {
+					appointmentsData = [];
+				}
 
-		let appointmentsData = response.data;
-		
-		// Handle different response structures
-		if (response.data?.appointments) {
-		appointmentsData = response.data.appointments;
-		} else if (response.data?.data) {
-		appointmentsData = response.data.data;
-		}
+				const filtered = appointmentsData.filter(
+					(appt) => appt && !["Cancelled", "All done", "Reject1", "Paid"].includes(appt.status)
+				);
 
-		if (!Array.isArray(appointmentsData)) {
-		console.warn("Appointments data is not an array:", appointmentsData);
-		appointmentsData = [];
-		}
+				setAppointments(filtered);
+			} catch (err) {
+				console.error("Error fetching appointments:", err);
+				setAppointments([]);
+			} finally {
+				setLoading(false);
+			}
+		};
 
-		const filtered = appointmentsData.filter(
-		(appt) => appt && !["Cancelled", "All done", "Reject1","Paid"].includes(appt.status)
-		);
-
-		console.log("Filtered appointments:", filtered);
-		setAppointments(filtered);
-	} catch (err) {
-		console.error("Error detailsssss:", {
-		message: err.message,
-		response: err.response?.data,
-		status: err.response?.status,
-		});
-		setAppointments([]);
-	} finally {
-		setLoading(false);
-	}
-	};
-
-		
-	fetchAppointments();
-		
+		fetchAppointments();
 	}, [user, token]);
 
 	const menuItems = useMemo(
 		() => [
-			{ path: "/", label: "Home", icon: <HomeIcon sx={{ color: "#ffffff" }} /> },
-			{ path: "/User", label: "Dashboard", icon: <DashboardIcon sx={{ color: "#ffffff" }}/> },
-			{ path: "/Vehicles", label: "Your Vehicles", icon: <DirectionsCarIcon sx={{ color: "#ffffff" }} /> },
-
+			{ path: "/", label: "Home", icon: <HomeIcon /> },
+			{ path: "/User", label: "Dashboard", icon: <DashboardIcon /> },
+			{ path: "/Vehicles", label: "Your Vehicles", icon: <DirectionsCarIcon /> },
 			{
 				path: "/appointments/new",
 				label: "Make an Appointment",
-				icon: <TodayIcon sx={{ color: "#ffffff" }} />,
+				icon: <TodayIcon />,
 			},
-		
 			{
 				label: "My Appointments",
-				icon: <ListIcon sx={{ color: "#ffffff" }}/>,
+				icon: <ListIcon />,
 				hasChildren: true,
 				children: appointments.map((appt) => ({
 					path: `/appointments/${appt._id}`,
@@ -188,8 +216,8 @@ export default function UserMiniDrawer() {
 					status: appt.status,
 				})),
 			},
-			{ path: "/UserHistory", label: "History", icon: <HistoryIcon sx={{ color: "#ffffff" }}/> },
-			{ path: "/UserFeedback", label: "FeedBack", icon: <FeedbackIcon sx={{ color: "#ffffff" }}/> },
+			{ path: "/UserHistory", label: "History", icon: <HistoryIcon /> },
+			{ path: "/UserFeedback", label: "Feedback", icon: <FeedbackIcon /> },
 		],
 		[appointments]
 	);
@@ -197,164 +225,216 @@ export default function UserMiniDrawer() {
 	return (
 		<Box sx={{ display: "flex" }}>
 			<CssBaseline />
-		<AppBar
-				position="fixed"
-				sx={{ backgroundColor: "#428bca", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-			>
+			<AppBar position="fixed">
 				<Toolbar disableGutters>
-					{/* Left-aligned image, same width as the drawer */}
 					<Box
 						sx={{
 							width: drawerWidth,
 							display: "flex",
 							alignItems: "center",
 							justifyContent: "center",
-							backgroundColor: "#fff", // match the logo background
+							backgroundColor: "#fff",
+							borderRadius: "0 0 16px 0",
 						}}
 					>
 						<Link
 							to="/"
 							style={{
-								display: "inline-block", // ensures no extra line spacing
-								lineHeight: 0, // removes any extra vertical spacing
+								display: "inline-block",
+								lineHeight: 0,
 								margin: 0,
 								padding: 0,
 							}}
 						>
 							<img
 								src="/assets/resized-garage24.png"
-								alt="Frame"
+								alt="Garage24 Logo"
 								style={{
 									height: "64px",
-									width: drawerWidth,
+									width: drawerWidth - 20,
 									objectFit: "contain",
 								}}
 							/>
 						</Link>
 					</Box>
 
-					{/* Toggle Drawer Icon */}
 					<IconButton
 						color="inherit"
 						onClick={open ? handleDrawerClose : handleDrawerOpen}
 						edge="end"
-						sx={{ marginRight: 2 }}
+						sx={{ 
+							marginRight: 2,
+							backgroundColor: "rgba(255, 255, 255, 0.1)",
+							"&:hover": {
+								backgroundColor: "rgba(255, 255, 255, 0.2)",
+							},
+						}}
 					>
-						{open ? (
-							<ChevronLeftIcon sx={{ color: "#ffffffff" }} />
-						) : (
-							<MenuIcon sx={{ color: "#ffffffff" }} />
-						)}
+						{open ? <ChevronLeftIcon /> : <MenuIcon />}
 					</IconButton>
+					
 					<Box sx={{ flexGrow: 1 }} />
+					
 					<Box
 						sx={{
 							display: { xs: "none", md: "flex" },
 							alignItems: "center",
-							gap: 2, // spacing between icons
-							pr: 5, // padding-right
+							gap: 2,
+							pr: 3,
 						}}
 					>
-
-						{/*<Notify />*/}
-
 						<Account />
 					</Box>
 				</Toolbar>
 			</AppBar>
 
-{/* Sidebar Drawer */}
-			<Drawer
-				variant="permanent"
-				open={open}
-				sx={{
-					"& .MuiDrawer-paper": {
-						backgroundColor: "#33383E",
-						color: "white", // text/icon color
-					},
-				}}
-			>
+			<Drawer variant="permanent" open={open}>
 				<DrawerHeader />
-				<Divider />
-
-				{/* User Avatar */}
+				
 				{open && (
-					<Box
-						sx={{
-							display: "flex",
-							flexDirection: "column",
-							alignItems: "center",
-							mt: 2,
-							mb: 2,
-						}}
-					>
-						<Avatar
-							src="https://randomuser.me/api/portraits/men/1.jpg"
-							sx={{ width: 100, height: 100 }}
-						/>
-						<br />
-						<Typography>User</Typography>
-					</Box>
+					<Fade in={open} timeout={300}>
+						<Box
+							sx={{
+								display: "flex",
+								flexDirection: "column",
+								alignItems: "center",
+								mt: 3,
+								mb: 3,
+								px: 2,
+							}}
+						>
+							<UserAvatar
+								src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=400"
+								alt="User Avatar"
+							/>
+							<Typography
+								variant="h6"
+								sx={{
+									mt: 2,
+									color: "white",
+									fontWeight: 600,
+									textAlign: "center",
+								}}
+							>
+								{user?.name || "User"}
+							</Typography>
+							<Typography
+								variant="body2"
+								sx={{
+									color: "rgba(255, 255, 255, 0.7)",
+									textAlign: "center",
+									fontSize: "0.875rem",
+								}}
+							>
+								Welcome back!
+							</Typography>
+						</Box>
+					</Fade>
 				)}
-				{open && <Divider sx={{ borderColor: "#ffffff", mr: 3, ml: 3 }} />}
+				
+				{open && (
+					<Divider 
+						sx={{ 
+							borderColor: "rgba(66, 139, 202, 0.3)", 
+							mx: 2,
+							mb: 2,
+						}} 
+					/>
+				)}
 
-				{/* Navigation List */}
-
-				<List>
+				<List sx={{ px: 1 }}>
 					{menuItems.map((item) => (
 						<React.Fragment key={item.path || item.label}>
-							<ListItem disablePadding sx={{ display: "block" }}>
-								<ListItemButton
+							<ListItem disablePadding sx={{ display: "block", mb: 0.5 }}>
+								<StyledListItemButton
 									onClick={() =>
 										item.path
 											? navigate(item.path)
 											: handleExpandClick(item.label)
 									}
-									selected={window.location.pathname === item.path}
+									selected={location.pathname === item.path}
 								>
 									<ListItemIcon
-										sx={{ minWidth: 0, justifyContent: "center", marginRight: 2 }}
+										sx={{ 
+											minWidth: 0, 
+											justifyContent: "center", 
+											marginRight: open ? 2 : 0,
+											color: "#428BCA",
+										}}
 									>
 										{item.icon}
 									</ListItemIcon>
 									<ListItemText
 										primary={item.label}
-										sx={{ opacity: open ? 1 : 0 }}
+										sx={{ 
+											opacity: open ? 1 : 0,
+											color: "white",
+											"& .MuiTypography-root": {
+												fontWeight: 500,
+												fontSize: "0.95rem",
+											},
+										}}
 									/>
-									{item.hasChildren &&
-										(expanded[item.label] ? <ExpandLess /> : <ExpandMore />)}
-								</ListItemButton>
+									{item.hasChildren && open && (
+										<Box sx={{ color: "#428BCA" }}>
+											{expanded[item.label] ? <ExpandLess /> : <ExpandMore />}
+										</Box>
+									)}
+								
+								</StyledListItemButton>
 							</ListItem>
 
-							{item.hasChildren && expanded[item.label] && (
-								<List component="div" disablePadding>
-									{loading ? (
-										<ListItem>
-											<CircularProgress size={24} />
-										</ListItem>
-									) : item.children?.length > 0 ? (
-										item.children.map((child, index) => (
-											<ListItem
-												key={child.path || `child-${index}`}
-												disablePadding
-												sx={{ pl: 4 }}
-												onClick={() => navigate(child.path)}
-											>
-												<ListItemButton
-													selected={
-														window.location.pathname === child.path
-													}
-												>
-													<ListItemText primary={child.label} />
-												</ListItemButton>
+							{item.hasChildren && expanded[item.label] && open && (
+								<Fade in timeout={200}>
+									<List component="div" disablePadding>
+										{loading ? (
+											<ListItem sx={{ justifyContent: "center", py: 2 }}>
+												<CircularProgress 
+													size={24} 
+													sx={{ color: "#428BCA" }}
+												/>
 											</ListItem>
-										))
-									) : (
-										<ListItem sx={{ pl: 4 }}>
-											<ListItemText primary="No Appointments" />
-										</ListItem>
-									)}
-								</List>
+										) : item.children?.length > 0 ? (
+											item.children.map((child, index) => (
+												<ListItem
+													key={child.path || `child-${index}`}
+													disablePadding
+													sx={{ pl: 2 }}
+												>
+													<StyledListItemButton
+														onClick={() => navigate(child.path)}
+														selected={location.pathname === child.path}
+														sx={{ pl: 4 }}
+													>
+														<ListItemText 
+															primary={child.label}
+															sx={{
+																color: "rgba(255, 255, 255, 0.9)",
+																"& .MuiTypography-root": {
+																	fontSize: "0.875rem",
+																},
+															}}
+														/>
+													
+													</StyledListItemButton>
+												</ListItem>
+											))
+										) : (
+											<ListItem sx={{ pl: 4 }}>
+												<ListItemText 
+													primary="No Active Appointments"
+													sx={{
+														color: "rgba(255, 255, 255, 0.6)",
+														"& .MuiTypography-root": {
+															fontSize: "0.875rem",
+															fontStyle: "italic",
+														},
+													}}
+												/>
+											</ListItem>
+										)}
+									</List>
+								</Fade>
 							)}
 						</React.Fragment>
 					))}

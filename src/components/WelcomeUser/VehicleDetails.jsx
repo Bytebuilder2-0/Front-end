@@ -61,9 +61,7 @@ const VehicleDetails = () => {
 
   return (
     <Box sx={{ mb: 4 }}>
-      <Typography variant="h6" sx={{ mb: 3, fontWeight: 'bold', fontSize: '22px' }}>
-        Your Vehicles
-      </Typography>
+ 
 
       {vehicles.length > 0 ? (
         <VehicleFound vehicles={vehicles} />

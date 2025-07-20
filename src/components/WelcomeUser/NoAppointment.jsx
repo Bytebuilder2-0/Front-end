@@ -1,97 +1,88 @@
-import React  from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import { Calendar, Plus } from 'lucide-react';
 
-//This component for when user hasn't any appointment
+const NoAppointment = ({ userId }) => {
+  const navigate = useNavigate();
 
-const NoAppointemnt = () => {
-    const navigate = useNavigate();
-
-    return (
-        <Box 
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          paddingBottom:'10px',
-          width: 'auto',
-          mx: 'auto',
-          my: 4,
-          overflow: 'hidden',
-          textAlign: 'center',
-          backgroundColor: 'background.paper',
-        }}>
-
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        textAlign: 'center',
+        p: 4,
+        maxWidth: 480,
+        mx: 'auto',
+      }}
+    >
       <Box
         sx={{
-          position: 'absolute',
-          zIndex: 1,     
-        
-        }}>
-
-          <Typography 
-          variant="h5" 
-          sx={{ 
-            color: '#606060',
-            fontWeight: 'medium',
-            textShadow: '0 1px 3px rgba(0,0,0,0.3)'
-          }}
-        >
-          You haven't made any<br />booking yet...
-        </Typography>
-      </Box>
-
-        <img
-           src="/assets/car.png"
-           alt="Car illustration"
-           style={{
-            height: "300px", 
-            width: "auto",
-            opacity: 0.3,
-            filter: 'drop-shadow(0px 4px 8px rgba(0,0,0,0.1))',
-            paddingBottom: '20px'
-          }}
-        />
-        
-   
-<Button
-        variant="contained"
-        onClick={() => navigate('/appointments/new')}
-        sx={{
-          width: '400px',
-          fontSize: '17px',
-          fontWeight: 'bold',
-          textAlign: 'center',
-          padding: '12px',
-          borderRadius: '10px',
-          height: '50px',
-          backgroundColor: '#66BB6A', // Fresh green
-          color: '#1a1a1a', // Your specified dark text
-          textTransform: 'none',
-          // Depth effect with border
-          border: '2px solid #4CAF50',
-          boxShadow: '0 3px 0 #2E7D32',
-          '&:hover': {
-            backgroundColor: '#5CB860', // Slightly darker green
-            transform: 'translateY(2px)',
-            boxShadow: '0 1px 0 #2E7D32'
-          },
-          '&:active': {
-            transform: 'translateY(3px)',
-            boxShadow: 'none'
-          },
-          transition: 'all 0.15s ease',
+          width: 80,
+          height: 80,
+          borderRadius: '50%',
+          backgroundColor: '#f8fafc',
+          border: '2px solid #e0e4e7',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          mb: 3
         }}
       >
-  BOOK  APPOINMENT
-</Button>
+        <Calendar size={32} color="#459328" />
+      </Box>
+      
+      <Typography 
+        variant="h5" 
+        gutterBottom
+        sx={{
+          fontWeight: 600,
+          color: '#33383E',
+          mb: 1
+        }}
+      >
+        No Active Appointments
+      </Typography>
+      
+      <Typography 
+        variant="body1" 
+        sx={{ 
+          mb: 4,
+          color: '#6b7280',
+          fontSize: '16px',
+          lineHeight: 1.6,
+          maxWidth: '320px'
+        }}
+      >
+        You don't have any active appointments. Schedule your next service appointment today.
+      </Typography>
+      
+      <Button
+        variant="contained"
+        onClick={() => navigate('/appointments')}
+        startIcon={<Plus size={18} />}
+        sx={{
+          backgroundColor: '#459328',
+          color: 'white',
+          fontSize: '14px',
+          fontWeight: 600,
+          py: 1.25,
+          px: 3,
+          borderRadius: '8px',
+          textTransform: 'none',
+          boxShadow: '0 1px 3px rgba(69, 147, 40, 0.2)',
+          '&:hover': {
+            backgroundColor: '#3a7c21',
+            boxShadow: '0 2px 6px rgba(69, 147, 40, 0.3)'
+          },
+          transition: 'all 0.2s ease'
+        }}
+      >
+        Book Appointment
+      </Button>
     </Box>
-    
-    );
-  };
+  );
+};
 
-
-export default NoAppointemnt;
-
+export default NoAppointment;

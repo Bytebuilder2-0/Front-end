@@ -60,10 +60,7 @@ const AppointDetails = () => {
 
 	return (
 		<Box>
-			<Typography variant="h6" sx={{ mb: 2, fontWeight: "bold", fontSize: "22px" }}>
-				Your Appointments
-			</Typography>
-
+		
 			<List sx={{ width: "100%" }}>
 				{appointments.map((appointment) => (
 					<React.Fragment key={appointment._id}>

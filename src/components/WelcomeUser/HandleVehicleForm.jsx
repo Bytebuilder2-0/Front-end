@@ -19,14 +19,21 @@ const vehicleTypes = ['Sedan', 'SUV', 'Truck', 'Van', 'Motorcycle', 'Other'];
 
 const HandleVehicleForm = ({ formData, onChange, onSubmit, onReset }) => {
   const theme = useTheme();
+  const currentYear = new Date().getFullYear();
 
-  // Check if all required fields are filled
+  // Validations
+  const isYearValid = formData.vehicleYear >= 1700 && formData.vehicleYear <= currentYear;
+  const isModelValid = /^[a-zA-Z0-9 ]+$/.test(formData.model || '');
+
+  // Check if all required fields are filled and valid
   const isFormValid = () => {
     return (
       formData.vehicleNumber &&
-      formData.vehicleYear && 
+      formData.vehicleYear &&
       formData.model &&
-      formData.vehicleType
+      formData.vehicleType &&
+      isYearValid &&
+      isModelValid
     );
   };
 
@@ -47,12 +54,13 @@ const HandleVehicleForm = ({ formData, onChange, onSubmit, onReset }) => {
         }}>
           Vehicle Registration
         </Typography>
-        
+
         <Divider sx={{ mb: 4 }} />
 
         <form onSubmit={onSubmit}>
           <Grid container spacing={3}>
-            {/* Vehicle Identification Section */}
+
+            {/* Vehicle Identification */}
             <Grid item xs={12}>
               <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
                 <DirectionsCar color="primary" />
@@ -76,7 +84,7 @@ const HandleVehicleForm = ({ formData, onChange, onSubmit, onReset }) => {
               />
             </Grid>
 
-            {/* Vehicle Details Section */}
+            {/* Vehicle Details */}
             <Grid item xs={12}>
               <Typography variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Build color="primary" />
@@ -86,50 +94,50 @@ const HandleVehicleForm = ({ formData, onChange, onSubmit, onReset }) => {
 
             <Grid item xs={12} sm={6}>
               <TextField
-                    fullWidth
-                    label="Year *"
-                    name="vehicleYear"
-                    value={formData.vehicleYear}
-                    onChange={onChange}
-                    required
-                    error={formData.vehicleYear && !isYearValid}
-                    helperText={
-                      formData.vehicleYear && !isYearValid
-                        ? `Enter a valid year between 1700 and ${currentYear}`
-                        : ''
-                    }
-                    InputProps={{
-                      startAdornment: (
-                        <CalendarToday color="action" sx={{ mr: 1 }} />
-                      ),
-                    }}/>
-                      </Grid>
-          <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="Model *"
-                  name="model"
-                  value={formData.model}
-                  onChange={onChange}
-                  required
-                  error={formData.model && !isModelValid}
-                  helperText={
-                    formData.model && !isModelValid
-                      ? 'Model can only contain letters and numbers'
-                      : ''
-                  }
-                />
-              </Grid>
+                fullWidth
+                label="Year *"
+                name="vehicleYear"
+                value={formData.vehicleYear}
+                onChange={onChange}
+                required
+                error={formData.vehicleYear && !isYearValid}
+                helperText={
+                  formData.vehicleYear && !isYearValid
+                    ? `Enter a valid year between 1700 and ${currentYear}`
+                    : ''
+                }
+                InputProps={{
+                  startAdornment: (
+                    <CalendarToday color="action" sx={{ mr: 1 }} />
+                  ),
+                }}
+              />
+            </Grid>
 
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Model *"
+                name="model"
+                value={formData.model}
+                onChange={onChange}
+                required
+                error={formData.model && !isModelValid}
+                helperText={
+                  formData.model && !isModelValid
+                    ? 'Model can only contain letters and numbers'
+                    : ''
+                }
+              />
+            </Grid>
 
-       <Grid item xs={12}>
-              <FormControl fullWidth>
+            <Grid item xs={12}>
+              <FormControl fullWidth required>
                 <InputLabel>Vehicle Type *</InputLabel>
                 <Select
                   name="vehicleType"
                   value={formData.vehicleType}
                   onChange={onChange}
-                  required
                   label="Vehicle Type *"
                 >
                   {vehicleTypes.map(type => (
@@ -147,9 +155,9 @@ const HandleVehicleForm = ({ formData, onChange, onSubmit, onReset }) => {
                   ))}
                 </Select>
               </FormControl>
-            </Grid> 
+            </Grid>
 
-            {/* Form Actions */}
+            {/* Actions */}
             <Grid item xs={12} sx={{ mt: 2 }}>
               <Divider sx={{ mb: 3 }} />
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>

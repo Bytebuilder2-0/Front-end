@@ -80,7 +80,7 @@ const VehicleFound = ({ vehicles }) => {
             transition: 'all 0.3s ease'
           }}
         >
-          Add New Vehicle
+          ADD NEW VEHICLE
         </Button>
 
         {/* Outlined Secondary Button */}
@@ -108,7 +108,7 @@ const VehicleFound = ({ vehicles }) => {
             transition: 'all 0.3s ease'
           }}
         >
-          View All Vehicles
+          VIEW ALL VEHICLES
         </Button>
       </Stack>
     </>
