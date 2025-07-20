@@ -27,20 +27,30 @@ const ReportCharts = ({
   theme,
   isSmallScreen,
 }) => {
-  const statusColors = {
-    pending: theme.palette.warning.light,
-    confirmed: theme.palette.info.light,
-    checking: theme.palette.secondary.light,
-    cancelled: theme.palette.error.light,
-    rejected: theme.palette.error.dark,
-    accepted: theme.palette.success.light,
-    inProgress: theme.palette.primary.light,
-    taskDone: theme.palette.success.main,
-    paid: theme.palette.success.dark,
-    reject1: theme.palette.error.main,
-    reject2: theme.palette.error.dark,
-    waiting: theme.palette.warning.main,
-    "all done": theme.palette.success.dark,
+  // Define all colors as hex values
+  const COLORS = {
+    // Status colors - define each status only once
+    pending: "#f1950aff", // Orange
+    confirmed: "#29B6F6", // Blue
+    checking: "#c32012ff", // Purple
+    // cancelled: "#EF5350", // Red
+    rejected: "#7d2626ff", // Dark Red
+    accepted: "#cc2ebcff", // Green
+    inProgress: "#3498db", // Blue
+    taskDone: "#27ae60", // Dark Green
+    paid: "#1618a0ff", // Teal
+    //reject1: "#EF5350", // Red
+    reject2: "#e74c3c", // Dark Red (Tech reject)
+    waiting: "#8907bcff", // Purple (waiting for technician confirmation)
+    //allDone: "#2E7D32", // Dark Green
+
+    // Border colors
+    borderDark: "#34495e",
+    borderLight: "#E0E0E0",
+
+    // Fallback colors
+    fallback: "#95a5a6",
+    fallbackLight: "#bdc3c7",
   };
 
   const chartData = {
@@ -49,7 +59,6 @@ const ReportCharts = ({
       "Pending",
       "Confirmed",
       "Waiting for Tech",
-      //  "Cancelled",
       "Tech rejected",
       "Accepted",
       "In Progress",
@@ -64,7 +73,6 @@ const ReportCharts = ({
           counts.pending,
           counts.confirmed,
           counts.waiting,
-          // counts.cancelled,
           counts.rejected,
           counts.accepted,
           counts.inProgress,
@@ -72,42 +80,39 @@ const ReportCharts = ({
           counts.paid,
         ],
         backgroundColor: [
-          statusColors.checking,
-          statusColors.pending,
-          statusColors.confirmed,
-          statusColors.waiting,
-          //statusColors.cancelled,
-          statusColors.rejected,
-          statusColors.accepted,
-          statusColors.inProgress,
-          statusColors.taskDone,
-          statusColors.paid,
+          COLORS.checking,
+          COLORS.pending,
+          COLORS.confirmed,
+          COLORS.waiting,
+          COLORS.rejected,
+          COLORS.accepted,
+          COLORS.inProgress,
+          COLORS.taskDone,
+          COLORS.paid,
         ],
         borderColor: [
-          theme.palette.warning.dark,
-          theme.palette.info.dark,
-          theme.palette.secondary.dark,
-          theme.palette.error.dark,
-          theme.palette.error.dark,
-          theme.palette.success.dark,
-          theme.palette.primary.dark,
-          theme.palette.success.dark,
-          theme.palette.success.dark,
-          theme.palette.secondary.dark,
+          COLORS.borderDark,
+          COLORS.borderDark,
+          COLORS.borderDark,
+          COLORS.borderDark,
+          COLORS.borderDark,
+          COLORS.borderDark,
+          COLORS.borderDark,
+          COLORS.borderDark,
+          COLORS.borderDark,
         ],
         borderWidth: 1,
         borderRadius: 4,
         hoverBackgroundColor: [
-          theme.palette.warning.main,
-          theme.palette.info.main,
-          theme.palette.secondary.main,
-          theme.palette.error.main,
-          theme.palette.error.main,
-          theme.palette.success.main,
-          theme.palette.primary.main,
-          theme.palette.success.main,
-          theme.palette.success.main,
-          theme.palette.warning.dark,
+          `${COLORS.checking}CC`,
+          `${COLORS.pending}CC`,
+          `${COLORS.confirmed}CC`,
+          `${COLORS.waiting}CC`,
+          `${COLORS.rejected}CC`,
+          `${COLORS.accepted}CC`,
+          `${COLORS.inProgress}CC`,
+          `${COLORS.taskDone}CC`,
+          `${COLORS.paid}CC`,
         ],
       },
     ],
@@ -124,7 +129,7 @@ const ReportCharts = ({
           size: isSmallScreen ? 12 : 16,
           weight: "bold",
         },
-        color: theme.palette.text.primary,
+        color: "#333333",
         padding: {
           top: 10,
           bottom: 15,
@@ -134,10 +139,10 @@ const ReportCharts = ({
         display: false,
       },
       tooltip: {
-        backgroundColor: theme.palette.background.paper,
-        titleColor: theme.palette.text.primary,
-        bodyColor: theme.palette.text.secondary,
-        borderColor: theme.palette.divider,
+        backgroundColor: "#FFFFFF",
+        titleColor: "#333333",
+        bodyColor: "#666666",
+        borderColor: "#E0E0E0",
         borderWidth: 1,
         titleFont: {
           size: 12,
@@ -161,18 +166,18 @@ const ReportCharts = ({
           callback: function (value) {
             return Number.isInteger(value) ? value : "";
           },
-          color: theme.palette.text.secondary,
+          color: "#666666",
           font: {
             size: isSmallScreen ? 9 : 11,
           },
         },
         grid: {
-          color: theme.palette.divider,
+          color: "#E0E0E0",
         },
       },
       x: {
         ticks: {
-          color: theme.palette.text.secondary,
+          color: "#666666",
           maxRotation: isSmallScreen ? 45 : 30,
           minRotation: isSmallScreen ? 45 : 30,
           autoSkip: false,
@@ -197,8 +202,12 @@ const ReportCharts = ({
     },
   };
 
-  const departmentLabels = technicianData.map((data) => data.department);
-  const departmentCounts = technicianData.map((data) => data.count);
+  // Sort departments alphabetically for Appointments by Department chart
+  const sortedTechnicianData = [...technicianData].sort((a, b) =>
+    a.department.localeCompare(b.department)
+  );
+  const departmentLabels = sortedTechnicianData.map((data) => data.department);
+  const departmentCounts = sortedTechnicianData.map((data) => data.count);
 
   const departmentChartData = {
     labels: departmentLabels,
@@ -237,55 +246,77 @@ const ReportCharts = ({
 
   const departmentStatusTableData = departmentStatusData.map((data) => ({
     department: data.department,
-    // confirmed: data.statusCounts.confirmed || 0,
-    // reject1: data.statusCounts.reject1 || 0,
-    // waiting: data.statusCounts.waiting || 0,
     "waiting for technician confirmation":
       data.statusCounts["waiting for technician confirmation"] || 0,
     "Tech reject": data.statusCounts.reject2 || 0,
     accepted: data.statusCounts.accepted || 0,
     taskDone: data.statusCounts["task done"] || 0,
     inProgress: data.statusCounts.inprogress || 0,
-
-    //  cancelled: data.statusCounts.cancelled || 0,
     paid: data.statusCounts.paid || 0,
-
-    // "all done": data.statusCounts["all done"] || 0,
   }));
 
   const statusKeys = [
-    // "confirmed",
-    // "reject1",
-    // "waiting for Tech",
     "waiting for technician confirmation",
-    "rejecte2",
     "accepted",
+    "Tech reject",
     "inProgress",
     "taskDone",
-    // "cancelled",
     "paid",
-
-    // "all done",
   ];
 
+  // Sort departments alphabetically for Detailed Status by Department chart
+  const sortedDepartmentStatusData = [...departmentStatusTableData].sort(
+    (a, b) => a.department.localeCompare(b.department)
+  );
+
   const departmentStatusChartDataForStatus = {
-    labels: departmentStatusTableData.map((item) => item.department),
-    datasets: statusKeys.map((key) => ({
-      label:
-        key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, " $1"),
-      data: departmentStatusTableData.map((item) => item[key]),
-      backgroundColor: statusColors[key],
-      borderColor:
-        theme.palette.mode === "dark"
-          ? theme.palette.grey[800]
-          : theme.palette.grey[300],
-      borderWidth: 1,
-      borderRadius: 2,
-      hoverBackgroundColor:
-        theme.palette.mode === "dark"
-          ? `${statusColors[key]}99`
-          : `${statusColors[key]}cc`,
-    })),
+    labels: sortedDepartmentStatusData.map((item) => item.department),
+    datasets: [
+      {
+        label: "Waiting for Tech",
+        data: sortedDepartmentStatusData.map(
+          (item) => item["waiting for technician confirmation"]
+        ),
+        backgroundColor: COLORS.waiting,
+        borderColor: COLORS.borderDark,
+        borderWidth: 1,
+      },
+      {
+        label: "Accepted",
+        data: sortedDepartmentStatusData.map((item) => item.accepted),
+        backgroundColor: COLORS.accepted,
+        borderColor: COLORS.borderDark,
+        borderWidth: 1,
+      },
+      {
+        label: "Tech Reject",
+        data: sortedDepartmentStatusData.map((item) => item["Tech reject"]),
+        backgroundColor: COLORS.reject2,
+        borderColor: COLORS.borderDark,
+        borderWidth: 1,
+      },
+      {
+        label: "In Progress",
+        data: sortedDepartmentStatusData.map((item) => item.inProgress),
+        backgroundColor: COLORS.inProgress,
+        borderColor: COLORS.borderDark,
+        borderWidth: 1,
+      },
+      {
+        label: "Task Done",
+        data: sortedDepartmentStatusData.map((item) => item.taskDone),
+        backgroundColor: COLORS.taskDone,
+        borderColor: COLORS.borderDark,
+        borderWidth: 1,
+      },
+      {
+        label: "Paid",
+        data: sortedDepartmentStatusData.map((item) => item.paid),
+        backgroundColor: COLORS.paid,
+        borderColor: COLORS.borderDark,
+        borderWidth: 1,
+      },
+    ],
   };
 
   const departmentStatusChartOptionsForStatus = {
@@ -303,7 +334,7 @@ const ReportCharts = ({
           padding: 10,
           usePointStyle: true,
           pointStyle: "circle",
-          color: theme.palette.text.primary,
+          color: "#333333",
           font: {
             size: isSmallScreen ? 9 : 11,
           },
@@ -319,16 +350,16 @@ const ReportCharts = ({
           callback: function (value) {
             return Number.isInteger(value) ? value : "";
           },
-          color: theme.palette.text.secondary,
+          color: "#666666",
         },
         grid: {
-          color: theme.palette.divider,
+          color: "#E0E0E0",
         },
       },
       x: {
         stacked: true,
         ticks: {
-          color: theme.palette.text.secondary,
+          color: "#666666",
           maxRotation: isSmallScreen ? 45 : 0,
           autoSkip: isSmallScreen ? false : true,
           font: {
@@ -351,6 +382,7 @@ const ReportCharts = ({
             height: "100%",
             display: "flex",
             flexDirection: "column",
+            backgroundColor: "#FFFFFF",
           }}
         >
           <CardContent sx={{ flexGrow: 1, p: isSmallScreen ? 1 : 2 }}>
@@ -358,7 +390,7 @@ const ReportCharts = ({
               variant="h5"
               gutterBottom
               fontWeight="bold"
-              color="primary"
+              color="#333333"
               fontSize={isSmallScreen ? "1rem" : "1.25rem"}
             >
               Appointment Status Distribution
@@ -377,6 +409,7 @@ const ReportCharts = ({
             height: "100%",
             display: "flex",
             flexDirection: "column",
+            backgroundColor: "#FFFFFF",
           }}
         >
           <CardContent sx={{ flexGrow: 1, p: isSmallScreen ? 1 : 2 }}>
@@ -384,7 +417,7 @@ const ReportCharts = ({
               variant="h5"
               gutterBottom
               fontWeight="bold"
-              color="primary"
+              color="#333333"
               fontSize={isSmallScreen ? "1rem" : "1.25rem"}
             >
               Appointments by Department
@@ -400,13 +433,18 @@ const ReportCharts = ({
       </Grid>
 
       <Grid item xs={12}>
-        <Card sx={{ boxShadow: 3 }}>
+        <Card
+          sx={{
+            boxShadow: 3,
+            backgroundColor: "#FFFFFF",
+          }}
+        >
           <CardContent sx={{ p: isSmallScreen ? 1 : 2 }}>
             <Typography
               variant="h5"
               gutterBottom
               fontWeight="bold"
-              color="primary"
+              color="#333333"
               fontSize={isSmallScreen ? "1rem" : "1.25rem"}
             >
               Detailed Status by Department

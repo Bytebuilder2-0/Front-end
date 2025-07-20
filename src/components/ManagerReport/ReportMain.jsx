@@ -284,7 +284,7 @@ const ReportMain = () => {
                           >
                             (Confirmed: {counts.confirmed}, In Progress:{" "}
                             {counts.inProgress}, Accepted: {counts.accepted},
-                            Waiting: {counts.waiting}, Rejected:{" "}
+                            Waiting for Tech: {counts.waiting}, Rejected:{" "}
                             {counts.rejected})
                           </Typography>
                         </CardContent>
