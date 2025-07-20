@@ -97,10 +97,12 @@ const ApointmentChecking = () => {
           newStatus === "Pending" ? "accepted" : "rejected"
         } successfully!`,
       });
-
-      window.location.reload();
     } catch (err) {
       console.error("Error updating status:", err);
+      setSnackbar({
+        open: true,
+        message: "Failed to update appointment status",
+      });
     }
   };
 
@@ -374,6 +376,8 @@ const ApointmentChecking = () => {
         open={snackbar.open}
         message={snackbar.message}
         onClose={() => setSnackbar({ open: false, message: "" })}
+        autoHideDuration={3000}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
       />
 
       <UpdateAppointmentDetailsDialog
