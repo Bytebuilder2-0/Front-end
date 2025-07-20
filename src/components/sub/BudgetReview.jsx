@@ -9,10 +9,10 @@ const BudgetReview = ({ appointment, updateAppointment, btn_name, showSnackbar }
 	const [openBudgetModal, setOpenBudgetModal] = useState(false);
 	const [budgetAllocations, setBudgetAllocations] = useState([]);
 
-	// Open Modal
+	//  Fetch fresh data before opening
 	const handleOpenBudget = async () => {
 		if (!appointment?._id) {
-			console.log("No appointment found");
+			console.error("No appointment found");
 			return;
 		}
 
@@ -22,41 +22,36 @@ const BudgetReview = ({ appointment, updateAppointment, btn_name, showSnackbar }
 					Authorization: `Bearer ${localStorage.getItem("token")}`,
 				},
 			});
-			setBudgetAllocations(response.data.amountAllocations);
+			setBudgetAllocations(response.data.amountAllocations || []);
 			setOpenBudgetModal(true);
 		} catch (error) {
 			console.error("Error fetching budget:", error);
 		}
 	};
 
-	// Close Modal
 	const handleCloseModals = () => {
 		setOpenBudgetModal(false);
 	};
 
-	// Handle amount change
 	const handleBudgetChange = (index, value) => {
-		const updatedAllocations = [...budgetAllocations];
-
-		// Ensure the value is a valid number and is positive
+		const updated = [...budgetAllocations];
 		const parsedValue = parseFloat(value);
-
-		// Only update if the value is valid and positive
-		updatedAllocations[index].amount =
-			!isNaN(parsedValue) && parsedValue > 0 ? parsedValue : 0;
-
-		// Update state correctly to trigger re-render
-		setBudgetAllocations(updatedAllocations);
+		updated[index].amount = !isNaN(parsedValue) && parsedValue > 0 ? parsedValue : 0;
+		setBudgetAllocations(updated);
 	};
 
-	// Submit budget updates
+	const addWorkloadStep = () => {
+		setBudgetAllocations((x) => [...x, { step: x.length + 1, des: "", amount: 0 }]);
+	};
+
+	//  Same logic as workload submit
 	const handleBudgetSubmit = async () => {
-		if (!appointment) return;
-		setOpenBudgetModal(false);
+		if (!appointment?._id) return;
+
 		try {
-			const updatedSteps = [];
+			// Update each step individually (same as your original code)
 			for (const allocation of budgetAllocations) {
-				const response = await axios.put(
+				await axios.put(
 					`${baseURL}/budget/${appointment._id}/update`,
 					{
 						step: allocation.step,
@@ -69,20 +64,25 @@ const BudgetReview = ({ appointment, updateAppointment, btn_name, showSnackbar }
 						},
 					}
 				);
-				updatedSteps.push(...response.data.budget.amountAllocations);
 			}
 
-			// Update the parent component and local state
-			updateAppointment({ ...appointment, amountAllocations: updatedSteps });
-			setBudgetAllocations(updatedSteps);
+			setOpenBudgetModal(false);
+
+			//  Re-fetch updated appointment to sync with parent
+			const { data } = await axios.get(`${baseURL}/appointments/${appointment._id}`, {
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+			});
+
+			updateAppointment(data); // Updates parent state properly
+			setBudgetAllocations(data.amountAllocations || []);
+
+			showSnackbar("Budget Reviewed", "success");
 		} catch (error) {
 			console.error("Error updating budget:", error);
+			showSnackbar("Failed to update budget", "error");
 		}
-	};
-
-	// Add a New Workload Step
-	const addWorkloadStep = () => {
-		setBudgetAllocations((x) => [...x, { step: x.length + 1, des: "", amount: 0 }]);
 	};
 
 	return (
@@ -155,20 +155,11 @@ const BudgetReview = ({ appointment, updateAppointment, btn_name, showSnackbar }
 						Add Step
 					</Button>
 
-					<Box
-						sx={{
-							display: "flex",
-							justifyContent: "space-between",
-							marginTop: 2,
-						}}
-					>
+					<Box sx={{ display: "flex", justifyContent: "space-between", marginTop: 2 }}>
 						<Button
 							variant="contained"
 							color="success"
-							onClick={() => {
-								handleBudgetSubmit();
-								showSnackbar("Budget Reviewed", "success");
-							}}
+							onClick={handleBudgetSubmit}
 							sx={{ width: "48%" }}
 						>
 							Submit

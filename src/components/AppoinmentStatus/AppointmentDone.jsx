@@ -95,7 +95,9 @@ const AppointmentDone = ({ appointment }) => {
 			>
 				Appointment Details
 			</Typography>
+
 			<Typography  sx={{ color: "green" }}>
+
 				Appointment - Completed
 			</Typography>
 
@@ -120,15 +122,19 @@ const AppointmentDone = ({ appointment }) => {
 							<strong>Service:</strong> {appointment.services?.slice(0, 2).join(', ') || 'General Service'}
 						</Typography>
 					</Box>
+
 						<Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
 								<CalendarMonthIcon color="primary" sx={{ mr: 1 }} />
 								<Typography>
-								  <strong>Delivary Date:</strong> {appointment.expectedDeliveryDate ? format(new Date(appointment.expectedDeliveryDate), 'MMM d, yyyy') : 'Not specified'}
+								  <strong>Delivary Date:</strong> 
+                   {appointment.expectedDeliveryDate ?
+                     format(new Date(appointment.expectedDeliveryDate), 'MMM d, yyyy') : 'Not specified'}
 								 </Typography>
 							
 					
 							  </Box>
 				</Grid>
+
 
 
 				{/* Model & Plate Number */}
@@ -174,6 +180,7 @@ const AppointmentDone = ({ appointment }) => {
 					feedback.
 				</Typography>
 
+
 			<Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mt: 2 }}>
   <Button
    
@@ -206,6 +213,7 @@ const AppointmentDone = ({ appointment }) => {
 </Stack>
 
 										
+
 
 				{!isBudgetSet && (
 					<Typography

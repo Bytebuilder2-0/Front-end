@@ -20,7 +20,9 @@ import {
 	ModelTraining as ModelIcon,
 } from "@mui/icons-material";
 import { format } from "date-fns";
+
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+
 
 const AppointmentInProgress = ({ appointment }) => {
 	const tasks = appointment.workload || [];
@@ -71,6 +73,7 @@ const AppointmentInProgress = ({ appointment }) => {
 						</Typography>
 					</Box>
 
+
            <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                           <CalendarMonthIcon color="primary" sx={{ mr: 1 }} />
                           <Typography>
@@ -82,6 +85,7 @@ const AppointmentInProgress = ({ appointment }) => {
 
     
         </Grid>
+
 
 				{/* Vehicle Column */}
 				<Grid item xs={12} md={4}>
