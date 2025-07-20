@@ -89,7 +89,7 @@ const TimingSection = ({ formData, errors, handleInputChange }) => {
           value={formData.contactNumber}
           onChange={handleInputChange}
           error={!!errors.contactNumber}
-          helperText={errors.contactNumber}
+          helperText={errors.contactNumber || 'Format: 94712345678'}
           InputProps={{
             startAdornment: (
               <Phone color="action" sx={{ mr: 1 }} />
