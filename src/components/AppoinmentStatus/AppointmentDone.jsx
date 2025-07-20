@@ -20,7 +20,10 @@ import {
 	Task,
 	CheckCircle,
 } from "@mui/icons-material";
+
 import { green } from "@mui/material/colors";
+
+
 
 import axios from "axios";
 import { loadStripe } from "@stripe/stripe-js";
@@ -37,7 +40,7 @@ const AppointmentDone = ({ appointment }) => {
 
 	const [budget, setBudget] = useState(null);
 
-	// ✅ Fetch budget exactly like in InvoiceView
+	//  Fetch budget exactly like in InvoiceView
 	useEffect(() => {
 		const fetchBudget = async () => {
 			try {
@@ -56,7 +59,7 @@ const AppointmentDone = ({ appointment }) => {
 		fetchBudget();
 	}, [appointment._id]);
 
-	// ✅ Use totalAmount like InvoiceView
+	// Use totalAmount like InvoiceView
 	const totalAmount = budget?.totalAmount || 0;
 	const isBudgetSet = totalAmount > 0;
 
@@ -112,6 +115,14 @@ const AppointmentDone = ({ appointment }) => {
 							<strong>Service:</strong> {appointment.services || "N/A"}
 						</Typography>
 					</Box>
+						<Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+								<ServiceIcon color="primary" sx={{ mr: 1 }} />
+								<Typography>
+								  <strong>Delivary Date:</strong> {appointment.expectedDeliveryDate ? format(new Date(appointment.expectedDeliveryDate), 'MMM d, yyyy') : 'Not specified'}
+								 </Typography>
+							
+					
+							  </Box>
 				</Grid>
 
 				{/* Model & Plate Number */}
@@ -161,7 +172,7 @@ const AppointmentDone = ({ appointment }) => {
 					variant="contained"
 					onClick={handlePayment}
 					sx={{ ml: 2 }}
-					disabled={!isBudgetSet} // ✅ Disabled if totalAmount = 0
+					disabled={!isBudgetSet} // Disabled if totalAmount = 0
 				>
 					Make The Payment
 				</Button>
