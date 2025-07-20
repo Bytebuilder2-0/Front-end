@@ -19,7 +19,15 @@ const ServiceManager = () => {
   const [isActionInProgress, setIsActionInProgress] = useState(false);
 
   useEffect(() => {
-    fetchServices().then(setServices);
+    fetchServices().then((data) => {
+      // Sort by createdAt (newest first) if data exists
+      const sorted = data
+        ? [...data].sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          )
+        : [];
+      setServices(sorted);
+    });
   }, []);
 
   const handleToggle = async (id, selected) => {
@@ -41,15 +49,21 @@ const ServiceManager = () => {
   const handleAdd = async (name) => {
     setIsActionInProgress(true);
     const tempId = Date.now();
-    setServices((prev) => [...prev, { _id: tempId, name, selected: false }]);
+
+    // Prepend the new service at the beginning of the array
+    setServices((prev) => [{ _id: tempId, name, selected: false }, ...prev]);
+
     try {
       const newService = await addService(name);
       if (newService && newService._id) {
-        setServices((prev) =>
-          prev.map((service) => (service._id === tempId ? newService : service))
-        );
+        // Replace temp ID with real ID while keeping it at the top
+        setServices((prev) => [
+          { ...newService, selected: false },
+          ...prev.filter((service) => service._id !== tempId),
+        ]);
         setSnackbarMessage(`"${name}" added successfully.`);
       } else {
+        // Remove if API call fails
         setServices((prev) => prev.filter((service) => service._id !== tempId));
         setSnackbarMessage("Error adding service.");
       }
@@ -57,10 +71,10 @@ const ServiceManager = () => {
       setServices((prev) => prev.filter((service) => service._id !== tempId));
       setSnackbarMessage("Error adding service.");
     }
+
     setSnackbarOpen(true);
     setIsActionInProgress(false);
   };
-
   const handleDelete = async (id, name) => {
     setIsActionInProgress(true);
     try {

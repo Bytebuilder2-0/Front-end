@@ -96,14 +96,23 @@ const ServiceItem = ({
 
         <Box display="flex" gap={1} justifyContent="flex-end">
           <Button
-            variant={service.selected ? "contained" : "outlined"}
-            color="primary"
+            variant="contained"
+            color="primary" // Force blue color
             onClick={() => onToggle(service._id, service.selected)}
             disabled={isActionInProgress || isEditing}
             sx={{
               minWidth: "100px",
               textTransform: "none",
               fontWeight: "medium",
+              backgroundColor: "#1976d2", // Blue background
+              color: "white", // White text
+              "&:hover": {
+                backgroundColor: "#1565c0", // Darker blue on hover
+              },
+              "&.Mui-disabled": {
+                backgroundColor: "rgba(25, 118, 210, 0.5)", // Disabled state
+                color: "rgba(255, 255, 255, 0.5)",
+              },
             }}
           >
             {service.selected ? "Remove" : "Add"}
@@ -141,27 +150,51 @@ const ServiceItem = ({
           ) : (
             <>
               <Button
-                variant="outlined"
-                color="success"
+                variant="contained" // Changed from "outlined" to "contained" for solid background
+                color="success" // Uses MUI's success color (green)
                 onClick={handleStartEditing}
-                disabled={isActionInProgress || editingId !== null}
+                disabled={
+                  isActionInProgress || editingId !== null || service.selected
+                }
                 sx={{
                   minWidth: "100px",
                   textTransform: "none",
                   fontWeight: "medium",
+                  backgroundColor: "success.main", // Green background (MUI success color)
+                  color: "white", // White text
+                  "&:hover": {
+                    backgroundColor: "success.dark", // Darker green on hover (if not disabled)
+                  },
+                  "&.Mui-disabled": {
+                    // Style when disabled
+                    backgroundColor: "rgba(76, 175, 80, 0.5)", // Semi-transparent green
+                    color: "rgba(255, 255, 255, 0.5)", // Semi-transparent white
+                  },
                 }}
               >
                 Edit
               </Button>
               <Button
-                variant="outlined"
+                variant="contained" // Changed from "outlined" to "contained" for solid background
                 color="error"
                 onClick={() => setConfirmDialogOpen(true)}
-                disabled={isActionInProgress || editingId !== null}
+                disabled={
+                  isActionInProgress || editingId !== null || service.selected
+                }
                 sx={{
                   minWidth: "100px",
                   textTransform: "none",
                   fontWeight: "medium",
+                  backgroundColor: "error.main", // Red background (MUI error color)
+                  color: "white", // White text
+                  "&:hover": {
+                    backgroundColor: "error.dark", // Darker red on hover (if not disabled)
+                  },
+                  "&.Mui-disabled": {
+                    // Style when disabled
+                    backgroundColor: "rgba(211, 47, 47, 0.5)", // Semi-transparent red
+                    color: "rgba(255, 255, 255, 0.5)", // Semi-transparent white
+                  },
                 }}
               >
                 Delete
