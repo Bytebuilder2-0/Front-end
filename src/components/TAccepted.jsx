@@ -20,8 +20,8 @@ import {
 	IconButton,
 } from "@mui/material";
 import AssignmentIcon from "@mui/icons-material/Assignment";
-import { lightBlue } from "@mui/material/colors";
 import { useAuth } from "../context/AuthContext";
+import ConfirmationDialog from "./sub/Confirmation"; // Imported confirmation dialog
 
 const API_BASE_URL = "http://localhost:5000/api/appointments";
 
@@ -30,18 +30,22 @@ function TAcceptedWork() {
 	const [appointments, setAppointments] = useState([]);
 	const [searchTerm, setSearchTerm] = useState("");
 	const [loading, setLoading] = useState(true);
+
 	const [openDialog, setOpenDialog] = useState(false);
 	const [declineReason, setDeclineReason] = useState("");
 	const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
+
 	const [expandedWorkload, setExpandedWorkload] = useState({});
+
+	//  For confirmation before starting
+	const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+	const [confirmAppointmentId, setConfirmAppointmentId] = useState(null);
 
 	useEffect(() => {
 		const fetchAppointments = async () => {
 			try {
 				const response = await axios.get(API_BASE_URL, {
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
+					headers: { Authorization: `Bearer ${token}` },
 				});
 
 				const assignedToMe = response.data.filter(
@@ -63,32 +67,41 @@ function TAcceptedWork() {
 		}
 	}, [token, user]);
 
-	const handleConfirm = async (appointmentId) => {
-		const confirm = window.confirm("Start this appointment?");
-		if (!confirm) return;
+	//  Open Confirmation Dialog for "Start"
+	const handleOpenConfirmDialog = (appointmentId) => {
+		setConfirmAppointmentId(appointmentId);
+		setOpenConfirmDialog(true);
+	};
+
+	const handleCloseConfirmDialog = () => {
+		setConfirmAppointmentId(null);
+		setOpenConfirmDialog(false);
+	};
+
+	// Confirm Start
+	const handleConfirmStart = async () => {
+		if (!confirmAppointmentId) return;
 
 		try {
 			await axios.put(
-				`${API_BASE_URL}/${appointmentId}/tStatusUpdate`,
+				`${API_BASE_URL}/${confirmAppointmentId}/tStatusUpdate`,
 				{ status: "InProgress" },
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
+				{ headers: { Authorization: `Bearer ${token}` } }
 			);
 
 			setAppointments((prev) =>
-				prev.map((a) => (a._id === appointmentId ? { ...a, status: "InProgress" } : a))
+				prev.map((a) =>
+					a._id === confirmAppointmentId ? { ...a, status: "InProgress" } : a
+				)
 			);
-
-			alert("Appointment marked as In Progress!");
 		} catch (error) {
 			console.error("Error starting appointment:", error);
-			alert("Failed to start appointment.");
+		} finally {
+			handleCloseConfirmDialog();
 		}
 	};
 
+	//  Decline Dialog
 	const handleOpenDialog = (appointmentId) => {
 		setSelectedAppointmentId(appointmentId);
 		setDeclineReason("");
@@ -104,15 +117,8 @@ function TAcceptedWork() {
 		try {
 			await axios.put(
 				`${API_BASE_URL}/${selectedAppointmentId}/tStatusUpdate`,
-				{
-					status: "Reject2",
-					reason: declineReason,
-				},
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
+				{ status: "Reject2", reason: declineReason },
+				{ headers: { Authorization: `Bearer ${token}` } }
 			);
 
 			setAppointments((prev) =>
@@ -122,11 +128,8 @@ function TAcceptedWork() {
 						: a
 				)
 			);
-
-			alert("Appointment Declined!");
 		} catch (error) {
 			console.error("Error declining appointment:", error);
-			alert("Failed to decline appointment.");
 		} finally {
 			handleCloseDialog();
 		}
@@ -207,11 +210,7 @@ function TAcceptedWork() {
 										<TableCell>
 											{new Date(appointment.expectedDeliveryDate).toLocaleDateString(
 												"en-US",
-												{
-													year: "numeric",
-													month: "short",
-													day: "numeric",
-												}
+												{ year: "numeric", month: "short", day: "numeric" }
 											)}
 										</TableCell>
 										<TableCell>{appointment.issue}</TableCell>
@@ -229,7 +228,7 @@ function TAcceptedWork() {
 												<Button
 													variant="contained"
 													color="primary"
-													onClick={() => handleConfirm(appointment._id)}
+													onClick={() => handleOpenConfirmDialog(appointment._id)}
 												>
 													Start
 												</Button>
@@ -280,9 +279,7 @@ function TAcceptedWork() {
 																<TableRow
 																	key={task._id || index}
 																	sx={{
-																		"&:nth-of-type(odd)": {
-																			backgroundColor: "#fafafa",
-																		},
+																		"&:nth-of-type(odd)": { backgroundColor: "#fafafa" },
 																	}}
 																>
 																	<TableCell align="center">{task.step}</TableCell>
@@ -308,7 +305,16 @@ function TAcceptedWork() {
 				</Table>
 			</TableContainer>
 
-			{/* Decline Dialog */}
+			{/*Confirmation Dialog for Starting Appointment */}
+			<ConfirmationDialog
+				open={openConfirmDialog}
+				title="Start Appointment"
+				message="Are you sure you want to mark this appointment as In Progress?"
+				onConfirm={handleConfirmStart}
+				onCancel={handleCloseConfirmDialog}
+			/>
+
+			{/* Decline Dialog (same logic as before) */}
 			<Dialog open={openDialog} onClose={handleCloseDialog}>
 				<DialogTitle>Decline Appointment</DialogTitle>
 				<DialogContent>

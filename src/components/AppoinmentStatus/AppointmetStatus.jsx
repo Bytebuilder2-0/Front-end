@@ -68,16 +68,19 @@ const AppointmentStatus = () => {
   }
 
   return (
+    
+
+
+
     <div>
-     {( appointment.status === 'Checking' ||
-     appointment.status === 'Reject2' || appointment.status === 'Waiting for Technician Confirmation'||
-     appointment.status === 'Accepted') && (
-      <AppointmentPending 
+      {(appointment.status === 'Checking' ) && <AppointmentPending appointment={appointment} onCancel={handleAppointmentCancel}/>}
+     {( appointment.status === 'Pending' || appointment.status === 'Reject2' || appointment.status === 'Waiting for Technician Confirmation'|| appointment.status === 'Accepted') && (
+      <AppointmentConfirm 
         appointment={appointment} 
         onCancel={handleAppointmentCancel} 
       />
     )}
-      {(appointment.status === 'Confirmed' || appointment.status === 'Pending') && <AppointmentConfirm appointment={appointment} onCancel={handleAppointmentCancel}/>}
+      {(appointment.status === 'Confirmed' || appointment.status === 'Pending' ) && <AppointmentConfirm appointment={appointment} onCancel={handleAppointmentCancel}/>}
       {appointment.status === 'Task Done' && <AppointmentDone appointment={appointment} />}
 
       {appointment.status === 'InProgress' && <AppointmentInProgress appointment={appointment} />}
