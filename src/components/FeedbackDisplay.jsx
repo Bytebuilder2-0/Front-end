@@ -76,13 +76,13 @@ const FeedbackDisplay = () => {
         <CardHeader
           avatar={
             <Avatar
-              src={fallbackAvatar}
-              alt={feedback.username || "User"}
-              sx={{ width: 48, height: 48 }}
-              imgProps={{
-                onError: (e) => {
-                  e.target.src = fallbackAvatar;
-                },
+            src={feedback.profilePhoto || fallbackAvatar}
+            alt={feedback.username || "User"}
+            sx={{ width: 48, height: 48 }}
+            imgProps={{
+              onError: (e) => {
+                e.target.src = fallbackAvatar;
+                          },
               }}
             />
           }
