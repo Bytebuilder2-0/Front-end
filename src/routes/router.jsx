@@ -49,6 +49,7 @@ import DisplayFeedBack from "../components/FeedbackDisplay";
 import VerifyEmail from "../components/VerifyEmail";
 import UserProfile from "../components/UserProfile";
 import AccountRequest from "../components/ManagerDashboard/AccountRequest";
+import SupervisorTechnicianProfile from "../components/StaffProfile";
 
 
 
@@ -442,6 +443,10 @@ const router = createBrowserRouter([
    {
     path: "/DisplayFeedBack",
     element: <DisplayFeedBack />,
+  },
+  {
+    path: "/StaffProfile",
+    element : <SupervisorTechnicianProfile />,
   },
 ]);
 

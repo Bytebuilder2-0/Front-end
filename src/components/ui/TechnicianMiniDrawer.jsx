@@ -38,7 +38,8 @@ import ApprovalIcon from "@mui/icons-material/Approval";
 import Account from "../Atoms/Account";
 import Notify from "../Atoms/Notify";
 import { Link } from "react-router-dom";
-
+import  { useEffect, useState } from "react";
+import axios from "axios";
 // Define the width of the drawer
 const drawerWidth = 240;
 
@@ -115,6 +116,27 @@ export default function TechnicianMiniDrawer({ children }) {
 	const [mobileOpen, setMobileOpen] = React.useState(false); // State to handle mobile drawer open/close
 	const isSmallScreen = useMediaQuery(theme.breakpoints.down("md")); // Check if current screen size is small
 
+	const [techProfile, setTechProfile] = useState({ name: "", profilePhoto: "" });
+
+useEffect(() => {
+	axios
+		.get("http://localhost:5000/api/user/profile", {
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem("token")}`, // only if using JWT
+			},
+			withCredentials: true, // only if using cookies
+		})
+		.then((res) => {
+			if (res.data.success) {
+				setTechProfile(res.data.data);
+			}
+		})
+		.catch((err) => {
+			console.error("Failed to fetch technician profile", err);
+		});
+}, []);
+
+
 	// Function to toggle drawer open and close based on screen size
 	const handleDrawerToggle = () => {
 		if (isSmallScreen) {
@@ -172,14 +194,23 @@ export default function TechnicianMiniDrawer({ children }) {
 				</Link>
 			</DrawerHeader>
 			<Divider />
+			{/* Technician Profile Section */}
 			<Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mt: 2 }}>
-				{/* User Avatar */}
-				<Avatar
-					src="https://t4.ftcdn.net/jpg/05/69/90/77/360_F_569907763_6JSDpoAAeyBjjyuP1eJWcfZ34aItK17U.jpg"
-					sx={{ width: 100, height: 100 }}
-				/>
-				<Typography sx={{ mt: 1 }}>Technician</Typography>
-			</Box>
+	<Avatar
+		src={techProfile.profilePhoto || undefined}
+		alt={techProfile.name || "Technician"}
+		sx={{ width: 100, height: 100 }}
+	>
+		{!techProfile.profilePhoto && techProfile.name
+			? techProfile.name.charAt(0).toUpperCase()
+			: <AccountCircle fontSize="large" />}
+	</Avatar>
+	<Typography sx={{ mt: 1, fontWeight: 500 }}>
+		{techProfile.name || "Technician"}
+	</Typography>
+</Box>
+
+
 			<Divider sx={{ mx: 2, my: 1 }} />
 			{/* Sidebar Menu Items */}
 			<List>

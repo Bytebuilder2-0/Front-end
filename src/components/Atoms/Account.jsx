@@ -17,10 +17,16 @@ function Account() {
 	};
 
 	const handleProfileClick = () => {
-		console.log("Profile clicked");
-		handleMenuClose();
-		navigate("/UserProfile"); // Update with your actual profile route
-	};
+    const role = localStorage.getItem("role");
+
+  handleMenuClose();
+  if (role === "customer") {
+    navigate("/UserProfile");
+  } else {
+    navigate("/StaffProfile");
+  }
+};
+
 
 	const handleLogoutClick = () => {
 		// Clear token and any other auth-related data
