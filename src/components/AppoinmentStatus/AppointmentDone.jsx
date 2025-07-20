@@ -22,8 +22,7 @@ import {
 } from "@mui/icons-material";
 
 import { green } from "@mui/material/colors";
-import { format } from "date-fns"; 
-
+import { format } from "date-fns";
 
 import axios from "axios";
 import { loadStripe } from "@stripe/stripe-js";
@@ -115,14 +114,15 @@ const AppointmentDone = ({ appointment }) => {
 							<strong>Service:</strong> {appointment.services || "N/A"}
 						</Typography>
 					</Box>
-						<Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-								<ServiceIcon color="primary" sx={{ mr: 1 }} />
-								<Typography>
-								  <strong>Delivary Date:</strong> {appointment.expectedDeliveryDate ? format(new Date(appointment.expectedDeliveryDate), 'MMM d, yyyy') : 'Not specified'}
-								 </Typography>
-							
-					
-							  </Box>
+					<Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+						<ServiceIcon color="primary" sx={{ mr: 1 }} />
+						<Typography>
+							<strong>Delivary Date:</strong>{" "}
+							{appointment.expectedDeliveryDate
+								? format(new Date(appointment.expectedDeliveryDate), "MMM d, yyyy")
+								: "Not specified"}
+						</Typography>
+					</Box>
 				</Grid>
 
 				{/* Model & Plate Number */}
