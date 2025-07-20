@@ -15,15 +15,12 @@ import {
 	Button,
 } from "@mui/material";
 
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-
 import IssueViewer from "./sub/IssueView";
 import WhatsAppButton from "./sub/WhatsAppButton";
 import BudgetReview from "./sub/BudgetReview";
 import InvoiceView from "./sub/InvoiceView";
 import CustomSnackbar from "./sub/CustomSnackbar";
-import ConfirmationDialog from "./sub/Confirmation"; // Import confirmation dialog
-
+import ConfirmationDialog from "./sub/Confirmation";
 import { useAuth } from "../context/AuthContext";
 
 const baseURL = import.meta.env.VITE_API_BASE_URL;
@@ -45,7 +42,6 @@ const fetchAppointments = async (supervisorId, token) => {
 	}
 };
 
-//  Function to update status to Paid
 const updateAppointmentStatus = async (appointmentId, token) => {
 	try {
 		const res = await axios.put(
@@ -71,7 +67,6 @@ function CompletedS() {
 		severity: "success",
 	});
 
-	//  For confirmation dialog
 	const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
 	const [selectedAppointmentId, setSelectedAppointmentId] = useState(null);
 
@@ -88,10 +83,18 @@ function CompletedS() {
 		return () => clearInterval(interval);
 	}, [user, token]);
 
+	//  EXACTLY LIKE WORKLOAD FLOW
 	const updateAppointmentInState = (updatedAppointment) => {
-		// Remove from list after marked as Paid
 		setAppointments((prevAppointments) =>
-			prevAppointments.filter((appt) => appt._id !== updatedAppointment._id)
+			prevAppointments.map((appt) =>
+				appt._id === updatedAppointment._id ? updatedAppointment : appt
+			)
+		);
+	};
+
+	const removeAppointmentFromState = (appointmentId) => {
+		setAppointments((prevAppointments) =>
+			prevAppointments.filter((appt) => appt._id !== appointmentId)
 		);
 	};
 
@@ -118,7 +121,6 @@ function CompletedS() {
 				/>
 			</Box>
 
-			{/* Table */}
 			<TableContainer
 				component={Paper}
 				sx={{
@@ -155,13 +157,13 @@ function CompletedS() {
 									<TableCell>{appointment.vehicleId}</TableCell>
 									<TableCell>{appointment.model}</TableCell>
 									<TableCell>
-										<IssueViewer appointment={appointment}  />
+										<IssueViewer appointment={appointment} />
 									</TableCell>
 									<TableCell>
 										<BudgetReview
 											appointment={appointment}
 											btn_name="Review"
-											updateAppointment={updateAppointmentInState}
+											updateAppointment={updateAppointmentInState} //SAME AS WORKLOAD
 											showSnackbar={showSnackbar}
 										/>
 									</TableCell>
@@ -169,10 +171,12 @@ function CompletedS() {
 										<InvoiceView appointment={appointment} />
 									</TableCell>
 									<TableCell>
-										<WhatsAppButton phone={appointment.contactNumber} VNumber={ appointment.vehicleNumber} />
+										<WhatsAppButton
+											phone={appointment.contactNumber}
+											VNumber={appointment.vehicleNumber}
+										/>
 									</TableCell>
 									<TableCell>
-										{/*  PAYMENT BUTTON with Confirmation */}
 										<Button
 											variant="contained"
 											color="success"
@@ -200,7 +204,6 @@ function CompletedS() {
 				</Table>
 			</TableContainer>
 
-			{/*  Confirmation Dialog */}
 			<ConfirmationDialog
 				open={confirmDialogOpen}
 				title="Confirm Payment"
@@ -208,7 +211,7 @@ function CompletedS() {
 				onConfirm={async () => {
 					try {
 						const updated = await updateAppointmentStatus(selectedAppointmentId, token);
-						updateAppointmentInState(updated);
+						removeAppointmentFromState(updated._id);
 						showSnackbar("Appointment marked as Paid!", "success");
 					} catch {
 						showSnackbar("Failed to update status", "error");
