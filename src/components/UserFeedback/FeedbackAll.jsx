@@ -148,12 +148,19 @@ const completedFeedbacks = feedbacks;
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
-      <Typography variant="h4" gutterBottom>
+    <Box sx={{ width: "100%", padding: 3 }}>
+      <Typography variant="h6" fontWeight={700} gutterBottom sx={{  
+              fontWeight: 600,
+              fontSize : 30,
+              marginBottom: '1px'
+        }}>
         Feedback Center
       </Typography>
+      <Typography  color="text.secondary" sx={{ mb: 3 }}>
+           Track your pending feedback and review your feedback history in one place.
+            </Typography>
 
-      <Divider sx={{ my: 3, borderBottomWidth: 1 }} /> 
+      <Divider sx={{ my: 3, borderBottomWidth: 1, mb:4 }} /> 
       
       <Tabs value={tabValue} onChange={handleTabChange} sx={{ mb: 3 }}>
         <Tab label={`Pending Feedback (${pendingFeedbacks.length})`} />

@@ -1,4 +1,4 @@
-import React from "react";
+import {React,useState} from "react";
 import {
 	Typography,
 	ListItemIcon,
@@ -20,10 +20,14 @@ import {
 	ModelTraining as ModelIcon,
 	Task,
 	CheckCircle,
-	RateReview,
 } from "@mui/icons-material";
-import { green, orange, blue } from "@mui/material/colors";
+import { green } from "@mui/material/colors";
 import { format } from "date-fns";
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import FeedbackForm from "../UserFeedback/FeedbackForm";
+// import PaymentIcon from '@mui/icons-material/Payment';
+// import RateReviewIcon from '@mui/icons-material/RateReview';
+
 
 import axios from "axios";
 import { loadStripe } from "@stripe/stripe-js";
@@ -33,6 +37,7 @@ const stripePromise = loadStripe(
 );
 
 const AppointmentDone = ({ appointment }) => {
+    const [openFeedback, setOpenFeedback] = useState(false);
 	const tasks = appointment.workload || [];
 	const completedTasks = tasks.filter((task) => task.status === "Completed");
 
@@ -80,11 +85,11 @@ const AppointmentDone = ({ appointment }) => {
 					<Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
 						<ServiceIcon color="primary" sx={{ mr: 1 }} />
 						<Typography>
-							<strong>Service:</strong> {appointment.services || "N/A"}
+							<strong>Service:</strong> {appointment.services?.slice(0, 2).join(', ') || 'General Service'}
 						</Typography>
 					</Box>
 						<Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-								<ServiceIcon color="primary" sx={{ mr: 1 }} />
+								<CalendarMonthIcon color="primary" sx={{ mr: 1 }} />
 								<Typography>
 								  <strong>Delivary Date:</strong> {appointment.expectedDeliveryDate ? format(new Date(appointment.expectedDeliveryDate), 'MMM d, yyyy') : 'Not specified'}
 								 </Typography>
@@ -92,6 +97,7 @@ const AppointmentDone = ({ appointment }) => {
 					
 							  </Box>
 				</Grid>
+
 
 				{/* Vehicle Column */}
 				<Grid item xs={12} md={4}>
@@ -135,9 +141,33 @@ const AppointmentDone = ({ appointment }) => {
 					Your vehicle is ready for pickup. Please complete the payment and leave
 					feedback..
 				</Typography>
-				<Button variant="contained" onClick={handlePayment} sx={{ ml: 2 }}>
-					Make The Payment
-				</Button>
+			<Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mt: 2 }}>
+  <Button
+    variant="contained"
+    // startIcon={<PaymentIcon />}
+    onClick={handlePayment}
+    sx={{ minWidth: 180 }}
+  >
+    Make Payment
+  </Button>
+
+  <Button
+  variant="outlined"
+  onClick={() => setOpenFeedback(true)}
+  sx={{ minWidth: 180 }}
+>
+  Submit Feedback
+</Button>
+
+<FeedbackForm
+  open={openFeedback}
+  onClose={() => setOpenFeedback(false)}
+  appointmentId={appointment._id}
+/>
+
+</Stack>
+
+										
 {/* 
 				<Button variant="contained" onClick={handlePayment} sx={{ ml: 2 }}>
 					Submit Feedback

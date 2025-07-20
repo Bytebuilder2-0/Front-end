@@ -19,6 +19,7 @@ import {
 } from "@mui/icons-material";
 import AppHistory from "./AppHistory";
 import MarkChatReadIcon from '@mui/icons-material/MarkChatRead';
+import { format } from 'date-fns';
 
 const FeedbackHistory = ({ feedbacks, loading }) => {
   const theme = useTheme();
@@ -73,9 +74,7 @@ const FeedbackHistory = ({ feedbacks, loading }) => {
             p: 3,
             borderRadius: 2,
             border: `1px solid ${theme.palette.divider}`,
-            '&:hover': {
-              boxShadow: theme.shadows[4]
-            }
+  
           }}
         >
           {/* Header */}
@@ -89,19 +88,22 @@ const FeedbackHistory = ({ feedbacks, loading }) => {
               <MarkChatReadIcon fontSize="small" />
             </Avatar>
             <Box>
-              <Typography variant="h6" fontWeight={600}>
-                Service Feedback
-              </Typography>
-              <Typography  color="text.secondary">
-                {feedback.model}
-              </Typography>
+ 
+                    <Typography variant="h6" fontWeight={600}>
+                      {feedback.model || 'Vehicle Service'}
+                    </Typography>
+                    <Typography color="text.secondary">
+                     {feedback.preferredDate ? format(new Date(feedback.preferredDate), 'MMM d, yyyy') : 'Not specified'}
+                    </Typography>
+                           
+           
             </Box>
           </Box>
 
 
           {/* Vehicle Details */}
 
-          <AppHistory appointment={feedback} />
+          <AppHistory data={feedback} />
 
            <Divider sx={{ my: 3 }} />
           

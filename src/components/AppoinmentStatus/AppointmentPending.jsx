@@ -123,10 +123,16 @@ const AppointmentPending = ({ appointment, onCancel }) => {
 
       {/* Date Info */}
         <Typography variant="body2" gutterBottom  sx={{ padding:'3px' }}>
-        Date  : {new Date(appointment.expectedDeliveryDate).toLocaleDateString('en-US', { year :'numeric',month: 'short', day: 'numeric' })}</Typography>
+        Appoinment Date  : {new Date(appointment.preferredDate).toLocaleDateString('en-US', { year :'numeric',month: 'short', day: 'numeric' })}</Typography>
+
+        <Typography variant="body2" gutterBottom  sx={{ padding:'3px' }}>
+        Delivery Date  : {new Date(appointment.expectedDeliveryDate).toLocaleDateString('en-US', { year :'numeric',month: 'short', day: 'numeric' })}</Typography>
+
+
+
 
          <Typography variant="body2" gutterBottom sx={{ padding: '3px' }}>
-            Time :   {appointment.preferredTime}   
+        Time :   {appointment.preferredTime}   
       </Typography>
       {/* Friendly Info Message */}
       <Typography variant="body2" gutterBottom  sx={{ padding:'3px' }}>

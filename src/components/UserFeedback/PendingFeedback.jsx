@@ -84,14 +84,13 @@ const PendingFeedback = ({ feedbacks = [], loading, onOpenFeedback }) => {
                 />
               </Box>
 
-              <AppHistory appointment={appointment} />
+              <AppHistory data={appointment} />
       
               <Box display="flex"  sx={{ pt: 1 }}>
 
                   <Button
                     variant="contained"
                     size="medium"
-                    startIcon={<RateReview />}
                     onClick={() => onOpenFeedback(appointment._id)}
                     sx={{
                       borderRadius: 2,

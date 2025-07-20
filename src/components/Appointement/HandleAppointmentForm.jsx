@@ -119,93 +119,94 @@ const validateForm = () => {
   const newErrors = {};
   const now = new Date();
 
-  // Contact Number Validation
-  if (!formData.contactNumber) {
+  const {
+    contactNumber,
+    issue,
+    preferredDate,
+    preferredTime,
+    expectedDeliveryDate
+  } = formData;
+
+  // --- Contact Number ---
+  if (!contactNumber) {
     newErrors.contactNumber = 'Contact number is required';
-  } else if (!/^\d{11}$/.test(formData.contactNumber)) {
-    newErrors.contactNumber = 'Contact number must be exactly 11 digits (e.g., 94771234567)';
-  } else if (!/^94\d{9}$/.test(formData.contactNumber)) {
-    newErrors.contactNumber = 'Invalid format: must start with 94 and contain 9 more digits';
+  } else if (!/^\d{11}$/.test(contactNumber)) {
+    newErrors.contactNumber = 'Contact number must be exactly 11 digits';
+  } else if (!/^94\d{9}$/.test(contactNumber)) {
+    newErrors.contactNumber = 'Must start with 94 and contain 9 more digits';
   }
 
-  // Issue Field Validation
-  if (formData.issue && !/^[A-Za-z0-9\s]+$/.test(formData.issue)) {
-    newErrors.issue = 'Issue must only contain letters, numbers, and spaces';
+  // --- Issue ---
+  if (issue && !/^[A-Za-z0-9\s]+$/.test(issue)) {
+    newErrors.issue = 'Only letters, numbers and spaces allowed';
   }
 
-  // Date/Time Validation
-  let preferredDateTime = null;
-  let deliveryDate = null;
-
-  // Preferred Date Validation
-  if (!formData.preferredDate) {
+  // --- Preferred Date ---
+  if (!preferredDate) {
     newErrors.preferredDate = 'Preferred date is required';
+  } else if (new Date(preferredDate) < new Date(now.toDateString())) {
+    newErrors.preferredDate = 'Invalid date. Must be future';
   }
 
-  // Preferred Time Validation
-  if (!formData.preferredTime) {
+  // --- Expected Delivery Date ---
+  if (!expectedDeliveryDate) {
+    newErrors.expectedDeliveryDate = 'Expected delivery date is required';
+  } else if (new Date(expectedDeliveryDate) < new Date(now.toDateString())) {
+    newErrors.expectedDeliveryDate = 'Invalid date.Must be future ';
+  }
+
+  // --- preferredDate <= expectedDeliveryDate ---
+  if (preferredDate && expectedDeliveryDate) {
+    const pDate = new Date(preferredDate);
+    const eDate = new Date(expectedDeliveryDate);
+    if (pDate > eDate) {
+      newErrors.preferredDate = 'Preferred date must be before expected delivery date';
+    }
+  }
+
+  // --- Time validation ---
+  if (!preferredTime) {
     newErrors.preferredTime = 'Preferred time is required';
-  }
-
-  // Process preferred date/time if both exist
-  if (formData.preferredDate && formData.preferredTime) {
-    const timeParts = formData.preferredTime.match(/(\d+):(\d+)\s?(AM|PM)/i);
-    if (timeParts) {
-      let [_, hour, minute, meridian] = timeParts;
-      hour = parseInt(hour);
-      minute = parseInt(minute);
-      
-      // Convert to 24-hour format
-      if (meridian.toUpperCase() === 'PM' && hour !== 12) hour += 12;
-      if (meridian.toUpperCase() === 'AM' && hour === 12) hour = 0;
-
-      preferredDateTime = new Date(formData.preferredDate);
-      preferredDateTime.setHours(hour, minute, 0, 0);
-
-      // Check if preferred date/time is in the future
-      if (preferredDateTime < now) {
-        newErrors.preferredTime = 'Preferred date and time must be in the future';
-      }
-    } else {
-      newErrors.preferredTime = 'Invalid time format (use HH:MM AM/PM)';
-    }
-  }
-
-  // Expected Delivery Date Validation
-  if (!formData.expectedDeliveryDate) {
-    newErrors.expectedDeliveryDate = 'Delivery date is required';
   } else {
-    deliveryDate = new Date(formData.expectedDeliveryDate);
-    deliveryDate.setHours(0, 0, 0, 0); // Set to start of day for comparison
-    
-    // Check if delivery date is in the future
-    if (deliveryDate < new Date(now.setHours(0, 0, 0, 0))) {
-      newErrors.expectedDeliveryDate = 'Delivery date must be today or in the future';
+    const [hours, minutes] = preferredTime.split(':').map(Number);
+    if (hours < 6 || hours === 0) {
+      newErrors.preferredTime = 'Time slot between 12:00 AM and 6:00 AM is not allowed';
     }
 
-    // Compare with preferred date/time if available
-    if (preferredDateTime) {
-      const preferredDateOnly = new Date(preferredDateTime);
-      preferredDateOnly.setHours(0, 0, 0, 0);
-      
-      if (deliveryDate < preferredDateOnly) {
-        newErrors.expectedDeliveryDate = 'Delivery date must be on or after the preferred service date';
-      }
+    // --- If preferredDate === expectedDeliveryDate and preferredDate === today ---
+    const pDateStr = new Date(preferredDate).toDateString();
+    const eDateStr = new Date(expectedDeliveryDate).toDateString();
+    const nowStr = now.toDateString();
+if (preferredDate && expectedDeliveryDate && preferredTime) {
+  const pDate = new Date(preferredDate);
+  const eDate = new Date(expectedDeliveryDate);
+  const [hours, minutes] = preferredTime.split(':').map(Number);
+
+  // Combine preferredDate and preferredTime into one datetime
+  const preferredDateTime = new Date(pDate);
+  preferredDateTime.setHours(hours);
+  preferredDateTime.setMinutes(minutes);
+  preferredDateTime.setSeconds(0);
+  preferredDateTime.setMilliseconds(0);
+
+  // If preferredDate === expectedDeliveryDate and it is today
+  if (
+    pDate.toDateString() === eDate.toDateString() &&
+    pDate.toDateString() === now.toDateString()
+  ) {
+    if (preferredDateTime <= now) {
+      newErrors.preferredTime = 'Invalid time. Must be later than current time';
     }
   }
+}
 
-  // Vehicle & Services Validation
-  if (!formData.vehicleObject) {
-    newErrors.vehicleObject = 'Vehicle selection is required';
-  }
-
-  if (formData.services.length === 0) {
-    newErrors.services = 'At least one service is required';
   }
 
   setErrors(newErrors);
   return Object.keys(newErrors).length === 0;
 };
+
+
 
 
 

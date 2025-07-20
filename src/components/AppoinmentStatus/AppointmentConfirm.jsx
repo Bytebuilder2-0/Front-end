@@ -136,8 +136,8 @@ const AppointmentConfirm = ({ appointment, onCancel }) => {
         </div>
         <Divider sx={{ my: 2, borderBottomWidth: 3 }} /> 
         <div>
-          <Typography variant="subtitle1" sx={{ fontWeight: 'bold',fontSize: '20px' }}>Date</Typography>
-          <Typography variant="body1">{new Date(appointment.expectedDeliveryDate).toLocaleDateString('en-US', { year :'numeric',month: 'short', day: 'numeric' })}</Typography>
+          <Typography variant="subtitle1" sx={{ fontWeight: 'bold',fontSize: '20px' }}>Appoinment Date</Typography>
+          <Typography variant="body1">{new Date(appointment.preferredDate).toLocaleDateString('en-US', { year :'numeric',month: 'short', day: 'numeric' })}</Typography>
         </div>
         
         <div>

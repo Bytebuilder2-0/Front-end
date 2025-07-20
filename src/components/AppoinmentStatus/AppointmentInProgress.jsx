@@ -8,7 +8,6 @@ import {
   ListItemText, 
   Chip,
   Divider,
-  Paper,
   Grid
 } from '@mui/material';
 import { 
@@ -17,8 +16,9 @@ import {
   Description as ServiceIcon,
   DirectionsCar as VehicleIcon,
   ConfirmationNumber as IdIcon,
-  ModelTraining as ModelIcon
+  ModelTraining as ModelIcon,
 } from '@mui/icons-material';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 const AppointmentInProgress = ({ appointment }) => {
   const tasks = appointment.workload || [];
@@ -64,7 +64,7 @@ const AppointmentInProgress = ({ appointment }) => {
           </Box>
 
            <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                          <ServiceIcon color="primary" sx={{ mr: 1 }} />
+                          <CalendarMonthIcon color="primary" sx={{ mr: 1 }} />
                           <Typography>
                             <strong>Delivary Date:</strong> {appointment.expectedDeliveryDate ? format(new Date(appointment.expectedDeliveryDate), 'MMM d, yyyy') : 'Not specified'}
                 </Typography>
