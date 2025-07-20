@@ -154,7 +154,7 @@ const ApointmentHistory = () => {
                     <DeatailsViewer appointment={appointment} />
                   </TableCell>
                   <TableCell align="center">
-                    <WhatsAppButton phone={appointment.contactNumber} />
+                    <WhatsAppButton phone={appointment.contactNumber} VNumber={ appointment.vehicleNumber} />
                   </TableCell>
                   <TableCell align="center">
                     <Typography
