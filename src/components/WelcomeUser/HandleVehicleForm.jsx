@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import { DirectionsCar, CalendarToday, Build } from '@mui/icons-material';
 
-// const vehicleTypes = ['Sedan', 'SUV', 'Truck', 'Van', 'Motorcycle', 'Other'];
+const vehicleTypes = ['Sedan', 'SUV', 'Truck', 'Van', 'Motorcycle', 'Other'];
 
 const HandleVehicleForm = ({ formData, onChange, onSubmit, onReset }) => {
   const theme = useTheme();
@@ -86,43 +86,43 @@ const HandleVehicleForm = ({ formData, onChange, onSubmit, onReset }) => {
 
             <Grid item xs={12} sm={6}>
               <TextField
-                fullWidth
-                label="Year *"
-                name="vehicleYear"
-                value={formData.vehicleYear}
-                onChange={onChange}
-                required
-                InputProps={{
-                  startAdornment: (
-                    <CalendarToday color="action" sx={{ mr: 1 }} />
-                  ),
-                }}
-              />
-            </Grid>
+                    fullWidth
+                    label="Year *"
+                    name="vehicleYear"
+                    value={formData.vehicleYear}
+                    onChange={onChange}
+                    required
+                    error={formData.vehicleYear && !isYearValid}
+                    helperText={
+                      formData.vehicleYear && !isYearValid
+                        ? `Enter a valid year between 1700 and ${currentYear}`
+                        : ''
+                    }
+                    InputProps={{
+                      startAdornment: (
+                        <CalendarToday color="action" sx={{ mr: 1 }} />
+                      ),
+                    }}/>
+                      </Grid>
+          <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  label="Model *"
+                  name="model"
+                  value={formData.model}
+                  onChange={onChange}
+                  required
+                  error={formData.model && !isModelValid}
+                  helperText={
+                    formData.model && !isModelValid
+                      ? 'Model can only contain letters and numbers'
+                      : ''
+                  }
+                />
+              </Grid>
 
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Type *"
-                name="vehicleType"
-                value={formData.vehicleType}
-                onChange={onChange}
-                required
-              />
-            </Grid>
 
-              <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Model *"
-                name="model"
-                value={formData.model}
-                onChange={onChange}
-                required
-              />
-            </Grid>
-
-            {/* <Grid item xs={12}>
+       <Grid item xs={12}>
               <FormControl fullWidth>
                 <InputLabel>Vehicle Type *</InputLabel>
                 <Select
@@ -147,7 +147,7 @@ const HandleVehicleForm = ({ formData, onChange, onSubmit, onReset }) => {
                   ))}
                 </Select>
               </FormControl>
-            </Grid> */}
+            </Grid> 
 
             {/* Form Actions */}
             <Grid item xs={12} sx={{ mt: 2 }}>

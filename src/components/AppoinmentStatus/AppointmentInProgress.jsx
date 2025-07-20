@@ -21,6 +21,9 @@ import {
 } from "@mui/icons-material";
 import { format } from "date-fns";
 
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+
+
 const AppointmentInProgress = ({ appointment }) => {
 	const tasks = appointment.workload || [];
 	const completedTasks = tasks.filter((task) => task.status === "Completed");
@@ -70,16 +73,19 @@ const AppointmentInProgress = ({ appointment }) => {
 						</Typography>
 					</Box>
 
-					<Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-						<ServiceIcon color="primary" sx={{ mr: 1 }} />
-						<Typography>
-							<strong>Delivary Date:</strong>{" "}
-							{appointment.expectedDeliveryDate
-								? format(new Date(appointment.expectedDeliveryDate), "MMM d, yyyy")
-								: "Not specified"}
-						</Typography>
-					</Box>
-				</Grid>
+
+           <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                          <CalendarMonthIcon color="primary" sx={{ mr: 1 }} />
+                          <Typography>
+                            <strong>Delivary Date:</strong> {appointment.expectedDeliveryDate ? format(new Date(appointment.expectedDeliveryDate), 'MMM d, yyyy') : 'Not specified'}
+                </Typography>
+                        
+                    
+             </Box>
+
+    
+        </Grid>
+
 
 				{/* Vehicle Column */}
 				<Grid item xs={12} md={4}>

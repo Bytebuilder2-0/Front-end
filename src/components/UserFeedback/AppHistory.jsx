@@ -13,8 +13,9 @@ import {
 } from "@mui/icons-material";
 import { format } from 'date-fns';
 
-const AppHistory = ({ appointment }) => {
-  if (!appointment) return null;
+
+const AppHistory = ({ data }) => {
+  if (!data) return null;
 
   return (
     <>
@@ -29,11 +30,11 @@ const AppHistory = ({ appointment }) => {
             />
             <Box>
               <Typography variant="caption" color="text.secondary">
-                Service Date
+                Delivery Date
               </Typography>
               <Typography variant="body2" fontWeight={500}>
-                {appointment.preferredDate
-                  ? format(new Date(appointment.preferredDate), 'PP')
+                {data.expectedDeliveryDate
+                  ? format(new Date(data.expectedDeliveryDate), 'PP')
                   : 'N/A'}
               </Typography>
             </Box>
@@ -51,7 +52,7 @@ const AppHistory = ({ appointment }) => {
                 Vehicle Number
               </Typography>
               <Typography variant="body2" fontWeight={500}>
-                {appointment.vehicleNumber || 'Not specified'}
+                {data.vehicleNumber || 'Not specified'}
               </Typography>
             </Box>
           </Stack>
@@ -68,7 +69,7 @@ const AppHistory = ({ appointment }) => {
                 Services
               </Typography>
               <Typography variant="body2" fontWeight={500}>
-                {appointment.services?.slice(0, 2).join(', ') || 'General Service'}
+                {data.services?.slice(0, 2).join(', ') || 'General Service'}
               </Typography>
             </Box>
           </Stack>
@@ -77,5 +78,6 @@ const AppHistory = ({ appointment }) => {
     </>
   );
 };
+
 
 export default AppHistory;

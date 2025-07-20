@@ -7,6 +7,7 @@ import AppointmentInProgress from './AppointmentInProgress';
 import { CircularProgress, Typography } from '@mui/material';
 import { useAuth } from "../../context/AuthContext";
 import AppointmentDone from './AppointmentDone';
+import AppointmentPaid from './AppoinmentPaid';
 
 
 const API_URL = 'http://localhost:5000/api/appointments';
@@ -74,15 +75,15 @@ const AppointmentStatus = () => {
 
     <div>
       {(appointment.status === 'Checking' ) && <AppointmentPending appointment={appointment} onCancel={handleAppointmentCancel}/>}
-     {( appointment.status === 'Pending' || appointment.status === 'Reject2' || appointment.status === 'Waiting for Technician Confirmation'|| appointment.status === 'Accepted') && (
+     {( appointment.status === 'Pending' || appointment.status === 'Reject2' || appointment.status === 'Waiting for Technician Confirmation'|| appointment.status === 'Accepted' || appointment.status === 'Confirmed') && (
       <AppointmentConfirm 
         appointment={appointment} 
         onCancel={handleAppointmentCancel} 
       />
     )}
-      {(appointment.status === 'Confirmed' || appointment.status === 'Pending' ) && <AppointmentConfirm appointment={appointment} onCancel={handleAppointmentCancel}/>}
+    
       {appointment.status === 'Task Done' && <AppointmentDone appointment={appointment} />}
-
+      {appointment.status === 'Paid' && <AppointmentPaid appointment={appointment} />}
       {appointment.status === 'InProgress' && <AppointmentInProgress appointment={appointment} />}
 
     </div>

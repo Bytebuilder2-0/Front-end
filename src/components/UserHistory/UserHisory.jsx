@@ -25,6 +25,7 @@ import {
   LocalShipping // New: for vehicle number clarity
 } from '@mui/icons-material';
 import { useAuth } from "../../context/AuthContext";
+import CreditScoreIcon from '@mui/icons-material/CreditScore';
 import { format } from 'date-fns';
 
 const UserHistory = () => {
@@ -118,10 +119,10 @@ const UserHistory = () => {
             }}>
         Your Service History 
       </Typography>
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+      <Typography  color="text.secondary" sx={{ mb: 3 }}>
         All your completed and paid service appointments are listed below.
       </Typography>
-      <Divider sx={{ mb: 3 }} />
+      <Divider sx={{ mb: 4 }} />
 
       <List sx={{ width: '100%', p: 0 }}>
         {appointments.map((appointment) => (

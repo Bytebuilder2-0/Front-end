@@ -1,12 +1,8 @@
 import React from "react";
 import {
     Typography,
-    ListItemIcon,
+    Paper,
     Box,
-    List,
-    ListItem,
-    ListItemText,
-    Chip,
     Divider,
     Stack,
     Grid,
@@ -18,12 +14,11 @@ import {
     DirectionsCar as VehicleIcon,
     ConfirmationNumber as IdIcon,
     ModelTraining as ModelIcon,
-    Task,
-    CheckCircle,
-    RateReview,
+    
 } from "@mui/icons-material";
 import { green, orange, blue } from "@mui/material/colors";
 import { format } from "date-fns";
+import { useNavigate } from 'react-router-dom';
 
 import axios from "axios";
 import { loadStripe } from "@stripe/stripe-js";
@@ -32,24 +27,11 @@ const stripePromise = loadStripe(
     "pk_test_51Rl8A92E8JZ0nXeqBkKSyzbSZnPa4fHYeEe8TF2ApdVDI8BDRoDDD5u4EIgPLuNkRMHyZvq47KqNf4fPbqMrGDwa004pUMyJfU"
 );
 
-const AppointmentDone = ({ appointment }) => {
-    const tasks = appointment.workload || [];
-    const completedTasks = tasks.filter((task) => task.status === "Completed");
+const AppointmentPaid = ({ appointment }) => {
+    const navigate = useNavigate();
 
-    const handlePayment = async () => {
-        try {
-            const { data } = await axios.post(
-                "http://localhost:5000/api/payment/create-checkout-session",
-                { appointmentId: appointment._id } 
-            );
 
-            const stripe = await stripePromise;
-            await stripe.redirectToCheckout({ sessionId: data.id });
-        } catch (error) {
-            console.error("Payment Error:", error);
-        }
-    };
-
+ 
     return (
         <Box sx={{ padding: "20px" }}>
             {/* Appointment Header */}
@@ -112,64 +94,64 @@ const AppointmentDone = ({ appointment }) => {
 
             <Divider sx={{ my: 3 }} />
 
-            <Box
-                sx={{
-                    backgroundColor: green[50],
-                    p: 2,
-                    borderRadius: 1,
-                    mb: 3,
-                    borderLeft: `4px solid ${green[500]}`,
-                }}
-            >
-                <Stack direction="row" alignItems="center" spacing={1} mb={1}>
-                    <CheckCircleIcon sx={{ color: green[800] }} />
-                    <Typography
-                        variant="subtitle1"
-                        sx={{ color: green[800], fontWeight: "bold", fontSize: "23px" }}
-                        mr="9"
-                    >
-                        Tasks completed !
-                    </Typography>
-                </Stack>
-                <Typography variant="body2" sx={{ mb: 2 }}>
-                    Your vehicle is ready for pickup. Please complete the payment and leave
-                    feedback..
-                </Typography>
-                <Button variant="contained" onClick={handlePayment} sx={{ ml: 2 }}>
-                    Make The Payment
-                </Button>
-{/* 
-                <Button variant="contained" onClick={handlePayment} sx={{ ml: 2 }}>
-                    Submit Feedback
-                </Button> */}
-            </Box>
+         
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
+        p: 4,
+        maxWidth: '500px',
+        margin: '0 auto'
+      }}
+    >
+      {/* Success icon */}
+      <CheckCircleIcon 
+        sx={{ 
+          fontSize: 80, 
+          color: 'green',
+          mb: 2 
+        }} 
+      />
 
-            {/* Completed Tasks */}
-            <Typography
-                variant="subtitle2"
-                gutterBottom
-                sx={{ mt: 5, fontWeight: "bold", fontSize: "17px" }}
-            >
-                <Task sx={{ verticalAlign: "middle", mr: 1 }} />
-                Services Performed
-            </Typography>
-            <List dense>
-                {completedTasks.map((task, index) => (
-                    <ListItem key={index} sx={{ pl: 0 }}>
-                        <ListItemIcon sx={{ minWidth: 36 }}>
-                            <CheckCircle sx={{ color: green[500] }} />
-                        </ListItemIcon>
-                        <ListItemText
-                            primary={task.description}
-                            secondary={task.completedBy ? `Completed by: ${task.completedBy}` : null}
-                        />
-                    </ListItem>
-                ))}
-            </List>
+      {/* Main message */}
+      <Typography variant="h5" sx={{ fontWeight: 600, mb: 2 }}>
+        Payment Successful!
+      </Typography>
+
+      {/* Thank you message */}
+      <Typography variant="body1" sx={{ mb: 4, lineHeight: 1.6 }}>
+        Thank you for your payment. Your appointment has been confirmed successfully.
+        Our team will contact you if any further information is needed.
+      </Typography>
+
+      {/* Action button */}
+      <Button
+        variant="contained"
+        onClick={() => navigate('/User')}
+        sx={{
+          px: 4,
+          py: 1.5,
+          borderRadius: '8px',
+          fontWeight: 600
+        }}
+      >
+        Return to Home
+      </Button>
+    </Box>
+
+
+
+           
+
+            
+            
 
             <Divider sx={{ my: 2 }} />
         </Box>
     );
 };
 
-export default AppointmentDone;
+export default AppointmentPaid;

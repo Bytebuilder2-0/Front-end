@@ -119,93 +119,112 @@ const validateForm = () => {
   const newErrors = {};
   const now = new Date();
 
-  // Contact Number Validation
-  if (!formData.contactNumber) {
+  const {
+    contactNumber,
+    issue,
+    preferredDate,
+    preferredTime,
+    expectedDeliveryDate
+  } = formData;
+
+  // --- Contact Number ---
+  if (!contactNumber) {
     newErrors.contactNumber = 'Contact number is required';
-  } else if (!/^\d{11}$/.test(formData.contactNumber)) {
-    newErrors.contactNumber = 'Contact number must be exactly 11 digits (e.g., 94771234567)';
-  } else if (!/^94\d{9}$/.test(formData.contactNumber)) {
-    newErrors.contactNumber = 'Invalid format: must start with 94 and contain 9 more digits';
+  } else if (!/^\d{11}$/.test(contactNumber)) {
+    newErrors.contactNumber = 'Contact number must be exactly 11 digits';
+  } else if (!/^94\d{9}$/.test(contactNumber)) {
+    newErrors.contactNumber = 'Must start with 94 and contain 9 more digits';
   }
 
-  // Issue Field Validation
-  if (formData.issue && !/^[A-Za-z0-9\s]+$/.test(formData.issue)) {
-    newErrors.issue = 'Issue must only contain letters, numbers, and spaces';
+  // --- Issue ---
+  if (issue && !/^[A-Za-z0-9\s]+$/.test(issue)) {
+    newErrors.issue = 'Only letters, numbers and spaces allowed';
   }
 
-  // Date/Time Validation
-  let preferredDateTime = null;
-  let deliveryDate = null;
-
-  // Preferred Date Validation
-  if (!formData.preferredDate) {
+  // --- Preferred Date ---
+  if (!preferredDate) {
     newErrors.preferredDate = 'Preferred date is required';
+  } else if (new Date(preferredDate) < new Date(now.toDateString())) {
+    newErrors.preferredDate = 'Invalid date. Must be future';
   }
 
-  // Preferred Time Validation
-  if (!formData.preferredTime) {
-    newErrors.preferredTime = 'Preferred time is required';
+  // --- Expected Delivery Date ---
+  if (!expectedDeliveryDate) {
+    newErrors.expectedDeliveryDate = 'Expected delivery date is required';
+  } else if (new Date(expectedDeliveryDate) < new Date(now.toDateString())) {
+    newErrors.expectedDeliveryDate = 'Invalid date.Must be future ';
   }
 
-  // Process preferred date/time if both exist
-  if (formData.preferredDate && formData.preferredTime) {
-    const timeParts = formData.preferredTime.match(/(\d+):(\d+)\s?(AM|PM)/i);
-    if (timeParts) {
-      let [_, hour, minute, meridian] = timeParts;
-      hour = parseInt(hour);
-      minute = parseInt(minute);
-      
-      // Convert to 24-hour format
-      if (meridian.toUpperCase() === 'PM' && hour !== 12) hour += 12;
-      if (meridian.toUpperCase() === 'AM' && hour === 12) hour = 0;
+  // --- preferredDate <= expectedDeliveryDate ---
+  if (preferredDate && expectedDeliveryDate) {
+    const pDate = new Date(preferredDate);
+    const eDate = new Date(expectedDeliveryDate);
+    if (pDate > eDate) {
+      newErrors.preferredDate = 'Preferred date must be before expected delivery date';
+    }
+  }
 
-      preferredDateTime = new Date(formData.preferredDate);
-      preferredDateTime.setHours(hour, minute, 0, 0);
+  // --- Time validation ---
+ if (!preferredTime) {
+  newErrors.preferredTime = 'Preferred time is required';
+} else {
+  // Parse 12-hour format with AM/PM
+  const timeParts = preferredTime.split(' ');
+  const timeValue = timeParts[0];
+  const period = timeParts[1]; // AM or PM
+  const [hoursStr, minutesStr] = timeValue.split(':');
+  let hours = parseInt(hoursStr, 10);
+  const minutes = parseInt(minutesStr, 10);
 
-      // Check if preferred date/time is in the future
-      if (preferredDateTime < now) {
-        newErrors.preferredTime = 'Preferred date and time must be in the future';
+  if (period === 'PM' && hours !== 12) {
+    hours += 12;
+  } else if (period === 'AM' && hours === 12) {
+    hours = 0;
+  }
+  if ((period === 'AM' && hours < 6) || (period === 'AM' && hours === 12)) {
+    newErrors.preferredTime = 'Time slot between 12:00 AM and 6:00 AM is not allowed';
+  }
+    if (preferredDate) {
+    const preferredDateTime = new Date(preferredDate);
+    preferredDateTime.setHours(hours, minutes, 0, 0);
+    const now = new Date();
+
+    // Check if preferred date is today
+    if (preferredDateTime.toDateString() === now.toDateString()) {
+      // Check if time is in the past
+      if (preferredDateTime <= now) {
+        newErrors.preferredTime = 'Time slot has already passed for today';
       }
-    } else {
-      newErrors.preferredTime = 'Invalid time format (use HH:MM AM/PM)';
+      // Check minimum buffer time (1 hour from now)
+      else {
+        const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000);
+        if (preferredDateTime <= oneHourFromNow) {
+          newErrors.preferredTime = 'Please select a time at least 1 hour from now';
+        }
+      }
     }
-  }
+    if (expectedDeliveryDate) {
+      const deliveryDate = new Date(expectedDeliveryDate);
+      if (preferredDateTime.toDateString() === deliveryDate.toDateString()) {
+        // Additional validation for same-day delivery
+        const deliveryDateTime = new Date(deliveryDate);
+        deliveryDateTime.setHours(17, 0, 0, 0); // Assuming 5PM closing time
 
-  // Expected Delivery Date Validation
-  if (!formData.expectedDeliveryDate) {
-    newErrors.expectedDeliveryDate = 'Delivery date is required';
-  } else {
-    deliveryDate = new Date(formData.expectedDeliveryDate);
-    deliveryDate.setHours(0, 0, 0, 0); // Set to start of day for comparison
-    
-    // Check if delivery date is in the future
-    if (deliveryDate < new Date(now.setHours(0, 0, 0, 0))) {
-      newErrors.expectedDeliveryDate = 'Delivery date must be today or in the future';
-    }
-
-    // Compare with preferred date/time if available
-    if (preferredDateTime) {
-      const preferredDateOnly = new Date(preferredDateTime);
-      preferredDateOnly.setHours(0, 0, 0, 0);
-      
-      if (deliveryDate < preferredDateOnly) {
-        newErrors.expectedDeliveryDate = 'Delivery date must be on or after the preferred service date';
+       
       }
     }
   }
+}
 
-  // Vehicle & Services Validation
-  if (!formData.vehicleObject) {
-    newErrors.vehicleObject = 'Vehicle selection is required';
-  }
 
-  if (formData.services.length === 0) {
-    newErrors.services = 'At least one service is required';
-  }
+
+  
 
   setErrors(newErrors);
   return Object.keys(newErrors).length === 0;
 };
+
+
 
 
 
