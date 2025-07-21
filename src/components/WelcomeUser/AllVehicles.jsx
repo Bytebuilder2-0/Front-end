@@ -9,7 +9,13 @@ import {
   Stack,
   Chip,
   Avatar,
-  useTheme
+  useTheme,
+  IconButton,
+  Tooltip,
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  Button
 } from '@mui/material';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
@@ -17,6 +23,9 @@ import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import CategoryIcon from '@mui/icons-material/Category';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AllVehicles = () => {
   const theme = useTheme();
@@ -24,6 +33,8 @@ const AllVehicles = () => {
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedVehicleId, setSelectedVehicleId] = useState(null);
 
   useEffect(() => {
     const fetchVehicles = async () => {
@@ -36,13 +47,10 @@ const AllVehicles = () => {
         setLoading(true);
         const API_URL = `http://localhost:5000/api/appointments/vehicles/${user.id}`;
         const response = await axios.get(API_URL, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
-        const vehiclesData = Array.isArray(response.data) ? response.data : [];
-        setVehicles(vehiclesData);
+        setVehicles(Array.isArray(response.data) ? response.data : []);
         setError(null);
       } catch (err) {
         setVehicles([]);
@@ -54,6 +62,30 @@ const AllVehicles = () => {
 
     fetchVehicles();
   }, [user?.id, token]);
+
+  const handleDeleteClick = (vehicleId) => {
+    setSelectedVehicleId(vehicleId);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!selectedVehicleId) return;
+
+    try {
+      const DELETE_URL = `http://localhost:5000/api/appointments/vehicles/${selectedVehicleId}`;
+      await axios.delete(DELETE_URL, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setVehicles((prev) => prev.filter((v) => v._id !== selectedVehicleId));
+      toast.success('Vehicle deleted successfully!', { position: 'top-right', theme: 'colored' });
+    } catch (err) {
+      toast.error('Failed to delete the vehicle.', { position: 'top-right', theme: 'colored' });
+    } finally {
+      setDeleteDialogOpen(false);
+      setSelectedVehicleId(null);
+    }
+  };
 
   if (loading) {
     return (
@@ -86,55 +118,49 @@ const AllVehicles = () => {
 
   return (
     <Box sx={{ p: 4 }}>
-      <Typography 
-        gutterBottom 
-        sx={{ 
-          fontWeight: 600,
-          fontSize: 35,
-          marginBottom: '1px'
-        }}
-      >
+      <ToastContainer />
+      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
+        <DialogTitle>Are you sure you want to delete this vehicle?</DialogTitle>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialogOpen(false)} color="primary">
+            No
+          </Button>
+          <Button onClick={confirmDelete} color="error" variant="contained">
+            Yes, Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Typography gutterBottom sx={{ fontWeight: 600, fontSize: 35, mb: '1px' }}>
         Your Vehicles
       </Typography>
-
-      <Typography  sx={{ color: 'green' }}>
-
-        All your registered vehicles
-      </Typography>
-      
+      <Typography sx={{ color: 'green' }}>All your registered vehicles</Typography>
       <Divider sx={{ mb: 4, mt: 2 }} />
 
       <Grid container spacing={3}>
         {vehicles.map((vehicle) => (
           <Grid item xs={12} md={6} key={vehicle._id}>
-            <Paper 
-              sx={{ 
-                p: 3, 
-                height: '100%',
-
-                borderRadius: 3
-
-              }} 
-              elevation={3}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Avatar sx={{ 
-                  bgcolor: theme.palette.primary.main, 
-                  mr: 2,
-                  width: 40,
-                  height: 40
-                }}>
-                  <DirectionsCarIcon fontSize="small" />
-                </Avatar>
-                <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                  {vehicle.model}
-                </Typography>
-                <Chip 
-                  label={vehicle.vehicleType} 
-                  varient="outlined"
-                  size="small" 
-                  sx={{  ml: 2 ,color: 'green' }}
-                />
+            <Paper sx={{ p: 3, height: '100%', borderRadius: 3 }} elevation={3}>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, justifyContent: 'space-between' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Avatar sx={{ bgcolor: theme.palette.primary.main, mr: 2, width: 40, height: 40 }}>
+                    <DirectionsCarIcon fontSize="small" />
+                  </Avatar>
+                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                    {vehicle.model}
+                  </Typography>
+                  <Chip
+                    label={vehicle.vehicleType}
+                    variant="outlined"
+                    size="small"
+                    sx={{ ml: 2, color: 'green' }}
+                  />
+                </Box>
+                <Tooltip title="Delete Vehicle">
+                  <IconButton color="error" onClick={() => handleDeleteClick(vehicle._id)}>
+                    <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
               </Box>
 
               <Divider sx={{ mb: 3 }} />
@@ -142,10 +168,7 @@ const AllVehicles = () => {
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <Stack direction="row" alignItems="center" spacing={1.5} mb={1.5}>
-                    <ConfirmationNumberIcon 
-                      fontSize="small" 
-                      sx={{ color: "text.secondary", width: 20 }} 
-                    />
+                    <ConfirmationNumberIcon fontSize="small" sx={{ color: 'text.secondary', width: 20 }} />
                     <Box>
                       <Typography variant="subtitle2" color="text.secondary">
                         Vehicle Number
@@ -159,10 +182,7 @@ const AllVehicles = () => {
 
                 <Grid item xs={12} sm={6}>
                   <Stack direction="row" alignItems="center" spacing={1.5} mb={1.5}>
-                    <CategoryIcon 
-                      fontSize="small" 
-                      sx={{ color: "text.secondary", width: 20 }} 
-                    />
+                    <CategoryIcon fontSize="small" sx={{ color: 'text.secondary', width: 20 }} />
                     <Box>
                       <Typography variant="subtitle2" color="text.secondary">
                         Vehicle Type
@@ -176,10 +196,7 @@ const AllVehicles = () => {
 
                 <Grid item xs={12} sm={6}>
                   <Stack direction="row" alignItems="center" spacing={1.5} mb={1.5}>
-                    <CalendarTodayIcon 
-                      fontSize="small" 
-                      sx={{ color: "text.secondary", width: 20 }} 
-                    />
+                    <CalendarTodayIcon fontSize="small" sx={{ color: 'text.secondary', width: 20 }} />
                     <Box>
                       <Typography variant="subtitle2" color="text.secondary">
                         Manufacture Year
@@ -190,8 +207,6 @@ const AllVehicles = () => {
                     </Box>
                   </Stack>
                 </Grid>
-
-          
               </Grid>
             </Paper>
           </Grid>
