@@ -173,7 +173,7 @@ const ApointmentHistory = () => {
               <TableCell align="center">Vehicle ID</TableCell>
               <TableCell align="center">Vehicle Number</TableCell>
               <TableCell align="center">Model</TableCell>
-              <TableCell align="center">Expected Delivery Date</TableCell>
+              <TableCell align="center">Delivery Date</TableCell>
               <TableCell align="center">Details</TableCell>
               <TableCell align="center">Contact</TableCell>
               <TableCell align="center">Status</TableCell>
@@ -203,7 +203,10 @@ const ApointmentHistory = () => {
                     <DeatailsViewer appointment={appointment} />
                   </TableCell>
                   <TableCell align="center">
-                    <WhatsAppButton phone={appointment.contactNumber} VNumber={ appointment.vehicleNumber} />
+                    <WhatsAppButton
+                      phone={appointment.contactNumber}
+                      VNumber={appointment.vehicleNumber}
+                    />
                   </TableCell>
                   <TableCell align="center">
                     <Typography
