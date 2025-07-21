@@ -144,9 +144,9 @@ const Signup = () => {
 		newErrors.confirmPassword = "Passwords do not match";
 	}
 
-	if (!formData.termsAccepted) {
-		newErrors.termsAccepted = "You must accept the terms and conditions";
-	}
+	// if (!formData.termsAccepted) {
+	// 	newErrors.termsAccepted = "You must accept the terms and conditions";
+	// }
 
 	return newErrors;
 };
@@ -172,10 +172,20 @@ const Signup = () => {
 			};
 			const res = await axios.post("http://localhost:5000/api/auth/register", payload);
 			//alert("Signup successful!");
-			toast.success("Registered Successfully!!"); 
+			// toast.success("Registered Successfully!!");
+		 
 			console.log(res);
 
-
+				toast.success("Registered Successfully!!", {
+  style: {
+    background: 'linear-gradient(to right, #00b09b, #96c93d)',
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: '16px',
+    borderRadius: '8px',
+  },
+  icon: "🎉",
+});
 			  //waiting page ekk daanna.......................................
 			  //navigate to email verification 
 			  //itapasse login ekata navigate krnn
@@ -195,11 +205,25 @@ const Signup = () => {
 				password: "",
 				confirmPassword: "",
 				role: "customer",
-				termsAccepted: false,
+				//termsAccepted: false,
 			});
+		// } catch (err) {
+		// 	console.error("Signup error:", err.response?.data || err.message);
+		// 	alert(err.response?.data?.message || "Signup failed");
 		} catch (err) {
-			console.error("Signup error:", err.response?.data || err.message);
-			alert(err.response?.data?.message || "Signup failed");
+  console.error("Signup error:", err.response?.data || err.message);
+  
+  toast.error(err.response?.data?.message || "Signup failed", {
+    style: {
+      background: 'linear-gradient(to right, #ff416c, #ff4b2b)',
+      color: 'white',
+      fontWeight: 'bold',
+      fontSize: '16px',
+      borderRadius: '8px',
+    },
+    icon: "❌",
+  });
+
 		} finally {
 			setIsLoading(false);
 		}
