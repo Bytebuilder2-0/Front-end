@@ -216,7 +216,7 @@ const ResponsiveCarousel = () => {
                       variant="contained"
                       size="large"
                       component={Link}
-                        to="/User"
+                        to="/LoginPage"
                         startIcon={<PlayArrowIcon />}
                       sx={{
                         px: 4,

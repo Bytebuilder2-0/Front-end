@@ -14,11 +14,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/navigation"; // Navigation styles can be removed too
+import Slider from "react-slick";
 
 const FeedbackDisplay = () => {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -80,13 +76,13 @@ const FeedbackDisplay = () => {
         <CardHeader
           avatar={
             <Avatar
-              src={feedback.profilePhoto || fallbackAvatar}
-              alt={feedback.username || "User"}
-              sx={{ width: 48, height: 48 }}
-              imgProps={{
-                onError: (e) => {
-                  e.target.src = fallbackAvatar;
-                },
+            src={feedback.profilePhoto || fallbackAvatar}
+            alt={feedback.username || "User"}
+            sx={{ width: 48, height: 48 }}
+            imgProps={{
+              onError: (e) => {
+                e.target.src = fallbackAvatar;
+                          },
               }}
             />
           }
@@ -119,6 +115,17 @@ const FeedbackDisplay = () => {
         </CardContent>
       </StyledCard>
     );
+  };
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    autoplay: true,
+    autoplaySpeed: 6000,
+    speed: 700,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: false,
   };
 
   return (
@@ -163,25 +170,13 @@ const FeedbackDisplay = () => {
             No feedback available
           </Typography>
         ) : (
-          <Swiper
-            modules={[Autoplay, Pagination]}
-            autoplay={{ delay: 4000, disableOnInteraction: false }}
-            loop={true}
-            pagination={{ clickable: true }}
-            breakpoints={{
-              0: { slidesPerView: 1 },
-              600: { slidesPerView: 1 },
-              900: { slidesPerView: 2 },
-              1200: { slidesPerView: 3 },
-            }}
-            spaceBetween={30}
-          >
+          <Slider {...settings}>
             {feedbacks.map((feedback) => (
-              <SwiperSlide key={feedback.id || feedback.feedbackId}>
+              <Box key={feedback.id || feedback.feedbackId}>
                 <FeedbackCard feedback={feedback} />
-              </SwiperSlide>
+              </Box>
             ))}
-          </Swiper>
+          </Slider>
         )}
       </Container>
     </Box>
