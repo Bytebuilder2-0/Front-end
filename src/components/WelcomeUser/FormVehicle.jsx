@@ -4,6 +4,7 @@ import { Box, Typography } from '@mui/material';
 import HandleVehicleForm from './HandleVehicleForm';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
+import { toast } from "react-hot-toast";
 
 const FormVehicle = () => {
   const { user, token } = useAuth();
@@ -38,9 +39,20 @@ const FormVehicle = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-
-      alert('Vehicle added successfully!');
+      toast.success("Vehicle added successfully!", {
+  style: {
+    background: 'linear-gradient(to right, #00c9ff, #92fe9d)',
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: '16px',
+    borderRadius: '8px',
+    boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+  },
+  icon: "🚗",
+});
+      //alert('Vehicle added successfully!');
       // Reset form after successful submission
+
   
       setFormData({
         vehicleNumber: '',
