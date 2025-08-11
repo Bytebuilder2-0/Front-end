@@ -1,74 +1,404 @@
-import { createBrowserRouter } from 'react-router-dom';
-import SupervisorDashboard from '../pages/supervisor/SupervisorDashboard';
-import SupInitial from '../pages/supervisor/SupInitial';
-import Inprogress from '../pages/supervisor/Inprogress';
-import TechnicianDashboard from '../pages/Technician/TechnicianDashboard';
-import TechnicianDeclined from '../pages/Technician/TechnicianDeclined'
-import CompletedSuper from '../pages/supervisor/CompletedSuper';
-import AppointmentSubmit from '../pages/User/AppoinmentSubmit';
-import AppointmentView from '../pages/User/AppointmentView';
-import UserDashboard from '../pages/User/UserDashboard';
+import { createBrowserRouter } from "react-router-dom";
+
+import HomePage from "../pages/Home";
+
+import Loginpage from "../pages/Loginpage";
+import SignupPage from "../pages/SignupPage";
+
+import SignInVehicleContainer from "../container/container1";
+
+import AppointmentSubmit from "../pages/User/AppoinmentSubmit";
+import AppointmentView from "../pages/User/AppointmentView";
+import UserDashboard from "../pages/User/UserDashboard";
+import PaidHistory from "../pages/User/PaidHistory";
+import Vehicles from "../pages/User/Vehicles";
+
+import TechnicianAccepted from "../pages/Technician/TechnicianAccepted";
+import TechnicianDashboard from "../pages/Technician/TechnicianDashboard";
+import TechnicianDeclined from "../pages/Technician/TechnicianDeclined";
+import TechnicianInprogress from "../pages/Technician/TechnicianInprogress";
+import TechnicianCompleted from "../pages/Technician/TechnicianCompleted";
+
+import SupervisorDashboard from "../pages/supervisor/SupervisorDashboard";
+import SupInitial from "../pages/supervisor/SupInitial";
+import Inprogress from "../pages/supervisor/Inprogress";
+import Decline from "../pages/supervisor/Decline";
+import History from "../pages/supervisor/History";
+import CompletedSuper from "../pages/supervisor/CompletedSuper";
 
 import FeedbackPage from "../pages/Manager/FeedbackPage";
-import ManageServices from '../pages/Manager/ManageServices';
+import ManageServices from "../pages/Manager/ManageServices";
+import ManagerHistoryPage from "../pages/Manager/HistoryPage";
+import ManagerDashboardPage from "../pages/Manager/ManagerDashboardPage";
+import CheckStatus from "../pages/Manager/CheckStatus";
 
+import Layout from "../pages/supervisor/Layout";
+import PrivateRoute from "../components/Atoms/PrivateRoute";
+import Reports from "../pages/Manager/Report";
+import FeedBackUser from "../pages/User/FeedBackUser";
 
-import TechnicianCompleted from '../pages/Technician/TechnicianCompleted';
+import VehicleRegister from "../pages/User/VehicleRegister";
 
-
-
+import PaymentSuccess from "../components/payment/PaymentSuccess";
+import PaymentCancel from "../components/payment/PaymentCancel";
+import DisplayFeedBack from "../components/FeedbackDisplay";
 
 const router = createBrowserRouter([
   {
-    path: "/Super",
-    element: <SupervisorDashboard />,
+    path: "/",
+    element: <HomePage />, // <-- Replace HomePage with your real Home component
   },
   {
-    path: "/SInitial",
-    element: <SupInitial />,
+    path: "/payment-success/:appointmentId",
+    element: <PaymentSuccess />,
   },
   {
-    path: "/SInpro",
-    element: <Inprogress />,
-  },
-  {
-    path: "/SCompleted",
-    element: <CompletedSuper/>,
+    element: <Layout />, //  All below routes will share the MiniDrawer layout
+    children: [
+      {
+        path: "/SInitial",
+        element: (
+          <PrivateRoute allowedRoles={["supervisor"]}>
+            <SupInitial />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/Super",
+        element: (
+          <PrivateRoute allowedRoles={["supervisor"]}>
+            <SupervisorDashboard />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/SInpro",
+        element: (
+          <PrivateRoute allowedRoles={["supervisor"]}>
+            <Inprogress />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/SCompleted",
+        element: <CompletedSuper />,
+      },
+      {
+        path: "/SDeclined",
+        element: <Decline />,
+      },
+      {
+        path: "/SHistory",
+        element: <History />,
+      },
+    ],
   },
   {
     path: "/TDashboard",
-    element: <TechnicianDashboard />,
+    element: (
+      <PrivateRoute allowedRoles={["technician"]}>
+        <TechnicianDashboard />
+      </PrivateRoute>
+    ),
   },
   {
     path: "/TDeclined",
-    element: <TechnicianDeclined />,
+    element: (
+      <PrivateRoute allowedRoles={["technician"]}>
+        <TechnicianDeclined />
+      </PrivateRoute>
+    ),
   },
   {
     path: "/TCompleted",
-    element: <TechnicianCompleted />,
+    element: (
+      <PrivateRoute allowedRoles={["technician"]}>
+        <TechnicianCompleted />
+      </PrivateRoute>
+    ),
   },
   {
-    path: '/appointments/new',
+    path: "/TInprogress",
+    element: (
+      <PrivateRoute allowedRoles={["technician"]}>
+        <TechnicianInprogress />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/TAccepted",
+    element: (
+      <PrivateRoute allowedRoles={["technician"]}>
+        <TechnicianAccepted />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/appointments/new",
     element: <AppointmentSubmit />,
   },
- {
-  path: "/appointments/:id", 
-  element: <AppointmentView />
-},
-{
-  path: "/User",
-  element: <UserDashboard />
-},{
-  path: "/feedback",
-  element: <FeedbackPage />,
-  
+  {
+    path: "/appointments/:id",
+    element: <AppointmentView />,
+  },
+  {
+    path: "/UserHistory",
+    element: <PaidHistory />,
+  },
+  {
+    path: "/User",
+    element: <UserDashboard />,
+  },
+  {
+    path: "/feedback",
+    element: <FeedbackPage />,
+  },
+  {
+    path: "/Loginpage",
+    element: <Loginpage />,
+  },
+  {
+    path: "/SignupPage",
+    element: <SignupPage />,
+  },
+  {
+    path: "/VehicleRegister",
+    element: <VehicleRegister />,
+  },
 
-},
-{
-      path: "/ManageServices",
-      element: <ManageServices/>,
-    } 
-
+  {
+    path: "/Vehicles",
+    element: <Vehicles />
+  },
+  {
+    path: "/SignupVReg",
+    element: <SignInVehicleContainer />,
+  },
+  {
+    path: "/UserFeedback",
+    element: <FeedBackUser />,
+  },
+  {
+    path: "/ManageServices",
+    element: (
+      <PrivateRoute allowedRoles={["manager"]}>
+        <ManageServices />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/ManagerDashboard",
+    element: (
+      <PrivateRoute allowedRoles={["manager"]}>
+        <ManagerDashboardPage />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/ManagerHistory",
+    element: (
+      <PrivateRoute allowedRoles={["manager"]}>
+        <ManagerHistoryPage />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/CheckStatus",
+    element: (
+      <PrivateRoute allowedRoles={["manager"]}>
+        <CheckStatus />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/Reports",
+    element: (
+      <PrivateRoute allowedRoles={["manager"]}>
+        <Reports />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/feedback",
+    element: (
+      <PrivateRoute allowedRoles={["manager"]}>
+        <FeedbackPage />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/",
+    element: <HomePage />, // <-- Replace HomePage with your real Home component
+  },
+  {
+    element: <Layout />, //  All below routes will share the MiniDrawer layout
+    children: [
+      {
+        path: "/SInitial",
+        element: (
+          <PrivateRoute allowedRoles={["supervisor"]}>
+            <SupInitial />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/Super",
+        element: (
+          <PrivateRoute allowedRoles={["supervisor"]}>
+            <SupervisorDashboard />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/SInpro",
+        element: (
+          <PrivateRoute allowedRoles={["supervisor"]}>
+            <Inprogress />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/SCompleted",
+        element: <CompletedSuper />,
+      },
+      {
+        path: "/SDeclined",
+        element: <Decline />,
+      },
+      {
+        path: "/SHistory",
+        element: <History />,
+      },
+    ],
+  },
+  {
+    path: "/TDashboard",
+    element: (
+      <PrivateRoute allowedRoles={["technician"]}>
+        <TechnicianDashboard />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/TDeclined",
+    element: (
+      <PrivateRoute allowedRoles={["technician"]}>
+        <TechnicianDeclined />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/TCompleted",
+    element: (
+      <PrivateRoute allowedRoles={["technician"]}>
+        <TechnicianCompleted />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/TInprogress",
+    element: (
+      <PrivateRoute allowedRoles={["technician"]}>
+        <TechnicianInprogress />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/TAccepted",
+    element: (
+      <PrivateRoute allowedRoles={["technician"]}>
+        <TechnicianAccepted />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/appointments/new",
+    element: <AppointmentSubmit />,
+  },
+  {
+    path: "/appointments/:id",
+    element: <AppointmentView />,
+  },
+  {
+    path: "/User",
+    element: <UserDashboard />,
+  },
+  {
+    path: "/feedback",
+    element: <FeedbackPage />,
+  },
+  {
+    path: "/Loginpage",
+    element: <Loginpage />,
+  },
+  {
+    path: "/SignupPage",
+    element: <SignupPage />,
+  },
+  {
+    path: "/VehicleRegister",
+    element: <VehicleRegister />,
+  },
+  {
+    path: "/SignupVReg",
+    element: <SignInVehicleContainer />,
+  },
+  {
+    path: "/UserFeedback",
+    element: <FeedBackUser />,
+  },
+  {
+    path: "/ManageServices",
+    element: (
+      <PrivateRoute allowedRoles={["manager"]}>
+        <ManageServices />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/ManagerDashboard",
+    element: (
+      <PrivateRoute allowedRoles={["manager"]}>
+        <ManagerDashboardPage />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/ManagerHistory",
+    element: (
+      <PrivateRoute allowedRoles={["manager"]}>
+        <ManagerHistoryPage />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/CheckStatus",
+    element: (
+      <PrivateRoute allowedRoles={["manager"]}>
+        <CheckStatus />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/Reports",
+    element: (
+      <PrivateRoute allowedRoles={["manager"]}>
+        <Reports />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/feedback",
+    element: (
+      <PrivateRoute allowedRoles={["manager"]}>
+        <FeedbackPage />
+      </PrivateRoute>
+    ),
+  },
+  {
+    path: "/DisplayFeedBack",
+    element: <DisplayFeedBack />,
+  },
 ]);
 
 export default router;

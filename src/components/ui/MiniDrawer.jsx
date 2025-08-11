@@ -26,9 +26,12 @@ import {
   DoneOutline as DoneOutlineIcon,
   History as HistoryIcon,
   Error as ErrorIcon,
-  Dashboard as DashboardIcon
-
+  Dashboard as DashboardIcon,
 } from "@mui/icons-material";
+
+import Notify from "../Atoms/Notify";
+import Account from "../Atoms/Account";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -66,7 +69,6 @@ const AppBar = styled(MuiAppBar)(({ theme }) => ({
   }),
 }));
 
-
 // Custom Drawer
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -87,14 +89,12 @@ const Drawer = styled(MuiDrawer, {
 
 // Drawer Header
 const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
-
-  ...theme.mixins.toolbar,
+  ...theme.mixins.toolbar, //this div is same height as the appbar height
 }));
 
-export default function MiniDrawer() {
+const menuId = "primary-search-account-menu"; //in the account icon in app bar
+
+function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
   const navigate = useNavigate();
@@ -109,39 +109,85 @@ export default function MiniDrawer() {
   return (
     <Box sx={{ display: "flex" }}>
       {/* App Bar */}
-      <AppBar position="fixed" sx={{ backgroundColor: "#ffffff", zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-  <Toolbar disableGutters >
-    {/* Left-aligned image, same width as the drawer */}
-    <Box sx={{ width: drawerWidth, display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <img
-        src="/assets/resized-garage24.png"
-        alt="Frame"
-        style={{
-          height: "64px",
-          width: drawerWidth, // fills drawer width
-          objectFit: "contain",
+      <AppBar
+        position="fixed"
+        sx={{
+          backgroundColor: "#428bca",
+          zIndex: (theme) => theme.zIndex.drawer + 1,
         }}
-      />
-    </Box>
+      >
+        <Toolbar disableGutters>
+          {/* Left-aligned image, same width as the drawer */}
+          <Box
+            sx={{
+              width: drawerWidth,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "#fff", // match the logo background
+            }}
+          >
+            <Link
+              to="/"
+              style={{
+                display: "inline-block", // ensures no extra line spacing
+                lineHeight: 0, // removes any extra vertical spacing
+                margin: 0,
+                padding: 0,
+              }}
+            >
+              <img
+                src="/assets/resized-garage24.png"
+                alt="Frame"
+                style={{
+                  height: "64px",
+                  width: drawerWidth,
+                  objectFit: "contain",
+                }}
+              />
+            </Link>
+          </Box>
 
-    {/* Toggle Drawer Icon */}
-    <IconButton
-      color="inherit"
-      onClick={open ? handleDrawerClose : handleDrawerOpen}
-      edge="end"
-      sx={{ marginRight: 2 }}
-    >
-      {open ? <ChevronLeftIcon sx={{ color: "text.primary" }}  /> : <MenuIcon sx={{ color: "text.primary" }}  />}
-    </IconButton>
-  </Toolbar>
-</AppBar>
-
+          {/* Toggle Drawer Icon */}
+          <IconButton
+            color="inherit"
+            onClick={open ? handleDrawerClose : handleDrawerOpen}
+            edge="end"
+            sx={{ marginRight: 2 }}
+          >
+            {open ? (
+              <ChevronLeftIcon sx={{ color: "#ffffffff" }} />
+            ) : (
+              <MenuIcon sx={{ color: "#ffffffff" }} />
+            )}
+          </IconButton>
+          <Box sx={{ flexGrow: 1 }} />
+          <Box
+            sx={{
+              display: { xs: "none", md: "flex" },
+              alignItems: "center",
+              gap: 2, // spacing between icons
+              pr: 5, // padding-right
+            }}
+          >
+            {/*<Notify />*/}
+            <Account />
+          </Box>
+        </Toolbar>
+      </AppBar>
 
       {/* Sidebar Drawer */}
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
-      
-        </DrawerHeader>
+      <Drawer
+        variant="permanent"
+        open={open}
+        sx={{
+          "& .MuiDrawer-paper": {
+            backgroundColor: "#33383E",
+            color: "white", // text/icon color
+          },
+        }}
+      >
+        <DrawerHeader />
         <Divider />
 
         {/* User Avatar */}
@@ -163,21 +209,41 @@ export default function MiniDrawer() {
             <Typography>Supervisor 1</Typography>
           </Box>
         )}
-        {open && <Divider sx={{ mx: 2, my: 1 }} />}
+        {open && <Divider sx={{ borderColor: "#ffffff", mr: 3, ml: 3 }} />}
 
         {/* Navigation List */}
         <List>
           {[
-            { path: "/SInitial", label: "Home", icon: <HomeIcon /> },
-            { path: "/Super", label: "Dashboard", icon: <DashboardIcon /> },
-            { path: "/SInpro", label: "In Progress", icon: <AutoGraphIcon /> },
+            {
+              path: "/SInitial",
+              label: "Home",
+              icon: <HomeIcon sx={{ color: "#ffffff" }} />,
+            },
+            {
+              path: "/Super",
+              label: "Dashboard",
+              icon: <DashboardIcon sx={{ color: "#ffffff" }} />,
+            },
+            {
+              path: "/SInpro",
+              label: "In Progress",
+              icon: <AutoGraphIcon sx={{ color: "#ffffff" }} />,
+            },
             {
               path: "/SCompleted",
               label: "Completed",
-              icon: <DoneOutlineIcon color="success" />,
+              icon: <DoneOutlineIcon sx={{ color: "#ffffff" }} />,
             },
-            { path: "", label: "Decline", icon: <ErrorIcon /> },
-            { path: "", label: "History", icon: <HistoryIcon /> },
+            {
+              path: "/SDeclined",
+              label: "Decline",
+              icon: <ErrorIcon sx={{ color: "#ffffff" }} />,
+            },
+            {
+              path: "/SHistory",
+              label: "History",
+              icon: <HistoryIcon sx={{ color: "#ffffff" }} />,
+            },
           ].map(({ path, label, icon }) => (
             <ListItem
               key={path}
@@ -185,7 +251,15 @@ export default function MiniDrawer() {
               sx={{ display: "block" }}
               onClick={() => handleNavItemClick(path)}
             >
-              <ListItemButton selected={window.location.pathname === path}>
+              <ListItemButton
+                selected={window.location.pathname === path}
+                sx={{
+                  "&.Mui-selected": {
+                    backgroundColor: "#444950", // darker shade
+                    color: "#ffffff",
+                  },
+                }}
+              >
                 <ListItemIcon
                   sx={{ minWidth: 0, justifyContent: "center", marginRight: 2 }}
                 >
@@ -200,3 +274,5 @@ export default function MiniDrawer() {
     </Box>
   );
 }
+
+export default MiniDrawer;

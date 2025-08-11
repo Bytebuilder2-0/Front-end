@@ -1,0 +1,227 @@
+// src/components/AppointmentDetailsModal.jsx
+import React from "react";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Typography,
+  Divider,
+  Box,
+  Button,
+} from "@mui/material";
+
+const AppointmentDetailsModal = ({ appointment, open, onClose }) => {
+  if (!appointment) return null;
+
+  return (
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+      <DialogTitle sx={{ fontWeight: "bold", color: "#1976d2" }}>
+        Appointment Details
+      </DialogTitle>
+      <Divider />
+
+      <DialogContent dividers sx={{ py: 3 }}>
+        {/* Customer Information */}
+        <Box mb={3}>
+          <Typography variant="h6" sx={{ color: "#1976d2", mb: 1 }}>
+            Customer Information
+          </Typography>
+          {appointment.userId && appointment.userId.name ? (
+            <>
+              <Typography>
+                <strong>Name:</strong> {appointment.userId.name}
+              </Typography>
+              <Typography>
+                <strong>Email:</strong> {appointment.userId.email || "N/A"}
+              </Typography>
+            </>
+          ) : (
+            <Typography>Customer information not available</Typography>
+          )}
+        </Box>
+
+        {/* Vehicle Info */}
+        <Box mb={3}>
+          <Typography variant="h6" sx={{ color: "#1976d2", mb: 1 }}>
+            Vehicle Information
+          </Typography>
+          {appointment.vehicleId && (
+            <Typography>
+              <strong>Vehicle ID:</strong> {appointment.vehicleId}
+            </Typography>
+          )}
+          {appointment.vehicleNumber && (
+            <Typography>
+              <strong>Vehicle Number:</strong> {appointment.vehicleNumber}
+            </Typography>
+          )}
+          {appointment.model && (
+            <Typography>
+              <strong>Model:</strong> {appointment.model}
+            </Typography>
+          )}
+        </Box>
+
+        {/* Services */}
+        {Array.isArray(appointment.services) &&
+          appointment.services.length > 0 && (
+            <Box mb={3}>
+              <Typography variant="h6" sx={{ color: "#1976d2", mb: 1 }}>
+                Services Selected
+              </Typography>
+              {appointment.services.map((service, idx) => (
+                <Typography key={idx} sx={{ mb: 0.5 }}>
+                  {service}
+                </Typography>
+              ))}
+            </Box>
+          )}
+
+        {/* Issue Info */}
+        {(appointment.issue || appointment.reason) && (
+          <Box mb={3}>
+            <Typography variant="h6" sx={{ color: "#1976d2", mb: 1 }}>
+              Issue Details
+            </Typography>
+            {appointment.issue && (
+              <Typography>
+                <strong>Issue:</strong> {appointment.issue}
+              </Typography>
+            )}
+            {appointment.reason && (
+              <Typography>
+                <strong>Reason:</strong> {appointment.reason}
+              </Typography>
+            )}
+          </Box>
+        )}
+
+        {/* Appointment Dates */}
+        {(appointment.preferredDate ||
+          appointment.preferredTime ||
+          appointment.expectedDeliveryDate) && (
+          <Box mb={3}>
+            <Typography variant="h6" sx={{ color: "#1976d2", mb: 1 }}>
+              Date Information
+            </Typography>
+            {appointment.preferredDate && (
+              <Typography>
+                <strong>Preferred Date:</strong>{" "}
+                {new Date(appointment.preferredDate).toLocaleDateString()}
+              </Typography>
+            )}
+            {appointment.preferredTime && (
+              <Typography>
+                <strong>Preferred Time:</strong> {appointment.preferredTime}
+              </Typography>
+            )}
+            {appointment.expectedDeliveryDate && (
+              <Typography>
+                <strong>Expected Delivery:</strong>{" "}
+                {new Date(
+                  appointment.expectedDeliveryDate
+                ).toLocaleDateString()}
+              </Typography>
+            )}
+          </Box>
+        )}
+
+        {/* Contact */}
+        {appointment.contactNumber && (
+          <Box mb={3}>
+            <Typography variant="h6" sx={{ color: "#1976d2", mb: 1 }}>
+              Contact Information
+            </Typography>
+            <Typography>
+              <strong>Contact Number:</strong> {appointment.contactNumber}
+            </Typography>
+          </Box>
+        )}
+        {appointment.sconfirmedBy && (
+          <Box mb={3}>
+            <Typography variant="h6" sx={{ color: "#1976d2", mb: 1 }}>
+              Supervisor Information
+            </Typography>
+            {appointment.sconfirmedBy.fullName && (
+              <Typography>
+                <strong>Name:</strong> {appointment.sconfirmedBy.fullName}
+              </Typography>
+            )}
+            {appointment.sconfirmedBy.userName && (
+              <Typography>
+                <strong>Username:</strong> {appointment.sconfirmedBy.userName}
+              </Typography>
+            )}
+          </Box>
+        )}
+        {/* Technician Information */}
+        {appointment.tech && (
+          <Box mb={3}>
+            <Typography variant="h6" sx={{ color: "#1976d2", mb: 1 }}>
+              Technician Information
+            </Typography>
+            {appointment.tech.fullName && (
+              <Typography>
+                <strong>Name:</strong> {appointment.tech.fullName}
+              </Typography>
+            )}
+            {appointment.tech.department && (
+              <Typography>
+                <strong>Department:</strong> {appointment.tech.department}
+              </Typography>
+            )}
+            {appointment.tech.employee_id && (
+              <Typography>
+                <strong>Employee ID:</strong> {appointment.tech.employee_id}
+              </Typography>
+            )}
+          </Box>
+        )}
+
+        {/* Workload */}
+        {Array.isArray(appointment.workload) &&
+          appointment.workload.length > 0 && (
+            <Box mb={3}>
+              <Typography variant="h6" sx={{ color: "#1976d2", mb: 1 }}>
+                Workload Details
+              </Typography>
+              {appointment.workload.map((task, idx) => (
+                <Typography key={idx} sx={{ mb: 0.5 }}>
+                  <strong>Step {task.step}:</strong> {task.description} (
+                  {task.status})
+                </Typography>
+              ))}
+            </Box>
+          )}
+
+        {/* Technician Feedback */}
+        {(appointment.techMessage || appointment.suggestion) && (
+          <Box mb={2}>
+            <Typography variant="h6" sx={{ color: "#1976d2", mb: 1 }}>
+              Technician's Feedback
+            </Typography>
+            {appointment.techMessage && (
+              <Typography>
+                <strong>Technician Message:</strong> {appointment.techMessage}
+              </Typography>
+            )}
+            {appointment.suggestion && (
+              <Typography>
+                <strong>Suggestion:</strong> {appointment.suggestion}
+              </Typography>
+            )}
+          </Box>
+        )}
+      </DialogContent>
+
+      <DialogActions>
+        <Button onClick={onClose} variant="contained" color="error">
+          Close
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
+export default AppointmentDetailsModal;

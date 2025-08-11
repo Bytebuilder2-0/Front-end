@@ -1,272 +1,365 @@
 import * as React from "react";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from "react";
 import { styled } from "@mui/material/styles";
-import axios from 'axios';
-
-import { Box, CssBaseline, Toolbar, Typography, IconButton, Avatar, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, CircularProgress,
-  AppBar as MuiAppBar,Drawer as MuiDrawer} from "@mui/material";
-
+import axios from "axios";
+import {
+	Box,
+	CssBaseline,
+	Toolbar,
+	Typography,
+	IconButton,
+	Avatar,
+	Divider,
+	List,
+	ListItem,
+	ListItemButton,
+	ListItemIcon,
+	ListItemText,
+	CircularProgress,
+	AppBar as MuiAppBar,
+	Drawer as MuiDrawer,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import {
-  Menu as MenuIcon,
-  ChevronLeft as ChevronLeftIcon,
-  Home as HomeIcon,
-  History as  HistoryIcon,
-  Notifications as NotificationsIcon,
-  Feedback as FeedbackIcon,
-  Edit as  EditIcon,
-  Schedule as TodayIcon,
-  List as ListIcon,
-  ExpandLess,
-  Dashboard as DashboardIcon,
-  ExpandMore
+	Menu as MenuIcon,
+	ChevronLeft as ChevronLeftIcon,
+	Home as HomeIcon,
+	Feedback as FeedbackIcon,
+	Schedule as TodayIcon,
+	List as ListIcon,
+	ExpandLess,
+	Dashboard as DashboardIcon,
+	ExpandMore,
 } from "@mui/icons-material";
+import HistoryIcon from '@mui/icons-material/History';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import { useAuth } from "../../context/AuthContext";
+import Account from "../Atoms/Account";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
 
-// Drawer Opened Styling
 const openedMixin = (theme) => ({
-  width: drawerWidth,
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  overflowX: "hidden",
+	width: drawerWidth,
+	transition: theme.transitions.create("width", {
+		easing: theme.transitions.easing.sharp,
+		duration: theme.transitions.duration.enteringScreen,
+	}),
+	overflowX: "hidden",
 });
 
-// Drawer Closed Styling
 const closedMixin = (theme) => ({
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  overflowX: "hidden",
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
-  },
+	transition: theme.transitions.create("width", {
+		easing: theme.transitions.easing.sharp,
+		duration: theme.transitions.duration.leavingScreen,
+	}),
+	overflowX: "hidden",
+	width: `calc(${theme.spacing(7)} + 1px)`,
+	[theme.breakpoints.up("sm")]: {
+		width: `calc(${theme.spacing(8)} + 1px)`,
+	},
 });
 
-// Custom AppBar
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
-})(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(["width", "margin"], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
+const AppBar = styled(MuiAppBar)(({ theme }) => ({
+	zIndex: theme.zIndex.drawer + 1, // ensures it's above the drawer
+	width: "100%", // always full width
+	transition: theme.transitions.create(["background-color"], {
+		easing: theme.transitions.easing.sharp,
+		duration: theme.transitions.duration.leavingScreen,
+	}),
 }));
 
-// Custom Drawer
 const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
+	shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
-  width: drawerWidth,
-  flexShrink: 0,
-  whiteSpace: "nowrap",
-  boxSizing: "border-box",
-  ...(open && {
-    ...openedMixin(theme),
-    "& .MuiDrawer-paper": openedMixin(theme),
-  }),
-  ...(!open && {
-    ...closedMixin(theme),
-    "& .MuiDrawer-paper": closedMixin(theme),
-  }),
+	width: drawerWidth,
+	flexShrink: 0,
+	whiteSpace: "nowrap",
+	boxSizing: "border-box",
+	...(open && {
+		...openedMixin(theme),
+		"& .MuiDrawer-paper": openedMixin(theme),
+	}),
+	...(!open && {
+		...closedMixin(theme),
+		"& .MuiDrawer-paper": closedMixin(theme),
+	}),
 }));
 
-// Drawer Header
 const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "flex-end",
- 
-  ...theme.mixins.toolbar,
+	...theme.mixins.toolbar, //this div is same height as the appbar height
 }));
 
-export default function UserMiniDrawer({userId}) {
-  const [open, setOpen] = React.useState(true);
-  const navigate = useNavigate();
-  const [expanded, setExpanded] = useState({ 'My Appointments': false });
-  const [loading, setLoading] = useState(true);
+export default function UserMiniDrawer() {
+	const { user, token } = useAuth();
+	const [open, setOpen] = React.useState(true);
+	const navigate = useNavigate();
+	const [expanded, setExpanded] = useState({ "My Appointments": false });
+	const [loading, setLoading] = useState(true);
+	const [appointments, setAppointments] = useState([]);
 
-  const handleDrawerOpen = () => setOpen(true);
-  const handleDrawerClose = () => setOpen(false);
+	const handleDrawerOpen = () => setOpen(true);
+	const handleDrawerClose = () => setOpen(false);
 
-  // const { id } = useParams(); // Get appointment ID from the URL
-  const [appointments, setAppointments] = useState([]);
+	const handleExpandClick = (menuItem) => {
+		console.log("Toggling menu:", menuItem);
+		setExpanded((prev) => ({ ...prev, [menuItem]: !prev[menuItem] }));
+	};
 
-  useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(`http://localhost:5000/api/appointments/user/${userId}`);
-      
-        let appointmentsData = response.data;
-        if (appointmentsData && !Array.isArray(appointmentsData)) {
-          // If backend wraps array in an object (like { data: [...] })
-          if (appointmentsData.data && appointmentsData.data  && Array.isArray(appointmentsData.data)) {
-            appointmentsData = appointmentsData.data;
-          } else {
-            // Convert single appointment to array
-            appointmentsData = [];
-          }
-        }
- 
-        setAppointments(appointmentsData || []);
-      } catch (err) {
-        console.error('Full error:', err);
-        console.error('Error response:', err.response);
-        setAppointments([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    if (userId) {
-      fetchAppointments();
-    }
-  }, [userId]);
+	useEffect(() => {
+		const fetchAppointments = async () => {
+		try {
+			console.log("Auth context:", { user, token });
+		if (!user?.id) {
+			console.error("No valid user ID available - user:", user);
+			return;
+}
 
-  const handleExpandClick = (menuItem) => {
-    setExpanded(prev => ({ ...prev, [menuItem]: !prev[menuItem] }));
-  };
+		setLoading(true);
+		console.log("Fetching appointments for user:", user);
 
-  return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
-      {/* App Bar */}
-      <AppBar position="fixed"  sx = {
-  {backgroundColor: '#9CE178', }}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            onClick={open ? handleDrawerClose : handleDrawerOpen}
-            edge="start"
-            sx={{ marginRight: 5 }}
-          >
-            {open ? <ChevronLeftIcon /> : <MenuIcon />}
-          </IconButton>
-  
-           <img
-            src="/assets/image.png"
-            alt="Frame"
-            style={{
-              height: "64px", 
-              width: "auto"
-            }}/>
-         
-        </Toolbar>
-      </AppBar>
+		const API_URL = `http://localhost:5000/api/appointments/user/${user.id}`;
+		console.log("Request URL:", API_URL);
 
-      {/* Sidebar Drawer */}
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
-         
-        </DrawerHeader>
-        <Divider />
+		const response = await axios.get(API_URL, {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+		});
 
-        {/* User Avatar */}
-        {open && (
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              mt: 2,
-              mb: 2,
-            }}
-          >
-            <Avatar
-              src="https://randomuser.me/api/portraits/men/1.jpg"
-              sx={{ width: 100, height: 100 }}
-            />
-            <br/>
-            <Typography>User 1</Typography>
-          </Box>
-        )}
-        {open && <Divider sx={{ mx: 2, my: 1 }} />}
+		console.log("Response data:", response.data);
 
-        {/* Navigation List */}
-        <List>
-          {[
-            { path: "", label: "Home", icon: <HomeIcon /> },
-            { path: "", label: "Dashboard", icon: <DashboardIcon/> },
-            {path : "/appointments/new" , label: "Make an Appointemnt", icon: <TodayIcon /> },
-            {path : "" , label: "Notifications", icon: <NotificationsIcon/> },
-            {
-              label: "My Appointments",
-              icon: <ListIcon />,
-              hasChildren: true,
-              children: appointments
-                .filter(appt => !['Cancelled', 'All done'].includes(appt?.status))
-                .map((appt) => ({
-                  path: `/appointments/${appt._id}`,
-                  label: appt.model || `Vehicle ${appt._id.substring(0, 4)}`, // Fallback to partial ID if no model
-                  status: appt.status,
-                }))
-            },
-            {path : "" , label: "History", icon: <HistoryIcon/> },
-            {path : "" , label: "Edit Profile", icon: <EditIcon/> },
-            {path : "" , label: "FeedBack", icon: <FeedbackIcon/> }
-          ].map((item) => (
-            <React.Fragment key={item.path || item.label}>
-              <ListItem disablePadding sx={{ display: "block" }}>
-                <ListItemButton
-                  onClick={() => item.path 
-                    ? navigate(item.path)
-                    : handleExpandClick(item.label)
-                  }
-                  selected={window.location.pathname === item.path}
-                >
-                  <ListItemIcon sx={{ minWidth: 0, justifyContent: "center", marginRight: 2 }}>
-                    {item.icon}
-                  </ListItemIcon>
-                  <ListItemText primary={item.label} sx={{ opacity: open ? 1 : 0 }} />
-                  {item.hasChildren && (
-                    expanded[item.label] ? <ExpandLess /> : <ExpandMore />
-                  )}
-                </ListItemButton>
-              </ListItem>
+		let appointmentsData = response.data;
+		
+		// Handle different response structures
+		if (response.data?.appointments) {
+		appointmentsData = response.data.appointments;
+		} else if (response.data?.data) {
+		appointmentsData = response.data.data;
+		}
 
-              {item.hasChildren && expanded[item.label] && (
-                <List component="div" disablePadding>
-                  {loading ? (
-                    <ListItem>
-                      <CircularProgress size={7} />
-                    </ListItem>
-                  ) : (
-                    item.children.map((child) => (
-                      <ListItem 
-                        key={child.path} 
-                        disablePadding
-                        sx={{ pl: 4 }}
-                        onClick={() => navigate(child.path)}
-                      >
-                        <ListItemButton selected={window.location.pathname === child.path}>
-                          <ListItemText 
-                            primary={child.label}
-                      
-                          />
-                        </ListItemButton>
-                      </ListItem>
-                    ))
-                  )}
-                </List>
-              )}
-            </React.Fragment>
-          ))}
-        </List>
-      </Drawer>
-    </Box>
-  );
+		if (!Array.isArray(appointmentsData)) {
+		console.warn("Appointments data is not an array:", appointmentsData);
+		appointmentsData = [];
+		}
+
+		const filtered = appointmentsData.filter(
+		(appt) => appt && !["Cancelled", "All done", "Reject1","Paid"].includes(appt.status)
+		);
+
+		console.log("Filtered appointments:", filtered);
+		setAppointments(filtered);
+	} catch (err) {
+		console.error("Error detailsssss:", {
+		message: err.message,
+		response: err.response?.data,
+		status: err.response?.status,
+		});
+		setAppointments([]);
+	} finally {
+		setLoading(false);
+	}
+	};
+
+		
+	fetchAppointments();
+		
+	}, [user, token]);
+
+	const menuItems = useMemo(
+		() => [
+			{ path: "/", label: "Home", icon: <HomeIcon sx={{ color: "#ffffff" }} /> },
+			{ path: "/User", label: "Dashboard", icon: <DashboardIcon sx={{ color: "#ffffff" }}/> },
+			{ path: "/Vehicles", label: "Your Vehicles", icon: <DirectionsCarIcon sx={{ color: "#ffffff" }} /> },
+
+			{
+				path: "/appointments/new",
+				label: "Make an Appointment",
+				icon: <TodayIcon sx={{ color: "#ffffff" }} />,
+			},
+		
+			{
+				label: "My Appointments",
+				icon: <ListIcon sx={{ color: "#ffffff" }}/>,
+				hasChildren: true,
+				children: appointments.map((appt) => ({
+					path: `/appointments/${appt._id}`,
+					label: appt.model || `Vehicle ${appt._id?.substring(0, 4)}`,
+					status: appt.status,
+				})),
+			},
+			{ path: "/UserHistory", label: "History", icon: <HistoryIcon sx={{ color: "#ffffff" }}/> },
+			{ path: "/UserFeedback", label: "FeedBack", icon: <FeedbackIcon sx={{ color: "#ffffff" }}/> },
+		],
+		[appointments]
+	);
+
+	return (
+		<Box sx={{ display: "flex" }}>
+			<CssBaseline />
+		<AppBar
+				position="fixed"
+				sx={{ backgroundColor: "#428bca", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+			>
+				<Toolbar disableGutters>
+					{/* Left-aligned image, same width as the drawer */}
+					<Box
+						sx={{
+							width: drawerWidth,
+							display: "flex",
+							alignItems: "center",
+							justifyContent: "center",
+							backgroundColor: "#fff", // match the logo background
+						}}
+					>
+						<Link
+							to="/"
+							style={{
+								display: "inline-block", // ensures no extra line spacing
+								lineHeight: 0, // removes any extra vertical spacing
+								margin: 0,
+								padding: 0,
+							}}
+						>
+							<img
+								src="/assets/resized-garage24.png"
+								alt="Frame"
+								style={{
+									height: "64px",
+									width: drawerWidth,
+									objectFit: "contain",
+								}}
+							/>
+						</Link>
+					</Box>
+
+					{/* Toggle Drawer Icon */}
+					<IconButton
+						color="inherit"
+						onClick={open ? handleDrawerClose : handleDrawerOpen}
+						edge="end"
+						sx={{ marginRight: 2 }}
+					>
+						{open ? (
+							<ChevronLeftIcon sx={{ color: "#ffffffff" }} />
+						) : (
+							<MenuIcon sx={{ color: "#ffffffff" }} />
+						)}
+					</IconButton>
+					<Box sx={{ flexGrow: 1 }} />
+					<Box
+						sx={{
+							display: { xs: "none", md: "flex" },
+							alignItems: "center",
+							gap: 2, // spacing between icons
+							pr: 5, // padding-right
+						}}
+					>
+
+						{/*<Notify />*/}
+
+						<Account />
+					</Box>
+				</Toolbar>
+			</AppBar>
+
+{/* Sidebar Drawer */}
+			<Drawer
+				variant="permanent"
+				open={open}
+				sx={{
+					"& .MuiDrawer-paper": {
+						backgroundColor: "#33383E",
+						color: "white", // text/icon color
+					},
+				}}
+			>
+				<DrawerHeader />
+				<Divider />
+
+				{/* User Avatar */}
+				{open && (
+					<Box
+						sx={{
+							display: "flex",
+							flexDirection: "column",
+							alignItems: "center",
+							mt: 2,
+							mb: 2,
+						}}
+					>
+						<Avatar
+							src="https://randomuser.me/api/portraits/men/1.jpg"
+							sx={{ width: 100, height: 100 }}
+						/>
+						<br />
+						<Typography>User</Typography>
+					</Box>
+				)}
+				{open && <Divider sx={{ borderColor: "#ffffff", mr: 3, ml: 3 }} />}
+
+				{/* Navigation List */}
+
+				<List>
+					{menuItems.map((item) => (
+						<React.Fragment key={item.path || item.label}>
+							<ListItem disablePadding sx={{ display: "block" }}>
+								<ListItemButton
+									onClick={() =>
+										item.path
+											? navigate(item.path)
+											: handleExpandClick(item.label)
+									}
+									selected={window.location.pathname === item.path}
+								>
+									<ListItemIcon
+										sx={{ minWidth: 0, justifyContent: "center", marginRight: 2 }}
+									>
+										{item.icon}
+									</ListItemIcon>
+									<ListItemText
+										primary={item.label}
+										sx={{ opacity: open ? 1 : 0 }}
+									/>
+									{item.hasChildren &&
+										(expanded[item.label] ? <ExpandLess /> : <ExpandMore />)}
+								</ListItemButton>
+							</ListItem>
+
+							{item.hasChildren && expanded[item.label] && (
+								<List component="div" disablePadding>
+									{loading ? (
+										<ListItem>
+											<CircularProgress size={24} />
+										</ListItem>
+									) : item.children?.length > 0 ? (
+										item.children.map((child, index) => (
+											<ListItem
+												key={child.path || `child-${index}`}
+												disablePadding
+												sx={{ pl: 4 }}
+												onClick={() => navigate(child.path)}
+											>
+												<ListItemButton
+													selected={
+														window.location.pathname === child.path
+													}
+												>
+													<ListItemText primary={child.label} />
+												</ListItemButton>
+											</ListItem>
+										))
+									) : (
+										<ListItem sx={{ pl: 4 }}>
+											<ListItemText primary="No Appointments" />
+										</ListItem>
+									)}
+								</List>
+							)}
+						</React.Fragment>
+					))}
+				</List>
+			</Drawer>
+		</Box>
+	);
 }

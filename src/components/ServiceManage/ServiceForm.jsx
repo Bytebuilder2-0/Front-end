@@ -1,24 +1,26 @@
 import React, { useState } from "react";
-import { TextField, Button, Box, MenuItem } from "@mui/material";
+import { TextField, Button, Box } from "@mui/material";
 
-const ServiceForm = ({ onAdd }) => {
+const ServiceForm = ({ onAdd, disabled }) => {
   const [name, setName] = useState("");
-  const [type, setType] = useState("customer");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name.trim()) return;
 
-    await onAdd(name, type);
+    await onAdd(name);
     setName("");
-    setType("customer");
   };
 
   return (
     <Box
       component="form"
       onSubmit={handleSubmit}
-      style={{ display: "flex", gap: "10px", marginBottom: "20px" }}
+      sx={{
+        display: "flex",
+        gap: 2,
+        mb: 4,
+      }}
     >
       <TextField
         label="New Service"
@@ -26,19 +28,42 @@ const ServiceForm = ({ onAdd }) => {
         value={name}
         onChange={(e) => setName(e.target.value)}
         fullWidth
+        disabled={disabled}
+        sx={{
+          backgroundColor: "white",
+          borderRadius: 2,
+          boxShadow: 1,
+          "& .MuiOutlinedInput-root": {
+            "& fieldset": {
+              borderColor: "#e0e0e0", // Static border color
+            },
+            "&:hover fieldset": {
+              borderColor: "#5da3e8ff", // Same as normal state to prevent hover effect
+            },
+            "&.Mui-focused fieldset": {
+              borderColor: "#1976d2", // Keep focus color (optional)
+            },
+          },
+        }}
       />
-      <TextField
-        select
-        label="Type"
-        value={type}
-        onChange={(e) => setType(e.target.value)}
-        style={{ width: "150px" }}
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        disabled={disabled}
+        sx={{
+          borderRadius: "8px",
+          fontWeight: "bold",
+          textTransform: "none",
+          px: 3,
+          boxShadow: 1,
+          "&:hover": {
+            backgroundColor: "#1565c0",
+            boxShadow: 2,
+          },
+        }}
       >
-        <MenuItem value="customer">Customer</MenuItem>
-        <MenuItem value="garage">Garage</MenuItem>
-      </TextField>
-      <Button type="submit" variant="contained" color="primary">
-        Add
+        ADD
       </Button>
     </Box>
   );
