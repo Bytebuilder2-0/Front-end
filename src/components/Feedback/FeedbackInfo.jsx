@@ -11,7 +11,7 @@ const FeedbackInfo = ({ feedback }) => {
       label: "Date",
       value: new Date(feedback.feedbackDate).toLocaleDateString(),
     },
-    { label: "Comment", value: feedback.comment },
+    { label: "Comment", value: feedback.comment || "No reply yet" },
     { label: "Reply", value: feedback.reply || "No reply yet" },
     {
       label: "Added",
