@@ -1,7 +1,8 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
+import API_BASE_URL from "../../config/api";
 
-const API_URL = "http://localhost:5000/api/servicesManage";
+const API_URL = `${API_BASE_URL}/servicesManage`;
 const token = localStorage.getItem("token");
 
 let decoded = null;

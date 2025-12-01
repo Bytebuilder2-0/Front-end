@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Typography,
   Box,
@@ -9,14 +9,15 @@ import {
   Stack,
   Chip,
   Avatar,
-  useTheme
-} from '@mui/material';
-import axios from 'axios';
-import { useAuth } from '../../context/AuthContext';
-import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
-import CategoryIcon from '@mui/icons-material/Category';
+  useTheme,
+} from "@mui/material";
+import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
+import API_BASE_URL from "../../config/api";
+import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
+import CategoryIcon from "@mui/icons-material/Category";
 
 const AllVehicles = () => {
   const theme = useTheme();
@@ -34,7 +35,7 @@ const AllVehicles = () => {
 
       try {
         setLoading(true);
-        const API_URL = `http://localhost:5000/api/appointments/vehicles/${user.id}`;
+        const API_URL = `${API_BASE_URL}/appointments/vehicles/${user.id}`;
         const response = await axios.get(API_URL, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -46,7 +47,7 @@ const AllVehicles = () => {
         setError(null);
       } catch (err) {
         setVehicles([]);
-        setError('Failed to fetch vehicles. Please try again later.');
+        setError("Failed to fetch vehicles. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -57,7 +58,12 @@ const AllVehicles = () => {
 
   if (loading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
         <CircularProgress />
       </Box>
     );
@@ -65,7 +71,7 @@ const AllVehicles = () => {
 
   if (error) {
     return (
-      <Box sx={{ textAlign: 'center', p: 4 }}>
+      <Box sx={{ textAlign: "center", p: 4 }}>
         <Typography color="error">{error}</Typography>
       </Box>
     );
@@ -73,7 +79,7 @@ const AllVehicles = () => {
 
   if (vehicles.length === 0) {
     return (
-      <Box sx={{ p: 4, textAlign: 'center' }}>
+      <Box sx={{ p: 4, textAlign: "center" }}>
         <Typography variant="h4" gutterBottom sx={{ fontWeight: 600 }}>
           Your Vehicles
         </Typography>
@@ -86,54 +92,54 @@ const AllVehicles = () => {
 
   return (
     <Box sx={{ p: 4 }}>
-      <Typography 
-        gutterBottom 
-        sx={{ 
+      <Typography
+        gutterBottom
+        sx={{
           fontWeight: 600,
           fontSize: 35,
-          marginBottom: '1px'
+          marginBottom: "1px",
         }}
       >
         Your Vehicles
       </Typography>
 
-      <Typography  sx={{ color: 'green' }}>
-
+      <Typography sx={{ color: "green" }}>
         All your registered vehicles
       </Typography>
-      
+
       <Divider sx={{ mb: 4, mt: 2 }} />
 
       <Grid container spacing={3}>
         {vehicles.map((vehicle) => (
           <Grid item xs={12} md={6} key={vehicle._id}>
-            <Paper 
-              sx={{ 
-                p: 3, 
-                height: '100%',
+            <Paper
+              sx={{
+                p: 3,
+                height: "100%",
 
-                borderRadius: 3
-
-              }} 
+                borderRadius: 3,
+              }}
               elevation={3}
             >
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                <Avatar sx={{ 
-                  bgcolor: theme.palette.primary.main, 
-                  mr: 2,
-                  width: 40,
-                  height: 40
-                }}>
+              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+                <Avatar
+                  sx={{
+                    bgcolor: theme.palette.primary.main,
+                    mr: 2,
+                    width: 40,
+                    height: 40,
+                  }}
+                >
                   <DirectionsCarIcon fontSize="small" />
                 </Avatar>
                 <Typography variant="h6" sx={{ fontWeight: 600 }}>
                   {vehicle.model}
                 </Typography>
-                <Chip 
-                  label={vehicle.vehicleType} 
+                <Chip
+                  label={vehicle.vehicleType}
                   varient="outlined"
-                  size="small" 
-                  sx={{  ml: 2 ,color: 'green' }}
+                  size="small"
+                  sx={{ ml: 2, color: "green" }}
                 />
               </Box>
 
@@ -141,10 +147,15 @@ const AllVehicles = () => {
 
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
-                  <Stack direction="row" alignItems="center" spacing={1.5} mb={1.5}>
-                    <ConfirmationNumberIcon 
-                      fontSize="small" 
-                      sx={{ color: "text.secondary", width: 20 }} 
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    spacing={1.5}
+                    mb={1.5}
+                  >
+                    <ConfirmationNumberIcon
+                      fontSize="small"
+                      sx={{ color: "text.secondary", width: 20 }}
                     />
                     <Box>
                       <Typography variant="subtitle2" color="text.secondary">
@@ -158,10 +169,15 @@ const AllVehicles = () => {
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
-                  <Stack direction="row" alignItems="center" spacing={1.5} mb={1.5}>
-                    <CategoryIcon 
-                      fontSize="small" 
-                      sx={{ color: "text.secondary", width: 20 }} 
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    spacing={1.5}
+                    mb={1.5}
+                  >
+                    <CategoryIcon
+                      fontSize="small"
+                      sx={{ color: "text.secondary", width: 20 }}
                     />
                     <Box>
                       <Typography variant="subtitle2" color="text.secondary">
@@ -175,10 +191,15 @@ const AllVehicles = () => {
                 </Grid>
 
                 <Grid item xs={12} sm={6}>
-                  <Stack direction="row" alignItems="center" spacing={1.5} mb={1.5}>
-                    <CalendarTodayIcon 
-                      fontSize="small" 
-                      sx={{ color: "text.secondary", width: 20 }} 
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    spacing={1.5}
+                    mb={1.5}
+                  >
+                    <CalendarTodayIcon
+                      fontSize="small"
+                      sx={{ color: "text.secondary", width: 20 }}
                     />
                     <Box>
                       <Typography variant="subtitle2" color="text.secondary">
@@ -190,8 +211,6 @@ const AllVehicles = () => {
                     </Box>
                   </Stack>
                 </Grid>
-
-          
               </Grid>
             </Paper>
           </Grid>

@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
+import API_BASE_URL from "../../config/api";
 
 const convertTo24HourFormat = (time12h) => {
   const [time, modifier] = time12h.split(" ");
@@ -32,7 +33,7 @@ const convertTo12HourFormat = (time24h) => {
   return `${hours}:${minutes} ${modifier}`;
 };
 
-const API_BASE_URL = "http://localhost:5000/api/appointments";
+const API_URL = `${API_BASE_URL}/appointments`;
 
 const UpdateAppointmentDetailsDialog = ({
   appointment,
@@ -87,7 +88,7 @@ const UpdateAppointmentDetailsDialog = ({
       const time12h = convertTo12HourFormat(preferredTime);
 
       await axios.put(
-        `${API_BASE_URL}/${appointment._id}/updateDetails`,
+        `${API_URL}/${appointment._id}/updateDetails`,
         { preferredDate, preferredTime: time12h, expectedDeliveryDate },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },

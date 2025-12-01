@@ -4,6 +4,7 @@ import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import API_BASE_URL from "../config/api";
 import {
   Box,
   Typography,
@@ -24,7 +25,7 @@ const FeedbackSlider = () => {
   useEffect(() => {
     // Replace this with your actual API endpoint
     axios
-      .get("http://localhost:5000/api/feedbacks") // Update URL
+      .get(`${API_BASE_URL}/feedbacks`) // Update URL
       .then((res) => setFeedbacks(res.data))
       .catch((err) => console.error("Error fetching feedbacks", err));
   }, []);
@@ -74,7 +75,12 @@ const FeedbackSlider = () => {
               </Box>
 
               {/* Rating & Message */}
-              <Rating value={item.rating} readOnly size="small" sx={{ mb: 1 }} />
+              <Rating
+                value={item.rating}
+                readOnly
+                size="small"
+                sx={{ mb: 1 }}
+              />
               <Typography variant="body2" color="text.primary" sx={{ mb: 2 }}>
                 {item.message}
               </Typography>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import API_BASE_URL from "../../config/api";
 import {
   Container,
   Box,
@@ -29,7 +30,7 @@ import SuccessSnackbar from "../ServiceManage/SuccessSnackbar";
 import { jwtDecode } from "jwt-decode";
 import UpdateAppointmentDetailsDialog from "./UpdateAppointmentDetailsDialog";
 
-const API_BASE_URL = "http://localhost:5000/api/appointments";
+const API_URL = `${API_BASE_URL}/appointments`;
 const token = localStorage.getItem("token");
 
 let decoded = null;
@@ -68,7 +69,7 @@ const ApointmentChecking = () => {
 
   const fetchAppointments = () => {
     axios
-      .get(API_BASE_URL, authConfig)
+      .get(API_URL, authConfig)
       .then((res) => {
         const sortedAppointments = res.data
           .filter((appt) => ["Checking", "Pending"].includes(appt.status))
@@ -85,7 +86,7 @@ const ApointmentChecking = () => {
   const handleStatusUpdate = async (appointmentId, newStatus) => {
     try {
       await axios.put(
-        `${API_BASE_URL}/${appointmentId}/statusUpdate`,
+        `${API_URL}/${appointmentId}/statusUpdate`,
         {
           status: newStatus,
         },

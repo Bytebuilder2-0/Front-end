@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import API_BASE_URL from "../../config/api";
 import {
   Container,
   Box,
@@ -19,7 +20,7 @@ import DeatailsViewer from "../ManagerDashboard/viewDeatails";
 import InvoiceView from "../sub/InvoiceView";
 import { jwtDecode } from "jwt-decode";
 
-const API_URL = "http://localhost:5000/api/appointments";
+const API_URL = `${API_BASE_URL}/appointments`;
 
 const token = localStorage.getItem("token");
 
@@ -203,7 +204,10 @@ const ApointmentHistory = () => {
                     <DeatailsViewer appointment={appointment} />
                   </TableCell>
                   <TableCell align="center">
-                    <WhatsAppButton phone={appointment.contactNumber} VNumber={ appointment.vehicleNumber} />
+                    <WhatsAppButton
+                      phone={appointment.contactNumber}
+                      VNumber={appointment.vehicleNumber}
+                    />
                   </TableCell>
                   <TableCell align="center">
                     <Typography

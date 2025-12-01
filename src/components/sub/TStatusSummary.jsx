@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import API_BASE_URL from "../../config/api";
 import {
   Card,
   CardContent,
@@ -11,7 +12,7 @@ import {
 import Grid from "@mui/material/Grid2";
 import { useAuth } from "../../context/AuthContext";
 
-const API_BASE_URL = "http://localhost:5000/api/appointments";
+const API_URL = `${API_BASE_URL}/appointments`;
 
 const TechStatusSummary = () => {
   const { user, token } = useAuth();
@@ -33,7 +34,7 @@ const TechStatusSummary = () => {
       setErr(null);
 
       try {
-        const res = await axios.get(API_BASE_URL, {
+        const res = await axios.get(API_URL, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

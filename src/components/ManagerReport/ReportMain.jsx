@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
+import API_BASE_URL from "../../config/api";
 import {
   Button,
   Card,
@@ -16,7 +17,7 @@ import ReportTables from "./ReportTables";
 import ReportDownload from "./ReportDownload";
 import { jwtDecode } from "jwt-decode";
 
-const baseURL = "http://localhost:5000/api";
+const baseURL = API_BASE_URL;
 
 const token = localStorage.getItem("token");
 

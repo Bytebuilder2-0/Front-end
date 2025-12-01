@@ -4,9 +4,9 @@ import { useState } from "react";
 import SuccessSnackbar from "../ServiceManage/SuccessSnackbar";
 import ConfirmDeleteDialog from "../ServiceManage/ConfirmDeleteDialog";
 import AppointmentDetailsModal from "./AppointmentDetailsModal";
+import API_BASE_URL from "../../config/api";
 
 // Base URL configuration
-const API_BASE_URL = "http://localhost:5000/api";
 
 const FeedbackActions = ({ feedback, onUpdate }) => {
   const [deleted, setDeleted] = useState(false);

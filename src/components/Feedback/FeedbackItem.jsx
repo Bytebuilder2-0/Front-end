@@ -5,6 +5,7 @@ import FeedbackActions from "./FeedbackActions";
 import FeedbackInfo from "./FeedbackInfo";
 import ReplyBox from "./ReplyBox";
 import SuccessSnackbar from "../ServiceManage/SuccessSnackbar";
+import API_BASE_URL from "../../config/api";
 
 const FeedbackItem = ({ feedback, onUpdate }) => {
   const [reply, setReply] = useState(feedback.reply || "");
@@ -23,7 +24,7 @@ const FeedbackItem = ({ feedback, onUpdate }) => {
 
     try {
       await axios.put(
-        `http://localhost:5000/api/feedback/${feedback._id}/reply`,
+        `${API_BASE_URL}/feedback/${feedback._id}/reply`,
         { reply: updatedReply },
         authConfig
       );

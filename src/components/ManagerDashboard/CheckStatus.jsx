@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import API_BASE_URL from "../../config/api";
 import {
   Container,
   Box,
@@ -21,7 +22,7 @@ import DeatailsViewer from "./viewDeatails";
 import WhatsAppButton from "../sub/WhatsAppButton";
 import { jwtDecode } from "jwt-decode";
 
-const API_BASE_URL = "http://localhost:5000/api/appointments/";
+const API_URL = `${API_BASE_URL}/appointments/`;
 const token = localStorage.getItem("token");
 
 // Status configuration object for better maintainability
@@ -57,7 +58,7 @@ const CheckStatus = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const res = await axios.get(API_BASE_URL, authConfig);
+        const res = await axios.get(API_URL, authConfig);
         const filtered = res.data
           .filter((appt) => allowedStatuses.includes(appt.status)) // Initial filter by allowed statuses
           .reverse();
@@ -277,7 +278,10 @@ const CheckStatus = () => {
                     <DeatailsViewer appointment={appointment} />
                   </TableCell>
                   <TableCell align="center">
-                    <WhatsAppButton phone={appointment.contactNumber} VNumber={ appointment.vehicleNumber} />
+                    <WhatsAppButton
+                      phone={appointment.contactNumber}
+                      VNumber={appointment.vehicleNumber}
+                    />
                   </TableCell>
                   <TableCell align="center">
                     {getStatusDisplay(appointment.status)}

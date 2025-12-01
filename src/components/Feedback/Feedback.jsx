@@ -3,8 +3,9 @@ import axios from "axios";
 import { Container, Typography, Paper, Box } from "@mui/material";
 import FeedbackList from "./FeedbackList";
 import { jwtDecode } from "jwt-decode"; // Importing jwtDecode
+import API_BASE_URL from "../../config/api";
 
-const API_URL = "http://localhost:5000/api/feedback";
+const API_URL = `${API_BASE_URL}/feedback`;
 
 const Feedback = () => {
   const [feedbacks, setFeedbacks] = useState([]);

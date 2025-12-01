@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import API_BASE_URL from "../../config/api";
 import {
   Card,
   CardContent,
@@ -11,7 +12,7 @@ import {
 import Grid from "@mui/material/Grid2";
 import { jwtDecode } from "jwt-decode"; // add
 
-const baseURL = "http://localhost:5000/api";
+const baseURL = API_BASE_URL;
 
 const token = localStorage.getItem("token"); // add
 let decoded = null;

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import API_BASE_URL from "../../config/api";
 import {
   Dialog,
   DialogTitle,
@@ -15,17 +16,17 @@ import {
   useTheme,
   Paper,
   Divider,
-  styled
+  styled,
 } from "@mui/material";
 import { Star, Send, Close, EmojiEmotions } from "@mui/icons-material";
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
 
 const StyledRating = styled(Rating)(({ theme }) => ({
-  '& .MuiRating-iconFilled': {
+  "& .MuiRating-iconFilled": {
     color: theme.palette.warning.main,
   },
-  '& .MuiRating-iconHover': {
+  "& .MuiRating-iconHover": {
     color: theme.palette.warning.dark,
   },
 }));
@@ -50,14 +51,14 @@ const FeedbackForm = ({ open, onClose, appointmentId }) => {
 
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/feedback/${appointmentId}/submit`,
+        `${API_BASE_URL}/feedback/${appointmentId}/submit`,
         { rating, comment },
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
-          validateStatus: (status) => status < 500
+          validateStatus: (status) => status < 500,
         }
       );
 
@@ -69,7 +70,10 @@ const FeedbackForm = ({ open, onClose, appointmentId }) => {
       }
     } catch (err) {
       console.error("Feedback submission error:", err);
-      setError(err.response?.data?.message || "An error occurred while submitting feedback");
+      setError(
+        err.response?.data?.message ||
+          "An error occurred while submitting feedback"
+      );
     } finally {
       setLoading(false);
     }
@@ -86,32 +90,39 @@ const FeedbackForm = ({ open, onClose, appointmentId }) => {
   };
 
   return (
-    <Dialog 
-      open={open} 
-      onClose={handleClose} 
-      maxWidth="sm" 
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      maxWidth="sm"
       fullWidth
       aria-labelledby="feedback-dialog-title"
       PaperProps={{
         sx: {
           borderRadius: 3,
           background: theme.palette.background.paper,
-        }
+        },
       }}
     >
       <DialogTitle id="feedback-dialog-title" sx={{ p: 0 }}>
-        <Paper elevation={0} sx={{ 
-          p: 3, 
-          borderTopLeftRadius: 12,
-          borderTopRightRadius: 12,
-          background: theme.palette.primary.main,
-          color: theme.palette.primary.contrastText
-        }}>
-          <Box display="flex" justifyContent="space-between" alignItems="center">
+        <Paper
+          elevation={0}
+          sx={{
+            p: 3,
+            borderTopLeftRadius: 12,
+            borderTopRightRadius: 12,
+            background: theme.palette.primary.main,
+            color: theme.palette.primary.contrastText,
+          }}
+        >
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+          >
             <Typography variant="h6" fontWeight="bold">
               Rate Your Experience
             </Typography>
-            <IconButton 
+            <IconButton
               onClick={handleClose}
               aria-label="close"
               disabled={loading}
@@ -122,15 +133,17 @@ const FeedbackForm = ({ open, onClose, appointmentId }) => {
           </Box>
         </Paper>
       </DialogTitle>
-      
+
       <DialogContent dividers sx={{ p: 3 }}>
         {submitted ? (
           <Box textAlign="center" py={4}>
-            <EmojiEmotions 
-              color="primary" 
-              sx={{ fontSize: 60, mb: 2 }} 
-            />
-            <Typography variant="h5" color="primary" gutterBottom fontWeight="bold">
+            <EmojiEmotions color="primary" sx={{ fontSize: 60, mb: 2 }} />
+            <Typography
+              variant="h5"
+              color="primary"
+              gutterBottom
+              fontWeight="bold"
+            >
               Thank You!
             </Typography>
             <Typography variant="body1" color="text.secondary">
@@ -164,12 +177,12 @@ const FeedbackForm = ({ open, onClose, appointmentId }) => {
                 onChange={(e) => setComment(e.target.value)}
                 disabled={loading}
                 sx={{
-                  '& .MuiOutlinedInput-root': {
+                  "& .MuiOutlinedInput-root": {
                     borderRadius: 2,
-                    '& fieldset': {
+                    "& fieldset": {
                       borderColor: theme.palette.divider,
                     },
-                    '&:hover fieldset': {
+                    "&:hover fieldset": {
                       borderColor: theme.palette.primary.light,
                     },
                   },
@@ -178,10 +191,10 @@ const FeedbackForm = ({ open, onClose, appointmentId }) => {
             </Box>
 
             {error && (
-              <Alert 
-                severity="error" 
+              <Alert
+                severity="error"
                 sx={{ mb: 2 }}
-                onClose={() => setError('')}
+                onClose={() => setError("")}
               >
                 {error}
               </Alert>
@@ -192,8 +205,8 @@ const FeedbackForm = ({ open, onClose, appointmentId }) => {
 
       {!submitted && (
         <DialogActions sx={{ p: 3, pt: 0 }}>
-          <Button 
-            onClick={handleClose} 
+          <Button
+            onClick={handleClose}
             color="inherit"
             disabled={loading}
             sx={{ mr: 2 }}
@@ -210,13 +223,13 @@ const FeedbackForm = ({ open, onClose, appointmentId }) => {
               px: 3,
               py: 1,
               borderRadius: 2,
-              fontWeight: 'bold',
-              boxShadow: 'none',
-              backgroundColor:  '#2e7d32',
-              '&:hover': {
-                boxShadow: 'none',
-                backgroundColor:  '#1b5e20',
-              }
+              fontWeight: "bold",
+              boxShadow: "none",
+              backgroundColor: "#2e7d32",
+              "&:hover": {
+                boxShadow: "none",
+                backgroundColor: "#1b5e20",
+              },
             }}
           >
             {loading ? (
@@ -224,7 +237,9 @@ const FeedbackForm = ({ open, onClose, appointmentId }) => {
                 <CircularProgress size={20} sx={{ mr: 1 }} />
                 Submitting...
               </>
-            ) : 'Submit'}
+            ) : (
+              "Submit"
+            )}
           </Button>
         </DialogActions>
       )}

@@ -1,48 +1,69 @@
-import React, { useState } from 'react';
-import { TextField, Button, Typography, Container, Paper, Box, Avatar, Grid } from '@mui/material';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import axios from 'axios';
-import { useAuth } from '../../context/AuthContext';
-
+import React, { useState } from "react";
+import {
+  TextField,
+  Button,
+  Typography,
+  Container,
+  Paper,
+  Box,
+  Avatar,
+  Grid,
+} from "@mui/material";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
+import API_BASE_URL from "../../config/api";
 
 const VehicleForm = () => {
   const { user, token } = useAuth();
   const [formData, setFormData] = useState({
-    type: '',
-    model: '',
-    registrationNumber: ''
+    type: "",
+    model: "",
+    registrationNumber: "",
   });
 
-  const [responseMsg, setResponseMsg] = useState('');
+  const [responseMsg, setResponseMsg] = useState("");
 
   const handleChange = (e) => {
-    setFormData({ 
-      ...formData, 
-      [e.target.name]: e.target.value 
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setResponseMsg('');
+    setResponseMsg("");
 
     try {
-      const res = await axios.post('http://localhost:5000/api/vehicles/register', formData);
+      const res = await axios.post(
+        `${API_BASE_URL}/vehicles/register`,
+        formData
+      );
       setResponseMsg(res.data.message);
-      setFormData({ type: '', model: '', registrationNumber: '' });
+      setFormData({ type: "", model: "", registrationNumber: "" });
     } catch (err) {
-      setResponseMsg(err.response?.data?.error || 'Registration failed.');
+      setResponseMsg(err.response?.data?.error || "Registration failed.");
     }
   };
 
   return (
     <Container maxWidth="sm">
-      <Paper  sx={{ p: 1, mt: 3}} style={{ height: '50vh', width: 405, margin: "0px auto" }}>
+      <Paper
+        sx={{ p: 1, mt: 3 }}
+        style={{ height: "50vh", width: 405, margin: "0px auto" }}
+      >
         <Grid align="center" mb={2}>
-        <Avatar sx={{ width: 50, height: 50 }}>r`</Avatar>
-        <Typography variant="h5" gutterBottom>Vehicle Details</Typography>
+          <Avatar sx={{ width: 50, height: 50 }}>r`</Avatar>
+          <Typography variant="h5" gutterBottom>
+            Vehicle Details
+          </Typography>
         </Grid>
-        <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+        <Box
+          component="form"
+          onSubmit={handleSubmit}
+          sx={{ display: "flex", flexDirection: "column", gap: 3 }}
+        >
           <TextField
             label="Type"
             variant="outlined"
@@ -67,12 +88,15 @@ const VehicleForm = () => {
             onChange={handleChange}
             required
           />
-          
-          <Button variant="contained"  type="submit">Add Vehicle</Button>
+
+          <Button variant="contained" type="submit">
+            Add Vehicle
+          </Button>
           {responseMsg && (
-            <Typography variant="body1" color="secondary">{responseMsg}</Typography>
+            <Typography variant="body1" color="secondary">
+              {responseMsg}
+            </Typography>
           )}
-        
         </Box>
       </Paper>
     </Container>

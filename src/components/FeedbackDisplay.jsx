@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import API_BASE_URL from "../config/api";
 import {
   Card,
   CardHeader,
@@ -25,9 +26,7 @@ const FeedbackDisplay = () => {
   useEffect(() => {
     const fetchFeedbacks = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/api/feedbackDisplay"
-        );
+        const response = await axios.get(`${API_BASE_URL}/feedbackDisplay`);
         if (response.data.success && Array.isArray(response.data.data)) {
           setFeedbacks(response.data.data);
         } else {
