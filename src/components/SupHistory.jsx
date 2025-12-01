@@ -16,7 +16,8 @@ import IssueViewer from "./sub/IssueView";
 import InvoiceView from "./sub/InvoiceView";
 import { useAuth } from "../context/AuthContext";
 
-const baseURL = import.meta.env.VITE_API_BASE_URL;
+import API_BASE_URL from '../config/api';
+const baseURL = API_BASE_URL.replace('/api', '');
 
 // Fetch "Paid" appointments confirmed by the current supervisor
 const fetchPaidAppointments = async (supervisorId, token) => {

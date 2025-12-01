@@ -22,7 +22,8 @@ import Reason from "./sub/Reason";
 import CustomSnackbar from "./sub/CustomSnackbar";
 import { useAuth } from "../context/AuthContext";
 
-const baseURL = import.meta.env.VITE_API_BASE_URL;
+import API_BASE_URL from '../config/api';
+const baseURL = API_BASE_URL.replace('/api', '');
 
 // Fetch "Reject2" appointments confirmed by the current supervisor
 const fetchDeclinedAppointments = async (supervisorId, token) => {

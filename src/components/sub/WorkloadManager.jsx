@@ -13,7 +13,8 @@ import { Add, Delete } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
 import { useAuth } from "../../context/AuthContext";
 
-const baseURL = import.meta.env.VITE_API_BASE_URL;
+import API_BASE_URL from '../../config/api';
+const baseURL = API_BASE_URL.replace('/api', '');
 
 const WorkloadManager = ({ appointment, updateAppointment, showSnackbar }) => {
 	const { token } = useAuth();

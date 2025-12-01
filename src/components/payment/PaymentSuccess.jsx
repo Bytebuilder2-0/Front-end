@@ -13,7 +13,7 @@ import {
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 // Replace with your actual API base URL or environment variable
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import API_BASE_URL from '../../config/api';
 
 export default function PaymentSuccess() {
 	const { appointmentId } = useParams();

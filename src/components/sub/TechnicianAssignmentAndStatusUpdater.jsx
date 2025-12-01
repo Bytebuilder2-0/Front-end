@@ -3,7 +3,8 @@ import axios from "axios";
 import { Select, MenuItem, Button, TableCell, Box } from "@mui/material";
 import ConfirmationDialog from "./Confirmation"; // Import your confirmation dialog
 
-const baseURL = import.meta.env.VITE_API_BASE_URL;
+import API_BASE_URL from '../../config/api';
+const baseURL = API_BASE_URL.replace('/api', '');
 
 const TechnicianAssignmentAndStatusUpdater = ({
 	appointment,

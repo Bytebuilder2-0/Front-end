@@ -23,7 +23,8 @@ import CustomSnackbar from "./sub/CustomSnackbar";
 
 import { useAuth } from "../context/AuthContext";
 
-const baseURL = import.meta.env.VITE_API_BASE_URL;
+import API_BASE_URL from '../config/api';
+const baseURL = API_BASE_URL.replace('/api', '');
 
 // Fetch appointments with status Confirmed or Waiting for Technician Confirmation
 const fetchAppointments = async (supervisorId, token) => {

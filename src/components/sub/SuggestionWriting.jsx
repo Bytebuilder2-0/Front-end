@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Button, Modal, Box, TextField, Typography } from "@mui/material";
 
-const baseURL = import.meta.env.VITE_API_BASE_URL;
+import API_BASE_URL from '../../config/api';
+const baseURL = API_BASE_URL.replace('/api', '');
 
 const SuggestionWriting = ({ appointment, updateAppointment, showSnackbar }) => {
 	const [openSuggestionModal, setOpenSuggestionModal] = useState(false);

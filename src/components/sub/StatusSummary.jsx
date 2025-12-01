@@ -3,7 +3,8 @@ import axios from "axios";
 import { Card, CardContent, CardHeader, Typography, CardMedia, Box } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 
-const baseURL = import.meta.env.VITE_API_BASE_URL;
+import API_BASE_URL from '../../config/api';
+const baseURL = API_BASE_URL.replace('/api', '');
 
 const StatusSummary = () => {
 	const [counts, setCounts] = useState({

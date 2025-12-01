@@ -21,7 +21,8 @@ import {
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 
-const baseURL = import.meta.env.VITE_API_BASE_URL;
+import API_BASE_URL from '../../config/api';
+const baseURL = API_BASE_URL.replace('/api', '');
 
 function InvoiceView({ appointment }) {
 	const [open, setOpen] = useState(false);

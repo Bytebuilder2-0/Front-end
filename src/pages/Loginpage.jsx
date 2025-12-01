@@ -20,6 +20,7 @@ import {
 import axios from "axios"
 import { Link, useNavigate } from "react-router-dom"
 import { AuthContext } from "../context/AuthContext"
+import API_BASE_URL from "../config/api"
 import LoginSignupNavbar from "../components/LoginSignupNavbar"
 import { LockOpen, Email, Visibility, VisibilityOff, DirectionsCar, Security, Speed } from "@mui/icons-material"
 import { jwtDecode } from "jwt-decode"
@@ -39,7 +40,7 @@ const Loginpage = () => {
     setIsLoading(true)
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/login`, {
+      const response = await axios.post(`${API_BASE_URL}/auth/login`, {
         email,
         password,
       })
