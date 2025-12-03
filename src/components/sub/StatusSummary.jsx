@@ -24,7 +24,7 @@ const StatusSummary = () => {
     const fetchCounts = async () => {
       try {
         const response = await axios.get(
-          `${baseURL}/appointments/statusCounts`,
+          `${API_BASE_URL}/appointments/statusCounts`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,

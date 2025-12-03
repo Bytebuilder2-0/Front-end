@@ -35,7 +35,7 @@ function InvoiceView({ appointment }) {
     try {
       //  1) Fetch Budget
       const response = await axios.get(
-        `${baseURL}/budget/${appointment._id}/view`,
+        `${API_BASE_URL}/budget/${appointment._id}/view`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

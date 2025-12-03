@@ -24,7 +24,7 @@ const BudgetReview = ({
 
     try {
       const response = await axios.get(
-        `${baseURL}/budget/${appointment._id}/view`,
+        `${API_BASE_URL}/budget/${appointment._id}/view`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -65,7 +65,7 @@ const BudgetReview = ({
       // Update each step individually (same as your original code)
       for (const allocation of budgetAllocations) {
         await axios.put(
-          `${baseURL}/budget/${appointment._id}/update`,
+          `${API_BASE_URL}/budget/${appointment._id}/update`,
           {
             step: allocation.step,
             amount: allocation.amount,
@@ -83,7 +83,7 @@ const BudgetReview = ({
 
       //  Re-fetch updated appointment to sync with parent
       const { data } = await axios.get(
-        `${baseURL}/appointments/${appointment._id}`,
+        `${API_BASE_URL}/appointments/${appointment._id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

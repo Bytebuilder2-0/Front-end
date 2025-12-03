@@ -23,7 +23,7 @@ const baseURL = API_BASE_URL.replace("/api", "");
 // Fetch "Paid" appointments confirmed by the current supervisor
 const fetchPaidAppointments = async (supervisorId, token) => {
   try {
-    const response = await axios.get(`${baseURL}/appointments`, {
+    const response = await axios.get(`${API_BASE_URL}/appointments`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -35,7 +35,7 @@ const SuggestionWriting = ({
       );
 
       const response = await axios.put(
-        `${baseURL}/appointments/${appointment._id}/suggestions`,
+        `${API_BASE_URL}/appointments/${appointment._id}/suggestions`,
         { suggestion },
         {
           headers: {
@@ -70,7 +70,7 @@ const SuggestionWriting = ({
 
     try {
       const response = await axios.get(
-        `${baseURL}/appointments/${appointment._id}`,
+        `${API_BASE_URL}/appointments/${appointment._id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
