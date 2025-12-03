@@ -37,6 +37,7 @@ import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
 import { useAuth } from "../../context/AuthContext";
 import Account from "../Atoms/Account";
 import { Link } from "react-router-dom";
+import NotificationBell from "../NotificationBell";
 
 const drawerWidth = 240;
 
@@ -279,8 +280,7 @@ export default function UserMiniDrawer() {
               pr: 5, // padding-right
             }}
           >
-            {/*<Notify />*/}
-
+            <NotificationBell />
             <Account />
           </Box>
         </Toolbar>
