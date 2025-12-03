@@ -15,6 +15,7 @@ import {
   Circle as CircleIcon,
 } from "@mui/icons-material";
 import axios from "axios";
+import { io } from "socket.io-client";
 import API_BASE_URL from "../config/api";
 import { jwtDecode } from "jwt-decode";
 
@@ -24,6 +25,7 @@ const NotificationBell = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState(null);
+  const [socket, setSocket] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -33,11 +35,44 @@ const NotificationBell = () => {
     }
   }, []);
 
+  // Setup Socket.IO connection
+  useEffect(() => {
+    if (userId) {
+      const baseURL = API_BASE_URL.replace('/api', '');
+      const newSocket = io(baseURL, {
+        auth: {
+          token: localStorage.getItem("token")
+        }
+      });
+
+      newSocket.on("connect", () => {
+        console.log("Socket connected");
+        newSocket.emit("join", userId);
+      });
+
+      newSocket.on("newNotification", ({ notification, unreadCount: count }) => {
+        console.log("New notification received:", notification);
+        setNotifications((prev) => [notification, ...prev]);
+        setUnreadCount(count);
+      });
+
+      newSocket.on("disconnect", () => {
+        console.log("Socket disconnected");
+      });
+
+      setSocket(newSocket);
+
+      return () => {
+        newSocket.disconnect();
+      };
+    }
+  }, [userId]);
+
   useEffect(() => {
     if (userId) {
       fetchUnreadCount();
-      // Poll for new notifications every 30 seconds
-      const interval = setInterval(fetchUnreadCount, 30000);
+      // Reduced polling interval since we have WebSocket now
+      const interval = setInterval(fetchUnreadCount, 60000); // Every 60 seconds as fallback
       return () => clearInterval(interval);
     }
   }, [userId]);
