@@ -48,7 +48,7 @@ function InvoiceView({ appointment }) {
       if (appointment.sconfirmedBy) {
         try {
           const supRes = await axios.get(
-            `${baseURL}/supervisor/${appointment.sconfirmedBy}`,
+            `${API_BASE_URL}/supervisor/${appointment.sconfirmedBy}`,
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
