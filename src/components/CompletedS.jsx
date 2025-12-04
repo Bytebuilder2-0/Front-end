@@ -24,11 +24,10 @@ import ConfirmationDialog from "./sub/Confirmation";
 import { useAuth } from "../context/AuthContext";
 
 import API_BASE_URL from "../config/api";
-const baseURL = API_BASE_URL.replace("/api", "");
 
 const fetchAppointments = async (supervisorId, token) => {
   try {
-    const response = await axios.get(`${baseURL}/appointments`, {
+    const response = await axios.get(`${API_BASE_URL}/appointments`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -47,7 +46,7 @@ const fetchAppointments = async (supervisorId, token) => {
 const updateAppointmentStatus = async (appointmentId, token) => {
   try {
     const res = await axios.put(
-      `${baseURL}/appointments/${appointmentId}/statusUpdate`,
+      `${API_BASE_URL}/appointments/${appointmentId}/statusUpdate`,
       { status: "Paid" },
       { headers: { Authorization: `Bearer ${token}` } }
     );

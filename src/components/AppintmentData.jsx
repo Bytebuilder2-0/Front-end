@@ -23,12 +23,11 @@ import { useAuth } from "../context/AuthContext";
 
 // API Base URL
 import API_BASE_URL from "../config/api";
-const baseURL = API_BASE_URL.replace("/api", "");
 
 // Fetch all appointments(status=confirmed,waiting for technician confirmation)
 const fetchAppointments = async (supervisorId, token) => {
   try {
-    const response = await axios.get(`${baseURL}/appointments`, {
+    const response = await axios.get(`${API_BASE_URL}/appointments`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

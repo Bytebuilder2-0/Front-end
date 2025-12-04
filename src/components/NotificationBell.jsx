@@ -38,11 +38,11 @@ const NotificationBell = () => {
   // Setup Socket.IO connection
   useEffect(() => {
     if (userId) {
-      const baseURL = API_BASE_URL.replace('/api', '');
+      const baseURL = API_BASE_URL.replace("/api", "");
       const newSocket = io(baseURL, {
         auth: {
-          token: localStorage.getItem("token")
-        }
+          token: localStorage.getItem("token"),
+        },
       });
 
       newSocket.on("connect", () => {
@@ -50,11 +50,14 @@ const NotificationBell = () => {
         newSocket.emit("join", userId);
       });
 
-      newSocket.on("newNotification", ({ notification, unreadCount: count }) => {
-        console.log("New notification received:", notification);
-        setNotifications((prev) => [notification, ...prev]);
-        setUnreadCount(count);
-      });
+      newSocket.on(
+        "newNotification",
+        ({ notification, unreadCount: count }) => {
+          console.log("New notification received:", notification);
+          setNotifications((prev) => [notification, ...prev]);
+          setUnreadCount(count);
+        }
+      );
 
       newSocket.on("disconnect", () => {
         console.log("Socket disconnected");
@@ -82,7 +85,7 @@ const NotificationBell = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const baseURL = API_BASE_URL.replace('/api', '');
+      const baseURL = API_BASE_URL.replace("/api", "");
       const response = await axios.get(
         `${baseURL}/api/notifications/user/${userId}/unread-count`,
         {
@@ -105,7 +108,7 @@ const NotificationBell = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const baseURL = API_BASE_URL.replace('/api', '');
+      const baseURL = API_BASE_URL.replace("/api", "");
       const response = await axios.get(
         `${baseURL}/api/notifications/user/${userId}?limit=10`,
         {
@@ -136,7 +139,7 @@ const NotificationBell = () => {
   const markAsRead = async (notificationId) => {
     try {
       const token = localStorage.getItem("token");
-      const baseURL = API_BASE_URL.replace('/api', '');
+      const baseURL = API_BASE_URL.replace("/api", "");
       await axios.patch(
         `${baseURL}/api/notifications/${notificationId}/read`,
         {},
@@ -144,7 +147,7 @@ const NotificationBell = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      
+
       // Update local state
       setNotifications((prev) =>
         prev.map((notif) =>
@@ -164,7 +167,7 @@ const NotificationBell = () => {
 
     try {
       const token = localStorage.getItem("token");
-      const baseURL = API_BASE_URL.replace('/api', '');
+      const baseURL = API_BASE_URL.replace("/api", "");
       await axios.patch(
         `${baseURL}/api/notifications/user/${userId}/read-all`,
         {},
@@ -172,7 +175,7 @@ const NotificationBell = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      
+
       // Update local state
       setNotifications((prev) =>
         prev.map((notif) => ({ ...notif, isRead: true }))
@@ -187,7 +190,7 @@ const NotificationBell = () => {
 
   const getTimeAgo = (date) => {
     const seconds = Math.floor((new Date() - new Date(date)) / 1000);
-    
+
     if (seconds < 60) return "Just now";
     if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
     if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
@@ -217,12 +220,22 @@ const NotificationBell = () => {
         PaperProps={{
           sx: {
             width: 380,
+            maxWidth: "calc(100vw - 32px)",
             maxHeight: 500,
             mt: 1.5,
+            overflow: "hidden",
           },
         }}
       >
-        <Box sx={{ px: 2, py: 1.5, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Box
+          sx={{
+            px: 2,
+            py: 1.5,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Typography variant="h6" fontWeight="bold">
             Notifications
           </Typography>
@@ -266,9 +279,19 @@ const NotificationBell = () => {
                       : "rgba(25, 118, 210, 0.12)",
                   },
                   borderBottom: "1px solid rgba(0, 0, 0, 0.08)",
+                  whiteSpace: "normal",
+                  wordWrap: "break-word",
+                  overflow: "hidden",
                 }}
               >
-                <Box sx={{ display: "flex", alignItems: "flex-start", width: "100%" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    width: "100%",
+                    minWidth: 0,
+                  }}
+                >
                   {!notification.isRead && (
                     <CircleIcon
                       sx={{
@@ -276,11 +299,28 @@ const NotificationBell = () => {
                         color: "primary.main",
                         mt: 0.5,
                         mr: 1.5,
+                        flexShrink: 0,
                       }}
                     />
                   )}
-                  <Box sx={{ flex: 1, ml: notification.isRead ? 3 : 0 }}>
-                    <Typography variant="body2" sx={{ mb: 0.5 }}>
+                  <Box
+                    sx={{
+                      flex: 1,
+                      ml: notification.isRead ? 3 : 0,
+                      minWidth: 0,
+                      overflow: "hidden",
+                    }}
+                  >
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        mb: 0.5,
+                        wordBreak: "break-word",
+                        whiteSpace: "normal",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
                       {notification.message}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">

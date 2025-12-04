@@ -25,11 +25,10 @@ import { useAuth } from "../context/AuthContext"; //  use the Auth context
 import DeatailsViewer from "./ManagerDashboard/viewDeatails";
 
 import API_BASE_URL from "../config/api";
-const baseURL = API_BASE_URL.replace("/api", "");
 
 const fetchAppointments = async (token) => {
   try {
-    const response = await axios.get(`${baseURL}/appointments`, {
+    const response = await axios.get(`${API_BASE_URL}/appointments`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -52,13 +51,13 @@ const updateAppointmentStatus = async (
 ) => {
   try {
     await axios.put(
-      `${baseURL}/appointments/${appointmentId}/statusUpdate`,
+      `${API_BASE_URL}/appointments/${appointmentId}/statusUpdate`,
       { status: newStatus },
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
     await axios.put(
-      `${baseURL}/appointments/${appointmentId}/superby`,
+      `${API_BASE_URL}/appointments/${appointmentId}/superby`,
       { sconfirmedBy: supervised },
       { headers: { Authorization: `Bearer ${token}` } }
     );
