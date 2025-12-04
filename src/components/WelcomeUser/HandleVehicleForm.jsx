@@ -20,13 +20,27 @@ const vehicleTypes = ['Sedan', 'SUV', 'Truck', 'Van', 'Motorcycle', 'Other'];
 const HandleVehicleForm = ({ formData, onChange, onSubmit, onReset }) => {
   const theme = useTheme();
 
+  // Validation helpers
+  const currentYear = new Date().getFullYear();
+  const isYearValid = formData.vehicleYear 
+    ? /^\d{4}$/.test(formData.vehicleYear) && 
+      parseInt(formData.vehicleYear) >= 1900 && 
+      parseInt(formData.vehicleYear) <= currentYear
+    : true;
+  
+  const isModelValid = formData.model 
+    ? /^[a-zA-Z0-9\s\-]+$/.test(formData.model)
+    : true;
+
   // Check if all required fields are filled
   const isFormValid = () => {
     return (
       formData.vehicleNumber &&
       formData.vehicleYear && 
       formData.model &&
-      formData.vehicleType
+      formData.vehicleType &&
+      isYearValid &&
+      isModelValid
     );
   };
 
@@ -86,40 +100,46 @@ const HandleVehicleForm = ({ formData, onChange, onSubmit, onReset }) => {
 
             <Grid item xs={12} sm={6}>
               <TextField
-                    fullWidth
-                    label="Year *"
-                    name="vehicleYear"
-                    value={formData.vehicleYear}
-                    onChange={onChange}
-                    required
-                    error={formData.vehicleYear && !isYearValid}
-                    helperText={
-                      formData.vehicleYear && !isYearValid
-                        ? `Enter a valid year between 1700 and ${currentYear}`
-                        : ''
-                    }
-                    InputProps={{
-                      startAdornment: (
-                        <CalendarToday color="action" sx={{ mr: 1 }} />
-                      ),
-                    }}/>
-                      </Grid>
+                fullWidth
+                label="Year *"
+                name="vehicleYear"
+                value={formData.vehicleYear}
+                onChange={onChange}
+                required
+                type="number"
+                inputProps={{
+                  min: 1900,
+                  max: currentYear
+                }}
+                error={formData.vehicleYear && !isYearValid}
+                helperText={
+                  formData.vehicleYear && !isYearValid
+                    ? `Enter a valid year between 1900 and ${currentYear}`
+                    : ''
+                }
+                InputProps={{
+                  startAdornment: (
+                    <CalendarToday color="action" sx={{ mr: 1 }} />
+                  ),
+                }}
+              />
+            </Grid>
           <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="Model *"
-                  name="model"
-                  value={formData.model}
-                  onChange={onChange}
-                  required
-                  error={formData.model && !isModelValid}
-                  helperText={
-                    formData.model && !isModelValid
-                      ? 'Model can only contain letters and numbers'
-                      : ''
-                  }
-                />
-              </Grid>
+            <TextField
+              fullWidth
+              label="Model *"
+              name="model"
+              value={formData.model}
+              onChange={onChange}
+              required
+              error={formData.model && !isModelValid}
+              helperText={
+                formData.model && !isModelValid
+                  ? 'Model can only contain letters, numbers, spaces, and hyphens'
+                  : ''
+              }
+            />
+          </Grid>
 
 
        <Grid item xs={12}>
