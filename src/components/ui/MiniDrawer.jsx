@@ -31,6 +31,7 @@ import {
 
 import Notify from "../Atoms/Notify";
 import Account from "../Atoms/Account";
+import NotificationBell from "../NotificationBell";
 import { Link } from "react-router-dom";
 
 const drawerWidth = 240;
@@ -170,7 +171,7 @@ function MiniDrawer() {
               pr: 5, // padding-right
             }}
           >
-            {/*<Notify />*/}
+            <NotificationBell />
             <Account />
           </Box>
         </Toolbar>

@@ -31,8 +31,8 @@ import FeedbackForm from "../UserFeedback/FeedbackForm";
 import axios from "axios";
 import { loadStripe } from "@stripe/stripe-js";
 
-import API_BASE_URL from '../../config/api';
-const baseURL = API_BASE_URL.replace('/api', '');
+import API_BASE_URL from "../../config/api";
+const baseURL = API_BASE_URL.replace("/api", "");
 
 const stripePromise = loadStripe(
   "pk_test_51Rl8A92E8JZ0nXeqBkKSyzbSZnPa4fHYeEe8TF2ApdVDI8BDRoDDD5u4EIgPLuNkRMHyZvq47KqNf4fPbqMrGDwa004pUMyJfU"

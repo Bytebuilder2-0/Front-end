@@ -41,6 +41,7 @@ import {
 import Notify from "../Atoms/Notify";
 import Account from "../Atoms/Account";
 import { Link } from "react-router-dom";
+import NotificationBell from "../NotificationBell";
 
 // Define the width of the drawer
 const drawerWidth = 240;
@@ -299,9 +300,7 @@ export default function ManagerSidebar({ children }) {
               gap: 2,
             }}
           >
-            {/* Notifications Icon with badge */}
-            {/*<Notify/>*/}
-            {/* Account Profile Icon */}
+            <NotificationBell />
             <Account />
           </Box>
         </Toolbar>
