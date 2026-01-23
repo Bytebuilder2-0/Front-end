@@ -181,7 +181,7 @@ const HomePage = () => {
 											{item.icon}
 										</Box>
 
-										// Content 
+										
 										<Box
 											className="feature-content"
 											sx={{ transition: "all 0.3s ease", flex: 1 }}
